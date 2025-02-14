@@ -1,0 +1,179 @@
+:root {
+  --eduact-text: #F1F2FD;
+  --eduact-text-rgb: 241, 242, 253;
+  --eduact-black: #fff;
+  --eduact-black-rgb: 255, 255, 255;
+  --eduact-white: #121534;
+  --eduact-white-rgb: 18, 21, 52;
+  --eduact-black3: #000324;
+  --eduact-black3-rgb: 0, 3, 36;
+  --eduact-grey: #F6F6F6;
+  --eduact-grey-rgb: 246, 246, 246;
+  --eduact-black4: #2A254D;
+  --eduact-black4-rgb: 42, 37, 77;
+  --eduact-black5: #121745;
+  --eduact-black5-rgb: 18, 23, 69;
+  --eduact-black6: #282445;
+  --eduact-black6-rgb: 40, 36, 69;
+  --eduact-soft3: #13194F;
+  --eduact-soft3-rgb: 19, 25, 79;
+}
+
+.main-menu .main-menu__list > li > a,
+.stricky-header .main-menu__list > li > a,
+.hero-banner__title,
+.service-one__icon,
+.category-one__hover__icon,
+.category-one__icon,
+.home-showcase__title,
+.course-one__like,
+.course-one__like:hover,
+.counter-one__left__title,
+.counter-one__left__content,
+.course-one__time,
+.team-one__title,
+.blog-one__cta__icon,
+.blog-one__cta__title,
+.blog-one__cats a,
+.cta-one__left__title,
+.main-footer__title,
+.main-footer__social a,
+.main-footer__social a:hover,
+.blog-one__cta__text,
+.team-one__designation,
+.team-one__social a,
+.category-one__hover__title,
+.category-one__hover__text,
+.main-menu__login,
+.main-menu__search,
+.hero-banner__cart__title,
+.about-one__thumb__box__icon,
+.eduact-btn,
+.eduact-btn:hover {
+  color: var(--eduact-black);
+}
+
+.hero-banner__text {
+  color: var(--eduact-text);
+}
+
+.hero-banner__bg-shape1,
+.hero-banner__bg-shape1::after {
+  background: linear-gradient(180deg, rgba(var(--eduact-black-rgb), 0.09) 0%, rgba(var(--eduact-black-rgb), 0) 100%);
+}
+
+.hero-banner__btn .eduact-btn + .eduact-btn {
+  border-color: var(--eduact-black);
+}
+
+.hero-banner__cart__content::after {
+  border-color: rgba(var(--eduact-black-rgb), 0.47);
+}
+
+.search-popup__overlay {
+  background-color: var(--eduact-white);
+}
+
+.counter-one,
+.stricky-header,
+.hero-banner {
+  background-color: var(--eduact-black3);
+}
+
+.main-footer,
+.hero-banner__video .video-popup {
+  background-color: var(--eduact-black4);
+}
+
+.blog-one__item,
+.course-one__content,
+.category-one__item,
+.service-one__item {
+  box-shadow: 11px 15px 30px 0px #05092d;
+}
+
+.testimonial-one__area {
+  box-shadow: 11px 15px 30px 0px rgba(2, 2, 2, 0.37);
+}
+
+.section-title__tagline svg path,
+.service-one__item svg path {
+  fill: var(--eduact-soft3);
+}
+
+.team-one,
+.search-popup__form input[type="search"],
+.search-popup__form input[type="text"],
+.counter-one__list li,
+.counter-one__list::after,
+.counter-one__list::before,
+.category-one__slider.owl-carousel .owl-dots,
+.about-one__box__icon {
+  background-color: var(--eduact-soft3);
+}
+
+.category-one__hover__icon::after,
+.category-one__icon::after {
+  background: linear-gradient(177deg, rgba(var(--eduact-black-rgb), 0.53) 0%, rgba(var(--eduact-black-rgb), 0) 100%);
+}
+
+.category-one__slider.owl-carousel .owl-dots .owl-dot {
+  background-color: rgba(var(--eduact-base-rgb), 0.48);
+}
+
+.course-one,
+.blog-one__meta,
+.blog-one__cta__email-input-box input[type="email"],
+.course-one__bottom {
+  background-color: var(--eduact-black5);
+}
+
+.counter-one__list li {
+  color: var(--eduact-secondary);
+}
+
+.blog-one .section-title__tagline svg path,
+.team-one .section-title__tagline svg path,
+.testimonial-one .section-title__tagline svg path {
+  fill: var(--eduact-black3);
+}
+
+.testimonial-one__carousel.owl-carousel .owl-nav button {
+  background-color: var(--eduact-black5);
+  color: var(--eduact-base);
+}
+
+.testimonial-one__carousel.owl-carousel .owl-nav button:hover {
+  color: var(--eduact-black);
+}
+
+.team-one__image::after {
+  background-color: rgba(var(--eduact-black4-rgb), 0.83);
+}
+
+.blog-one__image a {
+  background-color: rgba(var(--eduact-white-rgb), 0.4);
+}
+
+.blog-one__image a::after,
+.blog-one__image a::before {
+  background-color: var(--eduact-black);
+}
+
+.blog-one__cta::after {
+  background-color: rgba(var(--eduact-black6-rgb), 0.83);
+}
+
+.cta-one__svgshape svg {
+  fill: rgba(var(--eduact-black4-rgb), 0.74);
+}
+
+.cta-one__thumb__area__dark {
+  background-color: rgba(var(--eduact-black4-rgb), 0.46);
+}
+
+.course-one__thumb {
+  background: linear-gradient(147deg, var(--eduact-black) 0%, rgba(231, 231, 231, 0) 100%);
+}
+
+/*# sourceMappingURL=eduact-dark.css.map */

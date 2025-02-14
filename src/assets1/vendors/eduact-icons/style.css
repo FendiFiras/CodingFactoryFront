@@ -1,0 +1,215 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon8568.eot?w8l75j');
+  src:  url('fonts/icomoon8568.eot?w8l75j#iefix') format('embedded-opentype'),
+    url('fonts/icomoon8568.ttf?w8l75j') format('truetype'),
+    url('fonts/icomoon8568.woff?w8l75j') format('woff'),
+    url('fonts/icomoon8568.svg?w8l75j#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-art:before {
+  content: "\e923";
+}
+.icon-book:before {
+  content: "\e924";
+}
+.icon-chart-up:before {
+  content: "\e925";
+}
+.icon-chat:before {
+  content: "\e926";
+}
+.icon-check:before {
+  content: "\e927";
+}
+.icon-clock:before {
+  content: "\e928";
+}
+.icon-close:before {
+  content: "\e929";
+}
+.icon-computer-science:before {
+  content: "\e92a";
+}
+.icon-double-arrow-right:before {
+  content: "\e92b";
+}
+.icon-file:before {
+  content: "\e92c";
+}
+.icon-graduate:before {
+  content: "\e92d";
+}
+.icon-history:before {
+  content: "\e92e";
+}
+.icon-ideas:before {
+  content: "\e92f";
+}
+.icon-instructor:before {
+  content: "\e930";
+}
+.icon-language:before {
+  content: "\e931";
+}
+.icon-logical-thinking:before {
+  content: "\e932";
+}
+.icon-minus:before {
+  content: "\e933";
+}
+.icon-online-learning:before {
+  content: "\e934";
+}
+.icon-play:before {
+  content: "\e935";
+}
+.icon-play-border:before {
+  content: "\e936";
+}
+.icon-plus:before {
+  content: "\e937";
+}
+.icon-ratings:before {
+  content: "\e938";
+}
+.icon-reading:before {
+  content: "\e939";
+}
+.icon-star:before {
+  content: "\e93a";
+}
+.icon-star-dash:before {
+  content: "\e93b";
+}
+.icon-target:before {
+  content: "\e93c";
+}
+.icon-trophy:before {
+  content: "\e93d";
+}
+.icon-vision:before {
+  content: "\e93e";
+}
+.icon-account-1:before {
+  content: "\e900";
+}
+.icon-Analysis:before {
+  content: "\e901";
+}
+.icon-arrow-left:before {
+  content: "\e902";
+}
+.icon-arrow:before {
+  content: "\e903";
+}
+.icon-arrow-up:before {
+  content: "\e904";
+}
+.icon-arrow-down:before {
+  content: "\e905";
+}
+.icon-business:before {
+  content: "\e906";
+}
+.icon-Call:before {
+  content: "\e907";
+}
+.icon-chart-up1:before {
+  content: "\e908";
+}
+.icon-computer-science1:before {
+  content: "\e909";
+}
+.icon-Digital-marketing:before {
+  content: "\e90a";
+}
+.icon-caret-right:before {
+  content: "\e90b";
+}
+.icon-caret-down:before {
+  content: "\e90c";
+}
+.icon-caret-up:before {
+  content: "\e90d";
+}
+.icon-caret-left:before {
+  content: "\e90e";
+}
+.icon-education:before {
+  content: "\e90f";
+}
+.icon-Email:before {
+  content: "\e910";
+}
+.icon-facebook:before {
+  content: "\e911";
+}
+.icon-Headphone-Women:before {
+  content: "\e912";
+}
+.icon-like:before {
+  content: "\e913";
+}
+.icon-linkedin:before {
+  content: "\e914";
+}
+.icon-Location:before {
+  content: "\e915";
+}
+.icon-neural:before {
+  content: "\e916";
+}
+.icon-Newsletter:before {
+  content: "\e917";
+}
+.icon-Online-learning:before {
+  content: "\e918";
+}
+.icon-portfolio:before {
+  content: "\e919";
+}
+.icon-Presentation:before {
+  content: "\e91a";
+}
+.icon-Search:before {
+  content: "\e91b";
+}
+.icon-Start-up:before {
+  content: "\e91c";
+}
+.icon-Technology:before {
+  content: "\e91d";
+}
+.icon-Telephone:before {
+  content: "\e91e";
+}
+.icon-twitter:before {
+  content: "\e91f";
+}
+.icon-webinar:before {
+  content: "\e920";
+}
+.icon-youtube:before {
+  content: "\e921";
+}
+.icon-pen:before {
+  content: "\e922";
+}
