@@ -62,13 +62,13 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         icon: 'feather icon-server'
       },
-      {
-        id: 'Courses Managment',
-        title: 'Courses Managment',
+     {
+        id: 'Training-managment',
+        title: 'Training Management', // Titre affiché
         type: 'item',
-        url: '/Courses/bootstrap',
+        url: '/TrainingManagement', // URL de la route
         classes: 'nav-item',
-        icon: 'feather icon-server'
+        icon: 'feather icon-server' // Icône à utiliser
       },
       {
         id: 'Events Managment',

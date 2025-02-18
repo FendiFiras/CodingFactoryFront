@@ -4,7 +4,8 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
 import { LoginPageComponent } from './front/login-page/login-page.component';
-
+import { TrainingManagementComponent } from './demo/training-management/training-management/training-management.component';
+import {AddTrainingComponent} from './demo/training-management/add-training/add-training.component'
 const routes: Routes = [
   {
     path: '',
@@ -16,9 +17,21 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'TrainingManagement',
+    component: TrainingManagementComponent,
+    children:[]
+  },
+  {
+    path: 'Add_T',
+    component: AddTrainingComponent,
+    children:[]
+  },
+  {
     path: 'login',
     component: LoginPageComponent
   },
+  
+
   {
     path: '',
     component: AdminComponent,

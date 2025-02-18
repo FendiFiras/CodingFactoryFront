@@ -1,0 +1,53 @@
+<app-navigation class="pcoded-navbar" />
+<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light" />
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <app-breadcrumb />
+        <div class="main-body">
+          <div class="page-wrapper">
+            <div class="row">
+              <div class="col-xl-12">
+                <app-card cardTitle="Training List" [options]="false" blockClass="table-border-style">
+                  <div class="mb-3">
+                    <button class="btn btn-primary" (click)="openAddTrainingModal()">
+                      <i class="fas fa-plus"></i> Add Training
+                    </button>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Training Name</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Price</th>
+                          <th>Training Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Affichage dynamique des formations -->
+                        <tr *ngFor="let training of trainings; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ training.trainingType }}</td>
+                          <td>{{ training.startDate | date: 'dd/MM/yyyy' }}</td>
+                          <td>{{ training.endDate | date: 'dd/MM/yyyy' }}</td>
+                          
+                          <td>{{ training.price | currency: 'USD' }}</td> <!-- Affichage du prix -->
+                          <td>{{ training.trainingType }}</td> <!-- Affichage du type de formation -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </app-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-menu-overlay" tabindex="0"></div>
+</div>

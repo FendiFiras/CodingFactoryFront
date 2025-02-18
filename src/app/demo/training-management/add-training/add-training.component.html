@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Add New Training</h2>
+    <mat-dialog-content>
+      <form [formGroup]="trainingForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Training Name</mat-label>
+          <input matInput formControlName="trainingName" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Training Type</mat-label>
+          <mat-select formControlName="trainingType">
+            <mat-option *ngFor="let type of trainingTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Instructor</mat-label>
+          <mat-select formControlName="instructorId">
+            <mat-option *ngFor="let instructor of instructors" [value]="instructor.id">
+              {{ instructor.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" formControlName="price" min="0">
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" 
+              (click)="onSubmit()" 
+              [disabled]="!trainingForm.valid">Save</button>
+    </mat-dialog-actions>
