@@ -12,20 +12,30 @@ import { Training } from '../../../Models/training.model'
 import { TrainingService } from 'src/app/Services/training.service';
 import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
 import {AddTrainingComponent} from '../add-training/add-training.component'
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card'
-import { MatDialog } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-training-management',
   templateUrl: './training-management.component.html',
   standalone: true,  // Déclare le composant comme standalone
 
   styleUrls: ['./training-management.component.scss'],
-
-  imports: [SharedModule,CommonModule,NavigationComponent,ConfigurationComponent,NavContentComponent,NavLogoComponent,NavBarComponent,RouterModule,BreadcrumbsComponent,HttpClientModule,  CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    AddTrainingComponent ]
+  imports: [
+    // Modules Angular
+    CommonModule,
+    RouterModule,
+    
+    // Components partagés
+    SharedModule,
+    NavigationComponent,
+    ConfigurationComponent,
+    NavContentComponent,
+    NavLogoComponent,
+    NavBarComponent,
+    BreadcrumbsComponent,
+    
+    // Composant d'ajout
+    AddTrainingComponent
+  ]
 
 })
 export class TrainingManagementComponent implements OnInit  {
@@ -33,7 +43,6 @@ export class TrainingManagementComponent implements OnInit  {
 
   constructor(
     private trainingService: TrainingService,
-    private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     // Appelle la méthode du service pour récupérer les données
@@ -47,11 +56,10 @@ export class TrainingManagementComponent implements OnInit  {
     );
 
 }
-openAddTrainingModal(): void {
-  const dialogRef = this.dialog.open(AddTrainingComponent, {
-    width: '600px',
-    disableClose: true // Empêche la fermeture en cliquant à l'extérieur
-  });
+showAddTraining: boolean = false; // Variable de contrôle pour afficher ou non AddTraining
 
+  toggleAddTraining() {
+    this.showAddTraining = !this.showAddTraining;
+  }
 
-} }
+} 

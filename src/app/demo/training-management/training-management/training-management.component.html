@@ -11,7 +11,7 @@
               <div class="col-xl-12">
                 <app-card cardTitle="Training List" [options]="false" blockClass="table-border-style">
                   <div class="mb-3">
-                    <button class="btn btn-primary" (click)="openAddTrainingModal()">
+                    <button class="btn btn-primary" (click)="toggleAddTraining()">
                       <i class="fas fa-plus"></i> Add Training
                     </button>
                   </div>
@@ -28,15 +28,13 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <!-- Affichage dynamique des formations -->
                         <tr *ngFor="let training of trainings; let i = index">
                           <th scope="row">{{ i + 1 }}</th>
-                          <td>{{ training.trainingType }}</td>
+                          <td>{{ training.trainingName }}</td> <!-- Correction ici -->
                           <td>{{ training.startDate | date: 'dd/MM/yyyy' }}</td>
                           <td>{{ training.endDate | date: 'dd/MM/yyyy' }}</td>
-                          
-                          <td>{{ training.price | currency: 'USD' }}</td> <!-- Affichage du prix -->
-                          <td>{{ training.trainingType }}</td> <!-- Affichage du type de formation -->
+                          <td>{{ training.price | currency: 'USD' }}</td>
+                          <td>{{ training.trainingType }}</td>
                         </tr>
                       </tbody>
                     </table>

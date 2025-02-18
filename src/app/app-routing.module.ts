@@ -22,7 +22,7 @@ const routes: Routes = [
     children:[]
   },
   {
-    path: 'Add_T',
+    path: 'Ajouter_training',
     component: AddTrainingComponent,
     children:[]
   },
@@ -30,6 +30,7 @@ const routes: Routes = [
     path: 'login',
     component: LoginPageComponent
   },
+  
   
 
   {

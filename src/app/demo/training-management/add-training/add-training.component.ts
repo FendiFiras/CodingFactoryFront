@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TrainingService } from '../../../Services/training.service';
 import { TrainingType } from '../../../Models/training.model';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
+import { NavigationComponent } from 'src/app/theme/layout/admin/navigation/navigation.component';
+import { ConfigurationComponent } from 'src/app/theme/layout/admin/configuration/configuration.component';
+import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumbs/breadcrumbs.component';
+import { NavLogoComponent } from 'src/app/theme/layout/admin/navigation/nav-logo/nav-logo.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Training } from '../../../Models/training.model';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -18,16 +19,16 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule
+    SharedModule,
+    NavigationComponent,
+    ConfigurationComponent,
+    NavContentComponent,
+    NavLogoComponent,
+    NavBarComponent,
+    BreadcrumbsComponent
   ],
   templateUrl: './add-training.component.html',
-  styleUrls: ['./add-training.component.scss']
+  styleUrls: ['./add-training.component.scss'],
 })
 export class AddTrainingComponent {
   trainingForm: FormGroup;
@@ -35,12 +36,14 @@ export class AddTrainingComponent {
   instructors = [
     { id: 1, name: 'John Doe' },
     { id: 2, name: 'Jane Smith' },
-    { id: 3, name: 'Bob Johnson' }
+    { id: 3, name: 'Bob Johnson' },
   ];
+
+  // Fixer le userId à 1
+  userId: number = 1;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddTrainingComponent>,
     private trainingService: TrainingService
   ) {
     this.trainingForm = this.fb.group({
@@ -49,30 +52,27 @@ export class AddTrainingComponent {
       endDate: [null],
       trainingType: [null, Validators.required],
       instructorId: [null, Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]]
+      price: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
-  onSubmit(): void {
+  // Méthode pour ajouter une formation
+  onSubmit() {
     if (this.trainingForm.valid) {
-      const formData = this.trainingForm.value;
-      
-      // Appel direct avec les données du formulaire
-      this.trainingService.addTraining(formData, formData.instructorId)
-        .subscribe({
-          next: (res) => {
-            this.dialogRef.close(res);
-          },
-          error: (err) => {
-            console.error('Error adding training:', err);
-            // Gestion d'erreur améliorée
-            alert('Error adding training: ' + err.message);
-          }
-        });
+      const newTraining: Training = this.trainingForm.value;
+      // Ajouter la formation avec userId fixé
+      this.trainingService.addTraining(newTraining, this.userId).subscribe(
+        (response) => {
+          console.log('Formation ajoutée avec succès:', response);
+          // Effectuer des actions après l'ajout, comme la réinitialisation du formulaire
+          this.trainingForm.reset();
+        },
+        (error) => {
+          console.error('Erreur lors de l\'ajout de la formation:', error);
+        }
+      );
+    } else {
+      console.error('Le formulaire est invalide');
     }
-  }
-
-  onCancel(): void {
-    this.dialogRef.close();
   }
 }
