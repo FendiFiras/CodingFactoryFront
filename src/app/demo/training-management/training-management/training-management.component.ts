@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingService } from 'src/app/Services/training.service';
-import { Training } from '../../../Models/training.model';
+import { Training,TrainingType  } from '../../../Models/training.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -32,6 +32,8 @@ import {AddTrainingComponent} from '../add-training/add-training.component'
 export class TrainingManagementComponent implements OnInit {
   trainings: Training[] = [];  // Déclare un tableau pour stocker les formations
   showAddTraining: boolean = false; // Variable de contrôle pour afficher ou non AddTraining
+  trainingTypes = Object.values(TrainingType);  // Récupérer les valeurs de l'enum TrainingType
+  editing: { [key: number]: string[] } = {};  // Stocker les champs en édition pour chaque formation
 
   constructor(private trainingService: TrainingService) {}
 
@@ -51,4 +53,54 @@ export class TrainingManagementComponent implements OnInit {
   toggleAddTraining() {
     this.showAddTraining = !this.showAddTraining;
   }
-}
+  // Activer l'édition pour un champ spécifique
+  enableEditing(field: string, training: Training): void {
+    if (!this.editing[training.trainingId]) {
+      this.editing[training.trainingId] = [];
+    }
+    if (!this.editing[training.trainingId].includes(field)) {
+      this.editing[training.trainingId].push(field);
+    }
+  }
+
+  // Vérifier si un champ est en cours d'édition
+  isEditing(training: Training, field: string): boolean {
+    return this.editing[training.trainingId] && this.editing[training.trainingId].includes(field);
+  }
+
+  // Mettre à jour la formation après modification
+  updateTraining(training: Training): void {
+    this.trainingService.updateTraining(training).subscribe(
+      (response) => {
+        console.log('Formation mise à jour avec succès:', response);
+        this.editing[training.trainingId] = [];  // Désactiver l'édition après mise à jour
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour de la formation:', error);
+      }
+    );
+  }
+
+  deleteTraining(trainingId: number): void {
+    this.trainingService.deleteTraining(trainingId).subscribe(
+      (response) => {
+        // Rafraîchir la liste des formations après la suppression
+        this.trainingService.getTrainings().subscribe(
+          (data) => {
+            this.trainings = data;  // Met à jour la liste des formations
+            console.log('Formation supprimée avec succès');
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des formations après suppression', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Erreur lors de la suppression de la formation', error);
+      }
+    );
+  }
+  
+  
+  
+}  

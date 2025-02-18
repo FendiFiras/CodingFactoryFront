@@ -31,16 +31,38 @@
                           <th>End Date</th>
                           <th>Price</th>
                           <th>Training Type</th>
+                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr *ngFor="let training of trainings; let i = index">
                           <th scope="row">{{ i + 1 }}</th>
-                          <td>{{ training.trainingName }}</td>
-                          <td>{{ training.startDate | date: 'dd/MM/yyyy' }}</td>
-                          <td>{{ training.endDate | date: 'dd/MM/yyyy' }}</td>
-                          <td>{{ training.price | currency: 'USD' }}</td>
-                          <td>{{ training.trainingType }}</td>
+                          <td (dblclick)="enableEditing('trainingName', training)">
+                            <input *ngIf="isEditing(training, 'trainingName')" [(ngModel)]="training.trainingName" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'trainingName')">{{ training.trainingName }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('startDate', training)">
+                            <input *ngIf="isEditing(training, 'startDate')" [(ngModel)]="training.startDate" type="date" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'startDate')">{{ training.startDate | date: 'dd/MM/yyyy' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('endDate', training)">
+                            <input *ngIf="isEditing(training, 'endDate')" [(ngModel)]="training.endDate" type="date" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'endDate')">{{ training.endDate | date: 'dd/MM/yyyy' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('price', training)">
+                            <input *ngIf="isEditing(training, 'price')" [(ngModel)]="training.price" type="number" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'price')">{{ training.price | currency: 'USD' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('trainingType', training)">
+                            <select *ngIf="isEditing(training, 'trainingType')" [(ngModel)]="training.trainingType" (blur)="updateTraining(training)">
+                              <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
+                            </select>
+                            <span *ngIf="!isEditing(training, 'trainingType')">{{ training.trainingType }}</span>
+                          </td>
+                          <td>
+                            <button class="btn btn-danger rounded" (click)="deleteTraining(training.trainingId)">Delete</button>
+                            
+                          </td>
                         </tr>
                       </tbody>
                     </table>
