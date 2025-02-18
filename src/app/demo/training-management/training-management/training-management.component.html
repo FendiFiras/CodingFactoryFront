@@ -1,21 +1,27 @@
-<app-navigation class="pcoded-navbar" />
-<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light" />
+<app-navigation class="pcoded-navbar"></app-navigation>
+<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light"></app-nav-bar>
+
 <div class="pcoded-main-container">
   <div class="pcoded-wrapper">
     <div class="pcoded-content">
       <div class="pcoded-inner-content">
-        <app-breadcrumb />
+        <app-breadcrumb></app-breadcrumb>
         <div class="main-body">
           <div class="page-wrapper">
             <div class="row">
               <div class="col-xl-12">
                 <app-card cardTitle="Training List" [options]="false" blockClass="table-border-style">
                   <div class="mb-3">
-                    <button class="btn btn-primary" (click)="toggleAddTraining()">
+                    <button *ngIf="!showAddTraining" class="btn btn-primary" (click)="toggleAddTraining()">
                       <i class="fas fa-plus"></i> Add Training
                     </button>
                   </div>
-                  <div class="table-responsive">
+
+                  <!-- Formulaire d'ajout de formation, affiché quand showAddTraining est true -->
+                  <app-add-training *ngIf="showAddTraining"></app-add-training>
+
+                  <!-- Table des formations -->
+                  <div *ngIf="!showAddTraining" class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
@@ -30,7 +36,7 @@
                       <tbody>
                         <tr *ngFor="let training of trainings; let i = index">
                           <th scope="row">{{ i + 1 }}</th>
-                          <td>{{ training.trainingName }}</td> <!-- Correction ici -->
+                          <td>{{ training.trainingName }}</td>
                           <td>{{ training.startDate | date: 'dd/MM/yyyy' }}</td>
                           <td>{{ training.endDate | date: 'dd/MM/yyyy' }}</td>
                           <td>{{ training.price | currency: 'USD' }}</td>

@@ -15,6 +15,12 @@ import { Training } from '../../../Models/training.model';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
+
+
+
+
+  selector: 'app-add-training', // Ajoutez un selector ici
+
   standalone: true,
   imports: [
     CommonModule,
