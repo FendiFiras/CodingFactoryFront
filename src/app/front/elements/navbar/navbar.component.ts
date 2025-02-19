@@ -20,4 +20,7 @@ export class NavbarComponent {
   navigateToTrainingList() {
     this.router.navigate(['/TrainingList']);
   }
+  navigateToCourses() {
+    this.router.navigate(['/CoursesManagement']);
+  }
  }
