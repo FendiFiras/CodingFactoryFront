@@ -81,7 +81,7 @@ export class CoursesManagementComponent implements OnInit {
   }
 
   onUpdate(course: Courses): void {
-    this.courseService.updateCourse(course.courseId, course).subscribe(
+    this.courseService.updateCourse( course).subscribe(
       () => {
         console.log('Cours mis à jour');
       },

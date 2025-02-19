@@ -31,25 +31,34 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let course of courses">
+                                <!-- Nom du Cours -->
                                 <td>
                                     <input type="text" class="form-control" [(ngModel)]="course.courseName">
                                 </td>
+                        
+                                <!-- Description du Cours -->
                                 <td>
                                     <input type="text" class="form-control" [(ngModel)]="course.courseDescription">
                                 </td>
+                        
+                                <!-- Sélecteur de Difficulté -->
                                 <td>
-                                    <select class="form-select" [(ngModel)]="course.difficulty">
-                                        <option value="Beginner">Beginner</option>
-                                        <option value="Intermediate">Intermediate</option>
-                                        <option value="Advanced">Advanced</option>
+                                    <select class="form-select" name="difficulty" [(ngModel)]="course.difficulty">
+                                        <option value="EASY">Easy</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="DIFFICULT">Difficult</option>
+                                        <option value="ADVANCED">Advanced</option>
                                     </select>
                                 </td>
+                        
+                                <!-- Actions: Update / Delete -->
                                 <td>
                                     <button (click)="onUpdate(course)" class="btn btn-primary btn-sm">Update</button>
                                     <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
+                        
                     </table>
                 </div>
             </div>

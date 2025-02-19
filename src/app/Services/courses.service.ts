@@ -26,10 +26,10 @@ export class CourseService {
   }
   
 
-  // Mettre à jour un cours existant
-  updateCourse(id: number, course: Courses): Observable<Courses> {
-    return this.http.put<Courses>(`${this.apiUrl}/updateCourse/${id}`, course);
+  updateCourse(course: Courses): Observable<Courses> {
+    return this.http.put<Courses>(`${this.apiUrl}/updateCourse`, course);
   }
+  
 
   // Supprimer un cours
   deleteCourse(id: number): Observable<void> {
