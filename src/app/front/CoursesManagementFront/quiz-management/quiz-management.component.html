@@ -1,0 +1,112 @@
+<app-navbar></app-navbar>
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Quiz Management</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a routerLink="/">Home</a></li>
+            <li><span>Quizs</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="become-team">
+    <div class="container">
+        <div class="row">
+            <!-- Liste des quiz -->
+            <div class="col-lg-7 wow fadeInUp animated">
+                <div class="become-team__content">
+                    <h3 class="become-team__title">Available Quizzes</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 200px;">Name</th>
+                                    <th style="min-width: 150px;">Deadline</th>
+                                    <th style="min-width: 120px;">Min Grade</th>
+                                    <th style="min-width: 120px;">Time Limit (minutes)</th>
+                                    <th style="min-width: 120px;">Max Grade</th>
+                                    <th style="min-width: 150px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let quiz of quizzes">
+                                    <td><input type="text" class="form-control" [(ngModel)]="quiz.quizName"></td>
+                                    <td>
+                                        <!-- Input pour modifier la date -->
+                                        <input 
+                                            type="date" 
+                                            class="form-control" 
+                                            [(ngModel)]="quiz.deadline"
+                                            [ngModel]="formatDate(quiz.deadline)"
+                                            (ngModelChange)="quiz.deadline = $event"
+                                        >
+                                    
+                                        <!-- Affichage lisible de la date -->
+                                    </td>
+                                    
+                                     <td><input type="number" class="form-control" [(ngModel)]="quiz.minimumGrade"></td>
+                                    <td><input type="number" class="form-control" [(ngModel)]="quiz.timeLimit"></td>
+                                    <td><input type="number" class="form-control" [(ngModel)]="quiz.maxGrade"></td>
+                                    <td>
+                                        <button (click)="onUpdate(quiz)" class="btn btn-primary btn-sm">Update</button>
+                                        <button (click)="onDelete(quiz.idQuiz)" class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire d'ajout de quiz -->
+            <div class="col-lg-5 wow fadeInUp animated">
+                <div class="become-team__form-box">
+                    <h3 class="become-team__form-box__title">Add New Quiz</h3>
+                    <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+                        <div class="become-team__input-box">
+                            <input type="text" formControlName="quizName" class="form-control" placeholder="Quiz Name" required>
+                        </div>
+                        <div class="become-team__input-box">
+                            <input type="date" formControlName="deadline" class="form-control" required>
+                        </div>
+                        <div class="become-team__input-box">
+                            <select class="form-select form-select-lg" formControlName="minimumGrade" required style="height: 45px; font-size: 16px;">
+                                <option value="">Select Minimum Grade</option>
+                                <option *ngFor="let grade of [10, 20, 30, 40, 50, 60]" [value]="grade">
+                                    {{ grade }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="become-team__input-box">
+                            <select class="form-select form-select-lg" formControlName="timeLimit" required style="height: 45px; font-size: 16px;">
+                                <option value="">Select Time Limit (minutes)</option>
+                                <option *ngFor="let time of [10, 20, 30, 40, 50, 60]" [value]="time">
+                                    {{ time }} min
+                                </option>
+                            </select>
+                        </div>
+                        <div class="become-team__input-box">
+                            <select class="form-select form-select-lg" formControlName="maxGrade" required style="height: 45px; font-size: 16px;">
+                                <option value="">Select Max Grade</option>
+                                <option *ngFor="let grade of [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]" [value]="grade">
+                                    {{ grade }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="become-team__btn-box">
+                            <button type="submit" class="eduact-btn eduact-btn-second">
+                                Add Quiz
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<app-footer></app-footer>

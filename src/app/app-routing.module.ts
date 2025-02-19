@@ -10,6 +10,11 @@ import {AddSessionComponent}from './demo/training-management/add-session/add-ses
 import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists-training.component';
  import {TrainingInfoComponent} from './front/trainingFront/training-info/training-info.component'
  import {CoursesManagementComponent} from './front/CoursesManagementFront/courses-management/courses-management.component'
+ import {QuizManagementComponent} from './front/CoursesManagementFront/quiz-management/quiz-management.component'
+ 
+
+
+
 const routes: Routes = [
   {
     path: '',
@@ -54,6 +59,14 @@ const routes: Routes = [
   {
     path: 'CoursesManagement',  
     component: CoursesManagementComponent,
+    children:[]
+  },
+
+
+  {
+    path: 'QuizManagement',
+  
+    component: QuizManagementComponent,
     children:[]
   },
   {
