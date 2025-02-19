@@ -1,0 +1,111 @@
+<app-navbar></app-navbar> <!-- Utilisation du composant Navbar Angular -->
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Courses Management</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a routerLink="/">Home</a></li>
+            <li><span>Courses</span></li>
+        </ul>
+    </div>
+</section>
+
+<!-- Courses Table Start -->
+<section class="become-team">
+    <div class="container">
+        <div class="row">
+            <!-- Liste des Cours -->
+            <div class="col-lg-7 wow fadeInUp animated" data-wow-delay="300ms">
+                <div class="become-team__content">
+                    <h3 class="become-team__title">Available Courses</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Description</th>
+                                <th>Difficulty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let course of courses">
+                                <td>
+                                    <input type="text" class="form-control" [(ngModel)]="course.courseName">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" [(ngModel)]="course.courseDescription">
+                                </td>
+                                <td>
+                                    <select class="form-select" [(ngModel)]="course.difficulty">
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button (click)="onUpdate(course)" class="btn btn-primary btn-sm">Update</button>
+                                    <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+      <!-- Formulaire d'ajout de Cours -->
+<div class="col-lg-5 wow fadeInUp animated" data-wow-delay="400ms">
+    <div class="become-team__form-box">
+        <h3 class="become-team__form-box__title">Add New Course</h3>
+        <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+
+            <!-- Sélection du Training -->
+            <div class="become-team__input-box">
+                <label for="trainingId">Select Training:</label>
+                <select class="form-select" formControlName="trainingId" [(ngModel)]="selectedTrainingId" required>
+                    <option value="">Select Training</option>
+                    <option *ngFor="let training of trainings" [value]="training.trainingId">
+                        {{ training.trainingName }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Nom du Cours -->
+            <div class="become-team__input-box">
+                <label for="courseName">Course Name:</label>
+                <input type="text" class="form-control" formControlName="courseName" placeholder="Course Name" required>
+            </div>
+
+            <!-- Description du Cours -->
+            <div class="become-team__input-box">
+                <label for="courseDescription">Description:</label>
+                <input type="text" class="form-control" formControlName="courseDescription" placeholder="Description" required>
+            </div>
+
+            <!-- Sélection de la Difficulté -->
+            <div class="become-team__input-box">
+                <label for="difficulty">Select Difficulty:</label>
+                <select class="form-select" formControlName="difficulty" required>
+                    <option value="">Select Difficulty</option>
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="DIFFICULT">Difficult</option>
+                    <option value="ADVANCED">Advanced</option>
+                </select>
+            </div>
+
+            <!-- Bouton d'ajout -->
+            <div class="become-team__btn-box">
+                <button type="submit" class="eduact-btn eduact-btn-second">
+                    <span class="eduact-btn__curve"></span>Add Course<i class="icon-arrow"></i>
+                </button>
+            </div>
+        </form>
+        <div class="result"></div>
+    </div>
+</div>
+
+<!-- Courses Table End-->
+
+<app-footer></app-footer> <!-- Utilisation du composant Footer Angular -->

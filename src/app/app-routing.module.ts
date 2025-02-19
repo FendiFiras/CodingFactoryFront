@@ -9,6 +9,7 @@ import {AddTrainingComponent} from './demo/training-management/add-training/add-
 import {AddSessionComponent}from './demo/training-management/add-session/add-session.component'
 import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists-training.component';
  import {TrainingInfoComponent} from './front/trainingFront/training-info/training-info.component'
+ import {CoursesManagementComponent} from './front/CoursesManagementFront/courses-management/courses-management.component'
 const routes: Routes = [
   {
     path: '',
@@ -50,6 +51,11 @@ const routes: Routes = [
     children:[]
   },
 
+  {
+    path: 'CoursesManagement',  
+    component: CoursesManagementComponent,
+    children:[]
+  },
   {
     path: '',
     component: AdminComponent,
