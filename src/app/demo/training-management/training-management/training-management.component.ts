@@ -13,7 +13,8 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import {AddTrainingComponent} from '../add-training/add-training.component'
 import { Courses,CourseDifficulty } from 'src/app/Models/courses.model';
 import { CourseService } from 'src/app/Services/courses.service';
-
+import { Session } from '../../../Models/session.model';
+import {SessionService} from '../../../Services/session.service';
 
 @Component({
   selector: 'app-training-management',
@@ -39,10 +40,12 @@ export class TrainingManagementComponent implements OnInit {
   trainingTypes = Object.values(TrainingType);  // Récupérer les valeurs de l'enum TrainingType
   editing: { [key: number]: string[] } = {};  // Stocker les champs en édition pour chaque formation
   courses: Courses[] = [];
-
+  sessions: Session[] = [];
   constructor(
     private trainingService: TrainingService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private sessionService :SessionService
+  
   ) {}
   ngOnInit(): void {
     // Appelle la méthode du service pour récupérer les données
@@ -68,6 +71,17 @@ export class TrainingManagementComponent implements OnInit {
       console.error('Erreur lors de la récupération des cours', error);
     }
   );
+  this.sessionService.getSessions().subscribe(
+    (data) => {
+      console.log(data); // Affiche la réponse de l'API dans la console
+
+      this.sessions = data;  // Affecte les données reçues à la variable `courses`
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des cours', error);
+    }
+  );
+  
   }
 
   // Méthode pour basculer l'affichage du formulaire d'ajout
@@ -122,6 +136,42 @@ export class TrainingManagementComponent implements OnInit {
     );
   }
   
-  
+  deleteSession(sessionId: number): void {
+    this.sessionService.deleteSession(sessionId).subscribe(
+      () => {
+        // Mise à jour de la liste après suppression
+        this.sessions = this.sessions.filter(session => session.sessionId !== sessionId);
+        console.log('Session supprimée avec succès');
+      },
+      (error) => {
+        console.error('Erreur lors de la suppression de la session', error);
+      }
+    );
+  }
+   // Vérifier si un champ est en cours d'édition
+   isEditingS(session: Session, field: string): boolean {
+    return this.editing[session.sessionId] && this.editing[session.sessionId].includes(field);
+  }
+
+  // Activer l'édition d'un champ spécifique pour une session
+  enableEditingS(field: string, session: Session): void {
+    if (!this.editing[session.sessionId]) {
+      this.editing[session.sessionId] = [];
+    }
+    this.editing[session.sessionId].push(field);
+  }
+
+  // Mettre à jour la session après modification
+  updateSession(session: Session): void {
+    this.sessionService.updateSession(session).subscribe(
+      (response) => {
+        console.log('Session mise à jour avec succès:', response);
+        this.editing[session.sessionId] = [];  // Désactiver l'édition après mise à jour
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour de la session:', error);
+      }
+    );
+  }
   
 }  

@@ -14,5 +14,6 @@ export class CourseService {
   getCourses(): Observable<Courses[]> {
     return this.http.get<Courses[]>(`${this.apiUrl}/getAllCourses`); // Retourne la liste des cours
   }
+  
 }
 

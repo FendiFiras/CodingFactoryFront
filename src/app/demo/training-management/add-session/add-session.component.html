@@ -1,0 +1,77 @@
+<div class="container mt-4">
+    <h2>Add Session</h2>
+  
+    <!-- Formulaire pour ajouter une session -->
+    <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="sessionName">Session Name</label>
+        <input
+          id="sessionName"
+          class="form-control"
+          formControlName="sessionName"
+          placeholder="Enter session name"
+        />
+        <div *ngIf="sessionForm.get('sessionName').invalid && sessionForm.get('sessionName').touched" class="text-danger">
+          Session name is required.
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input
+          id="startDate"
+          class="form-control"
+          type="date"
+          formControlName="startDate"
+        />
+      </div>
+    
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input
+          id="endDate"
+          class="form-control"
+          type="date"
+          formControlName="endDate"
+        />
+      </div>
+    
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input
+          id="location"
+          class="form-control"
+          formControlName="location"
+          placeholder="Enter session location"
+        />
+      </div>
+    
+      <div class="form-group">
+        <label for="courseId">Course</label>
+        <select
+          id="courseId"
+          class="form-control"
+          formControlName="courseId"
+        >
+          <option *ngFor="let course of courses" [value]="course.courseId">
+            {{ course.courseName }}
+          </option>
+        </select>
+      </div>
+    
+      <div class="form-group">
+        <label for="program">Program</label>
+        <input
+          id="program"
+          class="form-control"
+          formControlName="program"
+          placeholder="Enter program name"
+        />
+      </div>
+    
+      <button type="submit" class="btn btn-primary" [disabled]="sessionForm.invalid">
+        Add Session
+      </button>
+    </form>
+  </div>
+  

@@ -10,17 +10,16 @@
           <div class="page-wrapper">
             <div class="row">
               <div class="col-xl-12">
+                
+                <!-- Liste des formations -->
                 <app-card cardTitle="Training List" [options]="false" blockClass="table-border-style">
                   <div class="mb-3">
                     <button *ngIf="!showAddTraining" class="btn btn-primary" (click)="toggleAddTraining()">
                       <i class="fas fa-plus"></i> Add Training
                     </button>
                   </div>
-
-                  <!-- Formulaire d'ajout de formation, affiché quand showAddTraining est true -->
                   <app-add-training *ngIf="showAddTraining"></app-add-training>
 
-                  <!-- Table des formations -->
                   <div *ngIf="!showAddTraining" class="table-responsive">
                     <table class="table">
                       <thead>
@@ -68,9 +67,63 @@
                     </table>
                   </div>
                 </app-card>
+
+                <!-- Liste des sessions -->
+                <app-card cardTitle="Session List" [options]="false" blockClass="table-border-style">
+                  <div class="mb-3">
+                   
+                
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Location</th>
+                          <th>Program</th>
+                          <th>Start Time</th>
+                          <th>End Time</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let session of sessions; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <!-- Location -->
+                          <td (dblclick)="enableEditingS('location', session)">
+                            <input *ngIf="isEditingS(session, 'location')" [(ngModel)]="session.location" (blur)="updateSession(session)" />
+                            <span *ngIf="!isEditingS(session, 'location')">{{ session.location }}</span>
+                          </td>
+                          
+                          <!-- Program -->
+                          <td (dblclick)="enableEditingS('program', session)">
+                            <input *ngIf="isEditingS(session, 'program')" [(ngModel)]="session.program" (blur)="updateSession(session)" />
+                            <span *ngIf="!isEditingS(session, 'program')">{{ session.program }}</span>
+                          </td>
+                          
+                          <!-- Start Time -->
+                          <td (dblclick)="enableEditingS('startTime', session)">
+                            <input *ngIf="isEditingS(session, 'startTime')" [(ngModel)]="session.startTime" type="datetime-local" (blur)="updateSession(session)" />
+                            <span *ngIf="!isEditingS(session, 'startTime')">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+                          </td>
+                          
+                          <!-- End Time -->
+                          <td (dblclick)="enableEditingS('endTime', session)">
+                            <input *ngIf="isEditingS(session, 'endTime')" [(ngModel)]="session.endTime" type="datetime-local" (blur)="updateSession(session)" />
+                            <span *ngIf="!isEditingS(session, 'endTime')">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+                          </td>
+                          
+                          <!-- Delete Button -->
+                          <td>
+                            <button class="btn btn-danger rounded" (click)="deleteSession(session.sessionId)">Delete</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      
+                    </table>
+                  </div>
+                </app-card>
+
+                <!-- Liste des cours -->
                 <app-card cardTitle="Course List" [options]="false" blockClass="table-border-style">
-          
-                  <!-- Table des cours -->
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -86,12 +139,13 @@
                           <th scope="row">{{ i + 1 }}</th>
                           <td>{{ course.courseName }}</td>
                           <td>{{ course.courseDescription }}</td>
-                          <td>{{ course.difficulty }}</td> <!-- Utiliser difficulty au lieu de CourseDifficulty -->
+                          <td>{{ course.difficulty }}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </app-card>
+
               </div>
             </div>
           </div>
