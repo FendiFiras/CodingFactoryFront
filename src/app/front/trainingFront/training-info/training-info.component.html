@@ -24,11 +24,7 @@
                 <div class="course-details__meta wow fadeInUp">
                     <h3 class="course-details__title">{{ selectedTraining.trainingName }}</h3>
                 </div>
-                <div class="course-details__duration wow fadeInUp" *ngIf="trainingDuration">
-                    <span class="icon-check"></span>
-                    <p>The duration of this training is {{ trainingDuration }} days.</p>
-                </div>
-                
+               
                 <div class="course-details__tabs tabs-box wow fadeInUp">
                     <ul class="course-details__tabs__lists tab-buttons list-unstyled">
                         <li data-tab="#overview" class="tab-btn active-btn"><span>Access Courses</span></li>
@@ -49,10 +45,10 @@
                                         <span class="icon-check"></span>
                                         End Date: {{ selectedTraining.endDate | date:'d MMMM yyyy' }}
                                     </li>
-                                    
-                                    
-                                    
-                                    
+                                
+                                    <li>
+                                        <span class="icon-check"></span>
+                                        This learning experience is designed to be completed in {{ trainingDuration }} days.                                    
                                     <li>
                                         <span class="icon-check"></span>
                                         Price: {{ selectedTraining.price | currency:'EUR' }}
