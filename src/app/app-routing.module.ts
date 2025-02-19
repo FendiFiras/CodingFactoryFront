@@ -7,6 +7,7 @@ import { LoginPageComponent } from './front/login-page/login-page.component';
 import { TrainingManagementComponent } from './demo/training-management/training-management/training-management.component';
 import {AddTrainingComponent} from './demo/training-management/add-training/add-training.component'
 import {AddSessionComponent}from './demo/training-management/add-session/add-session.component'
+import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists-training.component';
 const routes: Routes = [
   {
     path: '',
@@ -36,7 +37,13 @@ const routes: Routes = [
     component: AddSessionComponent,
     children:[]
   },
+  {
+    path: 'TrainingList',
+    component: ListsTrainingComponent,
+    children:[]
+  },
   
+   
 
   {
     path: '',

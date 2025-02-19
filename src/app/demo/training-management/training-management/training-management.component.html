@@ -52,11 +52,11 @@
                             <input *ngIf="isEditing(training, 'price')" [(ngModel)]="training.price" type="number" (blur)="updateTraining(training)" />
                             <span *ngIf="!isEditing(training, 'price')">{{ training.price | currency: 'USD' }}</span>
                           </td>
-                          <td (dblclick)="enableEditing('trainingType', training)">
-                            <select *ngIf="isEditing(training, 'trainingType')" [(ngModel)]="training.trainingType" (blur)="updateTraining(training)">
+                          <td (dblclick)="enableEditing('type', training)">
+                            <select *ngIf="isEditing(training, 'type')" [(ngModel)]="training.type" (blur)="updateTraining(training)">
                               <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
                             </select>
-                            <span *ngIf="!isEditing(training, 'trainingType')">{{ training.trainingType }}</span>
+                            <span *ngIf="!isEditing(training, 'type')">{{ training.type }}</span>
                           </td>
                           <td>
               <button class="btn btn-danger rounded" (click)="deleteTraining(training.trainingId)">Delete</button>

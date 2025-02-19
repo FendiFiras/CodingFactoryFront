@@ -4,7 +4,7 @@ export class Training {
     startDate: Date;
     endDate: Date;
     price: number;
-    trainingType: string;  // Utilisation de l'Enum
+    type: string;  // ✅ Le même nom que dans l'objet reçu
   }
   export enum TrainingType {
     ONLINE = 'ONLINE',

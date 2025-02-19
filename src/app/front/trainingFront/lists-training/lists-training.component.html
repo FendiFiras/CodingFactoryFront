@@ -1,0 +1,96 @@
+<app-navbar></app-navbar> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+                 
+
+<div class="stricky-header stricked-menu main-menu main-header-two">
+    <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+</div><!-- /.stricky-header -->
+    <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+        <div class="page-header__bg jarallax-img"></div><!-- /.page-header-bg -->
+        <div class="page-header__overlay"></div><!-- /.page-header-overlay -->
+        <div class="container text-center">
+            <h2 class="page-header__title">Training</h2><!-- /.page-title -->
+            <ul class="page-header__breadcrumb list-unstyled">
+                <li><a href="index.html">Home</a></li>
+                <li><span>Training</span></li>
+            </ul><!-- /.page-breadcrumb list-unstyled -->
+        </div><!-- /.container -->
+    </section><!-- /.page-header -->
+
+
+<!-- Training Card Start -->
+<section class="course-two course-two--page">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay="100ms" *ngFor="let training of trainings">
+                <div class="course-two__item">
+                    <div class="course-two__thumb">
+                        <img src="assets1/images/course/course-2-1.png" alt="{{ training.trainingName }}">
+                        <a class="course-two__like" href="javascript:void(0);"><span class="icon-like"></span></a>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 353 177">
+                            <path d="M37 0C16.5655 0 0 16.5655 0 37V93.4816C0 103.547 4.00259 113.295 11.7361 119.737C54.2735 155.171 112.403 177 176.496 177C240.589 177 298.718 155.171 341.261 119.737C348.996 113.295 353 103.546 353 93.4795V37C353 16.5655 336.435 0 316 0H37Z" />
+                        </svg>
+                    </div><!-- /.course-thumb -->
+                    <div class="course-two__content">
+                        <div class="course-two__time">
+                            <strong>Start Date:</strong> {{ training.startDate | date: 'd MMMM yyyy' }} <br>
+                        </div>
+                        <h3 class="course-two__title">
+                            <a href="javascript:void(0);">{{ training.trainingName }}</a>
+                        </h3>
+                        <div class="course-two__bottom">
+                            <div class="course-two__meta">
+                                <h4 class="course-two__meta__price"><strong>Price:</strong> {{ training.price | currency:'EUR' }}</h4>
+                                <p class="course-two__meta__class"><strong>Training Type:</strong> {{ training.type }}</p>
+                            </div>
+                        </div>
+                    </div><!-- /.course-content -->
+                    
+                    
+                </div><!-- /.course-card-two -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Training Card End -->
+
+
+
+
+
+
+
+
+
+
+
+           
+    <div class="course-two__shape-bottom wow fadeInLeft" data-wow-delay="400ms"><img src="assets1/images/shapes/course-shape-2.png" alt="eduact"></div>
+<!-- Course End -->
+
+<app-footer></app-footer> 
