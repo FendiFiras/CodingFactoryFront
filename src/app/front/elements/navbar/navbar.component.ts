@@ -16,4 +16,8 @@ export class NavbarComponent {
   navigateToLogin() {
     this.router.navigate(['/login']);
   }
+
+  navigateToTrainingList() {
+    this.router.navigate(['/TrainingList']);
+  }
  }

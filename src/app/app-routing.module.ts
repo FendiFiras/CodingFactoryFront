@@ -8,6 +8,7 @@ import { TrainingManagementComponent } from './demo/training-management/training
 import {AddTrainingComponent} from './demo/training-management/add-training/add-training.component'
 import {AddSessionComponent}from './demo/training-management/add-session/add-session.component'
 import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists-training.component';
+ import {TrainingInfoComponent} from './front/trainingFront/training-info/training-info.component'
 const routes: Routes = [
   {
     path: '',
@@ -43,7 +44,11 @@ const routes: Routes = [
     children:[]
   },
   
-   
+  {
+    path: 'TrainingInfo/:id',  // 🔹 ID dynamique de la formation
+    component: TrainingInfoComponent,
+    children:[]
+  },
 
   {
     path: '',

@@ -1,0 +1,91 @@
+<app-navbar></app-navbar>
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title wow fadeInUp">{{ selectedTraining?.trainingName }}</h2>
+        <ul class="page-header__breadcrumb list-unstyled wow fadeInUp">
+            <li><a href="/">Home</a></li>
+            <li><span>Training</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="course-details" *ngIf="selectedTraining">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="course-details__thumb wow fadeInUp">
+                    <img src="assets1/images/course/course-2-1.png">
+
+                </div>
+                
+                <div class="course-details__meta wow fadeInUp">
+                    <h3 class="course-details__title">{{ selectedTraining.trainingName }}</h3>
+                </div>
+
+                <div class="course-details__tabs tabs-box wow fadeInUp">
+                    <ul class="course-details__tabs__lists tab-buttons list-unstyled">
+                        <li data-tab="#overview" class="tab-btn active-btn"><span>Overview</span></li>
+                        <li data-tab="#curriculum" class="tab-btn"><span>Curriculum</span></li>
+                    </ul>
+                    <div class="tabs-content">
+                        <div class="tab fadeInUp animated active-tab" id="overview">
+                            <div class="course-details__overview">
+                                <p class="course-details__overview__text">
+                                    Details of our training: {{ selectedTraining.trainingName }}.
+                                </p>
+                                <ul class="list-unstyled course-details__overview__lists">
+                                    <li>
+                                        <span class="icon-check"></span>
+                                        Start Date: {{ selectedTraining.startDate | date:'d MMMM yyyy' }}
+                                    </li>
+                                    <li>
+                                        <span class="icon-check"></span>
+                                        End Date: {{ selectedTraining.endDate | date:'d MMMM yyyy' }}
+                                    </li>
+                                    <li>
+                                        <span class="icon-check"></span>
+                                        Duration: 
+                                        <span>{{ getTrainingDuration(selectedTraining.startDate, selectedTraining.endDate) }} days</span>
+                                    </li>
+                                    <li>
+                                        <span class="icon-check"></span>
+                                        Price: {{ selectedTraining.price | currency:'EUR' }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab fadeInUp animated" id="curriculum">
+                            <div class="course-details__curriculum">
+                                <h4 class="course-details__curriculum__title">Training Type: {{ selectedTraining.type }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 wow fadeInRight">
+                <div class="course-details__sidebar">
+                    <h3 class="course-details__sidebar__title">Join Us as a Student</h3>
+                    <ul class="course-details__sidebar__lists">
+                        <li><i class="icon-tag"></i> 
+                            Price: 
+                            <span>{{ selectedTraining.price | currency:'EUR' }}</span>
+                        </li>
+                        <li><i class="icon-envelope"></i> 
+                            <span style="color: #ff6600; font-weight: bold;">
+                                Upon successful payment, an email will be sent with more details.
+                            </span>
+                        </li>
+                        
+                    </ul>
+                    
+                    <a href="/contact" class="eduact-btn eduact-btn-second wow pulse">Enroll Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer></app-footer>
