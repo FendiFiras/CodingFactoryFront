@@ -60,9 +60,33 @@
                             <span *ngIf="!isEditing(training, 'trainingType')">{{ training.trainingType }}</span>
                           </td>
                           <td>
-                            <button class="btn btn-danger rounded" (click)="deleteTraining(training.trainingId)">Delete</button>
+              <button class="btn btn-danger rounded" (click)="deleteTraining(training.trainingId)">Delete</button>
                             
                           </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </app-card>
+                <app-card cardTitle="Course List" [options]="false" blockClass="table-border-style">
+          
+                  <!-- Table des cours -->
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Course Name</th>
+                          <th>Description</th>
+                          <th>Difficulty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let course of courses; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ course.courseName }}</td>
+                          <td>{{ course.courseDescription }}</td>
+                          <td>{{ course.difficulty }}</td> <!-- Utiliser difficulty au lieu de CourseDifficulty -->
                         </tr>
                       </tbody>
                     </table>

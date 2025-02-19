@@ -11,6 +11,10 @@ import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumb
 import { NavLogoComponent } from 'src/app/theme/layout/admin/navigation/nav-logo/nav-logo.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import {AddTrainingComponent} from '../add-training/add-training.component'
+import { Courses,CourseDifficulty } from 'src/app/Models/courses.model';
+import { CourseService } from 'src/app/Services/courses.service';
+
+
 @Component({
   selector: 'app-training-management',
   templateUrl: './training-management.component.html',
@@ -34,19 +38,36 @@ export class TrainingManagementComponent implements OnInit {
   showAddTraining: boolean = false; // Variable de contrôle pour afficher ou non AddTraining
   trainingTypes = Object.values(TrainingType);  // Récupérer les valeurs de l'enum TrainingType
   editing: { [key: number]: string[] } = {};  // Stocker les champs en édition pour chaque formation
+  courses: Courses[] = [];
 
-  constructor(private trainingService: TrainingService) {}
-
+  constructor(
+    private trainingService: TrainingService,
+    private courseService: CourseService
+  ) {}
   ngOnInit(): void {
     // Appelle la méthode du service pour récupérer les données
     this.trainingService.getTrainings().subscribe(
       (data) => {
+
+        console.log(data); // Affiche la réponse de l'API dans la console
+
         this.trainings = data;  // Affecte les données reçues à la variable `trainings`
       },
       (error) => {
         console.error('Erreur lors de la récupération des formations', error);
       }
     );
+    // Appelle la méthode du service pour récupérer les données des cours
+  this.courseService.getCourses().subscribe(
+    (data) => {
+      console.log(data); // Affiche la réponse de l'API dans la console
+
+      this.courses = data;  // Affecte les données reçues à la variable `courses`
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des cours', error);
+    }
+  );
   }
 
   // Méthode pour basculer l'affichage du formulaire d'ajout
