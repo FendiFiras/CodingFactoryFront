@@ -15,7 +15,7 @@ import { Courses,CourseDifficulty } from 'src/app/Models/courses.model';
 import { CourseService } from 'src/app/Services/courses.service';
 import { Session } from '../../../Models/session.model';
 import {SessionService} from '../../../Services/session.service';
-
+import { AddSessionComponent } from '../add-session/add-session.component';
 @Component({
   selector: 'app-training-management',
   templateUrl: './training-management.component.html',
@@ -31,12 +31,16 @@ import {SessionService} from '../../../Services/session.service';
     NavLogoComponent,
     NavBarComponent,
     BreadcrumbsComponent,
-    AddTrainingComponent
+    AddTrainingComponent,
+    AddSessionComponent
   ]
 })
 export class TrainingManagementComponent implements OnInit {
   trainings: Training[] = [];  // Déclare un tableau pour stocker les formations
   showAddTraining: boolean = false; // Variable de contrôle pour afficher ou non AddTraining
+  showAddSession: boolean = false;  // Contrôle l'affichage du formulaire d'ajout
+  showCoursesTable = true; // Contrôle l'affichage des cours
+
   trainingTypes = Object.values(TrainingType);  // Récupérer les valeurs de l'enum TrainingType
   editing: { [key: number]: string[] } = {};  // Stocker les champs en édition pour chaque formation
   courses: Courses[] = [];
@@ -83,10 +87,19 @@ export class TrainingManagementComponent implements OnInit {
   );
   
   }
+  // Toggle pour afficher/masquer le formulaire
+  toggleAddSession() {
+    this.showAddSession = !this.showAddSession;
+    this.showCoursesTable = !this.showAddTraining; // Masquer les cours lorsque la formation est ajoutée
+
+  }
+
 
   // Méthode pour basculer l'affichage du formulaire d'ajout
   toggleAddTraining() {
     this.showAddTraining = !this.showAddTraining;
+    this.showCoursesTable = !this.showAddTraining; // Masquer les cours lorsque la formation est ajoutée
+
   }
   // Activer l'édition pour un champ spécifique
   enableEditing(field: string, training: Training): void {

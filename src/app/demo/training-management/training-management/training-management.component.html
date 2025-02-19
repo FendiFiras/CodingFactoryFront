@@ -69,58 +69,69 @@
                 </app-card>
 
                 <!-- Liste des sessions -->
-                <app-card cardTitle="Session List" [options]="false" blockClass="table-border-style">
-                  <div class="mb-3">
-                   
-                
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Location</th>
-                          <th>Program</th>
-                          <th>Start Time</th>
-                          <th>End Time</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let session of sessions; let i = index">
-                          <th scope="row">{{ i + 1 }}</th>
-                          <!-- Location -->
-                          <td (dblclick)="enableEditingS('location', session)">
-                            <input *ngIf="isEditingS(session, 'location')" [(ngModel)]="session.location" (blur)="updateSession(session)" />
-                            <span *ngIf="!isEditingS(session, 'location')">{{ session.location }}</span>
-                          </td>
-                          
-                          <!-- Program -->
-                          <td (dblclick)="enableEditingS('program', session)">
-                            <input *ngIf="isEditingS(session, 'program')" [(ngModel)]="session.program" (blur)="updateSession(session)" />
-                            <span *ngIf="!isEditingS(session, 'program')">{{ session.program }}</span>
-                          </td>
-                          
-                          <!-- Start Time -->
-                          <td (dblclick)="enableEditingS('startTime', session)">
-                            <input *ngIf="isEditingS(session, 'startTime')" [(ngModel)]="session.startTime" type="datetime-local" (blur)="updateSession(session)" />
-                            <span *ngIf="!isEditingS(session, 'startTime')">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
-                          </td>
-                          
-                          <!-- End Time -->
-                          <td (dblclick)="enableEditingS('endTime', session)">
-                            <input *ngIf="isEditingS(session, 'endTime')" [(ngModel)]="session.endTime" type="datetime-local" (blur)="updateSession(session)" />
-                            <span *ngIf="!isEditingS(session, 'endTime')">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
-                          </td>
-                          
-                          <!-- Delete Button -->
-                          <td>
-                            <button class="btn btn-danger rounded" (click)="deleteSession(session.sessionId)">Delete</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                      
-                    </table>
-                  </div>
-                </app-card>
+              <!-- Liste des sessions -->
+<app-card cardTitle="Session List" [options]="false" blockClass="table-border-style">
+  <div class="mb-3">
+    <!-- Titre ajouté -->
+    <h4>Session for inPerson Trainings</h4>
+    
+    <!-- Bouton Add Session -->
+    <button *ngIf="!showAddSession" class="btn btn-primary" (click)="toggleAddSession()">
+      <i class="fas fa-plus"></i> Add Session
+    </button>
+
+    <app-add-session *ngIf="showAddSession"></app-add-session> <!-- Afficher le formulaire d'ajout de session -->
+  </div>
+
+  <div *ngIf="!showAddSession" class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Location</th>
+          <th>Program</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let session of sessions; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <!-- Location -->
+          <td (dblclick)="enableEditingS('location', session)">
+            <input *ngIf="isEditingS(session, 'location')" [(ngModel)]="session.location" (blur)="updateSession(session)" />
+            <span *ngIf="!isEditingS(session, 'location')">{{ session.location }}</span>
+          </td>
+          
+          <!-- Program -->
+          <td (dblclick)="enableEditingS('program', session)">
+            <input *ngIf="isEditingS(session, 'program')" [(ngModel)]="session.program" (blur)="updateSession(session)" />
+            <span *ngIf="!isEditingS(session, 'program')">{{ session.program }}</span>
+          </td>
+          
+          <!-- Start Time -->
+          <td (dblclick)="enableEditingS('startTime', session)">
+            <input *ngIf="isEditingS(session, 'startTime')" [(ngModel)]="session.startTime" type="datetime-local" (blur)="updateSession(session)" />
+            <span *ngIf="!isEditingS(session, 'startTime')">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+          
+          <!-- End Time -->
+          <td (dblclick)="enableEditingS('endTime', session)">
+            <input *ngIf="isEditingS(session, 'endTime')" [(ngModel)]="session.endTime" type="datetime-local" (blur)="updateSession(session)" />
+            <span *ngIf="!isEditingS(session, 'endTime')">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+          
+          <!-- Delete Button -->
+          <td>
+            <button class="btn btn-danger rounded" (click)="deleteSession(session.sessionId)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-card>
+
 
                 <!-- Liste des cours -->
                 <app-card cardTitle="Course List" [options]="false" blockClass="table-border-style">

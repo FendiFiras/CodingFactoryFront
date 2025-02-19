@@ -58,21 +58,36 @@ export class AddSessionComponent implements OnInit {
   // Méthode pour ajouter une session
   onSubmit() {
     if (this.sessionForm.valid) {
-      const courseId = this.sessionForm.value.courseId; // Récupérer le courseId du formulaire
-      const newSession: Session = this.sessionForm.value;
+      const courseId = this.sessionForm.value.courseId;
+      if (!courseId) {
+        console.error("Course ID is undefined!");
+        return;
+      }
+  
+      // Transformer les dates pour le backend
+      const newSession: Session = {
+        ...this.sessionForm.value,
+        startDate: new Date(this.sessionForm.value.startDate).toISOString(),
+        endDate: new Date(this.sessionForm.value.endDate).toISOString(),
+      };
+  
+      console.log("Données envoyées:", newSession); // Debug
+  
       this.sessionService.createSession(newSession, courseId).subscribe(
         (response) => {
-          console.log('Session added successfully:', response);
+          console.log("Session added successfully:", response);
           this.sessionForm.reset();
         },
         (error) => {
-          console.error('Error adding session:', error);
+          console.error("Error adding session:", error);
         }
       );
     } else {
-      console.error('Form is invalid');
+      console.error("Form is invalid");
     }
   }
+  
+  
   
   ngOnInit(): void {
     // Appeler la méthode pour récupérer les cours lors de l'initialisation du composant
