@@ -1,0 +1,57 @@
+.become-team__input-box {
+    margin-bottom: 20px;
+}
+
+.become-team__input-box input,
+.become-team__input-box select,
+.become-team__input-box label,
+.become-team__input-box input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.become-team__input-box label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.become-team__btn-box button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.become-team__btn-box button:hover {
+    background-color: #e55c00;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+

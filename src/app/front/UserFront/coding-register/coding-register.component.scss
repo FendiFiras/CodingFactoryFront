@@ -1,0 +1,83 @@
+.role-selection {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.role-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.role-card {
+    width: 150px;
+    height: 100px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.role-card:hover,
+.role-card input:checked + .role-content {
+    border-color: #007bff;
+    background: #e3f2fd;
+}
+
+.role-card input {
+    display: none;
+}
+
+.role-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.role-content i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #007bff;
+}
+/* Aligner le formulaire à gauche */
+.form-holder {
+    display: flex;
+    justify-content: flex-start; /* Aligner à gauche */
+    margin-left: 100px; /* Supprimer toute marge à gauche */
+    padding-left: 100px; /* Ajouter un espace à gauche si nécessaire */
+}
+
+.form-content {
+    width: 100%; /* Prendre toute la largeur disponible */
+    max-width: 500px; /* Ajuster la largeur maximale si nécessaire */
+    margin-left: 0; /* Supprimer toute marge à gauche */
+}
+
+    .iofrm-layout {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .form-holder {
+        flex: 1;
+        max-width: 500px;
+    }
+
+    .image-holder {
+        flex: 1;
+        text-align: center;
+    }
+
+    .image-holder img {
+        max-width: 60%;
+        height: auto;
+    }

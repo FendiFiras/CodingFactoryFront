@@ -1,0 +1,111 @@
+<app-navbar></app-navbar> 
+
+        <div class="stricky-header stricked-menu main-menu main-header-two">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+        <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+            <div class="page-header__bg jarallax-img"></div><!-- /.page-header-bg -->
+            <div class="page-header__overlay"></div><!-- /.page-header-overlay -->
+            <div class="container text-center">
+                <h2 class="page-header__title">Become an Instructor</h2><!-- /.page-title -->
+                <ul class="page-header__breadcrumb list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li><span>Instructor</span></li>
+                </ul><!-- /.page-breadcrumb list-unstyled -->
+            </div><!-- /.container -->
+        </section><!-- /.page-header -->
+        <!-- team-details-start -->
+        <section class="become-team">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 wow fadeInUp animated" data-wow-delay="300ms">
+                        <div class="become-team__content">
+                            <h3 class="become-team__title">Instructor Rules</h3>
+                            <ul class="become-team__list">
+                                <li>There are many variations of passages of Lorem Ipsum available</li>
+                                <li>suffered alteration in some form, by injected humour, or randomised words which
+                                    don't look</li>
+                                <li>ou need to be sure there isn't anything embarrassing hidden</li>
+                                <li>If you are going to use a passage of Lorem Ipsum, </li>
+                                <li>There are many variations of passages of Lorem Ipsum available</li>
+                            </ul>
+                            <h3 class="become-team__title">Areas of Expertise</h3>
+                            <p class="become-team__text">
+                                There are many variations of passages of Lorem Ipsum available, but the majority have
+                                suffered alteration in some form,
+                                by injected humour, or randomised words which don't look even slightly believable. If
+                                you are going to use a passage of
+                                Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle
+                                of text.
+                            </p>
+                            <h3 class="become-team__title">Education</h3>
+                            <p class="become-team__text">
+                                There are many variations of passages of Lorem Ipsum available, but the majority have
+                                suffered alteration in some form,
+                                by injected humour, or randomised words which don't look even slightly believable. If
+                                you are going to use a passage of
+                                Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle
+                                of text.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 wow fadeInUp animated" data-wow-delay="400ms">
+                        <div class="become-team__form-box">
+                            <h3 class="become-team__form-box__title">Apply for Registration</h3>
+                            
+                              
+                              <form (ngSubmit)="registerInstructor()" enctype="multipart/form-data">
+                                <div class="become-team__input-box">
+                                  <input type="text" placeholder="Your Name" [(ngModel)]="newUser.firstName" name="firstName" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="text" placeholder="Your Last Name" [(ngModel)]="newUser.lastName" name="lastName" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="email" placeholder="Email Address" [(ngModel)]="newUser.email" name="email" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="date" placeholder="Date of Birth" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="text" placeholder="Phone Number" [(ngModel)]="newUser.phoneNumber" name="phoneNumber" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="text" placeholder="Address" [(ngModel)]="newUser.address" name="address" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <input type="text" placeholder="Speciality" [(ngModel)]="newUser.speciality" name="speciality" required>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <select id="gender" [(ngModel)]="newUser.gender" name="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option [value]="Gender.MALE">Male</option>
+                                    <option [value]="Gender.FEMALE">Female</option>
+                                  </select>
+                                </div>
+                                <div class="become-team__input-box">
+                                  <label for="cv">Upload CV</label>
+                                  <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+                                </div>
+                                <div class="become-team__btn-box">
+                                  <button type="submit" class="eduact-btn eduact-btn-second">
+                                    <span class="eduact-btn__curve"></span>Become an Instructor<i class="icon-arrow"></i>
+                                  </button>
+                                </div>
+                                <div *ngIf="successMessage" class="alert alert-success">
+                                    {{ successMessage }}
+                                  </div>
+                                  
+                                  <div *ngIf="errorMessage" class="alert alert-danger">
+                                    {{ errorMessage }}
+                                  </div>
+                              </form>
+                              
+
+                            <div class="result"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <app-footer></app-footer> 

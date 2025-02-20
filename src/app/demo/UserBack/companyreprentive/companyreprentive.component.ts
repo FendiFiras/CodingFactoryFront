@@ -1,0 +1,99 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Pour la modale Bootstrap
+
+@Component({
+  selector: 'app-companyreprentive',
+  imports: [SharedModule],
+  templateUrl: './companyreprentive.component.html',
+  styleUrl: './companyreprentive.component.scss'
+})
+export class CompanyreprentiveComponent implements OnInit {
+  users: any[] = []; // Liste des utilisateurs
+  editForm: FormGroup; // Formulaire réactif pour la modification
+  selectedUser: any; // Utilisateur sélectionné pour la modification
+
+  constructor(
+    private userService: UserService,
+    private fb: FormBuilder, // Pour créer le formulaire réactif
+    private modalService: NgbModal // Pour gérer la modale
+  ) {
+    // Initialisation du formulaire réactif
+    this.editForm = this.fb.group({
+      idUser: [''], // Champ caché pour l'ID de l'utilisateur
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [''],
+      address: [''],
+      role: [''],
+      companyName: [''],
+      dateOfBirth: [''],
+      gender: [''],
+      grade: [''],
+      image: [''],
+      password: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.getUsersByRole('COMPANYREPRESENTIVE'); // Charger la liste des représentants d'entreprise au démarrage
+  }
+
+  // Récupérer la liste des représentants d'entreprise
+  getUsersByRole(role: string): void {
+    this.userService.getUsersByRole(role).subscribe(
+      (data) => {
+        this.users = data;
+        console.log('Users:', this.users); // Log pour vérifier les données
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des utilisateurs', error);
+      }
+    );
+  }
+
+  // Ouvrir la modale de modification
+  openEditModal(user: any, content: any): void {
+    this.selectedUser = user; // Stocker l'utilisateur sélectionné
+    this.editForm.patchValue(user); // Pré-remplir le formulaire avec les données de l'utilisateur
+    this.modalService.open(content, { ariaLabelledBy: 'editUserModalLabel' }); // Ouvrir la modale
+  }
+
+  // Soumettre le formulaire de modification
+  onSubmit(): void {
+    if (this.editForm.valid) {
+      const updatedUser = this.editForm.value; // Récupérer les valeurs du formulaire
+      this.userService.modifyUser(updatedUser).subscribe(
+        (response) => {
+          console.log('Utilisateur modifié :', response);
+          this.getUsersByRole('COMPANYREPRESENTIVE'); // Rafraîchir la liste des représentants d'entreprise
+          this.modalService.dismissAll(); // Fermer la modale
+        },
+        (error) => {
+          console.error('Erreur lors de la modification de l\'utilisateur', error);
+        }
+      );
+    }
+  }
+
+  // Supprimer un utilisateur
+  deleteUser(id: number): void {
+    if (!id) {
+      console.error('ID is undefined or invalid');
+      return;
+    }
+    console.log('Deleting user with ID:', id); // Log pour vérifier l'ID
+    this.userService.deleteUser(id).subscribe(
+      () => {
+        console.log('Utilisateur supprimé avec succès');
+        this.getUsersByRole('COMPANYREPRESENTIVE'); // Rafraîchir la liste des représentants d'entreprise
+      },
+      (error) => {
+        console.error('Erreur lors de la suppression de l\'utilisateur', error);
+      }
+    );
+  }
+}

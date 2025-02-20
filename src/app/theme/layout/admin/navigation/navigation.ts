@@ -54,19 +54,54 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         icon: 'feather icon-server'
       },
+     
       {
-        id: 'Users Managment',
-        title: 'Users Managment',
-        type: 'item',
-        url: '/Users/bootstrap',
-        classes: 'nav-item',
-        icon: 'feather icon-server'
+        id: 'UsersManagement',
+        title: 'Users Management',
+        type: 'collapse', // Permet l'expansion des éléments enfants
+        icon: 'feather icon-server',
+        children: [
+          {
+            
+            id: 'Users Managment',
+            title: 'List of Users',
+            type: 'item',
+            url: '/listeUsers',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+            
+          },
+          {
+            id: 'StudentManagement',
+            title: 'Student Management',
+            type: 'item',
+            url: '/student',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+          },
+          {
+            id: 'InstructorManagement',
+            title: 'Instructor Management',
+            type: 'item',
+            url: '/instructor',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+          },
+          {
+            id: 'CompanyRepresentativeManagement',
+            title: 'Company Representative Management',
+            type: 'item',
+            url: '/companyrepresentive',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+          }
+        ]
       },
       {
         id: 'Courses Managment',
         title: 'Courses Managment',
         type: 'item',
-        url: '/Courses/bootstrap',
+        url: '/companyrepresentive',
         classes: 'nav-item',
         icon: 'feather icon-server'
       },

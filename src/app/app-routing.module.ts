@@ -4,6 +4,12 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
 import { LoginPageComponent } from './front/login-page/login-page.component';
+import { CodingRegisterComponent } from './front/UserFront/coding-register/coding-register.component';
+import { CodingLoginComponent } from './front/UserFront/coding-login/coding-login.component';
+import { ForgetPasswdComponent } from './front/UserFront/forget-passwd/forget-passwd.component';
+import { InstructorComponent } from './front/UserFront/instructor/instructor.component';
+import { ListeUsersComponent } from './demo/UserBack/liste-users/liste-users.component';
+
 
 const routes: Routes = [
   {
@@ -17,7 +23,19 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginPageComponent
+    component: CodingLoginComponent
+  },
+  {
+    path: 'becomeainstructor',
+    component: InstructorComponent
+  },
+  {
+    path: 'register',
+    component: CodingRegisterComponent
+  },
+  {
+    path: 'forget',
+    component: ForgetPasswdComponent
   },
   {
     path: '',
@@ -26,6 +44,22 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+      },
+      {
+        path: 'listeUsers',
+        loadComponent: () => import('./demo/UserBack/liste-users/liste-users.component').then((c) => c.ListeUsersComponent)
+      },
+      {
+        path: 'student',
+        loadComponent: () => import('./demo/UserBack/student/student.component').then((c) => c.StudentComponent)
+      },
+      {
+        path: 'instructor',
+        loadComponent: () => import('./demo/UserBack/instructor/instructor.component').then((c) => c.InstructorComponent)
+      },
+      {
+        path: 'companyrepresentive',
+        loadComponent: () => import('./demo/UserBack/companyreprentive/companyreprentive.component').then((c) => c.CompanyreprentiveComponent)
       },
       {
         path: 'basic',
@@ -39,6 +73,7 @@ const routes: Routes = [
         path: 'tables',
         loadChildren: () => import('./demo/pages/tables/tables.module').then((m) => m.TablesModule)
       },
+      
       {
         path: 'apexchart',
         loadComponent: () => import('./demo/pages/core-chart/apex-chart/apex-chart.component')

@@ -1,0 +1,91 @@
+/* Aligner le formulaire à gauche */
+.form-holder {
+    display: flex;
+    justify-content: flex-start; /* Aligner à gauche */
+    margin-left: 100px; /* Supprimer toute marge à gauche */
+    padding-left: 100px; /* Ajouter un espace à gauche si nécessaire */
+}
+
+.form-content {
+    width: 100%; /* Prendre toute la largeur disponible */
+    max-width: 500px; /* Ajuster la largeur maximale si nécessaire */
+    margin-left: 0; /* Supprimer toute marge à gauche */
+}
+
+    .iofrm-layout {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .form-holder {
+        flex: 1;
+        max-width: 500px;
+    }
+
+    .image-holder {
+        flex: 1;
+        text-align: center;
+    }
+
+    .image-holder img {
+        max-width: 40%;
+        height: auto;
+    }
+    .form-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Prend toute la hauteur de l'écran */
+        background-color: #f8f9fa; /* Couleur de fond */
+    }
+    
+    .iofrm-layout {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px; /* Largeur maximale */
+        width: 100%;
+        background-color: #fff; /* Fond blanc pour le formulaire */
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    }
+    
+    .form-holder {
+        flex: 1;
+        padding: 20px;
+    }
+    
+    .image-holder {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .image-holder img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .form-content {
+        max-width: 400px; /* Largeur maximale du formulaire */
+        width: 100%;
+        margin: 0 auto; /* Centrer le formulaire */
+    }
+    
+    .form-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Espacement entre les éléments */
+    }
+    
+    .form-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .other-links {
+        display: flex;
+        justify-content: center;
+        gap: 10px; /* Espacement entre les icônes */
+    }

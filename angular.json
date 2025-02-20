@@ -30,7 +30,9 @@
               "src/favicon.ico",
               "src/assets",
               "src/fake-data",
-              "src/assets1"
+              "src/assets1",
+              "src/assets2"
+
             ],
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",
