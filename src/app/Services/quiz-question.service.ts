@@ -36,4 +36,9 @@ export class QuizQuestionService {
   updateAnswer(answer: QuizAnswer): Observable<QuizAnswer> {
     return this.http.put<QuizAnswer>(`${this.apiUrl}/answers_update`, answer);
   }
+
+  // ✅ Récupérer toutes les questions
+  getAllQuestions(): Observable<QuizQuestion[]> {
+    return this.http.get<QuizQuestion[]>(`${this.apiUrl}/GetAllquestion`);
+  }
 }

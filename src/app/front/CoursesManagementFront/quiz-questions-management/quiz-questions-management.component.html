@@ -15,11 +15,57 @@
 <section class="become-team">
     <div class="container">
         <div class="row">
+            
+            <!-- 📌 Tableau d'affichage des questions (Gauche) -->
             <div class="col-lg-7 wow fadeInUp animated">
                 <div class="become-team__content">
-                    <h3 class="become-team__title">Add Question with Answers</h3>
+                    <h3 class="become-team__title">Existing Questions</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Question</th>
+                                <th>Max Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let question of questions; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ question.questionText }}</td>
+                                <td>{{ question.maxGrade }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm me-2" (click)="toggleAnswers(i)">
+                                        {{ showAnswersIndex === i ? 'Hide' : 'Show' }} Answers
+                                    </button>
+                                    <button class="btn btn-warning btn-sm me-2" (click)="editQuestion(question)">✏ Edit</button>
+                                    <button class="btn btn-danger btn-sm" (click)="deleteQuestion(question.idQuizQ)">🗑 Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 📌 Affichage des réponses sous chaque question -->
+                    <div *ngIf="showAnswersIndex !== null" class="mt-3">
+                        <h5 class="text-primary">Answers for: {{ questions[showAnswersIndex]?.questionText }}</h5>
+                        <ul class="list-group">
+                            <li *ngFor="let answer of questions[showAnswersIndex]?.quizAnswers" class="list-group-item d-flex justify-content-between">
+                                {{ answer.answerText }} 
+                                <span class="badge bg-success" *ngIf="answer.isCorrect">✔ Correct</span>
+                                <span class="badge bg-danger" *ngIf="!answer.isCorrect">✖ Incorrect</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📌 Formulaire d'ajout de question (Droite) -->
+            <div class="col-lg-5 wow fadeInUp animated">
+                <div class="become-team__form-box">
+                    <h3 class="become-team__form-box__title">Add Question with Answers</h3>
                     <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
                         
+                        <!-- Sélection du quiz -->
                         <div class="become-team__input-box">
                             <select class="form-select" formControlName="quizId" required>
                                 <option value="">Select Quiz</option>
@@ -29,38 +75,52 @@
                             </select>
                         </div>
 
+                        <!-- Champ pour la question -->
                         <div class="become-team__input-box">
                             <input type="text" formControlName="questionText" class="form-control" placeholder="Enter the question" required>
                         </div>
 
+                        <!-- Champ pour la note max -->
                         <div class="become-team__input-box">
                             <input type="number" formControlName="maxGrade" class="form-control" placeholder="Max Grade" required>
                         </div>
-
-                        <!-- Liste des réponses dynamiques -->
                         <div class="become-team__input-box">
                             <h4>Answers</h4>
                             <div formArrayName="answers">
-                                <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
-                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
+                                <div [formGroup]="answers.at(0)" class="answer-group">
+                                    <!-- Champ texte pour la réponse -->
+                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer 1" required>
                         
-                                    <!-- ✅ La checkbox fonctionne en Angular, mais on convertira en 1/0 avant l'envoi -->
-                                    <input type="checkbox" formControlName="isCorrect">
-                                    <label>Correct</label>
+                                    <!-- Checkbox avec mise à jour forcée -->
+                                    <div class="input-group-text">
+                                        <input type="checkbox" formControlName="isCorrect" (change)="updateCorrectValue(0)">
+                                        <label class="ms-2">Correct</label>
+                                    </div>
                         
-                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
+                                    <!-- Bouton de suppression -->
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(0)">Remove</button>
                                 </div>
                             </div>
+                        
+                            <!-- Bouton pour ajouter une réponse -->
                             <button type="button" class="btn btn-secondary mt-2" (click)="addAnswer()">+ Add Answer</button>
                         </div>
                         
-
-                        <button type="submit" class="eduact-btn eduact-btn-second">
-                            <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
-                        </button>
+                        
+                        
+                        <!-- Boutons -->
+                        <div class="become-team__btn-box d-flex justify-content-between">
+                            <button type="submit" class="eduact-btn eduact-btn-second">
+                                <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
+                            </button>
+                            <button type="button" class="eduact-btn eduact-btn-second" (click)="manageQuizzes()">
+                                <span class="eduact-btn__curve"></span>Manage Quizzes<i class="icon-arrow"></i>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
