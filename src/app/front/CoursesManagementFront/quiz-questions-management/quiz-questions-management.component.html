@@ -87,25 +87,24 @@
                         <div class="become-team__input-box">
                             <h4>Answers</h4>
                             <div formArrayName="answers">
-                                <div [formGroup]="answers.at(0)" class="answer-group">
+                                <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
                                     <!-- Champ texte pour la réponse -->
-                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer 1" required>
+                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
                         
                                     <!-- Checkbox avec mise à jour forcée -->
                                     <div class="input-group-text">
-                                        <input type="checkbox" formControlName="isCorrect" (change)="updateCorrectValue(0)">
+                                        <input type="checkbox" formControlName="isCorrect" (change)="updateCorrectValue(i)">
                                         <label class="ms-2">Correct</label>
                                     </div>
                         
                                     <!-- Bouton de suppression -->
-                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(0)">Remove</button>
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
                                 </div>
                             </div>
                         
                             <!-- Bouton pour ajouter une réponse -->
                             <button type="button" class="btn btn-secondary mt-2" (click)="addAnswer()">+ Add Answer</button>
                         </div>
-                        
                         
                         
                         <!-- Boutons -->
