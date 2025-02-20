@@ -12,7 +12,7 @@ import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists
  import {CoursesManagementComponent} from './front/CoursesManagementFront/courses-management/courses-management.component'
  import {QuizManagementComponent} from './front/CoursesManagementFront/quiz-management/quiz-management.component'
  
-
+import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/quiz-questions-management/quiz-questions-management.component'
 
 
 const routes: Routes = [
@@ -69,6 +69,14 @@ const routes: Routes = [
     component: QuizManagementComponent,
     children:[]
   },
+  {
+    path: 'QuizQuestionsManagemet',
+  
+    component: QuizQuestionsManagementComponent,
+    children:[]
+  },
+
+  
   {
     path: '',
     component: AdminComponent,

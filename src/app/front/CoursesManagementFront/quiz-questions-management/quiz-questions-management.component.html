@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Quiz Questions Management</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a routerLink="/">Home</a></li>
+            <li><span>Quiz Questions</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="become-team">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 wow fadeInUp animated">
+                <div class="become-team__content">
+                    <h3 class="become-team__title">Add Question with Answers</h3>
+                    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+                        
+                        <div class="become-team__input-box">
+                            <select class="form-select" formControlName="quizId" required>
+                                <option value="">Select Quiz</option>
+                                <option *ngFor="let quiz of quizzes" [value]="quiz.idQuiz">
+                                    {{ quiz.quizName }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="become-team__input-box">
+                            <input type="text" formControlName="questionText" class="form-control" placeholder="Enter the question" required>
+                        </div>
+
+                        <div class="become-team__input-box">
+                            <input type="number" formControlName="maxGrade" class="form-control" placeholder="Max Grade" required>
+                        </div>
+
+                        <!-- Liste des réponses dynamiques -->
+                        <div class="become-team__input-box">
+                            <h4>Answers</h4>
+                            <div formArrayName="answers">
+                                <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
+                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
+                        
+                                    <!-- ✅ La checkbox fonctionne en Angular, mais on convertira en 1/0 avant l'envoi -->
+                                    <input type="checkbox" formControlName="isCorrect">
+                                    <label>Correct</label>
+                        
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary mt-2" (click)="addAnswer()">+ Add Answer</button>
+                        </div>
+                        
+
+                        <button type="submit" class="eduact-btn eduact-btn-second">
+                            <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer></app-footer>
