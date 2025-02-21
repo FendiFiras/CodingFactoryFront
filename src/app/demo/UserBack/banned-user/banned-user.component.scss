@@ -1,0 +1,19 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .table-responsive {
+    margin-top: 20px;
+  }
+  
+  thead {
+    background-color: #f8f9fa;
+  }
+  

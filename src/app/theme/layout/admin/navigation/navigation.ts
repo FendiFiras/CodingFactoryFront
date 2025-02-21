@@ -86,6 +86,13 @@ export const NavigationItems: NavigationItem[] = [
             url: '/instructor',
             icon: 'feather icon-server',
             breadcrumbs: false
+          }, {
+            id: 'BannedUsers',
+            title: 'Banned Users',
+            type: 'item',
+            url: '/banned-user',
+            icon: 'feather icon-server',
+            breadcrumbs: false
           },
           {
             id: 'CompanyRepresentativeManagement',
@@ -95,6 +102,9 @@ export const NavigationItems: NavigationItem[] = [
             icon: 'feather icon-server',
             breadcrumbs: false
           }
+
+
+         
         ]
       },
       {

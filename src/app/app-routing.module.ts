@@ -59,7 +59,11 @@ const routes: Routes = [
       },
       {
         path: 'companyrepresentive',
-        loadComponent: () => import('./demo/UserBack/companyreprentive/companyreprentive.component').then((c) => c.CompanyreprentiveComponent)
+        loadComponent: () => import('./demo/UserBack/companyreprentive/companyreprentive.component').then((c) => c.CompanyReprentiveComponent)
+      },
+      {
+        path: 'banned-user',
+        loadComponent: () => import('./demo/UserBack/banned-user/banned-user.component').then((c) => c.BannedUsersComponent)
       },
       {
         path: 'basic',

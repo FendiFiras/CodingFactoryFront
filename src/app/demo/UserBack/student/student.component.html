@@ -38,6 +38,7 @@
               <td>
                 <button class="btn btn-primary btn-sm" (click)="openEditModal(user, editModal)">Edit</button>
                 <button class="btn btn-danger btn-sm" (click)="deleteUser(user.idUser)">Delete</button>
+                <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>
               </td>
             </tr>
           </tbody>
@@ -107,3 +108,30 @@
       </form>
     </div>
   </ng-template>
+   <!-- Modale pour ajouter un BanLog -->
+<ng-template #banModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
+      <div class="mb-3">
+        <label for="banDuration" class="form-label">Ban Duration</label>
+        <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
+      </div>
+      <div class="mb-3">
+        <label for="banReason" class="form-label">Ban Reason</label>
+        <input type="text" class="form-control" id="banReason" formControlName="banReason">
+      </div>
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-control" id="status" formControlName="status">
+          <option value="ACTIVE">Active</option>
+          <option value="EXPIRED">Expired</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-warning">Ban User</button>
+    </form>
+  </div>
+</ng-template>

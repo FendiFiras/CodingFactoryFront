@@ -1,11 +1,15 @@
+import { User } from "./user";
+
 export class BanLog {
     idBan?: number;
   banDuration?: Date;
   banReason?: string;
   status?: Status;
+  user: User = new User();
   
 }
 export enum Status {
     ACTIVE = 'ACTIVE',
-    EXPIRED = 'EXPIRED'
+    EXPIRED = 'EXPIRED',
+    CANCELLED='CANCELLED'
   }

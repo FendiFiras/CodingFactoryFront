@@ -1,0 +1,83 @@
+<div class="col-xl-12">
+  <app-card cardTitle="Banned Users List" [options]="false" blockClass="table-border-style">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Ban Duration</th>
+            <th>Ban Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let banLog of bannedUsers; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ banLog.user?.firstName || 'N/A' }}</td>
+            <td>{{ banLog.user?.lastName || 'N/A' }}</td>
+            <td>{{ banLog.user?.email || 'N/A' }}</td>
+            <td>{{ banLog.user?.role || 'N/A' }}</td>
+            <td>{{ banLog.banDuration | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ banLog.banReason || 'N/A' }}</td>
+            <td>{{ banLog.status || 'N/A' }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="openEditModal(banLog)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteBanLog(banLog.idBan)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </app-card>
+</div>
+
+<!-- Modale pour l'édition -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Edit Ban Log</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <input type="hidden" formControlName="idBan">
+
+      <!-- Infos User (lecture seule) -->
+      <div class="mb-3">
+        <label class="form-label">First Name</label>
+        <input type="text" class="form-control" [value]="selectedBanLog?.user?.firstName" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Last Name</label>
+        <input type="text" class="form-control" [value]="selectedBanLog?.user?.lastName" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" [value]="selectedBanLog?.user?.email" readonly>
+      </div>
+
+      <!-- Champs modifiables -->
+      <div class="mb-3">
+        <label class="form-label">Ban Duration</label>
+        <input type="datetime-local" class="form-control" formControlName="banDuration">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Ban Reason</label>
+        <input type="text" class="form-control" formControlName="banReason">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select class="form-control" formControlName="status">
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+  </div>
+</ng-template>

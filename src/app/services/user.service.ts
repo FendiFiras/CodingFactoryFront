@@ -24,7 +24,7 @@ export class UserService {
     return this.http.get<User[]>(url);
   }
   modifyUser(user: User): Observable<User> {
-    const url = `${this.apiUrl}`;
+    const url = `${this.apiUrl}/${user.idUser}`; // Include the user ID in the URL
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<User>(url, user, { headers });
   }
