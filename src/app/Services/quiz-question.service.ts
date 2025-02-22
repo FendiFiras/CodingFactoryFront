@@ -12,10 +12,11 @@ export class QuizQuestionService {
 
   constructor(private http: HttpClient) {}
 
-  // Récupérer toutes les questions d'un quiz
   getQuestionsByQuiz(quizId: number): Observable<QuizQuestion[]> {
     return this.http.get<QuizQuestion[]>(`${this.apiUrl}/quiz/${quizId}/questions`);
   }
+  
+  
 
   // Ajouter une question avec ses réponses
   addQuestionWithAnswers(quizId: number, question: QuizQuestion, answers: QuizAnswer[]): Observable<void> {

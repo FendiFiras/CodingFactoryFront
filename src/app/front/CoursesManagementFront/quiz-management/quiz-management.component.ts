@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
+import { Router } from '@angular/router'; // ✅ Importer Router
 
 @Component({
   selector: 'app-quiz-management',
@@ -20,7 +21,9 @@ export class QuizManagementComponent implements OnInit {
 
   constructor(
     private quizService: QuizService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router // ✅ Injecter Router
+
   ) {
     this.quizForm = this.fb.group({
       quizName: ['', Validators.required],
@@ -94,6 +97,10 @@ export class QuizManagementComponent implements OnInit {
     const parsedDate = new Date(date);
     return parsedDate.toISOString().split('T')[0]; // Convertir en format YYYY-MM-DD
   }
-  
-  
+  manageQuizzes(): void {
+    window.location.href = "/QuizQuestionsManagemet";
+  }
+  manageQuizQuestions(quizId: number): void {
+    this.router.navigate(['/QuizQuestionsManagement', quizId]); // Passer l'ID du quiz dans l'URL
+  }
 }

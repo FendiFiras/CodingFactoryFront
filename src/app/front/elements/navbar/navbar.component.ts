@@ -23,4 +23,11 @@ export class NavbarComponent {
   navigateToCourses() {
     this.router.navigate(['/CoursesManagement']);
   }
+  navigateToQuizQuestion() {
+    this.router.navigate(['/QuizQuestionsManagemet']); 
+  }
+  navigateToQuizManagement() {
+    this.router.navigate(['/QuizManagement']); 
+  }
  }
+ 

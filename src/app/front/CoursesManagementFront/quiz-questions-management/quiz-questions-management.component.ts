@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router'; // ✅ Importer ActivatedRoute
 
 @Component({
   selector: 'app-quiz-questions-management',
@@ -24,14 +25,17 @@ export class QuizQuestionsManagementComponent implements OnInit {
   questionForm: FormGroup;
   editingQuestion: QuizQuestion | null = null;
   showAnswersIndex: number | null = null; // Garde l'index de la question affichée
+  selectedQuizName: string = ''; // ✅ Stocke le nom du quiz sélectionné
 
   constructor(
     private quizService: QuizService,
     private quizQuestionService: QuizQuestionService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route: ActivatedRoute // ✅ Injecter ActivatedRoute
+
   ) {
     this.questionForm = this.fb.group({
-      quizId: ['', Validators.required], //  Ajout manuel car `QuizQuestion` ne l'a pas
+      quizId: [{ value: '', disabled: true }, Validators.required], // ✅ Désactivé au chargement
       questionText: ['', Validators.required],
       maxGrade: ['', [Validators.required, Validators.min(1)]],
       answers: this.fb.array([]) //  Liste des réponses associées
@@ -40,8 +44,17 @@ export class QuizQuestionsManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadQuizzes();
-    this.loadQuestions(); //  Récupération des questions et réponses
-  }
+ 
+    this.route.paramMap.subscribe(params => {
+      const quizId = Number(params.get('id'));
+      if (!isNaN(quizId)) {
+        this.loadQuizDetails(quizId); // ✅ Charger les détails du quiz sélectionné
+
+        this.loadQuestionsByQuiz(quizId);
+      }
+    });  }
+
+    
 
   //  Charger les quiz existants
   loadQuizzes(): void {
@@ -51,6 +64,48 @@ export class QuizQuestionsManagementComponent implements OnInit {
     );
   }
 
+  loadQuestionsByQuiz(quizId: number): void {
+    this.quizQuestionService.getQuestionsByQuiz(quizId).subscribe(
+      (data) => {
+        console.log("📢 Données brutes reçues du backend :", JSON.stringify(data, null, 2));
+
+        // ✅ Normaliser `correct` pour s'assurer qu'il est bien un booléen
+        this.questions = data.map(question => ({
+          ...question,
+          quizAnswers: question.quizAnswers.map(answer => ({
+            ...answer,
+            isCorrect: this.convertToBoolean(answer.correct) // ✅ Correction ici
+          }))
+        }));
+
+        console.log("📌 Données après conversion :", this.questions);
+      },
+      (error) => {
+        console.error('❌ Erreur lors du chargement des questions', error);
+      }
+    );
+}
+
+private convertToBoolean(value: any): boolean {
+  if (typeof value === 'boolean') return value; // ✅ Déjà un booléen
+  if (typeof value === 'number') return value === 1; // ✅ Convertir `1` en `true`, `0` en `false`
+  if (typeof value === 'string') return value.trim().toLowerCase() === "true"; // ✅ Convertir `"true"` en `true`
+  return false; // ✅ Par défaut, `false`
+}
+
+
+// ✅ Charger les détails du quiz sélectionné
+loadQuizDetails(quizId: number): void {
+  this.quizService.getQuizById(quizId).subscribe(
+    (quiz) => {
+      this.selectedQuizName = quiz.quizName; // ✅ Met à jour le nom affiché dans l'input
+      this.questionForm.patchValue({ quizId: quiz.idQuiz }); // ✅ Met à jour l'ID du quiz
+    },
+    (error) => {
+      console.error("Erreur lors du chargement des détails du quiz", error);
+    }
+  );
+}
   //  Charger toutes les questions
   loadQuestions(): void {
     this.quizQuestionService.getAllQuestions().subscribe( //  Correction `getQuestions()`
@@ -67,10 +122,11 @@ export class QuizQuestionsManagementComponent implements OnInit {
     this.answers.push(
       this.fb.group({
         answerText: ['', Validators.required],
-        correct: [false]
+        isCorrect: [false] // ✅ Initialisé comme `false` (Boolean)
       })
     );
-  }
+}
+
 
   //  Supprimer une réponse
   removeAnswer(index: number): void {
@@ -92,13 +148,10 @@ export class QuizQuestionsManagementComponent implements OnInit {
             idQuizQ: this.editingQuestion ? this.editingQuestion.idQuizQ : undefined,
             questionText: this.questionForm.get('questionText')?.value,
             maxGrade: this.questionForm.get('maxGrade')?.value,
-            quizAnswers: this.answers.value.map(answer => {
-                console.log(`📢 Vérification AVANT conversion:`, answer);
-                return {
-                    answerText: answer.answerText,
-                    correct: answer.isCorrect ? 1 : 0  // ✅ Assure que `correct` est bien `1/0`
-                };
-            })
+            quizAnswers: this.answers.value.map(answer => ({
+                answerText: answer.answerText,
+                correct: !!answer.isCorrect // ✅ Assure que `isCorrect` est bien un `boolean`
+            }))
         };
 
         console.log("🚀 Question prête à être envoyée :", newQuestion);
@@ -108,7 +161,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
             this.quizQuestionService.updateQuestion(newQuestion).subscribe(
                 () => {
                     console.log('✅ Question mise à jour avec succès');
-                    this.loadQuestions();
+                    this.loadQuestionsByQuiz(quizId);
                     this.cancelEdit();
                 },
                 (error) => {
@@ -120,7 +173,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
             this.quizQuestionService.addQuestionWithAnswers(quizId, newQuestion, newQuestion.quizAnswers).subscribe(
                 () => {
                     console.log('✅ Question ajoutée avec succès');
-                    this.loadQuestions();
+                    this.loadQuestionsByQuiz(quizId);
                     this.questionForm.reset();
                     this.answers.clear();
                 },
@@ -133,6 +186,8 @@ export class QuizQuestionsManagementComponent implements OnInit {
         console.warn("⚠️ Veuillez remplir tous les champs et ajouter au moins une réponse !");
     }
 }
+
+
 
   
   
@@ -152,7 +207,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
       this.answers.push(
         this.fb.group({
           answerText: ans.answerText,
-          isCorrect: !!ans.isCorrect // ✅ Assure que la valeur reste un `boolean`
+          isCorrect: !!ans.correct
         })
       );
     });

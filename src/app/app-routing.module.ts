@@ -70,10 +70,8 @@ const routes: Routes = [
     children:[]
   },
   {
-    path: 'QuizQuestionsManagemet',
-  
+    path: 'QuizQuestionsManagement/:id', // ✅ Ajouter l'ID du quiz dans l'URL
     component: QuizQuestionsManagementComponent,
-    children:[]
   },
 
   

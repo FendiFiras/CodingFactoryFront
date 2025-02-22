@@ -51,8 +51,11 @@
                         <ul class="list-group">
                             <li *ngFor="let answer of questions[showAnswersIndex]?.quizAnswers" class="list-group-item d-flex justify-content-between">
                                 {{ answer.answerText }} 
-                                <span class="badge bg-success" *ngIf="answer.isCorrect">✔ Correct</span>
-                                <span class="badge bg-danger" *ngIf="!answer.isCorrect">✖ Incorrect</span>
+                                <span class="badge bg-success" *ngIf="answer.correct === true">✔ Correct</span>
+                                <span class="badge bg-danger" *ngIf="answer.correct === false">✖ Incorrect</span>
+
+                                
+
                             </li>
                         </ul>
                     </div>
@@ -65,15 +68,12 @@
                     <h3 class="become-team__form-box__title">Add Question with Answers</h3>
                     <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
                         
-                        <!-- Sélection du quiz -->
-                        <div class="become-team__input-box">
-                            <select class="form-select" formControlName="quizId" required>
-                                <option value="">Select Quiz</option>
-                                <option *ngFor="let quiz of quizzes" [value]="quiz.idQuiz">
-                                    {{ quiz.quizName }}
-                                </option>
-                            </select>
-                        </div>
+                    <!-- ✅ Remplace le select par un input readonly -->
+<div class="become-team__input-box">
+    <label for="quizName">Quiz Selected</label>
+    <input type="text" id="quizName" class="form-control" [value]="selectedQuizName" readonly>
+</div>
+
 
                         <!-- Champ pour la question -->
                         <div class="become-team__input-box">
@@ -96,7 +96,7 @@
                                         <input type="checkbox" formControlName="isCorrect" (change)="updateCorrectValue(i)">
                                         <label class="ms-2">Correct</label>
                                     </div>
-                        
+                                    
                                     <!-- Bouton de suppression -->
                                     <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
                                 </div>

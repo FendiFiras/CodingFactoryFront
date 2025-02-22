@@ -55,39 +55,47 @@ export class AddSessionComponent implements OnInit {
     });
   }
 
-  // Méthode pour ajouter une session
-  onSubmit() {
-    if (this.sessionForm.valid) {
-      const courseId = this.sessionForm.value.courseId;
+  // Méthode pour ajouter une session sans transformation ISO
+onSubmit() {
+  if (this.sessionForm.valid) {
+      const courseId = this.sessionForm.get('courseId')?.value;
       if (!courseId) {
-        console.error("Course ID is undefined!");
-        return;
+          console.error("❌ Course ID is undefined or null!");
+          return;
       }
-  
-      // Transformer les dates pour le backend
+
+      // Récupération des valeurs de date sans transformation
+      const startDate = this.sessionForm.get('startDate')?.value;
+      const endDate = this.sessionForm.get('endDate')?.value;
+
+      if (!startDate || !endDate) {
+          console.error("❌ StartDate or EndDate is missing!");
+          return;
+      }
+
+      // Création de l'objet session sans modification des dates
       const newSession: Session = {
-        ...this.sessionForm.value,
-        startDate: new Date(this.sessionForm.value.startDate).toISOString(),
-        endDate: new Date(this.sessionForm.value.endDate).toISOString(),
+          ...this.sessionForm.value,
+          startDate: startDate,  // ✅ Envoi de la date brute
+          endDate: endDate
       };
-  
-      console.log("Données envoyées:", newSession); // Debug
-  
+
+      console.log("📢 Données envoyées au backend:", newSession);
+
       this.sessionService.createSession(newSession, courseId).subscribe(
-        (response) => {
-          console.log("Session added successfully:", response);
-          this.sessionForm.reset();
-        },
-        (error) => {
-          console.error("Error adding session:", error);
-        }
+          (response) => {
+              console.log("✅ Session added successfully:", response);
+              this.sessionForm.reset();
+          },
+          (error) => {
+              console.error("❌ Error adding session:", error);
+          }
       );
-    } else {
-      console.error("Form is invalid");
-    }
+  } else {
+      console.error("⚠️ Form is invalid");
   }
-  
-  
+}
+
   
   ngOnInit(): void {
     // Appeler la méthode pour récupérer les cours lors de l'initialisation du composant

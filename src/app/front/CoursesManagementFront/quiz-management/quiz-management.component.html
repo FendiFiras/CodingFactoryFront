@@ -53,6 +53,8 @@
                                     <td>
                                         <button (click)="onUpdate(quiz)" class="btn btn-primary btn-sm">Update</button>
                                         <button (click)="onDelete(quiz.idQuiz)" class="btn btn-danger btn-sm">Delete</button>
+                                        <button (click)="manageQuizQuestions(quiz.idQuiz)" class="btn btn-info btn-sm">Manage</button> <!-- ✅ Nouveau bouton -->
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -97,10 +99,12 @@
                             </select>
                         </div>
                         <div class="become-team__btn-box">
-                            <button type="submit" class="eduact-btn eduact-btn-second">
+                            <button type="submit" class="eduact-btn eduact-btn-second me-2">
                                 Add Quiz
                             </button>
+                           
                         </div>
+                        
                     </form>
                 </div>
             </div>
