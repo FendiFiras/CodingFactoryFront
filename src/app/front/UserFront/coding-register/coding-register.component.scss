@@ -26,7 +26,7 @@
 
 .role-card:hover,
 .role-card input:checked + .role-content {
-    border-color: #007bff;
+    border-color: #ff6200;
     background: #e3f2fd;
 }
 
@@ -45,7 +45,7 @@
 .role-content i {
     font-size: 24px;
     margin-bottom: 5px;
-    color: #007bff;
+    color: #ff6200;
 }
 /* Aligner le formulaire à gauche */
 .form-holder {
@@ -80,4 +80,15 @@
     .image-holder img {
         max-width: 60%;
         height: auto;
+    }
+    .ibtn {
+        background-color: #ff6200 !important;
+        color: #fff !important;
+    }.form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ff6200;
+        border-radius: 5px;
+        font-size: 16px;
     }

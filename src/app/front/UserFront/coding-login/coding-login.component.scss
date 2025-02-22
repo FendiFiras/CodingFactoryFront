@@ -1,91 +1,140 @@
-/* Aligner le formulaire à gauche */
-.form-holder {
+/* Style de base pour le conteneur du formulaire */
+.form-container {
     display: flex;
-    justify-content: flex-start; /* Aligner à gauche */
-    margin-left: 100px; /* Supprimer toute marge à gauche */
-    padding-left: 100px; /* Ajouter un espace à gauche si nécessaire */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f5f7;
+    padding: 20px;
+    position: relative;
 }
 
+/* Style pour l'image à gauche */
+.left-image {
+    width: 30%;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Style pour la boîte du formulaire */
+.form-box {
+    width: 50%;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    text-align: center;
+}
+
+/* Style pour le contenu du formulaire */
 .form-content {
-    width: 100%; /* Prendre toute la largeur disponible */
-    max-width: 500px; /* Ajuster la largeur maximale si nécessaire */
-    margin-left: 0; /* Supprimer toute marge à gauche */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-    .iofrm-layout {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
+/* Style pour les éléments du formulaire */
+.form-items {
+    width: 100%;
+}
 
-    .form-holder {
-        flex: 1;
-        max-width: 500px;
-    }
+/* Style pour les liens de navigation (Login et Register en noir) */
+.page-links {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
 
-    .image-holder {
-        flex: 1;
-        text-align: center;
-    }
+.page-links a {
+    text-decoration: none;
+    color: #000; /* Noir */
+    font-weight: bold;
+}
 
-    .image-holder img {
-        max-width: 40%;
-        height: auto;
-    }
-    .form-body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Prend toute la hauteur de l'écran */
-        background-color: #f8f9fa; /* Couleur de fond */
-    }
-    
-    .iofrm-layout {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px; /* Largeur maximale */
-        width: 100%;
-        background-color: #fff; /* Fond blanc pour le formulaire */
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
-    }
-    
-    .form-holder {
-        flex: 1;
-        padding: 20px;
-    }
-    
-    .image-holder {
-        flex: 1;
-        text-align: center;
-    }
-    
-    .image-holder img {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    .form-content {
-        max-width: 400px; /* Largeur maximale du formulaire */
-        width: 100%;
-        margin: 0 auto; /* Centrer le formulaire */
-    }
-    
-    .form-items {
-        display: flex;
-        flex-direction: column;
-        gap: 15px; /* Espacement entre les éléments */
-    }
-    
-    .form-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .other-links {
-        display: flex;
-        justify-content: center;
-        gap: 10px; /* Espacement entre les icônes */
-    }
+.page-links a.active {
+    color: #000; /* Noir */
+    border-bottom: 2px solid #fff; /* Bordure orange pour le lien actif */
+}
+
+/* Style pour l'alerte */
+.alert-warning {
+    background-color: #fff3cd;
+    color: #ff6200;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Style pour les champs de formulaire */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ff6200;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Style pour le bouton de soumission (Login en orange) */
+.ibtn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff6200; /* Orange */
+    color: #ff6200; /* Texte en blanc */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.ibtn:hover {
+    background-color: #e65a00; /* Orange plus foncé au survol */
+}
+
+/* Style pour le lien "Forget password?" */
+.form-button a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #ff6200; /* Orange */
+    text-decoration: none;
+}
+
+.form-button a:hover {
+    text-decoration: underline;
+}
+
+/* Style pour les liens de connexion sociale */
+.other-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.other-links span {
+    display: block;
+    margin-bottom: 10px;
+    color: #060606;
+}
+
+.other-links a {
+    margin: 0 10px;
+    color: #ff6200;
+    font-size: 20px;
+}
+
+.other-links a:hover {
+    color: #ff6200; /* Orange au survol */
+}
+
+/* Style pour l'image en haut à droite */
+.top-right-image {
+    position: absolute;
+    top: 60px;
+    right: 190px;
+    width: 100px;
+    height: auto;
+}.ibtn {
+    background-color: #ff6200 !important;
+    color: #fff !important;
+}

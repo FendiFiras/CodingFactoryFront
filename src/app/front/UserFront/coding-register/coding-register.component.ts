@@ -4,12 +4,13 @@ import { User, Gender, Role } from 'src/app/models/user';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FooterComponent } from '../../elements/footer/footer.component';
 
 @Component({
   selector: 'app-coding-register',
   imports: [
     BrowserModule,
-    FormsModule,
+    FormsModule,FooterComponent,
     HttpClientModule
   ],
   templateUrl: './coding-register.component.html',

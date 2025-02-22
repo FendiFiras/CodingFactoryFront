@@ -1,44 +1,49 @@
+<div class="form-container">
+    <!-- Image à gauche -->
+    <img class="left-image" src="assets2/images/graphic13-1.svg" alt="Graphic">
 
-    <div class="form-body">
-        <div class="website-logo">
-            <a href="index.html">
-                <div class="logo">
-                    <img class="logo-size" src="images/logo-light.svg" alt="">
+    <div class="form-box">
+        <div class="form-content">
+            <div class="form-items">
+                <div class="page-links">
+                    <a href="login" class="active">Login</a>
+                    <a href="register">Register</a>
                 </div>
-            </a>
-        </div>
-        <div class="iofrm-layout">
-            
-            <div class="form-holder">
-                <div class="form-content">
-                    <div class="form-items">
-                        
-                        <div class="page-links">
-                            <a href="login" class="active">Login</a><a href="register">Register</a>
-                        </div>
-                        <div class="alert alert-warning alert-dismissible fade show with-icon" role="alert">
-                            Please fill the following form with your information
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form>
-                            <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
-                            <input class="form-control" type="password" name="password" placeholder="Password" required>
-                            <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="forget">Forget password?</a>
-                            </div>
-                        </form>
-                        <div class="other-links">
-                            <span>Or register with</span><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i
-                                    class="fab fa-google"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
+
+                <div class="alert alert-warning">
+                    Please fill the following form with your information
+                </div>
+
+                <!-- Formulaire de connexion -->
+                <form id="loginForm">
+                    <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
+                    <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    <div class="form-button">
+                        <button type="submit" class="ibtn">Login</button>
+                        <a href="forget">Forget password?</a>
                     </div>
+                </form>
+
+                <!-- Formulaire d'inscription (masqué par défaut) -->
+                <form id="registerForm" style="display: none;">
+                    <input class="form-control" type="text" name="fullname" placeholder="Full Name" required>
+                    <input class="form-control" type="email" name="email" placeholder="E-mail Address" required>
+                    <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    <div class="form-button">
+                        <button type="submit" class="ibtn">Register</button>
+                    </div>
+                </form>
+
+                <div class="other-links">
+                    <span>Or login with</span>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
-            </div>
-            <div class="image-holder">
-                <img src="assets2/images/graphic15.svg" alt="Graphic">
             </div>
         </div>
     </div>
-    
+
+    <!-- Image en haut à droite -->
+    <img class="top-right-image" src="assets2/images/graphic13-2.svg" alt="Graphic">
+</div>
