@@ -42,4 +42,12 @@ export class QuizQuestionService {
   getAllQuestions(): Observable<QuizQuestion[]> {
     return this.http.get<QuizQuestion[]>(`${this.apiUrl}/GetAllquestion`);
   }
+
+  getAnswersByQuestionId(questionId: number): Observable<QuizAnswer[]> {
+    return this.http.get<QuizAnswer[]>(`${this.apiUrl}/questions/${questionId}/answers`);
+  }
+  addAnswerToQuestion(questionId: number, newAnswer: QuizAnswer): Observable<QuizAnswer> {
+    return this.http.post<QuizAnswer>(`${this.apiUrl}/questions/${questionId}/answers`, newAnswer);
+  }
+  
 }

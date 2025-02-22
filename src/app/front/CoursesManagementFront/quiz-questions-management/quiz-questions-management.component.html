@@ -65,8 +65,10 @@
             <!-- 📌 Formulaire d'ajout de question (Droite) -->
             <div class="col-lg-5 wow fadeInUp animated">
                 <div class="become-team__form-box">
-                    <h3 class="become-team__form-box__title">Add Question with Answers</h3>
-                    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+                    <h3 class="become-team__form-box__title">
+                        {{ isEditing ? 'Update Question with Answers' : 'Add Question with Answers' }}
+                    </h3>
+                                        <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
                         
                     <!-- ✅ Remplace le select par un input readonly -->
 <div class="become-team__input-box">
