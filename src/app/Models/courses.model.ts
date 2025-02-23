@@ -4,6 +4,7 @@ export class Courses {
         courseName: string;
         courseDescription: string;
         difficulty:string;
+        fileUrls:string
 }
 
 export enum CourseDifficulty {

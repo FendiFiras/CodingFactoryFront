@@ -26,38 +26,30 @@
                                 <th>Course Name</th>
                                 <th>Description</th>
                                 <th>Difficulty</th>
+                                <th>File</th>
+
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let course of courses">
-                                <!-- Nom du Cours -->
+                                <td>{{ course.courseName }}</td>
+                                <td>{{ course.courseDescription }}</td>
+                                <td>{{ course.difficulty }}</td>
                                 <td>
-                                    <input type="text" class="form-control" [(ngModel)]="course.courseName">
+                                    <a *ngIf="course.fileUrls" [href]="course.fileUrls" target="_blank" class="btn btn-info btn-sm">
+                                        📂 {{ getFileName(course.fileUrls) }}
+                                    </a>
+                                    <span *ngIf="!course.fileUrls" class="text-muted">No File</span>
                                 </td>
-                        
-                                <!-- Description du Cours -->
-                                <td>
-                                    <input type="text" class="form-control" [(ngModel)]="course.courseDescription">
-                                </td>
-                        
-                                <!-- Sélecteur de Difficulté -->
-                                <td>
-                                    <select class="form-select" name="difficulty" [(ngModel)]="course.difficulty">
-                                        <option value="EASY">Easy</option>
-                                        <option value="MEDIUM">Medium</option>
-                                        <option value="DIFFICULT">Difficult</option>
-                                        <option value="ADVANCED">Advanced</option>
-                                    </select>
-                                </td>
-                        
-                                <!-- Actions: Update / Delete -->
+                                
                                 <td>
                                     <button (click)="onUpdate(course)" class="btn btn-primary btn-sm">Update</button>
                                     <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
-                        </tbody>
+                            </tbody>
+                            
                         
                     </table>
                 </div>
@@ -103,6 +95,11 @@
                     <option value="ADVANCED">Advanced</option>
                 </select>
             </div>
+<div class="become-team__input-box">
+    <label for="file">Upload File:</label>
+    <input type="file" class="form-control" (change)="onFileSelected($event)">
+</div>
+
 
             <!-- Bouton d'ajout -->
             <div class="become-team__btn-box">

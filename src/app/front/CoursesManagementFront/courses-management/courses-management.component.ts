@@ -23,6 +23,8 @@ export class CoursesManagementComponent implements OnInit {
   courseForm: FormGroup;
   selectedTrainingId: number | null = null;
   userId: number = 1; //fixer user 1 pour faire le test 
+  selectedFileUrl: string = ''; // ✅ Stocker l'URL locale du fichier importé
+  selectedFile!: File;
 
   constructor(
     private fb: FormBuilder,
@@ -63,23 +65,28 @@ export class CoursesManagementComponent implements OnInit {
       }
     );
   }
-
-  onSubmit(): void {
+onSubmit(): void {
     if (this.courseForm.valid) {
-      const newCourse: Courses = this.courseForm.value;
-      this.courseService.addCourse(newCourse, this.selectedTrainingId).subscribe(
-        (data) => {
-          console.log('Cours ajouté :', data);
-
-          this.courses.push(data);
-          this.courseForm.reset();
-        },
-        (error) => {
-          console.error('Erreur lors de l\'ajout du cours', error);
-        }
-      );
+        const newCourse: Courses = this.courseForm.value;
+        newCourse.fileUrls = this.selectedFileUrl; // ✅ Associer le fichier sélectionné
+        
+        this.courseService.addCourse(newCourse, this.selectedTrainingId!)
+            .subscribe(
+                (data) => {
+                    console.log('Cours ajouté avec fichier :', data);
+                    this.courses.push(data);
+                    this.courseForm.reset();
+                    this.selectedFileUrl = ''; // Réinitialiser après ajout
+                },
+                (error) => {
+                    console.error('Erreur lors de l\'ajout du cours', error);
+                }
+            );
     }
-  }
+}
+
+  
+  
 
   onUpdate(course: Courses): void {
     this.courseService.updateCourse( course).subscribe(
@@ -102,4 +109,17 @@ export class CoursesManagementComponent implements OnInit {
       }
     );
   }
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0]; 
+    if (file) {
+        this.selectedFileUrl = `assets/uploads/${file.name}`; // 🔥 Stocker l'URL locale du fichier
+    }
+}
+
+  getFileName(fileUrl: string): string {
+    if (!fileUrl) return 'No File';
+    return fileUrl.split('/').pop() || 'No File'; // 🔥 Extraire le dernier élément de l'URL
+  }
+  
+  
 }
