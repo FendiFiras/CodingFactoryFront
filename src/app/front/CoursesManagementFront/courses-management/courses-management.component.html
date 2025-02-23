@@ -32,24 +32,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let course of courses">
-                                <td>{{ course.courseName }}</td>
-                                <td>{{ course.courseDescription }}</td>
-                                <td>{{ course.difficulty }}</td>
-                                <td>
-                                    <a *ngIf="course.fileUrls" [href]="course.fileUrls" target="_blank" class="btn btn-info btn-sm">
-                                        📂 {{ getFileName(course.fileUrls) }}
-                                    </a>
-                                    <span *ngIf="!course.fileUrls" class="text-muted">No File</span>
-                                </td>
-                                
-                                <td>
-                                    <button (click)="onUpdate(course)" class="btn btn-primary btn-sm">Update</button>
-                                    <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                            
+                     <!-- Affichage des fichiers importés pour chaque cours -->
+<tr *ngFor="let course of courses">
+    <td>{{ course.courseName }}</td>
+    <td>{{ course.courseDescription }}</td>
+    <td>{{ course.difficulty }}</td>
+    <td>
+        <a *ngIf="course.fileUrls" [href]="course.fileUrls" target="_blank" class="btn btn-info btn-sm">📂 View File</a>
+    </td>
+    <td>
+        <button (click)="onUpdate(course)" class="btn btn-primary btn-sm">Update</button>
+        <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
+    </td>
+</tr>
+
+                        </tbody>
                         
                     </table>
                 </div>
@@ -95,11 +92,6 @@
                     <option value="ADVANCED">Advanced</option>
                 </select>
             </div>
-<div class="become-team__input-box">
-    <label for="file">Upload File:</label>
-    <input type="file" class="form-control" (change)="onFileSelected($event)">
-</div>
-
 
             <!-- Bouton d'ajout -->
             <div class="become-team__btn-box">

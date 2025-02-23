@@ -1,0 +1,59 @@
+
+<app-navbar></app-navbar> <!-- Utilisation du composant Navbar Angular -->
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Courses Available</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a routerLink="/">Training</a></li>
+            <li><span>Courses</span></li>
+        </ul>
+    </div>
+</section>
+<section class="become-team">
+    <div class="container">
+        <h3 class="text-center mb-4 fw-bold animated-title">
+            📘 Available Courses
+        </h3>
+
+        <div class="row">
+            <div *ngFor="let course of courses; let i = index" class="col-lg-4 col-md-6 col-sm-12">
+                <div class="course-card">
+                    
+                    <!-- 🌟 Image du cours -->
+                    <div class="course-card-img">
+                        <img [src]="getCourseImage(course.courseId)" alt="Course Image">
+                    </div>
+
+                    <div class="course-card-body">
+                        <h5 class="course-title">{{ course.courseName }}</h5>
+                        <p class="course-description">{{ course.courseDescription }}</p>
+
+                        <!-- 🔥 Niveau de difficulté -->
+                        <span [ngClass]="{
+                            'difficulty-easy': course.difficulty === 'EASY',
+                            'difficulty-medium': course.difficulty === 'MEDIUM',
+                            'difficulty-difficult': course.difficulty === 'DIFFICULT',
+                            'difficulty-advanced': course.difficulty === 'ADVANCED'
+                        }" class="badge difficulty-badge">
+                            {{ course.difficulty }}
+                        </span>
+
+                        <!-- 📂 Bouton pour ouvrir le fichier -->
+                        <div class="course-action">
+                            <a *ngIf="course.fileUrls" [href]="course.fileUrls" target="_blank" class="btn btn-view-file">
+                                <i class="fas fa-folder-open"></i> Open File
+                            </a>
+                            <span *ngIf="!course.fileUrls" class="text-muted d-block">No File Available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<app-footer></app-footer> <!-- Utilisation du composant Footer Angular -->

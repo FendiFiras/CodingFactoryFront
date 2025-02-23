@@ -1,0 +1,153 @@
+/* 🌟 Animation d’apparition élégante */
+@keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* 📌 Animation du titre */
+  .animated-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.6s ease-in-out;
+  }
+  
+  /* 🌟 Style global des cartes */
+  .course-card {
+    position: relative;
+    background: linear-gradient(145deg, #ffffff, #f3f3f3);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    animation: fadeInUp 0.7s ease-in-out;
+    padding: 20px;
+    text-align: center;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  /* 🌟 Image du cours */
+  .course-card-img {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .course-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .course-card:hover .course-card-img img {
+    transform: scale(1.08);
+  }
+  
+  /* 🎓 Contenu de la carte */
+  .course-card-body {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* 🎯 Titre du cours */
+  .course-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  /* 📌 Description du cours */
+  .course-description {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  /* 🔥 Badge de difficulté dynamique */
+  .difficulty-badge {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  
+  /* 🎨 Couleurs des badges selon difficulté */
+  .difficulty-easy {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .difficulty-medium {
+    background-color: #ffc107;
+    color: white;
+  }
+  
+  .difficulty-difficult {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .difficulty-advanced {
+    background-color: #6610f2;
+    color: white;
+  }
+  
+  /* 📂 Bouton interactif */
+  .btn-view-file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    background-color: transparent;
+    border: 2px solid #17a2b8;
+    color: #17a2b8;
+    transition: all 0.3s ease-in-out;
+  
+    i {
+      margin-right: 8px;
+      transition: transform 0.2s ease-in-out;
+    }
+  
+    &:hover {
+      background-color: #17a2b8;
+      color: white;
+  
+      i {
+        transform: rotate(10deg);
+      }
+    }
+  }
+  
+  /* 🌟 Effet responsive sur mobile */
+  @media (max-width: 768px) {
+    .course-card {
+      margin-bottom: 20px;
+    }
+  
+    .btn-view-file {
+      width: 100%;
+    }
+  }
+  

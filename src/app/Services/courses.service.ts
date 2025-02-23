@@ -35,6 +35,13 @@ export class CourseService {
   deleteCourse(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/deleteCourse/${id}`);
   }
+  uploadFile(courseId: number, formData: FormData): Observable<Courses> {
+    return this.http.post<Courses>(`${this.apiUrl}/uploadFile/${courseId}`, formData);
+  }
+  
+  getCoursesByTraining(trainingId: number): Observable<Courses[]> {
+    return this.http.get<Courses[]>(`${this.apiUrl}/training/${trainingId}/courses`);
+}
 
   
 }

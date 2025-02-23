@@ -13,7 +13,7 @@ import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists
  import {QuizManagementComponent} from './front/CoursesManagementFront/quiz-management/quiz-management.component'
  
 import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/quiz-questions-management/quiz-questions-management.component'
-
+import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-student/courses-student.component'
 
 const routes: Routes = [
   {
@@ -73,6 +73,10 @@ const routes: Routes = [
     path: 'QuizQuestionsManagement/:id', // ✅ Ajouter l'ID du quiz dans l'URL
     component: QuizQuestionsManagementComponent,
   },
+
+  { path: 'courses/training/:trainingId', 
+    component: CoursesStudentComponent },
+
 
   
   {
