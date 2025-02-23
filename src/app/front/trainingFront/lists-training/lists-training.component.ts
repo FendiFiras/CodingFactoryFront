@@ -15,6 +15,8 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 })
 export class ListsTrainingComponent implements OnInit {
   trainings: Training[] = [];
+  userId: number = 1; //fixer user 1 pour faire le test 
+
 
   constructor(
     private trainingService: TrainingService,

@@ -16,41 +16,58 @@
     </div>
 </section>
 
-<!-- Training Card Start -->
+<!-- Training Section -->
 <section class="course-two course-two--page">
     <div class="container">
         <div class="row">
-            <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay="100ms" *ngFor="let training of trainings">
-                <div class="course-two__item">
-                    <div class="course-two__thumb">
-                        <img src="assets1/images/course/course-2-1.png" alt="{{ training.trainingName }}">
-                        <a class="course-two__like" href="javascript:void(0);"><span class="icon-like"></span></a>
-                    </div>
-                    <div class="course-two__content">
-                        <div class="course-two__time">
-                            <strong>Start Date:</strong> {{ training.startDate | date: 'd MMMM yyyy' }} <br>
-                        </div>
-                        <h3 class="course-two__title">
-                            <a href="javascript:void(0);" (click)="goToTrainingDetails(training.trainingId)">
-                                {{ training.trainingName }}
-                            </a>
-                        </h3>
-                        <div class="course-two__bottom">
-                            <div class="course-two__meta">
-                                <h4 class="course-two__meta__price"><strong>Price:</strong> {{ training.price | currency:'EUR' }}</h4>
-                                <p class="course-two__meta__class"><strong>Training Type:</strong> {{ training.type }}</p>
+            <!-- ✅ Vérifie s'il y a des trainings -->
+            <div *ngIf="trainings.length > 0; else noTrainingMessage">
+                <div class="row">
+                    <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay="100ms" *ngFor="let training of trainings">
+                        <div class="course-two__item">
+                            <div class="course-two__thumb">
+                                <img src="assets1/images/course/course-2-1.png" alt="{{ training.trainingName }}">
+                                <a class="course-two__like" href="javascript:void(0);"><span class="icon-like"></span></a>
+                            </div>
+                            <div class="course-two__content">
+                                <div class="course-two__time">
+                                    <strong>Start Date:</strong> {{ training.startDate | date: 'd MMMM yyyy' }} <br>
+                                </div>
+                                <h3 class="course-two__title">
+                                    <a href="javascript:void(0);" (click)="goToTrainingDetails(training.trainingId)">
+                                        {{ training.trainingName }}
+                                    </a>
+                                </h3>
+                                <div class="course-two__bottom">
+                                    <div class="course-two__meta">
+                                        <h4 class="course-two__meta__price"><strong>Price:</strong> {{ training.price | currency:'EUR' }}</h4>
+                                        <p class="course-two__meta__class"><strong>Training Type:</strong> {{ training.type }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
+
+            <!-- ✅ Message si aucun training n'est disponible -->
+          <!-- ✅ Message si aucun training n'est disponible -->
+<ng-template #noTrainingMessage>
+    <div class="col-12 text-center">
+        <p class="alert alert-info mt-4">
+            <i class="fas fa-info-circle"></i> No training assigned yet. 
+            You will be enrolled in a training program soon. Stay tuned!
+        </p>
+    </div>
+</ng-template>
+
         </div>
     </div>
 </section>
-<!-- Training Card End -->
 
+<!-- Training Card End -->
 <div class="course-two__shape-bottom wow fadeInLeft" data-wow-delay="400ms">
     <img src="assets1/images/shapes/course-shape-2.png" alt="eduact">
 </div>
 
-<app-footer></app-footer> 
+<app-footer></app-footer>

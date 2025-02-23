@@ -40,4 +40,9 @@ export class TrainingService {
   assignQuiz(trainingId: number, quizId: number): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/assign-quiz/${trainingId}/${quizId}`, null);
   }
+  // ✅ Récupérer les formations de l'utilisateur avec l'ID 1 (fixé)
+  getUserTrainings(userId: number): Observable<Training[]> {
+    return this.http.get<Training[]>(`${this.apiUrl}/user/${userId}`);
+  }
+  
 }

@@ -22,6 +22,7 @@ export class CoursesManagementComponent implements OnInit {
   trainings: Training[] = [];  // Liste des trainings pour le select
   courseForm: FormGroup;
   selectedTrainingId: number | null = null;
+  userId: number = 1; //fixer user 1 pour faire le test 
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +39,7 @@ export class CoursesManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
-    this.loadTrainings();
+    this.loadTrainingsForUser();
   }
 
   loadCourses(): void {
@@ -52,13 +53,13 @@ export class CoursesManagementComponent implements OnInit {
     );
   }
 
-  loadTrainings(): void {
-    this.trainingService.getTrainings().subscribe(
-      (data) => {
-        this.trainings = data;
+  loadTrainingsForUser(): void {
+    this.trainingService.getUserTrainings(this.userId).subscribe(
+      (trainings) => {
+        this.trainings = trainings;
       },
       (error) => {
-        console.error('Erreur lors du chargement des trainings', error);
+        console.error('❌ Erreur lors du chargement des formations de l\'utilisateur', error);
       }
     );
   }
