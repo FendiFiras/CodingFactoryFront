@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
+import { ReactiveFormsModule } from '@angular/forms';  // Importer ReactiveFormsModule
 
 @NgModule({
-  declarations: [],
+  declarations: [ ],
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule,  // Ajouter ReactiveFormsModule ici
   ]
 })
 export class FrontModule { }

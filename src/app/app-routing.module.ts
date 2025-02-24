@@ -1,20 +1,40 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
 import { LoginPageComponent } from './front/login-page/login-page.component';
+import { ListeForumComponent } from './front/Forum-Front/liste-forum/liste-forum.component';
+
+import { ForumService } from 'src/app/service/forum.service';
+import { CommonModule } from '@angular/common';
+// import { FourmsListComponent } from './front/Forum-Front/fourms-list/fourms-list.component';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full' // This ensures an exact match for the empty path
+    pathMatch: 'full' 
   },
   {
     path: 'home',
     component: HomeComponent
   },
+
+  {
+    path: 'ListForum',
+    component: ListeForumComponent
+  },
+
+ /*
+  {
+    path: 'ForumsList',
+    component: FourmsListComponent
+  },
+*/
+  
+
   {
     path: 'login',
     component: LoginPageComponent
@@ -63,7 +83,8 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes), CommonModule], 
+  exports: [RouterModule],
+  providers: [ForumService]
 })
 export class AppRoutingModule {}

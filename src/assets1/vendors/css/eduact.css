@@ -5329,6 +5329,7 @@ body.megamenu-popup-active .mobile-nav__content {
   transition: opacity 500ms ease 500ms, visibility 500ms ease 500ms, transform 500ms ease 500ms;
 }
 
+/*
 .mobile-nav__overlay {
   position: absolute;
   top: 0;
@@ -5339,7 +5340,7 @@ body.megamenu-popup-active .mobile-nav__content {
   opacity: 0.3;
   cursor: url(../images/close.png), auto;
 }
-
+*/
 .mobile-nav__content {
   width: 300px;
   background-color: var(--eduact-black2);
@@ -5557,7 +5558,8 @@ body.megamenu-popup-active .mobile-nav__content {
   -webkit-transition-delay: .3s;
   background-color: var(--eduact-black);
   opacity: 0.8;
-  cursor: url(../images/close.png), auto;
+ /* cursor: url(../images/close.png), auto;
+ */
 }
 
 @media (max-width: 767px) {
