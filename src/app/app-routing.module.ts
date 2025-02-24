@@ -11,7 +11,7 @@ import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists
  import {TrainingInfoComponent} from './front/trainingFront/training-info/training-info.component'
  import {CoursesManagementComponent} from './front/CoursesManagementFront/courses-management/courses-management.component'
  import {QuizManagementComponent} from './front/CoursesManagementFront/quiz-management/quiz-management.component'
- 
+ import{QuizInterfaceComponent} from './front/CoursesManagementFront/quiz-interface/quiz-interface.component'
 import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/quiz-questions-management/quiz-questions-management.component'
 import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-student/courses-student.component'
 
@@ -76,7 +76,8 @@ const routes: Routes = [
 
   { path: 'courses/training/:trainingId', 
     component: CoursesStudentComponent },
-
+    { path: 'PassQuiz/:quizId',
+       component: QuizInterfaceComponent }, // ✅ Passage du quiz avec ID
 
   
   {

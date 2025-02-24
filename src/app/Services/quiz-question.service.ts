@@ -49,5 +49,17 @@ export class QuizQuestionService {
   addAnswerToQuestion(questionId: number, newAnswer: QuizAnswer): Observable<QuizAnswer> {
     return this.http.post<QuizAnswer>(`${this.apiUrl}/questions/${questionId}/answers`, newAnswer);
   }
-  
+  submitQuizResponses(userId: number, quizId: number, selectedAnswers: number[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/submit/${userId}/${quizId}`, selectedAnswers);
+  }
+  calculateQuizScore(quizId: number, userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/calculate-score/${quizId}/${userId}`);
+  }
+
+  submitAndCalculateScore(userId: number, quizId: number, selectedAnswers: number[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/submit-and-score/${userId}/${quizId}`, selectedAnswers);
+}
+
+
+
 }

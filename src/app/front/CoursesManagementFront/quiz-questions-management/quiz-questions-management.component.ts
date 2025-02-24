@@ -41,7 +41,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
       questionText: ['', Validators.required],
       maxGrade: ['', [Validators.required, Validators.min(1)]],
       answers: this.fb.array([
-        this.fb.group({ answerText: '', correct: false }) // ✅ Ajout d'une réponse initiale
+        this.fb.group({ answerText: '', correct: true }) // ✅ Ajout d'une réponse initiale
       ])    });
   }
 
