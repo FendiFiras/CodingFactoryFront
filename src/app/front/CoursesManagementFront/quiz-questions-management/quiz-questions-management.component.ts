@@ -40,8 +40,9 @@ export class QuizQuestionsManagementComponent implements OnInit {
       quizId: [{ value: '', disabled: true }, Validators.required], // ✅ Désactivé au chargement
       questionText: ['', Validators.required],
       maxGrade: ['', [Validators.required, Validators.min(1)]],
-      answers: this.fb.array([]) //  Liste des réponses associées
-    });
+      answers: this.fb.array([
+        this.fb.group({ answerText: '', correct: false }) // ✅ Ajout d'une réponse initiale
+      ])    });
   }
 
   ngOnInit(): void {
@@ -76,7 +77,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
           ...question,
           quizAnswers: question.quizAnswers.map(answer => ({
             ...answer,
-            isCorrect: this.convertToBoolean(answer.correct) // ✅ Correction ici
+            correct: this.convertToBoolean(answer.correct) // ✅ Correction ici
           }))
         }));
 
@@ -124,7 +125,7 @@ loadQuizDetails(quizId: number): void {
     this.answers.push(
       this.fb.group({
         answerText: ['', Validators.required],
-        isCorrect: [false] // ✅ Initialisé comme `false` (Boolean)
+        correct: [false] // ✅ Initialisé comme `false` (Boolean)
       })
     );
 }
@@ -143,32 +144,39 @@ loadQuizDetails(quizId: number): void {
         return;
     }
 
-    const updatingQuestion = this.editingQuestion &&
-                             (this.questionForm.get('questionText')?.value !== this.editingQuestion.questionText ||
-                              this.questionForm.get('maxGrade')?.value !== this.editingQuestion.maxGrade);
+    // Vérification si au moins une réponse est fournie
+    if (this.answers.length === 0) {
+        console.error("❌ Erreur : Une question doit avoir au moins une réponse !");
+        return;
+    }
 
-    const updatingAnswers = this.answers.controls.some(control => control.dirty); // Si au moins une réponse a changé
+    const newQuestion: QuizQuestion = {
+        idQuizQ: this.editingQuestion ? this.editingQuestion.idQuizQ : undefined, // ✅ Garde l'ID si édition
+        questionText: this.questionForm.get('questionText')?.value,
+        maxGrade: this.questionForm.get('maxGrade')?.value,
+        quizAnswers: this.answers.value // ✅ Récupère les réponses associées
+    };
 
-    // 🎯 Cas 1 : Mise à jour uniquement de la question
-    if (updatingQuestion && !updatingAnswers) {
-        this.updateQuestion(quizId);
-    }
-    // 🎯 Cas 2 : Mise à jour uniquement des réponses
-    else if (!updatingQuestion && updatingAnswers) {
-        this.updateAnswers(quizId);
-    }
-    // 🎯 Cas 3 : Mise à jour des deux (question + réponses)
-    else if (updatingQuestion && updatingAnswers) {
+    // Vérifier si on est en mode édition (editingQuestion a une valeur)
+    if (this.editingQuestion) {
+        console.log("✏️ Mise à jour de la question :", newQuestion);
+
         this.updateQuestion(quizId);
         this.updateAnswers(quizId);
-    }
-    // 🎯 Cas 4 : Rien n'a changé, annulation
-    else {
-        console.warn("⚠️ Aucune modification détectée !");
+    } else {
+        console.log("📢 Ajout d'une nouvelle question :", newQuestion);
+
+        this.quizQuestionService.addQuestionWithAnswers(quizId, newQuestion, newQuestion.quizAnswers)
+            .subscribe(
+                () => {
+                    console.log("✅ Nouvelle question ajoutée avec succès !");
+                    this.loadQuestionsByQuiz(quizId);
+                    this.cancelEdit(); // ✅ Réinitialisation du formulaire
+                },
+                (error) => console.error("❌ Erreur lors de l'ajout de la question", error)
+            );
     }
 }
-
-
 
 
   
@@ -176,13 +184,10 @@ loadQuizDetails(quizId: number): void {
 
 
 editQuestion(question: QuizQuestion): void {
-  this.editingQuestion = question;
+  console.log("✏️ Mode édition activé pour la question :", question);
 
-  // ✅ Trouver le quiz correspondant pour afficher son nom
-  const selectedQuiz = this.quizzes.find(quiz => quiz.idQuiz === question.idQuizQ);
-  if (selectedQuiz) {
-      this.selectedQuizName = selectedQuiz.quizName;
-  }
+  this.editingQuestion = question; // ✅ Active le mode édition
+  this.isEditing = true; // ✅ Active le flag d'édition
 
   this.questionForm.patchValue({
       quizId: question.idQuizQ,
@@ -192,46 +197,44 @@ editQuestion(question: QuizQuestion): void {
 
   this.answers.clear();
 
-  // ✅ Récupérer uniquement les réponses de cette question
   this.quizQuestionService.getAnswersByQuestionId(question.idQuizQ).subscribe(
       (answers) => {
           answers.forEach(ans => {
               this.answers.push(
                   this.fb.group({
-                      idQuizA: ans.idQuizA, // ✅ Garde l'ID pour l'update
+                      idQuizA: ans.idQuizA, // ✅ Garde l'ID pour mise à jour
                       answerText: ans.answerText,
-                      isCorrect: this.convertToBoolean(ans.correct)
-                  })
+                      isCorrect: !!ans.correct
+                    })
               );
           });
 
-          // ✅ Ajouter une réponse vide (nouvelle réponse) lors de l'édition
-          this.addEmptyAnswer();
+          this.addEmptyAnswer(); // ✅ Ajoute une réponse vide pour l'édition
       },
       (error) => console.error("❌ Erreur lors du chargement des réponses", error)
   );
-
-  // ✅ Change le titre du formulaire en mode édition
-  this.isEditing = true;
 }
+
 addEmptyAnswer(): void {
   this.answers.push(
       this.fb.group({
           idQuizA: undefined, // ✅ `undefined` signifie que c'est une nouvelle réponse
           answerText: '',
-          isCorrect: false
+          correct: false
       })
   );
 }
 
 
 
+
 cancelEdit(): void {
-  this.editingQuestion = null;
-  this.isEditing = false; // ✅ Revenir en mode "Ajout"
+  this.editingQuestion = null; // ✅ Désactive le mode édition
+  this.isEditing = false; // ✅ Désactive le flag d'édition
   this.questionForm.reset();
   this.answers.clear();
 }
+
 
 
 // Supprimer une question sans confirmation
@@ -259,7 +262,7 @@ deleteQuestion(idQuizQ: number): void {
   updateCorrectValue(index: number): void {
     const answerControl = this.answers.at(index);
     if (answerControl) {
-      const isChecked = answerControl.get('isCorrect')?.value;
+      const isChecked = answerControl.get('correct')?.value;
   
       console.log(`📢 Checkbox changée pour la réponse ${index}:`, isChecked); // 🔍 Debug
   
@@ -300,7 +303,6 @@ deleteQuestion(idQuizQ: number): void {
 
 
 
-
 updateAnswers(quizId: number): void {
   if (!this.editingQuestion) {
       console.error("❌ Erreur : Aucune question sélectionnée !");
@@ -313,13 +315,13 @@ updateAnswers(quizId: number): void {
           return this.quizQuestionService.updateAnswer({
               idQuizA: answer.idQuizA,
               answerText: answer.answerText,
-              correct: !!answer.isCorrect,
+              correct: !!answer.correct,
           });
       } else {
           // ✅ Ajouter une nouvelle réponse
           return this.quizQuestionService.addAnswerToQuestion(this.editingQuestion!.idQuizQ, {
               answerText: answer.answerText,
-              correct: !!answer.isCorrect,
+              correct: !!answer.correct,
           });
       }
   }).filter(request => request !== null);
@@ -340,7 +342,6 @@ updateAnswers(quizId: number): void {
       (error) => console.error('❌ Erreur lors de la mise à jour des réponses', error)
   );
 }
-
 
 
   }
