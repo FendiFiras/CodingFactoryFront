@@ -1,0 +1,134 @@
+<app-navbar></app-navbar>
+
+<div class="stricky-header stricked-menu main-menu main-header-two">
+  <div class="sticky-header__content"></div>
+</div>
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+  <div class="page-header__bg jarallax-img"></div>
+  <div class="page-header__overlay"></div>
+  <div class="container text-center">
+    <h2 class="page-header__title">Event Details</h2>
+    <ul class="page-header__breadcrumb list-unstyled">
+      <li><a href="index.html">Home</a></li>
+      <li><span>Events</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="blog-details">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-8 col-lg-7">
+        <div class="blog-details__content">
+          <!-- Display Image or Video -->
+          <div class="blog-details__img">
+            <ng-container *ngIf="event.imageUrl; else videoTemplate">
+                <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
+
+            </ng-container>
+
+            <ng-template #videoTemplate>
+              <video width="100%" height="auto" controls>
+                <source [src]="event.videoUrl" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </ng-template>
+          </div>
+
+          <div class="blog-details__meta">
+            <div class="blog-details__meta__cats">
+              <a href="blog-list-right.html">Development</a>
+            </div>
+            <div class="blog-details__meta__date"><i class="icon-clock"></i>{{ event.startDate | date: 'dd MMM, yyyy' }}</div>
+          </div>
+
+          <h3 class="blog-details__title">{{ event.title }}</h3>
+          <p class="blog-details__text">{{ event.description }}</p>
+
+          <div class="blog-details__bottom">
+            <div class="blog-details__tags">
+              <h5 class="blog-details__tags__title">Tags</h5>
+              <a href="blog-grid-left.html">Marketing</a>
+              <a href="blog-grid-right.html">Development</a>
+              <a href="blog-grid.html">Design</a>
+            </div>
+            <div class="blog-details__social">
+              <a href="https://www.google.com/"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.google.com/"><i class="fab fa-twitter"></i></a>
+              <a href="https://www.google.com/"><i class="fab fa-pinterest-p"></i></a>
+              <a href="https://www.google.com/"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="blog-details__comment">
+          <h3 class="blog-details__comment__title">2 Comments</h3>
+          <div class="blog-details__comment__item">
+            <div class="blog-details__comment__image">
+              <img src="assets/images/blog/comment-1-1.jpg" alt="eduact">
+            </div>
+            <div class="blog-details__comment__content">
+              <h3 class="blog-details__comment__name">David Shon</h3>
+              <p class="blog-details__comment__text">
+                Nam vel lacus eu nisl bibendum accumsan vitae vitae nibh. Nam nec eros id magna hendrerit sagittis.
+                Nullam sed mi non odio feugiat volutpat sit amet nec elit.
+              </p>
+              <a href="blog-details.html" class="eduact-btn"><span class="eduact-btn__curve"></span>Reply</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="blog-details__comment-form">
+          <h3 class="blog-details__comment-form__title">Leave a Comment</h3>
+          <form action="#" class="contact-form-validated" novalidate="novalidate">
+            <div class="row">
+              <div class="col-xl-6">
+                <div class="blog-details__comment-form__input-box">
+                  <input type="text" placeholder="Your name" name="name">
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <div class="blog-details__comment-form__input-box">
+                  <input type="email" placeholder="Email address" name="email">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="blog-details__comment-form__input-box">
+                  <textarea name="message" placeholder="Write a comment"></textarea>
+                </div>
+                <button type="submit" class="eduact-btn eduact-btn-second">
+                  <span class="eduact-btn__curve"></span>Submit Comment<i class="icon-arrow"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+          <div class="result"></div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-5">
+        <div class="sidebar">
+          <div class="sidebar__single sidebar__search">
+            <form action="#" class="sidebar__search-form">
+              <input type="search" placeholder="Type Here">
+              <button type="submit"><span class="icon-Search"></span></button>
+            </form>
+          </div>
+
+          <div class="sidebar__single sidebar__video">
+            <h3 class="sidebar__title">Event Video</h3>
+            <div class="sidebar__video-container">
+              <video *ngIf="event.videoUrl" [src]="'http://localhost:8089/event/' + event.videoUrl" height="200" width="100%" controls></video>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

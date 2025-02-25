@@ -1,0 +1,44 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Event } from '../Model/event.model'; // Adjust the path as needed
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EventService {
+  private apiUrl = 'http://localhost:8089/event'; // Adjust the URL if needed
+
+  constructor(private http: HttpClient) {}
+  uploadFile(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${this.apiUrl}/upload`, formData).toPromise()
+      .then(response => response.url);
+  }
+  
+  // Convertir en Promise
+  addEvent(event: Event): Promise<Event> {
+    return this.http.post<Event>(`${this.apiUrl}/add-event`, event).toPromise();
+  }
+
+  
+
+  getEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.apiUrl}/event`);
+  }
+
+  getEventById(id: number): Observable<Event> {
+    return this.http.get<Event>(`${this.apiUrl}/retrieve-Event/${id}`);
+  }
+
+  
+
+  updateEvent(event: Event): Observable<Event> {
+    return this.http.put<Event>(`${this.apiUrl}/modify-event`, event);
+  }
+
+  deleteEvent(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/remove-event/${id}`);
+  }
+}

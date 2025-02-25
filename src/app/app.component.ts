@@ -7,7 +7,7 @@ import { SpinnerComponent } from './theme/shared/components/spinner/spinner.comp
 
 @Component({
   selector: 'app-root',
-  imports: [SpinnerComponent, RouterModule],
+  imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

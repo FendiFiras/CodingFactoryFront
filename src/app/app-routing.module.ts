@@ -19,6 +19,16 @@ const routes: Routes = [
     path: 'login',
     component: LoginPageComponent
   },
+  {path: 'listeventsfront',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/listevenement/listevenement.component').then((c) => c.ListevenementComponent) // Chargement du composant Events
+  }
+  ,
+  {path: 'detailseventfront/:id',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/detailevent/detailevent.component').then((c) => c.DetaileventComponent) // Chargement du composant Events
+  },
+  {path: 'planningeventfront/:id',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/planning-event/planning-event.component').then((c) => c.PlanningEventComponent) // Chargement du composant Events
+  },
   {
     path: '',
     component: AdminComponent,
@@ -27,6 +37,16 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
+      
+  {
+    path: 'events',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./demo/Events/add-event/add-event.component').then((c) => c.AddEventComponent) // Chargement du composant Events
+  },
+  {path: 'listevents',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/list-event/list-event.component').then((c) => c.ListEventComponent) // Chargement du composant Events
+},
+
+
       {
         path: 'basic',
         loadChildren: () => import('./demo/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
