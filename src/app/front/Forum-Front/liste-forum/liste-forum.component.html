@@ -20,7 +20,7 @@
 
   <!-- Add Forum Button -->
   <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
-    Add Forum
+    {{ showAddForm ? 'Cancel' : 'Add Forum' }}
   </button>
 
   <!-- Add Forum Form -->
@@ -36,8 +36,8 @@
         <textarea class="form-control" formControlName="description"></textarea>
       </div>
       <div class="mb-3">
-        <label class="form-label">Image URL (optional)</label>
-        <input type="text" class="form-control" formControlName="image" />
+        <label class="form-label">Image</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
       </div>
       <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Submit</button>
     </form>
@@ -59,7 +59,7 @@
           <td>{{ forum.title }}</td>
           <td>{{ forum.description }}</td>
           <td>
-            <img *ngIf="forum.image" [src]="forum.image" alt="Forum Image" style="max-width: 100px; max-height: 100px;" />
+            <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" style="max-width: 100px; max-height: 100px;" />
             <span *ngIf="!forum.image">No Image</span>
           </td>
           <td>{{ forum.creationDate | date: 'medium' }}</td>

@@ -1,100 +1,96 @@
-import { Component, OnInit } from '@angular/core';
-import { ForumService } from 'src/app/service/forum.service';
-import { Forum } from 'src/app/models/forum';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';  // Importer ReactiveFormsModule
+import { ForumService } from 'src/app/service/forum.service';
+import { FooterComponent } from '../../elements/footer/footer.component';
+import { NavbarComponent } from '../../elements/navbar/navbar.component';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+
+interface Forum {
+  id?: number;
+  title: string;
+  description: string;
+  image?: string;
+  creationDate?: Date;
+}
 
 @Component({
   selector: 'app-liste-forum',
-  standalone: true,
-  imports: [CommonModule, RouterModule,ReactiveFormsModule], // Import necessary modules
   templateUrl: './liste-forum.component.html',
   styleUrls: ['./liste-forum.component.scss'],
+  imports: [CommonModule,  SharedModule]
+
+
 })
 export class ListeForumComponent implements OnInit {
-  forums: Forum[] = []; // Array to hold forums
-  isLoading: boolean = true; // Loading state
-  errorMessage: string | null = null;
-  showAddForm: boolean = false; // Pour afficher/masquer le formulaire
+  forums: Forum[] = [];
+  isLoading = true;
+  errorMessage = '';
+  showAddForm = false;
   addForumForm: FormGroup;
-  
-
 
   constructor(private forumService: ForumService, private fb: FormBuilder) {
     this.addForumForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      image: [''], // Image facultative
+      image: [null] // Changer la valeur initiale à null
     });
   }
+
   ngOnInit(): void {
-    this.loadForums(); // Load forums on component initialization
+    this.loadForums();
   }
 
-  // Fetch all forums
   loadForums(): void {
+    this.isLoading = true;
     this.forumService.getAllForums().subscribe({
       next: (data) => {
         this.forums = data;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching forums:', err);
-        this.errorMessage = 'Failed to load forums. Please try again later.';
+        this.errorMessage = 'Error loading forums';
         this.isLoading = false;
-      },
+      }
     });
   }
+
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
   }
 
   addForum(): void {
-    if (this.addForumForm.valid) {
-        const userId = 1; // Static ID
-        const { title, description, image } = this.addForumForm.value;
-
-        // Create FormData object
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("description", description);
-
-        // Only append the image if it's not null or undefined
-        if (image) {
-            formData.append("image", image);  // image is a File object (selected by the user)
-        }
-
-        // Send the FormData to the backend
-        this.forumService.addForum(userId, formData).subscribe({
-            next: (data) => {
-                this.loadForums(); // Reload the forum list
-                this.showAddForm = false; // Close the form
-                this.addForumForm.reset(); // Reset the form
-            },
-            error: (err) => {
-                console.error('Error adding forum:', err);
-                this.errorMessage = 'Failed to add forum. Please try again.';
-            },
-        });
+    if (this.addForumForm.invalid) return;
+    const { title, description, image } = this.addForumForm.value;
+    
+    // Créer un FormData pour envoyer les données du formulaire et l'image
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    if (image) {
+      formData.append('image', image, image.name);
     }
-}
+    
+    const userId = 1; // Remplacer par l'ID utilisateur dynamique si nécessaire
 
-  
+    // Appeler le service pour ajouter le forum
+    this.forumService.addForum(userId, formData).subscribe({
+      next: (newForum) => {
+        this.forums.push(newForum);
+        this.addForumForm.reset();
+        this.showAddForm = false;
+      },
+      error: () => {
+        this.errorMessage = 'Error adding forum';
+      }
+    });
+  }
 
-  // Delete a forum
-  deleteForum(forumId: number): void {
-    if (confirm('Are you sure you want to delete this forum?')) {
-      this.forumService.deleteForum(forumId).subscribe({
-        next: (response) => {
-          console.log(response);
-          this.loadForums(); // Reload forums after deletion
-        },
-        error: (err) => {
-          console.error('Error deleting forum:', err);
-        },
-      });
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (file) {
+      this.addForumForm.patchValue({ image: file });
     }
   }
 }
