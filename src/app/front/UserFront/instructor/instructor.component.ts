@@ -10,10 +10,10 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 @Component({
   selector: 'app-instructor',
   imports: [
-      BrowserModule,
-      FormsModule,
-      HttpClientModule,NavbarComponent,FooterComponent
-    ],
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,NavbarComponent,FooterComponent
+  ],
   templateUrl: './instructor.component.html',
   styleUrls: ['./instructor.component.scss']
 })
@@ -22,25 +22,80 @@ export class InstructorComponent {
   successMessage: string = '';
   errorMessage: string = '';
   Gender = Gender;
+  errors: any = {};
 
   constructor(private userService: UserService) {}
 
+  validateForm(): boolean {
+    this.errors = {}; // Reset errors
+    let valid = true;
+
+    if (!this.newUser.firstName || !/^[A-Za-z\s]+$/.test(this.newUser.firstName)) {
+      this.errors.firstName = 'First name is required and must contain only letters.';
+      valid = false;
+    }
+
+    if (!this.newUser.lastName || !/^[A-Za-z\s]+$/.test(this.newUser.lastName)) {
+      this.errors.lastName = 'Last name is required and must contain only letters.';
+      valid = false;
+    }
+
+    if (!this.newUser.email || !/^\S+@\S+\.\S+$/.test(this.newUser.email)) {
+      this.errors.email = 'Invalid email address.';
+      valid = false;
+    }
+
+    if (!this.newUser.password) {
+      this.errors.password = 'Password is required.';
+      valid = false;
+    } else if (this.newUser.password.length < 6) {
+      this.errors.password = 'Password must be at least 6 characters.';
+      valid = false;
+    } else if (!/[A-Z]/.test(this.newUser.password) || !/[a-z]/.test(this.newUser.password) || !/[0-9]/.test(this.newUser.password)) {
+      this.errors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number.';
+      valid = false;
+    }
+
+    if (!this.newUser.phoneNumber || !/^\d{8,15}$/.test(this.newUser.phoneNumber)) {
+      this.errors.phoneNumber = 'Invalid phone number.';
+      valid = false;
+    }
+
+    if (!this.newUser.address) {
+      this.errors.address = 'Address is required.';
+      valid = false;
+    }
+
+    if (!this.newUser.speciality) {
+      this.errors.speciality = 'Speciality is required.';
+      valid = false;
+    }
+
+    if (!this.newUser.gender) {
+      this.errors.gender = 'Please select your gender.';
+      valid = false;
+    }
+
+    return valid;
+  }
+
   registerInstructor() {
-    // Automatically set the role to INSTRUCTOR
+    if (!this.validateForm()) {
+      return;
+    }
+
     this.newUser.role = Role.INSTRUCTOR;
-  
-    // Convert date to ISO format
+
     if (this.newUser.dateOfBirth) {
       this.newUser.dateOfBirth = new Date(this.newUser.dateOfBirth).toISOString();
     }
-  
-    // Send user data to the backend
+
     this.userService.registerUser(this.newUser).subscribe({
       next: (response) => {
         console.log("Instructor registered successfully:", response);
         this.successMessage = 'Your request has been added.';
         this.errorMessage = '';
-        this.newUser = new User();  // Reset form on success
+        this.newUser = new User();
       },
       error: (error) => {
         console.error('Error registering instructor:', error);
@@ -49,5 +104,4 @@ export class InstructorComponent {
       }
     });
   }
-  
 }

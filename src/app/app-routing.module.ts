@@ -3,19 +3,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
-import { LoginPageComponent } from './front/login-page/login-page.component';
-import { CodingRegisterComponent } from './front/UserFront/coding-register/coding-register.component';
 import { CodingLoginComponent } from './front/UserFront/coding-login/coding-login.component';
+import { CodingRegisterComponent } from './front/UserFront/coding-register/coding-register.component';
 import { ForgetPasswdComponent } from './front/UserFront/forget-passwd/forget-passwd.component';
 import { InstructorComponent } from './front/UserFront/instructor/instructor.component';
-import { ListeUsersComponent } from './demo/UserBack/liste-users/liste-users.component';
-
+import { AdminGuard } from './auth/admin.guard';  // Import du guard
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full' // This ensures an exact match for the empty path
+    pathMatch: 'full' // Redirection vers 'home' si le path est vide
   },
   {
     path: 'home',
@@ -26,12 +24,12 @@ const routes: Routes = [
     component: CodingLoginComponent
   },
   {
-    path: 'becomeainstructor',
-    component: InstructorComponent
-  },
-  {
     path: 'register',
     component: CodingRegisterComponent
+  },
+  {
+    path: 'becomeainstructor',
+    component: InstructorComponent
   },
   {
     path: 'forget',
@@ -40,6 +38,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [AdminGuard],  // Application du guard ici
     children: [
       {
         path: 'dashboard',
@@ -77,7 +76,6 @@ const routes: Routes = [
         path: 'tables',
         loadChildren: () => import('./demo/pages/tables/tables.module').then((m) => m.TablesModule)
       },
-      
       {
         path: 'apexchart',
         loadComponent: () => import('./demo/pages/core-chart/apex-chart/apex-chart.component')
@@ -99,7 +97,6 @@ const routes: Routes = [
     ]
   }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -61,14 +61,16 @@ export class ListeUsersComponent implements OnInit {
   getUsers(): void {
     this.userService.getAllUsers().subscribe(
       (data) => {
+        console.log('Received users:', data);  // Check if users are being fetched correctly
         this.users = data;
-        console.log('Users:', this.users);
       },
       (error) => {
-        console.error('Erreur lors de la récupération des utilisateurs', error);
+        console.error('Error fetching users:', error);
       }
     );
   }
+  
+  
 
   // Ouvrir la modale de modification
   openEditModal(user: any, content: any): void {

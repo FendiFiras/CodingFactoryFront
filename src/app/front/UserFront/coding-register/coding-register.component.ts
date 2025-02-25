@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth-service.service';
 import { User, Gender, Role } from 'src/app/models/user';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { FooterComponent } from '../../elements/footer/footer.component';
 
 @Component({
   selector: 'app-coding-register',
+  standalone: true,
   imports: [
     BrowserModule,
-    FormsModule,FooterComponent,
+    FormsModule,
     HttpClientModule
   ],
   templateUrl: './coding-register.component.html',
@@ -22,29 +22,86 @@ export class CodingRegisterComponent {
   errorMessage: string = '';
   Gender = Gender;
   Role = Role;
-  constructor(private userService: UserService) {}
+  errors: any = {};
+
+  constructor(private authService: AuthService) {}
+
+  validateForm(): boolean {
+    this.errors = {};
+    let valid = true;
+
+    if (!this.newUser.firstName) {
+      this.errors.firstName = 'First Name is required';
+      valid = false;
+    }
+    if (!this.newUser.lastName) {
+      this.errors.lastName = 'Last Name is required';
+      valid = false;
+    }
+    if (!this.newUser.email) {
+      this.errors.email = 'Email is required';
+      valid = false;
+    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(this.newUser.email)) {
+      this.errors.email = 'Invalid email format';
+      valid = false;
+    }
+    if (!this.newUser.password) {
+      this.errors.password = 'Password is required';
+      valid = false;
+    } else if (this.newUser.password.length < 6) {
+      this.errors.password = 'Password must be at least 6 characters';
+      valid = false;
+    } else if (!/[A-Z]/.test(this.newUser.password)) {
+      this.errors.password = 'Password must contain at least one uppercase letter';
+      valid = false;
+    }
+    
+    if (!this.newUser.dateOfBirth) {
+      this.errors.dateOfBirth = 'Date of Birth is required';
+      valid = false;
+    }
+    if (!this.newUser.gender) {
+      this.errors.gender = 'Gender is required';
+      valid = false;
+    }
+    if (!this.newUser.phoneNumber) {
+      this.errors.phoneNumber = 'Phone Number is required';
+      valid = false;
+    } else if (!/^\d{8}$/.test(this.newUser.phoneNumber)) {
+      this.errors.phoneNumber = 'Invalid phone number format';
+      valid = false;
+    }
+    if (!this.newUser.address) {
+      this.errors.address = 'Address is required';
+      valid = false;
+    }
+    if (!this.newUser.role) {
+      this.errors.role = 'Role is required';
+      valid = false;
+    }
+
+    return valid;
+  }
+
   registerUser() {
-    // Convert the date to ISO 8601 format if it's a valid date
+    if (!this.validateForm()) {
+      return;
+    }
+
     if (this.newUser.dateOfBirth) {
       this.newUser.dateOfBirth = new Date(this.newUser.dateOfBirth).toISOString();
     }
-  
-    console.log("Tentative d'inscription avec :", this.newUser);
-    console.log("Données envoyées au backend :", JSON.stringify(this.newUser));
-  
-    this.userService.registerUser(this.newUser).subscribe({
+
+    this.authService.register(this.newUser).subscribe({
       next: (response) => {
-        console.log("Réponse reçue :", response);
-        this.successMessage = 'User registered successfully!';
+        this.successMessage = response?.message || 'User registered successfully!';
         this.errorMessage = '';
-        this.newUser = new User();  // Réinitialise le formulaire après succès
+        this.newUser = new User();
+        this.errors = {};
       },
       error: (error) => {
-        console.error('Erreur d\'inscription :', error);
         this.errorMessage = error.error?.message || 'Failed to register user. Please try again.';
-        this.successMessage = '';
       }
     });
   }
-  
 }

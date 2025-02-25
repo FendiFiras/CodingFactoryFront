@@ -130,11 +130,15 @@
 /* Style pour l'image en haut à droite */
 .top-right-image {
     position: absolute;
-    top: 60px;
-    right: 190px;
+    top: 100px;
+    right: 185px;
     width: 100px;
     height: auto;
 }.ibtn {
     background-color: #ff6200 !important;
     color: #fff !important;
-}
+} .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }

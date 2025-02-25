@@ -24,10 +24,11 @@ export class UserService {
     return this.http.get<User[]>(url);
   }
   modifyUser(user: User): Observable<User> {
-    const url = `${this.apiUrl}/${user.idUser}`; // Include the user ID in the URL
+    const url = `${this.apiUrl}/${user.idUser}`;  // Ajoutez l'ID dans l'URL
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<User>(url, user, { headers });
   }
+  
 
   deleteUser(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;

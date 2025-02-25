@@ -1,32 +1,41 @@
-
 <div class="form-body">
-   
     <div class="iofrm-layout">
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                     
                     <div class="page-links">
-                        <a href="login" >Login</a><a href="register" class="active">Register</a>
+                        <a href="login">Login</a><a href="register" class="active">Register</a>
                     </div>
-                    
+
                     <form (ngSubmit)="registerUser()">
                         <input class="form-control" type="text" [(ngModel)]="newUser.firstName" name="firstName" placeholder="First Name" required>
+                        <p *ngIf="errors.firstName" class="error-message">{{ errors.firstName }}</p>
+
                         <input class="form-control" type="text" [(ngModel)]="newUser.lastName" name="lastName" placeholder="Last Name" required>
+                        <p *ngIf="errors.lastName" class="error-message">{{ errors.lastName }}</p>
+
                         <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email" placeholder="E-mail Address" required>
+                        <p *ngIf="errors.email" class="error-message">{{ errors.email }}</p>
+
                         <input class="form-control" type="password" [(ngModel)]="newUser.password" name="password" placeholder="Password" required>
+                        <p *ngIf="errors.password" class="error-message">{{ errors.password }}</p>
+
                         <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth" required>
-                    
+                        <p *ngIf="errors.dateOfBirth" class="error-message">{{ errors.dateOfBirth }}</p>
+
                         <select class="form-control" [(ngModel)]="newUser.gender" name="gender" required>
                             <option value="" disabled selected>Select Gender</option>
                             <option [value]="Gender.MALE">Male</option>
                             <option [value]="Gender.FEMALE">Female</option>
                         </select>
-                    
+                        <p *ngIf="errors.gender" class="error-message">{{ errors.gender }}</p>
+
                         <input class="form-control" type="tel" [(ngModel)]="newUser.phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
-                        
+                        <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
+
                         <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address" placeholder="Address" required>
-                    
+                        <p *ngIf="errors.address" class="error-message">{{ errors.address }}</p>
+
                         <div class="role-selection">
                             <h5>Who are you?</h5>
                             <div class="role-options">
@@ -46,12 +55,12 @@
                                 </label>
                             </div>
                         </div>
-                    
+                        <p *ngIf="errors.role" class="error-message">{{ errors.role }}</p>
+
                         <div class="form-button">
                             <button id="submit" type="submit" class="ibtn">Register</button>
                         </div>
                     </form>
-                    
 
                     <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
                     <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -70,4 +79,3 @@
         </div>
     </div>
 </div>
-<app-footer></app-footer> 
