@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Event } from '../Model/event.model'; // Adjust the path as needed
 import { HttpClient } from '@angular/common/http';
 
@@ -41,4 +41,16 @@ export class EventService {
   deleteEvent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove-event/${id}`);
   }
+
+
+
+
+  registerUser(registration: any, eventId: number, userId: number) {
+    return this.http.post(`${this.apiUrl}/add/${eventId}/${userId}`, registration)
+      .pipe(
+        catchError(error => {
+          return throwError(() => new Error(error.error));
+        })
+      );
+    }
 }

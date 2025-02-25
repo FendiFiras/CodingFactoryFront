@@ -16,8 +16,12 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrl: './detailevent.component.scss'
 })
 export class DetaileventComponent implements OnInit {
+  errorMessage: string = '';
+  successMessage: string ='';
+
     event!: EventModel; // Stocke les détails de l'événement
   idEvent!: number; // Stocke l'ID de l'événement
+  idUser!: number;
       constructor(private route: ActivatedRoute,private eventService: EventService) {}
       ngOnInit(): void {
         // Récupérer l'ID depuis l'URL
@@ -26,7 +30,9 @@ export class DetaileventComponent implements OnInit {
           if (id) {
             this.idEvent = +id; // Convertir en nombre
             this.loadEventDetails();
+
           }
+          this.idUser=1;
         });
       }
     
@@ -41,9 +47,22 @@ export class DetaileventComponent implements OnInit {
           }
         });
       }
+      register() {
+        this.eventService.registerUser({}, this.idEvent, this.idUser).subscribe({
+            next: () => {
+                this.successMessage = ' Inscription réussie !';
+                this.errorMessage = ''; // Réinitialiser le message d'erreur
+            },
+            error: (err) => {
+                this.errorMessage = ' ' + err.message;
+                this.successMessage = ''; // Réinitialiser le message de succès
+            }
+        });
+    
     
      
 
 }
 
 
+}

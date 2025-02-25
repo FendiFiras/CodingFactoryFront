@@ -1,0 +1,23 @@
+
+
+
+
+.error-message, .success-message {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligner à droite */
+    margin-top: 5px;
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
+
+.error-message i, .success-message i {
+    margin-right: 5px; /* Espacement entre l'icône et le texte */
+}
