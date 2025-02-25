@@ -1,47 +1,58 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Courses } from '../Models/courses.model'; // Import du modèle
+import { Courses } from '../Models/courses.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:8089/pidev/Courses'; // URL de l'API
+  private apiUrl = 'http://localhost:8089/pidev/Courses'; // Base URL de l'API
 
   constructor(private http: HttpClient) {}
 
-  // Récupérer tous les cours
+  // ✅ Récupérer tous les cours
   getCourses(): Observable<Courses[]> {
     return this.http.get<Courses[]>(`${this.apiUrl}/getAllCourses`);
   }
 
-  // Récupérer un cours par son ID
+  // ✅ Récupérer un cours par ID
   getCourseById(id: number): Observable<Courses> {
     return this.http.get<Courses>(`${this.apiUrl}/getCourse/${id}`);
   }
 
-  addCourse(course: Courses, trainingId: number): Observable<Courses> {
-    return this.http.post<Courses>(`${this.apiUrl}/add_courses/${trainingId}`, course);
-  }
-  
+  addCourse(formData: FormData, trainingId: number): Observable<Courses> {
+    return this.http.post<Courses>(`${this.apiUrl}/add_courses/${trainingId}`, formData);
+}
 
-  updateCourse(course: Courses): Observable<Courses> {
-    return this.http.put<Courses>(`${this.apiUrl}/updateCourse`, course);
-  }
-  
 
-  // Supprimer un cours
+  // ✅ Mettre à jour un cours avec des fichiers
+  updateCourse(course: Courses, files?: File[]): Observable<Courses> {
+    const formData = new FormData();
+    formData.append('course', new Blob([JSON.stringify(course)], { type: 'application/json' }));
+
+    if (files) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+
+    return this.http.put<Courses>(`${this.apiUrl}/update_course`, formData);
+  }
+
+  // ✅ Supprimer un cours
   deleteCourse(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/deleteCourse/${id}`);
   }
-  uploadFile(courseId: number, formData: FormData): Observable<Courses> {
-    return this.http.post<Courses>(`${this.apiUrl}/uploadFile/${courseId}`, formData);
+
+  // ✅ Ouvrir un fichier en appelant l'API Spring Boot
+  openFile(filename: string): void {
+    const fileUrl = `${this.apiUrl}/Courses/${filename}`;
+    window.open(fileUrl, '_blank'); // Ouvre le fichier dans un nouvel onglet
   }
-  
+
+  // ✅ Récupérer les cours associés à une formation
   getCoursesByTraining(trainingId: number): Observable<Courses[]> {
     return this.http.get<Courses[]>(`${this.apiUrl}/training/${trainingId}/courses`);
-}
-
-  
+  }
 }

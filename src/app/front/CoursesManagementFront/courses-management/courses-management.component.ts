@@ -17,13 +17,17 @@ import { TrainingService } from '../../../Services/training.service';
   styleUrls: ['./courses-management.component.scss']
 })
 export class CoursesManagementComponent implements OnInit {
-  courses: Courses[] = [];  // Liste des cours
-  trainings: Training[] = [];  // Liste des trainings pour le select
+  courses: Courses[] = [];  
+  trainings: Training[] = [];  
   courseForm: FormGroup;
   selectedTrainingId: number | null = null;
-  userId: number = 1; //fixer user 1 pour faire le test 
-  selectedFileUrl: string = ''; // ✅ Stocker l'URL locale du fichier importé
-  selectedFile!: File;
+  userId: number = 1; // 🔥 Utilisateur test
+  selectedFiles: File[] = []; // Liste des fichiers sélectionnés
+// ✅ Variables pour gérer l'affichage du modal et les fichiers sélectionnés
+showFileModal: boolean = false;
+selectedCourseFiles: string[] = [];
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +53,7 @@ export class CoursesManagementComponent implements OnInit {
         this.courses = data;
       },
       (error) => {
-        console.error('Erreur lors du chargement des cours', error);
+        console.error('❌ Erreur chargement cours', error);
       }
     );
   }
@@ -60,50 +64,71 @@ export class CoursesManagementComponent implements OnInit {
         this.trainings = trainings;
       },
       (error) => {
-        console.error('❌ Erreur lors du chargement des formations de l\'utilisateur', error);
+        console.error('❌ Erreur chargement formations utilisateur', error);
       }
     );
   }
   onSubmit(): void {
     if (this.courseForm.valid) {
-      const newCourse: Courses = this.courseForm.value;
-  
-      // ✅ Ajoute uniquement l'URL relative du fichier
-      newCourse.fileUrls = this.selectedFileUrl;  
-  
-      this.courseService.addCourse(newCourse, this.selectedTrainingId!)
-        .subscribe(
-          (data) => {
-            console.log('Cours ajouté avec fichier local:', data);
-            this.courses.push(data);
-            this.courseForm.reset();
-            this.selectedFileUrl = ''; // Réinitialisation après ajout
-          },
-          (error) => {
-            console.error('Erreur lors de l\'ajout du cours', error);
-          }
+        console.log("📝 Training ID sélectionné :", this.selectedTrainingId);
+
+        if (!this.selectedTrainingId) {
+            console.error("❌ Aucun Training sélectionné !");
+            return;
+        }
+
+        const formData = new FormData();
+
+        const newCourse: any = {
+            courseName: this.courseForm.value.courseName,
+            courseDescription: this.courseForm.value.courseDescription,
+            difficulty: this.courseForm.value.difficulty
+        };
+
+        formData.append('course', new Blob([JSON.stringify(newCourse)], { type: 'application/json' }));
+
+        // ✅ **Ajouter les fichiers déjà enregistrés (sans les écraser)**
+        const existingFiles = this.courses.find(c => c.courseName === this.courseForm.value.courseName)?.fileUrls || [];
+        existingFiles.forEach(url => {
+            formData.append('existingFiles', url); // Conserver les fichiers déjà présents
+        });
+
+        // ✅ **Ajouter les nouveaux fichiers sélectionnés**
+        this.selectedFiles.forEach(file => {
+            formData.append('files', file);
+        });
+
+        this.courseService.addCourse(formData, this.selectedTrainingId).subscribe(
+            (data) => {
+                console.log('✅ Cours ajouté avec fichiers:', data);
+                this.courses.push(data);
+                this.courseForm.reset();
+                this.selectedFiles = [];
+            },
+            (error) => {
+                console.error('❌ Erreur ajout du cours', error);
+            }
         );
     }
-  }
-  
-  
-  
-  openLocalFile(fileName: string) {
-    const filePath = `${fileName}`; // ✅ Garde l'URL relative correcte
-    window.open(filePath, '_blank'); // ✅ Ouvre correctement dans un nouvel onglet
-  }
-  
-  
-  
-  
+}
+
+
+
 
   onUpdate(course: Courses): void {
-    this.courseService.updateCourse( course).subscribe(
+    const formData = new FormData();
+    formData.append('course', new Blob([JSON.stringify(course)], { type: 'application/json' }));
+
+    this.selectedFiles.forEach(file => {
+      formData.append('files', file);
+    });
+
+    this.courseService.updateCourse(course, this.selectedFiles).subscribe(
       () => {
-        console.log('Cours mis à jour');
+        console.log('✅ Cours mis à jour');
       },
       (error) => {
-        console.error('Erreur lors de la mise à jour du cours', error);
+        console.error('❌ Erreur mise à jour du cours', error);
       }
     );
   }
@@ -114,47 +139,56 @@ export class CoursesManagementComponent implements OnInit {
         this.courses = this.courses.filter(course => course.courseId !== courseId);
       },
       (error) => {
-        console.error('Erreur lors de la suppression du cours', error);
+        console.error('❌ Erreur suppression du cours', error);
       }
     );
   }
-  onFileSelected(event: any, courseId: number) {
-    const file: File = event.target.files[0]; // 📂 Récupère le fichier sélectionné
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-  
-      // 📤 Envoie le fichier au backend pour l’enregistrer
-      this.courseService.uploadFile(courseId, formData).subscribe(
-        (response) => {
-          console.log("✅ Fichier uploadé avec succès :", response);
-          this.loadCourses(); // 🔄 Recharge les cours pour afficher le fichier uploadé
-        },
-        (error) => {
-          console.error("❌ Erreur lors de l'upload du fichier", error);
-        }
-      );
-    }
-  }
-  
-  
-  
-  saveFileToUploads(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const filePath = `assets/uploads/${file.name}`; // Chemin du fichier
-      localStorage.setItem(filePath, reader.result as string); // 🔥 Simule un stockage local (alternative Angular)
-    };
-    reader.readAsDataURL(file);
-  }
-  
-  
-  
 
-  getFileName(fileUrl: string): string {
-    if (!fileUrl) return 'No File';
-    return fileUrl.split('/').pop() || 'No File'; // 🔥 Extraire le dernier élément de l'URL
-  }
-  
-  
+  onFileSelected(event: any) {
+    const files: FileList = event.target.files;
+
+    // Ajouter les nouveaux fichiers à la liste existante
+    for (let i = 0; i < files.length; i++) {
+        if (!this.selectedFiles.some(f => f.name === files[i].name)) {
+            this.selectedFiles.push(files[i]);
+        }
+    }
+
+    console.log("📂 Fichiers sélectionnés :", this.selectedFiles);
+}
+
+// Supprimer un fichier de la liste avant l'envoi
+removeFile(file: File) {
+    this.selectedFiles = this.selectedFiles.filter(f => f !== file);
+}
+
+// Extraire le nom du fichier à partir de l'URL
+extractFileName(fileUrl: string): string {
+    return fileUrl.split('/').pop() || 'Unknown File';
+}
+
+
+ // ✅ Fonction pour ouvrir un fichier
+ openFile(fileUrl: string): void {
+  const filename = this.extractFileName(fileUrl);
+  this.courseService.openFile(filename);
+}
+
+  onTrainingChange(event: any): void {
+    console.log("🎯 Training sélectionné :", this.selectedTrainingId);
+}
+// ✅ Ouvrir le modal avec les fichiers du cours sélectionné
+openFilesModal(fileUrls: string[]) {
+  console.log("🔍 Ouverture du modal, fichiers reçus :", fileUrls);
+  this.selectedCourseFiles = fileUrls;
+  this.showFileModal = true;
+}
+
+
+// ✅ Fermer le modal
+closeFilesModal() {
+  this.showFileModal = false;
+  this.selectedCourseFiles = [];
+}
+
 }

@@ -4,8 +4,8 @@ export class Courses {
         courseName: string;
         courseDescription: string;
         difficulty:string;
-        fileUrls:string
-}
+        fileUrls!: string[]; // ✅ Correction ici : doit être un tableau
+    }
 
 export enum CourseDifficulty {
     EASY,
