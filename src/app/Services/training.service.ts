@@ -53,6 +53,9 @@ getTrainingsByQuiz(quizId: number): Observable<Training[]> {
   return this.http.get<Training[]>(`${this.apiUrl}/quiz/${quizId}`);
 }
 
+getTrainingsForCourse(courseId: number): Observable<Training[]> {
+  return this.http.get<Training[]>(`${this.apiUrl}/courses/${courseId}`);
+}
 
 
 }

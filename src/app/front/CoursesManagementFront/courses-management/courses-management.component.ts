@@ -26,6 +26,8 @@ export class CoursesManagementComponent implements OnInit {
 // ✅ Variables pour gérer l'affichage du modal et les fichiers sélectionnés
 showFileModal: boolean = false;
 selectedCourseFiles: string[] = [];
+editingCourse: Courses | null = null;
+isEditing: boolean = false;  // ✅ Ajout d'un état pour savoir si on est en mode update
 
 
 
@@ -35,12 +37,12 @@ selectedCourseFiles: string[] = [];
     private trainingService: TrainingService
   ) {
     this.courseForm = this.fb.group({
-      courseName: ['', Validators.required],
-      courseDescription: ['', Validators.required],
+      courseName: ['', [Validators.required, Validators.minLength(3)]], // ✅ Min 3 caractères
+      courseDescription: ['', [Validators.required, Validators.minLength(12)]], // ✅ Min 12 caractères
       difficulty: ['', Validators.required],
       trainingId: ['', Validators.required]
-    });
-  }
+  });
+  }  
 
   ngOnInit(): void {
     this.loadCourses();
@@ -68,6 +70,7 @@ selectedCourseFiles: string[] = [];
       }
     );
   }
+
   onSubmit(): void {
     if (this.courseForm.valid) {
         console.log("📝 Training ID sélectionné :", this.selectedTrainingId);
@@ -78,60 +81,100 @@ selectedCourseFiles: string[] = [];
         }
 
         const formData = new FormData();
-
-        const newCourse: any = {
+        const courseData: any = {
+            courseId: this.isEditing ? this.editingCourse?.courseId : null, // ✅ Vérifie si c'est une mise à jour
             courseName: this.courseForm.value.courseName,
             courseDescription: this.courseForm.value.courseDescription,
-            difficulty: this.courseForm.value.difficulty
+            difficulty: this.courseForm.value.difficulty,
+            trainingId: this.courseForm.value.trainingId
         };
 
-        formData.append('course', new Blob([JSON.stringify(newCourse)], { type: 'application/json' }));
+        formData.append('course', new Blob([JSON.stringify(courseData)], { type: 'application/json' }));
 
-        // ✅ **Ajouter les fichiers déjà enregistrés (sans les écraser)**
-        const existingFiles = this.courses.find(c => c.courseName === this.courseForm.value.courseName)?.fileUrls || [];
-        existingFiles.forEach(url => {
-            formData.append('existingFiles', url); // Conserver les fichiers déjà présents
+        // ✅ Ajouter les fichiers déjà enregistrés (évite de les perdre)
+        this.selectedCourseFiles.forEach(fileUrl => {
+            formData.append('existingFiles', fileUrl);
         });
 
-        // ✅ **Ajouter les nouveaux fichiers sélectionnés**
+        // ✅ Ajouter les nouveaux fichiers sélectionnés
         this.selectedFiles.forEach(file => {
             formData.append('files', file);
         });
 
-        this.courseService.addCourse(formData, this.selectedTrainingId).subscribe(
-            (data) => {
-                console.log('✅ Cours ajouté avec fichiers:', data);
-                this.courses.push(data);
-                this.courseForm.reset();
-                this.selectedFiles = [];
-            },
-            (error) => {
-                console.error('❌ Erreur ajout du cours', error);
-            }
-        );
+        console.log("📢 Données envoyées :", courseData);
+
+        if (this.isEditing) {
+            // 🔥 **Mode Mise à jour**
+            this.courseService.updateCourse(formData).subscribe(() => {
+                console.log('✅ Cours mis à jour avec succès');
+                this.loadCourses();
+                this.resetForm();
+            }, error => console.error('❌ Erreur mise à jour du cours', error));
+        } else {
+            // 🔥 **Mode Ajout**
+            this.courseService.addCourse(formData, this.selectedTrainingId!).subscribe(() => {
+                console.log('✅ Nouveau cours ajouté');
+                this.loadCourses();
+                this.resetForm();
+            }, error => console.error('❌ Erreur ajout du cours', error));
+        }
+    } else {
+        console.error("⚠️ Formulaire invalide !");
     }
+}
+
+resetForm(): void {
+  this.courseForm.reset();
+  this.selectedTrainingId = null;
+  this.selectedFiles = [];
+  this.selectedCourseFiles = [];
+  this.isEditing = false;
+  this.editingCourse = null;
+}
+
+
+onUpdate(): void {
+  if (this.courseForm.valid && this.editingCourse) {
+      const updatedCourse: any = {
+          courseId: this.editingCourse.courseId, 
+          courseName: this.courseForm.value.courseName,
+          courseDescription: this.courseForm.value.courseDescription,
+          difficulty: this.courseForm.value.difficulty,
+          trainingId: this.courseForm.value.trainingId
+      };
+
+      const formData = new FormData();
+      formData.append('course', new Blob([JSON.stringify(updatedCourse)], { type: 'application/json' }));
+
+      // ✅ Envoyer la liste des fichiers existants sous forme de JSON (Blob)
+      formData.append('existingFiles', new Blob([JSON.stringify(this.selectedCourseFiles)], { type: 'application/json' }));
+
+      // ✅ Ajouter les nouveaux fichiers sélectionnés
+      this.selectedFiles.forEach(file => {
+          formData.append('files', file);
+      });
+
+      console.log("📢 Données envoyées au backend :", updatedCourse);
+      console.log("📢 Fichiers existants envoyés :", this.selectedCourseFiles);
+
+      this.courseService.updateCourse(formData).subscribe(
+          () => {
+              console.log('✅ Cours mis à jour avec succès');
+              this.loadCourses();
+              this.resetForm();
+          },
+          (error) => {
+              console.error('❌ Erreur mise à jour du cours', error);
+          }
+      );
+  } else {
+      console.error("⚠️ Formulaire invalide !");
+  }
 }
 
 
 
 
-  onUpdate(course: Courses): void {
-    const formData = new FormData();
-    formData.append('course', new Blob([JSON.stringify(course)], { type: 'application/json' }));
-
-    this.selectedFiles.forEach(file => {
-      formData.append('files', file);
-    });
-
-    this.courseService.updateCourse(course, this.selectedFiles).subscribe(
-      () => {
-        console.log('✅ Cours mis à jour');
-      },
-      (error) => {
-        console.error('❌ Erreur mise à jour du cours', error);
-      }
-    );
-  }
 
   onDelete(courseId: number): void {
     this.courseService.deleteCourse(courseId).subscribe(
@@ -143,6 +186,56 @@ selectedCourseFiles: string[] = [];
       }
     );
   }
+
+  editCourse(course: Courses): void {
+    console.log("✏️ Mode édition activé pour :", course);
+
+    // ✅ Passer en mode édition
+    this.isEditing = true;
+    this.editingCourse = course;
+
+    // ✅ Remplir le formulaire avec les valeurs du cours sélectionné
+    this.courseForm.patchValue({
+        courseName: course.courseName,
+        courseDescription: course.courseDescription,
+        difficulty: course.difficulty
+    });
+
+    // ✅ Stocker les fichiers existants et les afficher
+    this.selectedCourseFiles = course.fileUrls ? [...course.fileUrls] : [];
+
+    // ✅ Réinitialiser la formation sélectionnée
+    this.selectedTrainingId = null;
+
+    // 🔥 Charger la formation associée au cours
+    this.trainingService.getTrainingsForCourse(course.courseId).subscribe(
+        (trainings) => {
+            if (trainings.length > 0) {
+                this.selectedTrainingId = trainings[0].trainingId;
+                console.log("📌 Formation associée trouvée :", this.selectedTrainingId);
+
+                // ✅ Mettre à jour le formulaire avec la formation trouvée
+                this.courseForm.patchValue({
+                    trainingId: this.selectedTrainingId
+                });
+            } else {
+                console.warn("⚠️ Aucun training trouvé pour ce cours.");
+            }
+        },
+        (error) => {
+            console.error("❌ Erreur lors de la récupération de la formation associée", error);
+        }
+    );
+}
+
+
+removeExistingFile(fileUrl: string) {
+  this.selectedCourseFiles = this.selectedCourseFiles.filter(f => f !== fileUrl);
+}
+
+
+
+
 
   onFileSelected(event: any) {
     const files: FileList = event.target.files;

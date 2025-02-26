@@ -26,19 +26,9 @@ export class CourseService {
 }
 
 
-  // ✅ Mettre à jour un cours avec des fichiers
-  updateCourse(course: Courses, files?: File[]): Observable<Courses> {
-    const formData = new FormData();
-    formData.append('course', new Blob([JSON.stringify(course)], { type: 'application/json' }));
-
-    if (files) {
-      files.forEach(file => {
-        formData.append('files', file);
-      });
-    }
-
-    return this.http.put<Courses>(`${this.apiUrl}/update_course`, formData);
-  }
+updateCourse(formData: FormData): Observable<Courses> {
+  return this.http.put<Courses>(`${this.apiUrl}/update_course`, formData);
+}
 
   // ✅ Supprimer un cours
   deleteCourse(id: number): Observable<void> {
