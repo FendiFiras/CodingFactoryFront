@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EventService } from 'src/app/Service/event.service';
 import { Event as EventModel } from 'src/app/Model/event.model';
+import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
 
 
 @Component({
@@ -18,6 +19,12 @@ import { Event as EventModel } from 'src/app/Model/event.model';
 export class PlanningEventComponent implements OnInit {
   event!: EventModel; // Stocke les détails de l'événement
   idEvent!: number; // Stocke l'ID de l'événement
+  idUser!: number;
+
+  feedbacks: FeedBackEvent[] = [];
+  newFeedback: FeedBackEvent = { idFeedback: 0, rating: 0, comments: '' };
+
+  
       constructor(private route: ActivatedRoute,private eventService: EventService) {}
       ngOnInit(): void {
         // Récupérer l'ID depuis l'URL
@@ -27,6 +34,9 @@ export class PlanningEventComponent implements OnInit {
             this.idEvent = +id; // Convertir en nombre
             this.loadEventDetails();
           }
+          this.idUser=1;
+          this.loadFeedbacks();
+
         });
       }
     
@@ -41,6 +51,28 @@ export class PlanningEventComponent implements OnInit {
           }
         });
   }
+
+// Charger les feedbacks de l'événement donné
+loadFeedbacks(): void {
+  this.eventService.getComments(this.idEvent).subscribe((data) => {
+    this.feedbacks = data;
+  });
+}
+
+// Ajouter un feedback
+addFeedback(): void {
+  this.eventService.addComment(this.newFeedback,this.idEvent,this.idUser).subscribe(() => {
+    this.loadFeedbacks(); // Rafraîchir la liste après l'ajout
+    this.newFeedback = { idFeedback: 0, rating: 0, comments: '' }; // Réinitialiser le formulaire
+  });
+}
+
+
+
+getRatingArray(rating:number): number[] {
+  return new Array(rating);
+}
+
 
   
       }

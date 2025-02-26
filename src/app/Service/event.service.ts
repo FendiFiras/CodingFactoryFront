@@ -53,4 +53,16 @@ export class EventService {
         })
       );
     }
+
+
+
+     // Ajouter un commentaire
+  addComment(comment: any, eventId: number, userId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/addfeedback/${eventId}/${userId}`, comment);
+  }
+
+  // Récupérer les commentaires d'un événement
+  getComments(eventId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/feedbackevent/${eventId}`);
+  }
 }
