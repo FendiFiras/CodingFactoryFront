@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+    <h2 class="blog-details__comment__title">Forum Discussions</h2>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Discussions List -->
+    <div *ngIf="!isLoading && discussions.length > 0">
+        <div class="blog-details__comment">
+            <div *ngFor="let discussion of discussions" class="blog-details__comment__item">
+                <div class="blog-details__comment__image">
+                    <!-- You can add an image here if needed -->
+                    <img src="assets/images/blog/messenger.png" alt="discussion">
+                </div>
+                <div class="blog-details__comment__content">
+                    <h3 class="blog-details__comment__name">{{ discussion.title }}</h3>
+                    <p class="blog-details__comment__text">
+                        {{ discussion.description }}
+                    </p>
+                    <small>Likes: {{ discussion.numberOfLikes }} | Published: {{ discussion.publicationDate | date }}</small>
+                    <button class="eduact-btn" (click)="deleteDiscussion(discussion.id!)">
+                        <span class="eduact-btn__curve"></span>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Discussions Message -->
+    <div *ngIf="!isLoading && discussions.length === 0" class="alert alert-info">
+        No discussions found.
+    </div>
+
+  
+    <!-- Add Discussion Button -->
+    <button (click)="showForm = !showForm" class="btn btn-primary">
+        Ajouter une discussion
+      </button>
+      
+      <!-- Formulaire affiché uniquement si showForm est true -->
+      <div *ngIf="showForm">
+        <form (ngSubmit)="addDiscussion()">
+          <div class="form-group">
+            <label for="title">Titre :</label>
+            <input type="text" id="title" [(ngModel)]="newDiscussion.title" name="title" class="form-control" required />
+          </div>
+      
+          <div class="form-group">
+            <label for="description">Description :</label>
+            <textarea id="description" [(ngModel)]="newDiscussion.description" name="description" class="form-control" required></textarea>
+          </div>
+      
+          <button type="submit" class="btn btn-success">Ajouter</button>
+          <button type="button" class="btn btn-secondary" (click)="showForm = false">Annuler</button>
+        </form>
+      </div>
+        </div>
+  <app-footer></app-footer>

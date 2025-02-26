@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="container mt-4">
   <h2>List of Forums</h2>
 
@@ -18,15 +19,89 @@
     No forums found.
   </div>
 
-  <!-- Add Forum Button -->
-  <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
-    {{ showAddForm ? 'Cancel' : 'Add Forum' }}
-  </button>
+  <!-- Forums List -->
+  <div class="row" *ngIf="!isLoading && forums.length > 0">
+    <div class="col-xl-8 col-lg-7">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 wow fadeInUp" *ngFor="let forum of forums">
+          <div class="blog-two__item blog-two__item--list">
+            <!-- Forum Image -->
+            <div class="blog-two__image">
+              <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
+              <a [routerLink]="['/forum', forum.forum_id, ]"></a>
+            
+            </div><!-- /.blog-image -->
 
-  <!-- Add Forum Form -->
-  <div *ngIf="showAddForm" class="card p-3 mb-3">
+            <!-- Forum Content -->
+            <div class="blog-two__content">
+              <!-- Top Meta (Category and Date) -->
+              <div class="blog-two__top-meta">
+                <div class="blog-two__cats"><a href="#">Forum</a></div><!-- /.blog-cats -->
+                <div class="blog-two__date"><i class="icon-clock"></i>{{ forum.creationDate | date: 'medium' }}</div><!-- /.blog-date -->
+              </div>
+
+              <h3 class="blog-two__title">
+                <a [routerLink]="['/forum', forum.forum_id, 'discussions']">{{ forum.title }}</a>
+              </h3>
+
+              <!-- Forum Description -->
+              <p class="blog-two__text">
+                {{ forum.description }}
+              </p><!-- /.blog-content -->
+
+              <!-- Forum Meta (Author and Actions) -->
+              <div class="blog-two__meta">
+          
+                <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modifier</button>
+                <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Supprimer</button>
+              </div><!-- /.blog-meta -->
+            </div><!-- /.blog-content -->
+
+            <!-- Edit Form (Inside the Card) -->
+            <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
+              <h4>Edit Forum</h4>
+              <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input type="text" class="form-control" formControlName="title" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" formControlName="description"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Image</label>
+                  <input type="file" class="form-control" (change)="onFileSelected($event)" />
+                </div>
+                <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Save</button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Cancel</button>
+              </form>
+            </div>
+          </div><!-- /.blog-two-one -->
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="blog-page__pagination text-left clearfix">
+            <li><a href="#" class="active">1</a></li>
+            <li><a href="#">2</a></li>
+            <li class="next"><a href="#"><span class="icon-caret-right"></span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Forum Form (when not in edit mode) -->
+  <div *ngIf="!editMode">
     <h4>Add a New Forum</h4>
     <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
+      <div class="mb-3">
+        <label class="form-label">User ID</label>
+        <input type="text" class="form-control" formControlName="userId" />
+      </div>
       <div class="mb-3">
         <label class="form-label">Title</label>
         <input type="text" class="form-control" formControlName="title" />
@@ -42,29 +117,19 @@
       <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Submit</button>
     </form>
   </div>
-
-  <!-- Forums Table -->
-  <div *ngIf="!isLoading && forums.length > 0">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Image</th>
-          <th>Creation Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let forum of forums">
-          <td>{{ forum.title }}</td>
-          <td>{{ forum.description }}</td>
-          <td>
-            <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" style="max-width: 100px; max-height: 100px;" />
-            <span *ngIf="!forum.image">No Image</span>
-          </td>
-          <td>{{ forum.creationDate | date: 'medium' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
+<app-footer></app-footer>
+<style>
+  .forum-image {
+    max-width: 100%; /* L'image ne dépassera pas la largeur de son conteneur */
+    height: auto; /* Maintient le ratio de l'image */
+    border-radius: 8px; /* Coins arrondis pour un look moderne */
+    object-fit: cover; /* Assure que l'image couvre la zone sans déformation */
+    max-height: 200px; /* Limite la hauteur de l'image */
+  }
+
+  .blog-two__image {
+    overflow: hidden; /* Cache les parties de l'image qui dépassent */
+    border-radius: 8px; /* Coins arrondis pour le conteneur de l'image */
+  }
+</style>

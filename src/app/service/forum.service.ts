@@ -27,10 +27,21 @@
     
   
     // Ajouter un forum avec FormData
-    addForum(userId: number, formData: FormData): Observable<Forum> {
-      const url = `${this.apiUrl}/AddForum/${userId}`;
-      return this.http.post<Forum>(url, formData); 
+    addForum(formData: FormData): Observable<Forum> {
+      const userId = formData.get('userId');  // Récupérer userId à partir du FormData
+      return this.http.post<Forum>(`${this.apiUrl}/AddForum/${userId}`, formData);
     }
+    
+  // Modifier un forum
+updateForum(forumId: number, formData: FormData): Observable<Forum> {
+  return this.http.put<Forum>(`${this.apiUrl}/UpdateForum/${forumId}`, formData);
+}
+
+// Supprimer un forum
+deleteForum(forumId: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/delete/${forumId}`);
+}
+
     
     
   }

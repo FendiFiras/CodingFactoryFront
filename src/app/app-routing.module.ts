@@ -9,6 +9,8 @@ import { ListeForumComponent } from './front/Forum-Front/liste-forum/liste-forum
 
 import { ForumService } from 'src/app/service/forum.service';
 import { CommonModule } from '@angular/common';
+import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
+// import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
 // import { FourmsListComponent } from './front/Forum-Front/fourms-list/fourms-list.component';
 
 const routes: Routes = [
@@ -26,6 +28,14 @@ const routes: Routes = [
     path: 'ListForum',
     component: ListeForumComponent
   },
+  { path: 'forum/:forumId', component: ForumDiscussionsComponent }, // Route avec un paramètre forumId
+
+  /*
+  {
+    path: 'forum/:id/discussions',
+    component: ForumDiscussionsComponent 
+  },
+  */
 
  /*
   {
