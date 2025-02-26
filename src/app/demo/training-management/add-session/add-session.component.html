@@ -1,6 +1,9 @@
 <div class="container mt-4">
   <h2>Add Session</h2>
-
+<!-- ✅ Success Message -->
+<div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+</div>
   <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
     
     <!-- ✅ Nom de la session -->
@@ -17,7 +20,7 @@
   <label for="startTime">Start Date & Time</label>
   <input id="startTime" class="form-control" type="datetime-local" formControlName="startTime" />
   <div *ngIf="sessionForm.get('startTime')?.errors?.['invalidStartTime'] && sessionForm.get('startTime')?.touched" class="text-danger">
-    Start time must be between 08:00 and 18:00.
+    Start time must be between 08:00 and 20:00.
   </div>
 </div>
 

@@ -113,36 +113,47 @@
         <tr *ngFor="let session of sessions; let i = index">
           <th scope="row">{{ i + 1 }}</th>
           
-          <!-- Location -->
+          <!-- ✅ Location -->
           <td (dblclick)="enableEditingS('location', session)">
-            <input *ngIf="isEditingS(session, 'location')" [(ngModel)]="session.location" (blur)="updateSession(session)" />
-            <span *ngIf="!isEditingS(session, 'location')">{{ session.location }}</span>
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'location'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.location }}</span>
           </td>
-          
-          <!-- Program -->
+      
+          <!-- ✅ Program -->
           <td (dblclick)="enableEditingS('program', session)">
-            <input *ngIf="isEditingS(session, 'program')" [(ngModel)]="session.program" (blur)="updateSession(session)" />
-            <span *ngIf="!isEditingS(session, 'program')">{{ session.program }}</span>
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'program'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.program }}</span>
           </td>
-          
-          <!-- Start Time -->
+      
+          <!-- ✅ Start Time -->
           <td (dblclick)="enableEditingS('startTime', session)">
-            <input *ngIf="isEditingS(session, 'startTime')" [(ngModel)]="session.startTime" type="datetime-local" (blur)="updateSession(session)" />
-            <span *ngIf="!isEditingS(session, 'startTime')">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'startTime'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   type="datetime-local" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
           </td>
-          
-          <!-- End Time -->
+      
+          <!-- ✅ End Time -->
           <td (dblclick)="enableEditingS('endTime', session)">
-            <input *ngIf="isEditingS(session, 'endTime')" [(ngModel)]="session.endTime" type="datetime-local" (blur)="updateSession(session)" />
-            <span *ngIf="!isEditingS(session, 'endTime')">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'endTime'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   type="datetime-local" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
           </td>
-          
-          <!-- Delete Button -->
+      
+          <!-- ✅ Delete Button -->
           <td>
             <button class="btn btn-danger rounded" (click)="deleteSession(session.sessionId)">Delete</button>
           </td>
         </tr>
       </tbody>
+      
     </table>
   </div>
 </app-card>

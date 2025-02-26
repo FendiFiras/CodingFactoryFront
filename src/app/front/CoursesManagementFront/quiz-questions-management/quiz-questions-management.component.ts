@@ -38,11 +38,15 @@ export class QuizQuestionsManagementComponent implements OnInit {
   ) {
     this.questionForm = this.fb.group({
       quizId: [{ value: '', disabled: true }, Validators.required], // ✅ Désactivé au chargement
-      questionText: ['', Validators.required],
+      questionText: ['', [Validators.required, Validators.minLength(2)]], // ✅ Min 2 caractères
       maxGrade: ['', [Validators.required, Validators.min(1)]],
       answers: this.fb.array([
-        this.fb.group({ answerText: '', correct: true }) // ✅ Ajout d'une réponse initiale
-      ])    });
+        this.fb.group({
+          answerText: ['', [Validators.required, Validators.minLength(2)]], // ✅ Min 2 caractères
+          correct: [false] // ✅ Booléen
+        })
+      ])
+    });
   }
 
   ngOnInit(): void {
@@ -186,34 +190,37 @@ loadQuizDetails(quizId: number): void {
 editQuestion(question: QuizQuestion): void {
   console.log("✏️ Mode édition activé pour la question :", question);
 
-  this.editingQuestion = question; // ✅ Active le mode édition
-  this.isEditing = true; // ✅ Active le flag d'édition
+  this.editingQuestion = question;
+  this.isEditing = true;
 
   this.questionForm.patchValue({
-      quizId: question.idQuizQ,
-      questionText: question.questionText,
-      maxGrade: question.maxGrade
+    quizId: question.idQuizQ,
+    questionText: question.questionText,
+    maxGrade: question.maxGrade
   });
 
+  // ✅ Avant d'ajouter de nouvelles réponses, on vide le FormArray
   this.answers.clear();
 
   this.quizQuestionService.getAnswersByQuestionId(question.idQuizQ).subscribe(
-      (answers) => {
-          answers.forEach(ans => {
-              this.answers.push(
-                  this.fb.group({
-                      idQuizA: ans.idQuizA, // ✅ Garde l'ID pour mise à jour
-                      answerText: ans.answerText,
-                      isCorrect: !!ans.correct
-                    })
-              );
-          });
+    (answers) => {
+      answers.forEach(ans => {
+        this.answers.push(
+          this.fb.group({
+            idQuizA: [ans.idQuizA], // ✅ ID pour l'update
+            answerText: [ans.answerText, Validators.required], // ✅ Ajout de validation
+            correct: [ans.correct === true] // ✅ S'assurer que c'est un booléen
+          })
+        );
+      });
 
-          this.addEmptyAnswer(); // ✅ Ajoute une réponse vide pour l'édition
-      },
-      (error) => console.error("❌ Erreur lors du chargement des réponses", error)
+      console.log("📌 Réponses après ajout au formulaire :", this.answers.value);
+    },
+    (error) => console.error("❌ Erreur lors du chargement des réponses", error)
   );
 }
+
+
 
 addEmptyAnswer(): void {
   this.answers.push(
@@ -264,13 +271,16 @@ deleteQuestion(idQuizQ: number): void {
     if (answerControl) {
       const isChecked = answerControl.get('correct')?.value;
   
-      console.log(`📢 Checkbox changée pour la réponse ${index}:`, isChecked); // 🔍 Debug
+      console.log(`📢 Checkbox changée pour la réponse ${index}:`, isChecked);
   
       answerControl.patchValue({
-        correct: isChecked ? 1 : 0 // ✅ Convertir `true/false` en `1/0`
+        correct: isChecked ? true : false // ✅ Corrige la valeur pour éviter `undefined`
       });
+    } else {
+      console.warn(`⚠️ Impossible de mettre à jour la réponse à l'index ${index}`);
     }
   }
+  
   updateQuestion(quizId: number): void {
     if (!this.editingQuestion) {
         console.error("❌ Erreur : Aucune question en édition !");
@@ -281,25 +291,25 @@ deleteQuestion(idQuizQ: number): void {
         idQuizQ: this.editingQuestion.idQuizQ,
         questionText: this.questionForm.get('questionText')?.value,
         maxGrade: this.questionForm.get('maxGrade')?.value,
-        quizAnswers: [] // ⚠️ On ne met pas à jour les réponses ici
+        quizAnswers: this.answers.value // ✅ Inclure les réponses ici
     };
 
-    console.log("✏ Mise à jour de la question :", updatedQuestion);
+    console.log("✏ Mise à jour de la question avec les réponses :", updatedQuestion);
 
     this.quizQuestionService.updateQuestion(updatedQuestion).subscribe(
         () => {
             console.log('✅ Question mise à jour avec succès');
+            this.updateAnswers(quizId); // ✅ Mise à jour des réponses après la question
 
-            // ⬇️ Mise à jour locale pour un meilleur affichage immédiat
-            this.questions = this.questions.map(q => 
-                q.idQuizQ === updatedQuestion.idQuizQ ? { ...q, ...updatedQuestion } : q
-            );
 
-            this.cancelEdit(); // ✅ Réinitialise le formulaire après mise à jour
+            setTimeout(() => {
+              window.location.reload();
+          }, 500);
         },
         (error) => console.error('❌ Erreur lors de la mise à jour de la question', error)
     );
 }
+
 
 
 
@@ -324,7 +334,7 @@ updateAnswers(quizId: number): void {
               correct: !!answer.correct,
           });
       }
-  }).filter(request => request !== null);
+  });
 
   if (answerUpdateRequests.length === 0) {
       console.warn("⚠️ Aucune réponse à mettre à jour !");
@@ -339,12 +349,13 @@ updateAnswers(quizId: number): void {
           this.loadQuestionsByQuiz(quizId);
           this.cancelEdit();
       },
-      (error) => console.error('❌ Erreur lors de la mise à jour des réponses', error)
+      (error) => {
+          console.error('❌ Erreur lors de la mise à jour des réponses', error);
+          alert("❌ Une erreur est survenue lors de la mise à jour des réponses !");
+      }
   );
 }
-
-
-  }
+}
   
   
   

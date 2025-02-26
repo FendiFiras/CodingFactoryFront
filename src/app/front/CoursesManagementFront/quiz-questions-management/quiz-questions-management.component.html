@@ -80,11 +80,21 @@
                         <!-- Champ pour la question -->
                         <div class="become-team__input-box">
                             <input type="text" formControlName="questionText" class="form-control" placeholder="Enter the question" required>
+                            <div *ngIf="questionForm.get('questionText')?.invalid && questionForm.get('questionText')?.touched" class="text-danger">
+                                <small *ngIf="questionForm.get('questionText')?.errors?.['required']">⚠ This field is required.</small>
+                                <small *ngIf="questionForm.get('questionText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
+                              </div>
+                              
                         </div>
 
                         <!-- Champ pour la note max -->
                         <div class="become-team__input-box">
                             <input type="number" formControlName="maxGrade" class="form-control" placeholder="Max Grade" required>
+                            <div *ngIf="questionForm.get('maxGrade')?.invalid && questionForm.get('maxGrade')?.touched" class="text-danger">
+                                <small *ngIf="questionForm.get('maxGrade')?.errors?.['required']">⚠ This field is required.</small>
+                                <small *ngIf="questionForm.get('maxGrade')?.errors?.['min']">⚠ Value must be at least 1.</small>
+                              </div>
+                              
                         </div>
                         <div class="become-team__input-box">
                             <h4>Answers</h4>
@@ -92,10 +102,14 @@
                                 <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
                                     <!-- Champ texte pour la réponse -->
                                     <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
-                        
+                                    <div *ngIf="answer.get('answerText')?.invalid && answer.get('answerText')?.touched" class="text-danger">
+                                        <small *ngIf="answer.get('answerText')?.errors?.['required']">⚠ This field is required.</small>
+                                        <small *ngIf="answer.get('answerText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
+                                      </div>
+                                      
                                     <!-- Checkbox avec mise à jour forcée -->
                                     <div class="input-group-text">
-                                        <input type="checkbox" formControlName="isCorrect" (change)="updateCorrectValue(i)">
+                                        <input type="checkbox" formControlName="correct" (change)="updateCorrectValue(i)">
                                         <label class="ms-2">Correct</label>
                                     </div>
                                     
@@ -111,9 +125,10 @@
                         
                         <!-- Boutons -->
                         <div class="become-team__btn-box d-flex justify-content-between">
-                            <button type="submit" class="eduact-btn eduact-btn-second">
+                            <button type="submit" class="eduact-btn eduact-btn-second" [disabled]="questionForm.invalid">
                                 <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
-                            </button>
+                              </button>
+                              
                             <button type="button" class="eduact-btn eduact-btn-second" (click)="manageQuizzes()">
                                 <span class="eduact-btn__curve"></span>Manage Quizzes<i class="icon-arrow"></i>
                             </button>

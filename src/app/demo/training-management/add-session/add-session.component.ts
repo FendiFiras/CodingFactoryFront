@@ -35,6 +35,8 @@ import { CourseService } from 'src/app/Services/courses.service';
 export class AddSessionComponent implements OnInit {
   sessionForm: FormGroup;
   courses: Courses[] = [];
+  successMessage: string = ''; // ✅ Variable pour stocker le message de succès
+
 
 
 
@@ -89,6 +91,8 @@ export class AddSessionComponent implements OnInit {
         this.sessionService.createSession(newSession, courseId).subscribe(
             (response) => {
                 console.log("✅ Session ajoutée avec succès:", response);
+                this.successMessage = '✅ Session added successfully!';
+
                 this.sessionForm.reset();
             },
             (error) => {

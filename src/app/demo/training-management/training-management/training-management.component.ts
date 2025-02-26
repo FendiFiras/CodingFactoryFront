@@ -45,6 +45,9 @@ export class TrainingManagementComponent implements OnInit {
   editing: { [key: number]: string[] } = {};  // Stocker les champs en édition pour chaque formation
   courses: Courses[] = [];
   sessions: Session[] = [];
+
+  editingSessions: { [key: number]: { field: string, value: any } } = {};
+
   constructor(
     private trainingService: TrainingService,
     private courseService: CourseService,
@@ -116,18 +119,59 @@ export class TrainingManagementComponent implements OnInit {
     return this.editing[training.trainingId] && this.editing[training.trainingId].includes(field);
   }
 
-  // Mettre à jour la formation après modification
   updateTraining(training: Training): void {
+    // ✅ Vérifier si le nom de la formation a au moins 5 caractères
+    if (training.trainingName.length < 5) {
+        console.error('❌ Le nom de la formation doit contenir au moins 5 caractères !');
+        alert('Le nom de la formation doit contenir au moins 5 caractères !');
+        return;
+    }
+
+    // ✅ Vérifier que la date de début est au moins 5 jours après aujourd’hui
+    const minStartDate = new Date();
+    minStartDate.setDate(minStartDate.getDate() + 5);
+    const startDate = new Date(training.startDate);
+
+    if (startDate < minStartDate) {
+        console.error('❌ La date de début doit être au moins 5 jours après aujourd’hui !');
+        alert('La date de début doit être au moins 5 jours après aujourd’hui !');
+        return;
+    }
+
+    // ✅ Vérifier que la date de fin est après la date de début
+    const endDate = new Date(training.endDate);
+    if (endDate <= startDate) {
+        console.error('❌ La date de fin doit être après la date de début !');
+        alert('La date de fin doit être après la date de début !');
+        return;
+    }
+
+    // ✅ Vérifier que le type de formation est sélectionné
+    if (!training.type) {
+        console.error('❌ Le type de formation est obligatoire !');
+        alert('Le type de formation est obligatoire !');
+        return;
+    }
+
+ // ✅ Vérifier que le prix est requis et n'est pas négatif
+ if (training.price === null || training.price === undefined || training.price < 0) {
+  console.error('❌ Le prix est obligatoire et ne peut pas être négatif !');
+  alert('Le prix est obligatoire et ne peut pas être négatif !');
+  return;
+}
+
+    // ✅ Mise à jour si tout est valide
     this.trainingService.updateTraining(training).subscribe(
-      (response) => {
-        console.log('Formation mise à jour avec succès:', response);
-        this.editing[training.trainingId] = [];  // Désactiver l'édition après mise à jour
-      },
-      (error) => {
-        console.error('Erreur lors de la mise à jour de la formation:', error);
-      }
+        (response) => {
+            console.log('✅ Formation mise à jour avec succès:', response);
+            this.editing[training.trainingId] = []; // Désactiver l'édition après mise à jour
+        },
+        (error) => {
+            console.error('❌ Erreur lors de la mise à jour de la formation:', error);
+        }
     );
-  }
+}
+
 
   deleteTraining(trainingId: number): void {
     this.trainingService.deleteTraining(trainingId).subscribe(
@@ -161,30 +205,82 @@ export class TrainingManagementComponent implements OnInit {
       }
     );
   }
+
+
+// ✅ Désactiver l'édition après modification
+disableEditing(sessionId: number) {
+  delete this.editingSessions[sessionId];
+}
    // Vérifier si un champ est en cours d'édition
    isEditingS(session: Session, field: string): boolean {
     return this.editing[session.sessionId] && this.editing[session.sessionId].includes(field);
   }
 
-  // Activer l'édition d'un champ spécifique pour une session
-  enableEditingS(field: string, session: Session): void {
-    if (!this.editing[session.sessionId]) {
-      this.editing[session.sessionId] = [];
-    }
-    this.editing[session.sessionId].push(field);
+// ✅ Activer le mode édition sur un champ spécifique
+enableEditingS(field: string, session: Session) {
+  this.editingSessions[session.sessionId] = { field, value: session[field] };
+}
+
+updateSession(session: Session) {
+  const editedField = this.editingSessions[session.sessionId];
+  if (!editedField) return;
+
+  const { field, value } = editedField;
+
+  // ✅ Validation des horaires
+  if (field === 'startTime' || field === 'endTime') {
+      const newDate = new Date(value);
+      const hour = newDate.getHours();
+
+      // ✅ Start Time doit être entre 08:00 et 20:00
+      if (field === 'startTime' && (hour < 8 || hour > 20)) {
+          console.error("❌ L'heure de début doit être entre 08:00 et 20:00 !");
+          alert("L'heure de début doit être entre 08:00 et 20:00 !");
+          return;
+      }
+
+      // ✅ Vérification de End Time
+      if (field === 'endTime') {
+          const startTime = new Date(session.startTime);
+          
+          // ✅ L'heure de fin doit être après l'heure de début
+          if (newDate <= startTime) {
+              console.error("❌ L'heure de fin doit être après l'heure de début !");
+              alert("L'heure de fin doit être après l'heure de début !");
+              return;
+          }
+
+          // ✅ Vérifier que la session ne dépasse pas 3 heures
+          const diffInHours = (newDate.getTime() - startTime.getTime()) / (1000 * 60 * 60);
+          if (diffInHours > 3) {
+              console.error("❌ La session ne peut pas durer plus de 3 heures !");
+              alert("La session ne peut pas durer plus de 3 heures !");
+              return;
+          }
+      }
   }
 
-  // Mettre à jour la session après modification
-  updateSession(session: Session): void {
-    this.sessionService.updateSession(session).subscribe(
-      (response) => {
-        console.log('Session mise à jour avec succès:', response);
-        this.editing[session.sessionId] = [];  // Désactiver l'édition après mise à jour
+  // ✅ Validation du programme
+  if (field === 'program' && value.length < 10) {
+      console.error("❌ Le programme doit contenir au moins 10 caractères !");
+      alert("Le programme doit contenir au moins 10 caractères !");
+      return;
+  }
+
+  // ✅ Envoi de la mise à jour
+  const updatedSession = { ...session, [field]: value };
+
+  this.sessionService.updateSession(updatedSession).subscribe(
+      () => {
+          console.log("✅ Session mise à jour avec succès !");
+          session[field] = value;
+          this.disableEditing(session.sessionId);
       },
       (error) => {
-        console.error('Erreur lors de la mise à jour de la session:', error);
+          console.error("❌ Erreur lors de la mise à jour :", error);
       }
-    );
-  }
-  
+  );
+}
+
+
 }  

@@ -1,6 +1,8 @@
 <div class="container mt-4">
   <h2>Add Training</h2>
-
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
   <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
     <!-- ✅ Nom de formation -->
     <div class="form-group">

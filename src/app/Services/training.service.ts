@@ -45,4 +45,14 @@ export class TrainingService {
     return this.http.get<Training[]>(`${this.apiUrl}/user/${userId}`);
   }
   
+// ✅ Fonction pour affecter un quiz à une formation
+assignQuizToTraining(trainingId: number, quizId: number): Observable<void> {
+  return this.http.put<void>(`${this.apiUrl}/assign-quiz/${trainingId}/${quizId}`, {});
+}
+getTrainingsByQuiz(quizId: number): Observable<Training[]> {
+  return this.http.get<Training[]>(`${this.apiUrl}/quiz/${quizId}`);
+}
+
+
+
 }

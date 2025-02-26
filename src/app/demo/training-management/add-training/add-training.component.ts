@@ -14,7 +14,9 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Training } from '../../../Models/training.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 @Component({
 
 
@@ -32,7 +34,10 @@ import { Location } from '@angular/common';
     NavContentComponent,
     NavLogoComponent,
     NavBarComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatInputModule
   ],
   templateUrl: './add-training.component.html',
   styleUrls: ['./add-training.component.scss'],
@@ -42,6 +47,7 @@ export class AddTrainingComponent {
   trainingTypes: string[] = ['ONLINE', 'ON_SITE'];  // ✅ Liste des types
   showAddTraining: boolean = false; // ✅ Variable pour afficher ou masquer le formulaire
   minStartDate: string; // ✅ Stocke la date minimale autorisée pour Start Date
+  successMessage: string = ''; // ✅ Variable pour stocker le message de succès
 
   instructors = [
     { id: 1, name: 'John Doe' },
@@ -94,23 +100,34 @@ export class AddTrainingComponent {
     return endDate > startDate ? null : { invalidEndDate: true };
   }
 
-  // ✅ Soumettre le formulaire
-  onSubmit() {
-    if (this.trainingForm.valid) {
-      const newTraining: Training = this.trainingForm.value;
-      this.trainingService.addTraining(newTraining, this.userId).subscribe(
-        (response) => {
-          console.log('Formation ajoutée avec succès:', response);
-          this.trainingForm.reset();
-        },
-        (error) => {
-          console.error('Erreur lors de l\'ajout de la formation:', error);
-        }
-      );
-    } else {
-      console.error('Le formulaire est invalide');
-    }
+ // ✅ Soumettre le formulaire et afficher le message de succès
+ onSubmit() {
+  if (this.trainingForm.valid) {
+    const newTraining: Training = this.trainingForm.value;
+    this.trainingService.addTraining(newTraining, this.userId).subscribe(
+      (response) => {
+        console.log('✅ Formation ajoutée avec succès:', response);
+        
+        // ✅ Afficher le message de succès
+        this.successMessage = '✅ Training added successfully!';
+
+        // ✅ Réinitialiser le formulaire après ajout
+        this.trainingForm.reset();
+
+        // ✅ Masquer le message après 3 secondes
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+      },
+      (error) => {
+        console.error('❌ Erreur lors de l\'ajout de la formation:', error);
+      }
+    );
+  } else {
+    console.error('⚠️ Le formulaire est invalide');
   }
+}
+
 
   // ✅ Fonction pour revenir en arrière
   goBack(): void {
