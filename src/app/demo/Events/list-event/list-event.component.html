@@ -1,103 +1,98 @@
 <div class="col-xl-12">
-    <div class="table-responsive">
-      <table class="table table-striped">
-       
-       <thead>
-  <tr>
-    <th>#</th>
-    <th>Titre</th>
-    <th>Description</th>
-    <th>Lieu</th>
-    <th>Date de début</th>
-    <th>Date de fin</th>
-    <th>Prix</th>
-    <th>Image</th> <!-- Add column for Image -->
-    <th>Video</th> <!-- Add column for Image -->
-
-    <th>Type d'événement</th> <!-- Add column for Event Type -->
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody>
-  <tr *ngFor="let event of events; let i = index" (dblclick)="openModifyPopup(event)">
-    <th scope="row">{{ i + 1 }}</th>
-    <td>{{ event.title }}</td>
-    <td>{{ event.description | slice:0:50 }}...</td>
-    <td>{{ event.location }}</td>
-    <td>{{ event.startDate | date: 'dd/MM/yyyy' }}</td>
-    <td>{{ event.endDate | date: 'dd/MM/yyyy' }}</td>
-    <td>{{ event.price | currency: 'EUR' }}</td>
-    <td>
-        <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" height="50" width="50">
-      </td>
-      <td>
-        <video *ngIf="event.videoUrl" [src]="'http://localhost:8089/event/' + event.videoUrl" height="50" width="50" controls></video>
-      </td>
-             <!-- Display video link -->
-    <td>{{ event.eventType }}</td> <!-- Display event type -->
-    <td>
-      <button (click)="deleteEvent(event.idEvent)" class="styled-delete-button">
-        <span>Delete</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </td>
-  </tr>
-</tbody>
-
-
-
-
-      </table>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Lieu</th>
+          <th>Date de début</th>
+          <th>Date de fin</th>
+          <th>Prix</th>
+          <th>Image</th>
+          <th>Video</th>
+          <th>Type d'événement</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events; let i = index" (dblclick)="openModifyPopup(event)">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ event.title }}</td>
+          <td>{{ event.description | slice:0:50 }}...</td>
+          <td>{{ event.location }}</td>
+          <td>{{ event.startDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ event.endDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ event.price | currency: 'EUR' }}</td>
+          <td>
+            <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" height="50" width="50">
+          </td>
+          <td>
+            <video *ngIf="event.videoUrl" [src]="'http://localhost:8089/event/' + event.videoUrl" height="50" width="50" controls></video>
+          </td>
+          <td>{{ event.eventType }}</td>
+          <td>
+            <button (click)="deleteEvent(event.idEvent)" class="styled-delete-button">
+              <span>Delete</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Button to view details -->
+            <button (click)="goToEventDetails(event.idEvent)" class="styled-detail-button">
+              <span>Détail</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  
- <!-- Modal for modifying the event -->
+</div>
+
+<!-- Modal for modifying the event -->
 <div *ngIf="selectedEvent" class="modal" [ngClass]="{ 'show': selectedEvent }">
-    <div class="modal-content">
-      <h3>Edit Event</h3>
-      <form (ngSubmit)="updateEvent()">
-        <label for="title">Title:</label>
-        <input type="text" [(ngModel)]="selectedEvent.title" name="title" required />
-  
-        <label for="description">Description:</label>
-        <br>
-        <textarea [(ngModel)]="selectedEvent.description" name="description" required  style="width: 100%; resize: none;
-        min-height: 100px; "></textarea>
-           <br>
-        <label for="location">Location:</label>
-        <input type="text" [(ngModel)]="selectedEvent.location" name="location" required />
-  
-        <label for="startDate">Start Date:</label>
-        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
-  
-        <label for="endDate">End Date:</label>
-        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
-  
-        <label for="price">Price:</label>
-        <input type="number" [(ngModel)]="selectedEvent.price" name="price" required />
-  
-        <!-- Image Upload -->
-        <label for="image">Event Image:</label>
-        <input type="file" (change)="onFileSelected($event, 'image')" />
-        <img *ngIf="selectedEvent.imageUrl" [src]="'http://localhost:8089/event/' + selectedEvent.imageUrl" alt="Event Image" width="100" />
-  
-        <!-- Video Upload -->
-        <label for="video">Event Video:</label>
-        <input type="file" (change)="onFileSelected($event, 'video')" />
-        <video *ngIf="selectedEvent.videoUrl" [src]="'http://localhost:8089/event/' + selectedEvent.videoUrl" width="200" controls></video>
-          <br>
-        <!-- Event Type Selection -->
-        <label for="eventType">Event Type:</label>
-        <select [(ngModel)]="selectedEvent.eventType" name="eventType" required>
-          <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
-        </select>
-  <br>
-  <br>
-        <button type="submit">Save</button>
-        <button type="button" (click)="closeModal()">Cancel</button>
-      </form>
-    </div>
+  <div class="modal-content">
+    <h3>Edit Event</h3>
+    <form (ngSubmit)="updateEvent()">
+      <label for="title">Title:</label>
+      <input type="text" [(ngModel)]="selectedEvent.title" name="title" required />
+
+      <label for="description">Description:</label>
+      <br>
+      <textarea [(ngModel)]="selectedEvent.description" name="description" required  style="width: 100%; resize: none; min-height: 100px;"></textarea>
+      <br>
+      <label for="location">Location:</label>
+      <input type="text" [(ngModel)]="selectedEvent.location" name="location" required />
+
+      <label for="startDate">Start Date:</label>
+      <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
+
+      <label for="endDate">End Date:</label>
+      <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
+
+      <label for="price">Price:</label>
+      <input type="number" [(ngModel)]="selectedEvent.price" name="price" required />
+
+      <!-- Image Upload -->
+      <label for="image">Event Image:</label>
+      <input type="file" (change)="onFileSelected($event, 'image')" />
+      <img *ngIf="selectedEvent.imageUrl" [src]="'http://localhost:8089/event/' + selectedEvent.imageUrl" alt="Event Image" width="100" />
+
+      <!-- Video Upload -->
+      <label for="video">Event Video:</label>
+      <input type="file" (change)="onFileSelected($event, 'video')" />
+      <video *ngIf="selectedEvent.videoUrl" [src]="'http://localhost:8089/event/' + selectedEvent.videoUrl" width="200" controls></video>
+      <br>
+
+      <!-- Event Type Selection -->
+      <label for="eventType">Event Type:</label>
+      <select [(ngModel)]="selectedEvent.eventType" name="eventType" required>
+        <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
+      </select>
+      <br><br>
+      <button type="submit">Save</button>
+      <button type="button" (click)="closeModal()">Cancel</button>
+    </form>
   </div>
-  
+</div>

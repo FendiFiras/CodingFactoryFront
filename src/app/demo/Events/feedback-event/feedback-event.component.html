@@ -1,1 +1,86 @@
-<p>feedback-event works!</p>
+
+<div class="feedback-container">
+    <h3>Participants inscrits</h3>
+    
+    <!-- Vérifie si des participants existent -->
+    <div *ngIf="registrations.length > 0; else noRegistration">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Date d'inscription</th>
+              <th>Confirmation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registration of registrations">
+              <td>{{ registration.user?.firstName }} {{ registration.user?.lastName }}</td>
+              <td>{{ registration.registrationDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ registration.confirmation ? 'Confirmé' : 'Non confirmé' }}</td>
+              <td>
+                <button class="styled-delete-button" (click)="deleteRegistration(registration.idRegistration)">
+                  <span>Supprimer</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Si aucun participant n'est disponible -->
+    <ng-template #noRegistration>
+      <p>Aucun participant inscrit à cet événement.</p>
+    </ng-template>
+    
+    <h3>Commentaires des utilisateurs</h3>
+  
+    <!-- Vérifie si des feedbacks existent -->
+    <div *ngIf="feedbacks.length > 0; else noFeedback">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Date</th>
+              <th>Commentaire</th>
+              <th>Note</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let feedback of feedbacks">
+              <td>{{ feedback.user?.firstName }} {{ feedback.user?.lastName }}</td>
+              <td>{{ feedback.feedbackDate ? (feedback.feedbackDate | date: 'dd/MM/yyyy') : 'Non spécifiée' }}</td>
+              <td>"{{ feedback.comments }}"</td>
+              <td>
+                <div class="feedback-rating">
+                  <span *ngFor="let star of [].constructor(feedback.rating)" class="fa fa-star"></span>
+                </div>
+              </td>
+              <td>
+                <button class="styled-delete-button" (click)="deleteFeedBack(feedback.idFeedback)">
+                  <span>Supprimer</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Si aucun commentaire n'est disponible -->
+    <ng-template #noFeedback>
+      <p>Aucun commentaire pour cet événement.</p>
+    </ng-template>
+  
+    </div>
+  

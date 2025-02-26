@@ -65,4 +65,30 @@ export class EventService {
   getComments(eventId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/feedbackevent/${eventId}`);
   }
+
+
+//delete FeedBack
+  deleteFeedBackEvent(idFeedBackEvent: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/deletefeedback/${idFeedBackEvent}`);
+  }
+
+
+
+
+
+   // Récupérer les commentaires d'un événement
+   getRegistrations(eventId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/registration/${eventId}`);
+  }
+
+
+//delete FeedBack
+  deleteRegistration(idRegistration: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/deleteregistration/${idRegistration}`);
+  }
+
+//verfier participation 
+  checkUserParticipation(eventId: number, userId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/checkparticipant/${eventId}/${userId}`);
+  }
 }

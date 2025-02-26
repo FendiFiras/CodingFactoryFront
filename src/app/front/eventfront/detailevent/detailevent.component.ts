@@ -36,6 +36,8 @@ export class DetaileventComponent implements OnInit {
 
           }
           this.idUser=1;
+          this.loadFeedbacks();
+
         });
       }
     

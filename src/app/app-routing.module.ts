@@ -46,6 +46,10 @@ const routes: Routes = [
   loadComponent: () => import('./demo/Events/list-event/list-event.component').then((c) => c.ListEventComponent) // Chargement du composant Events
 },
 
+{path: 'feedback/:id',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/feedback-event/feedback-event.component').then((c) => c.FeedbackEventComponent) // Chargement du composant Events
+},
+
 
       {
         path: 'basic',

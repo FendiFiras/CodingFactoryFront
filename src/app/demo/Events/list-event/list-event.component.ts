@@ -3,6 +3,7 @@ import { EventService } from 'src/app/Service/event.service';
 import { Event as EventModel } from 'src/app/Model/event.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-event',
@@ -19,7 +20,7 @@ export class ListEventComponent implements OnInit {
   // Liste des types d'événements disponibles (extrait de ton enum)
   eventTypes: string[] = ['CONFERENCE', 'WORKSHOP', 'MEETUP'];
 
-  constructor(private eventService: EventService) {}
+  constructor(private eventService: EventService,private router:Router) {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -34,6 +35,11 @@ export class ListEventComponent implements OnInit {
         console.error('Erreur lors du chargement des événements', error);
       }
     );
+  }
+
+  // Méthode pour naviguer vers la page FeedbackEventComponent
+  goToEventDetails(eventId: number): void {
+    this.router.navigate([`/feedback/${eventId}`]);  // Navigation vers FeedbackEventComponent avec l'ID de l'événement
   }
 
   deleteEvent(id: number): void {

@@ -5,7 +5,7 @@ import { Event as EventModel } from 'src/app/Model/event.model';
 import { EventService } from 'src/app/Service/event.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-listevenement',
@@ -16,10 +16,14 @@ import { RouterModule } from '@angular/router';
 })
 export class ListevenementComponent implements OnInit {
     events: EventModel[] = [];
-      constructor(private eventService: EventService) {}
+    isAlreadyRegistered: boolean | null = null;  // Réponse de l'API
+    idUser: number = 0;
+
+      constructor(private eventService: EventService,private router:Router) {}
     
       ngOnInit(): void {
         this.loadEvents();
+        this.idUser=1;
       }
     
       loadEvents(): void {
@@ -33,4 +37,22 @@ export class ListevenementComponent implements OnInit {
         );
       }
 
-}
+      checkParticipation(idEvent:number): void {
+        this.eventService.checkUserParticipation(idEvent,this.idUser).subscribe(
+          (response: boolean) => {
+            this.isAlreadyRegistered = response;
+            if(this.isAlreadyRegistered)
+            {
+              this.router.navigate([`/planningeventfront/${idEvent}`]);
+            }
+            else 
+            this.router.navigate([`/detailseventfront/${idEvent}`]);
+          },
+          (error) => {
+            this.isAlreadyRegistered = null;
+          }
+        );
+      }
+    }
+
+

@@ -58,7 +58,9 @@
                     <div class="course-two__content">
                         <div class="course-two__time">{{ event.startDate | date: 'short' }} - {{ event.endDate | date: 'short' }}</div>
                         <h3 class="course-two__title">
-                            <a [routerLink]="['/detailseventfront', event.idEvent]">{{ event.title }}</a>
+                            <button (click)="checkParticipation(event.idEvent)">
+                                {{ event.title }}
+                            </button>
                         </h3>
                         <div class="course-two__bottom">
                             <div class="course-two__author">
