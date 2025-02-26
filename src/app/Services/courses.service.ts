@@ -55,4 +55,10 @@ export class CourseService {
   getCoursesByTraining(trainingId: number): Observable<Courses[]> {
     return this.http.get<Courses[]>(`${this.apiUrl}/training/${trainingId}/courses`);
   }
+  getPdfUrl(filename: string): Observable<Blob> {
+    return this.http.get(`http://localhost:8089/Courses/${filename}`, { responseType: 'blob' });
+  }
+  
+
+
 }
