@@ -1,0 +1,71 @@
+<div class="container">
+    <h2 class="text-center">Gestion des Forums</h2>
+  
+    <button class="btn btn-primary my-3" (click)="toggleAddForm()">
+      {{ showAddForm ? 'Fermer' : 'Ajouter un forum' }}
+    </button>
+  
+    <!-- Formulaire d'ajout/mise à jour -->
+    <div *ngIf="showAddForm" class="card p-3">
+        <form [formGroup]="addForumForm" (ngSubmit)="editMode ? updateForum() : addForum()">
+          
+           <!-- Ajouter le champ userId -->
+           <div class="mb-3" *ngIf="!editMode">
+            <label for="userId" class="form-label">User ID</label>
+        <input id="userId" formControlName="userId" type="number" class="form-control" required>
+      </div>
+            <div class="mb-3">
+            <label for="title" class="form-label">Titre</label>
+            <input id="title" formControlName="title" type="text" class="form-control" required>
+          </div>
+      
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" formControlName="description" class="form-control" required></textarea>
+          </div>
+      
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input id="image" type="file" class="form-control" (change)="onFileSelected($event)">
+          </div>
+      
+          <button type="submit" class="btn btn-success">
+            {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+        </form>
+      </div>
+  
+    <!-- Chargement en cours -->
+    <div *ngIf="isLoading" class="text-center my-3">
+      <p>Chargement des forums...</p>
+    </div>
+  
+    <!-- Aucun forum trouvé -->
+    <div *ngIf="!isLoading && forums.length === 0" class="text-center">
+      <p>Aucun forum trouvé.</p>
+    </div>
+  
+    <!-- Liste des forums -->
+    <div *ngIf="forums.length > 0" class="row">
+        <p>Debug: forums.length = {{ forums.length }}</p>
+
+      <div *ngFor="let forum of forums" class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ forum.title }}</h5>
+            <p class="card-text">{{ forum.description }}</p>
+            <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Image du forum" class="img-fluid">
+            <button class="btn btn-info" (click)="navigateToDiscussions(forum.forum_id)">
+              Voir Discussions
+            </button>
+            <button class="btn btn-warning" (click)="editForum(forum)">
+              Modifier
+            </button>
+            <button class="btn btn-danger" (click)="confirmDelete(forum.forum_id)">
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
