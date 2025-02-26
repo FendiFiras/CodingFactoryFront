@@ -13,6 +13,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Training } from '../../../Models/training.model';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
 
@@ -38,39 +39,68 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class AddTrainingComponent {
   trainingForm: FormGroup;
-  trainingTypes = Object.values(TrainingType);
+  trainingTypes: string[] = ['ONLINE', 'ON_SITE'];  // ✅ Liste des types
+  showAddTraining: boolean = false; // ✅ Variable pour afficher ou masquer le formulaire
+  minStartDate: string; // ✅ Stocke la date minimale autorisée pour Start Date
+
   instructors = [
     { id: 1, name: 'John Doe' },
     { id: 2, name: 'Jane Smith' },
     { id: 3, name: 'Bob Johnson' },
   ];
 
-  // Fixer le userId à 1
-  userId: number = 1;
+  userId: number = 1;  // Fixer le userId à 1
 
   constructor(
     private fb: FormBuilder,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private location: Location
   ) {
+    this.minStartDate = this.getMinStartDate(); // ✅ Définir la date minimale
+
     this.trainingForm = this.fb.group({
-      trainingName: ['', Validators.required],
-      startDate: [null, Validators.required],
-      endDate: [null],
-      trainingType: [null, Validators.required],
+      trainingName: ['', [Validators.required, Validators.minLength(5)]], // ✅ Min 5 caractères
+      startDate: [null, [Validators.required, this.startDateValidator.bind(this)]], // ✅ Doit être supérieure à aujourd'hui + 5 jours
+      endDate: [null, [Validators.required, this.endDateValidator.bind(this)]], // ✅ Doit être après startDate
+      type: [null, Validators.required],  // ✅ CHANGEMENT: "type" au lieu de "trainingType"
       instructorId: [null, Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
-  // Méthode pour ajouter une formation
+  // ✅ Récupère la date minimale autorisée (aujourd'hui + 5 jours)
+  getMinStartDate(): string {
+    let date = new Date();
+    date.setDate(date.getDate() + 5);
+    return date.toISOString().split('T')[0];
+  }
+
+  // ✅ Validation : startDate doit être supérieure à aujourd'hui + 5 jours
+  startDateValidator(control: any) {
+    if (!control.value) return null;
+    const startDate = new Date(control.value);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 5);
+    
+    return startDate >= minDate ? null : { invalidStartDate: true };
+  }
+
+  // ✅ Validation : endDate doit être après startDate
+  endDateValidator(control: any) {
+    if (!control.value || !this.trainingForm) return null;
+    const endDate = new Date(control.value);
+    const startDate = new Date(this.trainingForm.get('startDate')?.value);
+    
+    return endDate > startDate ? null : { invalidEndDate: true };
+  }
+
+  // ✅ Soumettre le formulaire
   onSubmit() {
     if (this.trainingForm.valid) {
       const newTraining: Training = this.trainingForm.value;
-      // Ajouter la formation avec userId fixé
       this.trainingService.addTraining(newTraining, this.userId).subscribe(
         (response) => {
           console.log('Formation ajoutée avec succès:', response);
-          // Effectuer des actions après l'ajout, comme la réinitialisation du formulaire
           this.trainingForm.reset();
         },
         (error) => {
@@ -81,4 +111,10 @@ export class AddTrainingComponent {
       console.error('Le formulaire est invalide');
     }
   }
+
+  // ✅ Fonction pour revenir en arrière
+  goBack(): void {
+    this.location.back();
+  }
 }
+

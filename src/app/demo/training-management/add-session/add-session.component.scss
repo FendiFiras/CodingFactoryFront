@@ -1,0 +1,4 @@
+/* ✅ Forcer l'affichage en format 24h */
+input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+    display: none; /* Cache AM/PM */
+}

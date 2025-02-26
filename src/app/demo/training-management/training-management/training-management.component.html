@@ -17,7 +17,14 @@
                     <button *ngIf="!showAddTraining" class="btn btn-primary" (click)="toggleAddTraining()">
                       <i class="fas fa-plus"></i> Add Training
                     </button>
+
+
+                      <!-- ✅ Afficher "Back" si le formulaire est affiché -->
+  <button *ngIf="showAddTraining" class="btn btn-secondary" (click)="toggleAddTraining()">
+    🔙 Back
+  </button>
                   </div>
+                  
                   <app-add-training *ngIf="showAddTraining"></app-add-training>
 
                   <div *ngIf="!showAddTraining" class="table-responsive">
@@ -69,20 +76,27 @@
                 </app-card>
 
                 <!-- Liste des sessions -->
-              <!-- Liste des sessions -->
+            <!-- Liste des sessions -->
 <app-card cardTitle="Session List" [options]="false" blockClass="table-border-style">
   <div class="mb-3">
     <!-- Titre ajouté -->
-    <h4>Session for inPerson Trainings</h4>
+    <h4>Session for In-Person Trainings</h4>
     
-    <!-- Bouton Add Session -->
+    <!-- Boutons pour afficher ou masquer le formulaire -->
     <button *ngIf="!showAddSession" class="btn btn-primary" (click)="toggleAddSession()">
       <i class="fas fa-plus"></i> Add Session
     </button>
 
-    <app-add-session *ngIf="showAddSession"></app-add-session> <!-- Afficher le formulaire d'ajout de session -->
+    <!-- ✅ Bouton "Back" pour revenir à la liste -->
+    <button *ngIf="showAddSession" class="btn btn-secondary" (click)="toggleAddSession()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <!-- Affichage du formulaire -->
+    <app-add-session *ngIf="showAddSession"></app-add-session>
   </div>
 
+  <!-- Table des sessions -->
   <div *ngIf="!showAddSession" class="table-responsive">
     <table class="table">
       <thead>
@@ -98,6 +112,7 @@
       <tbody>
         <tr *ngFor="let session of sessions; let i = index">
           <th scope="row">{{ i + 1 }}</th>
+          
           <!-- Location -->
           <td (dblclick)="enableEditingS('location', session)">
             <input *ngIf="isEditingS(session, 'location')" [(ngModel)]="session.location" (blur)="updateSession(session)" />
@@ -131,6 +146,7 @@
     </table>
   </div>
 </app-card>
+
 
 
                 <!-- Liste des cours -->

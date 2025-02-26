@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../../Services/session.service'; // Assurez-vous d'avoir un service pour gérer les sessions
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
@@ -46,55 +46,61 @@ export class AddSessionComponent implements OnInit {
      
   ) {
     this.sessionForm = this.fb.group({
-      sessionName: ['', Validators.required], // Nom de la session
-      startDate: [null, Validators.required], // Date de début
-      endDate: [null, Validators.required], // Date de fin
-      location: ['', Validators.required], // Lieu de la session
-      courseId: [null, Validators.required],  // Modifier ici pour le champ 'courseId'
-      program: ['', Validators.required], // Programme
+      sessionName: ['', Validators.required], 
+      startTime: [null, [Validators.required, this.validateStartTime]], 
+      endTime: [null, [Validators.required, this.validateEndTime.bind(this)]], 
+      location: ['', Validators.required], 
+      courseId: [null, Validators.required],  
+      program: ['', [Validators.required, Validators.minLength(10)]], 
     });
   }
+    
 
-  // Méthode pour ajouter une session sans transformation ISO
-onSubmit() {
-  if (this.sessionForm.valid) {
-      const courseId = this.sessionForm.get('courseId')?.value;
-      if (!courseId) {
-          console.error("❌ Course ID is undefined or null!");
-          return;
-      }
-
-      // Récupération des valeurs de date sans transformation
-      const startDate = this.sessionForm.get('startDate')?.value;
-      const endDate = this.sessionForm.get('endDate')?.value;
-
-      if (!startDate || !endDate) {
-          console.error("❌ StartDate or EndDate is missing!");
-          return;
-      }
-
-      // Création de l'objet session sans modification des dates
-      const newSession: Session = {
-          ...this.sessionForm.value,
-          startDate: startDate,  // ✅ Envoi de la date brute
-          endDate: endDate
-      };
-
-      console.log("📢 Données envoyées au backend:", newSession);
-
-      this.sessionService.createSession(newSession, courseId).subscribe(
-          (response) => {
-              console.log("✅ Session added successfully:", response);
-              this.sessionForm.reset();
-          },
-          (error) => {
-              console.error("❌ Error adding session:", error);
-          }
-      );
-  } else {
-      console.error("⚠️ Form is invalid");
+  onSubmit() {
+    if (this.sessionForm.valid) {
+        const courseId = this.sessionForm.get('courseId')?.value;
+        if (!courseId) {
+            console.error("❌ Course ID is undefined or null!");
+            return;
+        }
+  
+        // 🔥 Vérifie si les dates existent avant conversion
+        const startTime = this.sessionForm.get('startTime')?.value 
+            ? new Date(this.sessionForm.get('startTime')?.value).toISOString() 
+            : null;
+        
+        const endTime = this.sessionForm.get('endTime')?.value 
+            ? new Date(this.sessionForm.get('endTime')?.value).toISOString() 
+            : null;
+  
+        if (!startTime || !endTime) {
+            console.error("❌ StartTime ou EndTime est NULL !");
+            return;
+        }
+  
+        const newSession: Session = {
+            ...this.sessionForm.value,
+            startTime: startTime,  // ✅ Utilisation de startTime pour correspondre au backend
+            endTime: endTime
+        };
+  
+        console.log("📢 Données envoyées au backend:", newSession);
+  
+        this.sessionService.createSession(newSession, courseId).subscribe(
+            (response) => {
+                console.log("✅ Session ajoutée avec succès:", response);
+                this.sessionForm.reset();
+            },
+            (error) => {
+                console.error("❌ Erreur lors de l'ajout de la session:", error);
+            }
+        );
+    } else {
+        console.error("⚠️ Le formulaire est invalide");
+    }
   }
-}
+  
+
 
   
   ngOnInit(): void {
@@ -113,4 +119,45 @@ onSubmit() {
       }
     );
   }
+
+
+
+
+// ✅ Validation pour s'assurer que `startTime` est entre 08:00 et 18:00
+validateStartTime(control: AbstractControl) {
+  if (!control.value) return null;
+
+  const startTime = new Date(control.value);
+  const hour = startTime.getHours();
+
+  // ✅ Modification : La session doit être entre 08:00 et 18:00
+  if (hour < 8 || hour > 18) {
+    return { invalidStartTime: true };
+  }
+  return null;
+}
+
+
+// ✅ Validation pour s'assurer que `endTime` est supérieur à `startTime` et que la session ne dépasse pas 3 heures
+validateEndTime(control: AbstractControl) {
+  if (!control.value || !this.sessionForm) return null;
+  const startTime = new Date(this.sessionForm.get('startTime')?.value);
+  const endTime = new Date(control.value);
+
+  if (startTime >= endTime) {
+    return { endTimeBeforeStart: true };
+  }
+
+  const duration = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60); // en heures
+  if (duration > 3) {
+    return { maxSessionDuration: true };
+  }
+
+  return null;
+}
+
+
+
+
+
 }
