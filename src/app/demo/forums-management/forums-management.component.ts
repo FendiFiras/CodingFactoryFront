@@ -3,6 +3,8 @@ import { ForumService } from 'src/app/service/forum.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfigurationComponent } from "../../theme/layout/admin/configuration/configuration.component";
 
 interface Forum {
   forum_id?: number;
@@ -10,29 +12,29 @@ interface Forum {
   description: string;
   image?: string;
   creationDate?: Date;
+  
 }
 
 @Component({
   selector: 'app-forums-management',
   templateUrl: './forums-management.component.html',
   styleUrls: ['./forums-management.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ConfigurationComponent],
 })
 export class ForumsManagementComponent implements OnInit {
   forums: Forum[] = [];
   isLoading = true;
   errorMessage = '';
-  showAddForm = false;
   addForumForm: FormGroup;
-  editMode = false;
   forumToEdit: Forum | null = null;
+  showAddForm: boolean = false; // Contrôle l'affichage de la sidebar
+  editMode: boolean = false; // Contrôle le mode édition
 
   constructor(
     private forumService: ForumService,
     private router: Router,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef // Injecter ChangeDetectorRef
-
+    private cdr: ChangeDetectorRef, // Injecter ChangeDetectorRef
   ) {
     this.addForumForm = this.fb.group({
       userId: [null, Validators.required], // Ajouter le champ userId
@@ -46,13 +48,13 @@ export class ForumsManagementComponent implements OnInit {
     this.loadForums();
   }
 
-  // Affiche/Masque le formulaire d'ajout
+  // Méthode pour basculer l'affichage de la sidebar
   toggleAddForm(): void {
-    console.log('toggleAddForm appelé, showAddForm =', !this.showAddForm);
     this.showAddForm = !this.showAddForm;
-    this.editMode = false;
-    this.forumToEdit = null;
-    this.addForumForm.reset();
+    if (!this.showAddForm) {
+      this.editMode = false; // Réinitialiser le mode édition
+      this.addForumForm.reset(); // Réinitialiser le formulaire
+    }
   }
 
   // Charge les forums
@@ -78,20 +80,16 @@ export class ForumsManagementComponent implements OnInit {
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('title', this.addForumForm.value.title);
     formData.append('description', this.addForumForm.value.description);
-    formData.append('userId', this.addForumForm.value.userId.toString()); // Utiliser userId du formulaire
+    formData.append('userId', this.addForumForm.value.userId.toString()); // Ajouter userId
+
     if (this.addForumForm.value.image) {
       formData.append('image', this.addForumForm.value.image);
     }
-  
-    // Log FormData contents
-    for (let [key, value] of (formData as any).entries()) {
-      console.log(key, value);
-    }
-  
+
     this.forumService.addForum(formData).subscribe({
       next: (newForum) => {
         this.forums.push(newForum);
@@ -116,9 +114,10 @@ export class ForumsManagementComponent implements OnInit {
     }
   }
 
-  // Navigation vers les discussions d’un forum
+  // Navigation vers les discussions d'un forum
   navigateToDiscussions(forumId: number): void {
-    this.router.navigate(['/forum', forumId, 'discussions']);
+    console.log('Navigating to discussions for forum ID:', forumId);  // Debugging line
+    this.router.navigate([`/admin/forum/${forumId}/discussions`]);
   }
 
   // Édition d'un forum
@@ -127,10 +126,17 @@ export class ForumsManagementComponent implements OnInit {
     this.forumToEdit = { ...forum }; // Conserver l'objet forum à modifier
     this.showAddForm = true;
     this.addForumForm.patchValue({
+      forum_id: forum.forum_id, // Ajouter forum_id au formulaire
       title: forum.title,
       description: forum.description,
       image: null, // Réinitialiser l'image pour éviter les conflits
     });
+  
+    // Supprimer la validation de userId en mode édition
+    if (this.editMode) {
+      this.addForumForm.get('userId')?.clearValidators();
+      this.addForumForm.get('userId')?.updateValueAndValidity();
+    }
   }
 
   // Mise à jour d'un forum
@@ -139,8 +145,10 @@ export class ForumsManagementComponent implements OnInit {
   
     const { title, description, image } = this.addForumForm.value;
     const formData = new FormData();
+    formData.append('forum_id', this.forumToEdit.forum_id!.toString()); // Inclure forum_id
     formData.append('title', title);
     formData.append('description', description);
+  
     if (image) {
       formData.append('image', image);
     }
@@ -169,8 +177,6 @@ export class ForumsManagementComponent implements OnInit {
       },
     });
   }
-  
-
 
   // Suppression d'un forum
   confirmDelete(forumId: number | undefined): void {
@@ -178,16 +184,16 @@ export class ForumsManagementComponent implements OnInit {
       this.errorMessage = 'ID forum invalide.';
       return;
     }
-  
+
     if (confirm('Voulez-vous vraiment supprimer ce forum ?')) {
       this.forumService.deleteForum(forumId).subscribe({
         next: (response) => {
           console.log('Réponse API après suppression :', response);
-      
+
           // Mettre à jour la liste des forums en supprimant le forum supprimé
           this.forums = this.forums.filter((forum) => forum.forum_id !== forumId);
           this.cdr.detectChanges();
-      
+
           console.log('Forum supprimé :', forumId);
           this.errorMessage = '';
         },
@@ -196,6 +202,23 @@ export class ForumsManagementComponent implements OnInit {
           this.errorMessage = 'Erreur lors de la suppression du forum. Veuillez réessayer.';
         },
       });
-    }}      
+    }
+  }
+
+  // Gestion de la soumission du formulaire
+  onSubmit(): void {
+    if (this.addForumForm.invalid) {
+      console.log('Formulaire invalide', this.addForumForm.value);
+      this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
+      return;
+    }
   
+    if (this.editMode && this.forumToEdit) {
+      // Mode édition : mettre à jour le forum existant
+      this.updateForum();
+    } else {
+      // Mode ajout : créer un nouveau forum
+      this.addForum();
+    }
+  }
 }

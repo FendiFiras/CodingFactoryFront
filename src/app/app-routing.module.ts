@@ -11,6 +11,8 @@ import { ForumService } from 'src/app/service/forum.service';
 import { CommonModule } from '@angular/common';
 import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
 import { ForumsManagementComponent } from './demo/forums-management/forums-management.component';
+import { AdminDiscussionComponent } from './demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
 // import { FourmsListComponent } from './front/Forum-Front/fourms-list/fourms-list.component';
 
@@ -29,7 +31,28 @@ const routes: Routes = [
     path: 'ListForum',
     component: ListeForumComponent
   },
-  { path: 'forum/:forumId', component: ForumDiscussionsComponent }, // Route avec un paramètre forumId
+
+
+  { path: 'forum/:forumId',
+     component: ForumDiscussionsComponent }, 
+
+
+  { path: 'admin/forum/:forumId/discussions',
+     component: AdminDiscussionComponent },
+
+
+
+
+
+
+ /* { path: 'admin/forum/:forumId/discussions/add',
+     component: AdminAddDiscussionComponent },
+
+
+  { path: 'admin/forum/:forumId/discussions/:discussionId/edit',
+     component: AdminAddDiscussionComponent },
+    */
+
 
 
  // { path: 'forums-management', component: ForumsManagementComponent },
@@ -91,8 +114,12 @@ const routes: Routes = [
       {
         path: 'forums-management',
         loadComponent: () => import('./demo/forums-management/forums-management.component').then((m) => m.ForumsManagementComponent)
-      }
+      },
 
+      {
+        path: 'admin-forum-discussions',
+        loadComponent: () => import('./demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component').then((m) => m.AdminDiscussionComponent)
+      }
     ]
   },
   {
@@ -109,7 +136,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), CommonModule], 
+  imports: [RouterModule.forRoot(routes), CommonModule, FontAwesomeModule], 
   exports: [RouterModule],
   providers: [ForumService]
 })

@@ -4,4 +4,5 @@ export interface Forum {
   description: string;
   image: string | null; // Image path (can be null)
   creationDate: Date;
+
 }

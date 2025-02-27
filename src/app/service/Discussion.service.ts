@@ -30,10 +30,11 @@ export class DiscussionService {
     return this.http.get<Discussion[]>(`http://localhost:8089/forum/${forumId}`);
   }
 
-  // Récupérer une discussion par son ID
-  getDiscussionById(id: number): Observable<Discussion> {
-    return this.http.get<Discussion>(`$http://localhost:8089/forum/{{forumId}/GetDiscussionBy/${id}`);
-  }
+ // Récupérer une discussion par son ID
+getDiscussionById(forumId: number, id: number): Observable<Discussion> {
+  return this.http.get<Discussion>(`http://localhost:8089/forum/${forumId}/GetDiscussionBy/${id}`);
+}
+
 
   // Ajouter une discussion à un forum
   addDiscussionToForum(discussion: Discussion, userId: number, forumId: number): Observable<Discussion> {
