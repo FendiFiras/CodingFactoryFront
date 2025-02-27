@@ -2,25 +2,14 @@
 <div class="container mt-4">
   <h2>List of Forums</h2>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+  <!-- Parent Row -->
+  <div class="row">
+    <!-- Left Sidebar -->
+    <div class="col-xl-4 col-lg-5">
+      <app-left-side-bar></app-left-side-bar>
     </div>
-  </div>
 
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-
-  <!-- No Forums Message -->
-  <div *ngIf="!isLoading && forums.length === 0" class="alert alert-info">
-    No forums found.
-  </div>
-
-  <!-- Forums List -->
-  <div class="row" *ngIf="!isLoading && forums.length > 0">
+    <!-- Forums List -->
     <div class="col-xl-8 col-lg-7">
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 wow fadeInUp" *ngFor="let forum of forums">
@@ -28,8 +17,7 @@
             <!-- Forum Image -->
             <div class="blog-two__image">
               <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
-              <a [routerLink]="['/forum', forum.forum_id, ]"></a>
-            
+              <a [routerLink]="['/forum', forum.forum_id]"></a>
             </div><!-- /.blog-image -->
 
             <!-- Forum Content -->
@@ -51,7 +39,6 @@
 
               <!-- Forum Meta (Author and Actions) -->
               <div class="blog-two__meta">
-          
                 <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modifier</button>
                 <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Supprimer</button>
               </div><!-- /.blog-meta -->
@@ -120,16 +107,35 @@
 </div>
 <app-footer></app-footer>
 <style>
-  .forum-image {
-    max-width: 100%; /* L'image ne dépassera pas la largeur de son conteneur */
-    height: auto; /* Maintient le ratio de l'image */
-    border-radius: 8px; /* Coins arrondis pour un look moderne */
-    object-fit: cover; /* Assure que l'image couvre la zone sans déformation */
-    max-height: 200px; /* Limite la hauteur de l'image */
-  }
+  /* Ensure the parent container uses flexbox */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-  .blog-two__image {
-    overflow: hidden; /* Cache les parties de l'image qui dépassent */
-    border-radius: 8px; /* Coins arrondis pour le conteneur de l'image */
-  }
+/* Ensure the left sidebar and list forum are aligned side by side */
+.col-xl-4, .col-lg-5 {
+  flex: 0 0 auto;
+  width: 33.3333%; /* Adjust width as needed */
+}
+
+.col-xl-8, .col-lg-7 {
+  flex: 0 0 auto;
+  width: 66.6667%; /* Adjust width as needed */
+}
+
+/* Ensure the left sidebar sticks to the left */
+.sidebar--left {
+  position: sticky;
+  top: 0; /* Adjust as needed */
+  height: 100vh; /* Full height */
+  overflow-y: auto; /* Add scroll if content overflows */
+}
+.forum-image {
+  width: 100%; /* Pour qu'elles occupent toute la largeur du conteneur */
+  height: 200px; /* Taille fixe en hauteur */
+  object-fit: cover; /* Recadre l'image sans déformation */
+  border-radius: 8px; /* Coins arrondis pour un meilleur design */
+}
+
 </style>

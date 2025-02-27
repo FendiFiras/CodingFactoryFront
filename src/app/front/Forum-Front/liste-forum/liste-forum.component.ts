@@ -7,6 +7,7 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router'; // Import RouterModule
+import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component'; // Import the component
 
 
 
@@ -22,7 +23,7 @@ interface Forum {
   selector: 'app-liste-forum',
   templateUrl: './liste-forum.component.html',
   styleUrls: ['./liste-forum.component.scss'],
-  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent,RouterModule]
+  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent,RouterModule,LeftSideBarComponent]
 
 
 })

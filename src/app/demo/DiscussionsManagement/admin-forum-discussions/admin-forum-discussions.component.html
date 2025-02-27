@@ -51,12 +51,11 @@
                   </p>
                   <div class="button-container">
                     <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.id)">
-                        <i class="fas fa-trash"></i> Supprimer
-                      </button>
-                      
-                      <button class="btn btn-warning btn-sm" (click)="editDiscussion(discussion)">
-                        <i class="fas fa-edit"></i> Modifier
-                      </button>
+                      <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                    <button class="btn btn-warning btn-sm" (click)="editDiscussion(discussion)">
+                      <i class="fas fa-edit"></i> Modifier
+                    </button>
                   </div>
                 </div>
               </div>
@@ -80,13 +79,27 @@
               <div class="form-group mb-3">
                 <label for="title">Titre</label>
                 <input id="title" formControlName="title" class="form-control" required />
+                <!-- Messages d'erreur pour le champ "title" -->
+                <div *ngIf="addDiscussionForm.get('title').invalid && addDiscussionForm.get('title').touched" class="text-danger">
+                  <div *ngIf="addDiscussionForm.get('title').errors?.['required']">Le titre est requis.</div>
+                  <div *ngIf="addDiscussionForm.get('title').errors?.['minlength']">Le titre doit contenir au moins 5 caractères.</div>
+                  <div *ngIf="addDiscussionForm.get('title').errors?.['maxlength']">Le titre ne doit pas dépasser 100 caractères.</div>
+                  <div *ngIf="addDiscussionForm.get('title').errors?.['forbiddenCharacters']">Le titre contient des caractères interdits.</div>
+                </div>
               </div>
               <div class="form-group mb-3">
                 <label for="description">Description</label>
                 <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+                <!-- Messages d'erreur pour le champ "description" -->
+                <div *ngIf="addDiscussionForm.get('description').invalid && addDiscussionForm.get('description').touched" class="text-danger">
+                  <div *ngIf="addDiscussionForm.get('description').errors?.['required']">La description est requise.</div>
+                  <div *ngIf="addDiscussionForm.get('description').errors?.['minlength']">La description doit contenir au moins 10 caractères.</div>
+                  <div *ngIf="addDiscussionForm.get('description').errors?.['maxlength']">La description ne doit pas dépasser 500 caractères.</div>
+                  <div *ngIf="addDiscussionForm.get('description').errors?.['forbiddenWords']">La description contient des mots interdits.</div>
+                </div>
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
                   {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
                 </button>
                 <button type="button" class="btn btn-secondary ms-2" (click)="toggleForm()">

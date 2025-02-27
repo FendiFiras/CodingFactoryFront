@@ -1,7 +1,7 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { Discussion } from 'src/app/models/discussion1';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // Importez CommonModule
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
 import { FooterComponent } from "../../elements/footer/footer.component";
@@ -19,13 +19,8 @@ export class ForumDiscussionsComponent implements OnInit {
   showForm = false;
   errorMessage = '';
   forumId!: number;
-  newDiscussion: Discussion = {
-    discussion_id: 0,
-    title: '',
-    description: '',
-    numberOfLikes: 0,
-    publicationDate: ''
-  };
+  newDiscussion = {  discussion_id: 0, // Optionnel, selon les besoins de l'API
+    title: '', description: '', numberOfLikes: 0, publicationDate: '' };
   selectedDiscussion: Discussion | null = null;
 
   constructor(
@@ -45,7 +40,7 @@ export class ForumDiscussionsComponent implements OnInit {
     this.isLoading = true;
     this.discussionService.getDiscussionsByForum(this.forumId).subscribe({
       next: (data) => {
-        this.discussions = data;
+        this.discussions = data; // Utilisez discussion_id directement
         this.isLoading = false;
       },
       error: (err) => {
@@ -73,13 +68,8 @@ export class ForumDiscussionsComponent implements OnInit {
         next: (response) => {
           console.log('Discussion ajoutée:', response);
           this.showForm = false;
-          this.newDiscussion = {
-            discussion_id: 0,
-            title: '',
-            description: '',
-            numberOfLikes: 0,
-            publicationDate: ''
-          };
+          this.newDiscussion = {   discussion_id: 0, // Optionnel, selon les besoins de l'API
+            title: '', description: '', numberOfLikes: 0, publicationDate: '' };
           this.loadDiscussions();
         },
         error: (err) => {
@@ -92,7 +82,7 @@ export class ForumDiscussionsComponent implements OnInit {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')) {
       this.discussionService.deleteDiscussion(discussionId).subscribe({
         next: () => {
-          this.discussions = this.discussions.filter(d => d.discussion_id !== discussionId);
+          this.discussions = this.discussions.filter(d => d.discussion_id !== discussionId); // Utilisez discussion_id
         },
         error: () => {
           this.errorMessage = 'Erreur lors de la suppression de la discussion';
@@ -111,7 +101,7 @@ export class ForumDiscussionsComponent implements OnInit {
         .subscribe({
           next: (updatedDiscussion) => {
             console.log('Discussion mise à jour:', updatedDiscussion);
-            const index = this.discussions.findIndex(d => d.discussion_id === updatedDiscussion.discussion_id);
+            const index = this.discussions.findIndex(d => d.discussion_id === updatedDiscussion.discussion_id); // Utilisez discussion_id
             if (index !== -1) {
               this.discussions[index] = updatedDiscussion;
             }

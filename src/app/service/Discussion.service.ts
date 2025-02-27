@@ -31,11 +31,10 @@ export class DiscussionService {
     return this.http.post<Discussion>(`http://localhost:8089/add/${userId}/${forumId}`, discussion);
   }
 
-  // Update a discussion
-  updateDiscussion(discussion_id: number, discussion: Discussion): Observable<Discussion> {
-    return this.http.put<Discussion>(`${this.apiUrl}/UpdateDiscussion/${discussion_id}`, discussion);
+  updateDiscussion(discussionId: number, updatedDiscussion: any): Observable<any> {
+    const url = ('http://localhost:8089/UpdateDiscussion/${discussionId}');
+    return this.http.put(url, updatedDiscussion);
   }
-
   // Delete a discussion
   deleteDiscussion(discussionId: number): Observable<void> {
     return this.http.delete<void>(`http://localhost:8089/deleteDiscussion/${discussionId}`);

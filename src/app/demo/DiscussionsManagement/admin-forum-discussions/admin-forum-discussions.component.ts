@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -14,37 +14,34 @@ import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumb
   templateUrl: './admin-forum-discussions.component.html',
   styleUrls: ['./admin-forum-discussions.component.scss'],
   imports: [ReactiveFormsModule, CommonModule, NavigationComponent, RouterModule, ConfigurationComponent],
-
-
 })
 export class AdminDiscussionComponent implements OnInit {
-navMobClick() {
-throw new Error('Method not implemented.');
-}
+  navMobClick() {
+    throw new Error('Method not implemented.');
+  }
   addDiscussionForm: FormGroup;
   forumId!: number;
   editMode = false;
   discussionId?: number;
-  errorMessage: string = '';  // Définir cette propriété
-  discussions: any[] = [];  // Pour stocker la liste des discussions
-  isLoading: boolean = false;  // Ajouter la propriété isLoading
-  showForm: boolean = false; // Ajouter cette propriété
+  errorMessage: string = '';
+  discussions: any[] = [];
+  isLoading: boolean = false;
+  showForm: boolean = false;
 
-  // Ajoutez ces propriétés pour gérer la navigation
-  navCollapsed = false; // État de la barre de navigation (réduite ou non)
-  navCollapsedMob = false; // État de la barre de navigation sur mobile
-
+  // Propriétés pour la navigation
+  navCollapsed = false;
+  navCollapsedMob = false;
 
   constructor(
     private fb: FormBuilder,
     private discussionService: DiscussionService,
     private route: ActivatedRoute,
     private router: Router,
-
   ) {
+    // Initialisation du formulaire avec des validateurs
     this.addDiscussionForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100), this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>]/)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500), this.forbiddenWordsValidator(['motInterdit1', 'motInterdit2'])]],
     });
   }
 
@@ -52,9 +49,9 @@ throw new Error('Method not implemented.');
     this.route.params.subscribe(params => {
       this.forumId = +params['forumId'];
       const discussionId = params['discussionId'];
-      console.log('Forum ID:', this.forumId); // Vérifiez le forumId
-      console.log('Discussion ID:', discussionId); // Vérifiez le discussionId
-  
+      console.log('Forum ID:', this.forumId);
+      console.log('Discussion ID:', discussionId);
+
       if (discussionId) {
         this.editMode = true;
         this.discussionId = +discussionId;
@@ -66,33 +63,49 @@ throw new Error('Method not implemented.');
     });
   }
 
-    // Méthode pour basculer l'affichage du formulaire
-    toggleForm(): void {
-      this.showForm = !this.showForm;
-      if (!this.showForm) {
-        this.editMode = false; // Réinitialiser le mode édition
-        this.addDiscussionForm.reset(); // Réinitialiser le formulaire
-      }
-    }
-  
+  // Validateur personnalisé pour les caractères interdits
+  forbiddenCharactersValidator(forbiddenChars: RegExp): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const forbidden = forbiddenChars.test(control.value);
+      return forbidden ? { forbiddenCharacters: { value: control.value } } : null;
+    };
+  }
 
-   // Charger toutes les discussions du forum
-   loadDiscussions(): void {
-    this.isLoading = true;  // Activer l'indicateur de chargement
+  // Validateur personnalisé pour les mots interdits
+  forbiddenWordsValidator(forbiddenWords: string[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const forbidden = forbiddenWords.some(word => control.value.includes(word));
+      return forbidden ? { forbiddenWords: { value: control.value } } : null;
+    };
+  }
+
+  // Basculer l'affichage du formulaire
+  toggleForm(): void {
+    this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.editMode = false;
+      this.discussionId = undefined;
+      this.addDiscussionForm.reset();
+    }
+  }
+
+  // Charger toutes les discussions du forum
+  loadDiscussions(): void {
+    this.isLoading = true;
     this.discussionService.getDiscussionsByForum(this.forumId).subscribe({
       next: (data) => {
-        console.log("Discussions chargées :", data); // Debug
-
+        console.log("Discussions chargées :", data);
         this.discussions = data;
-        this.isLoading = false;  // Désactiver l'indicateur de chargement une fois les données chargées
+        this.isLoading = false;
       },
       error: (err) => {
         this.errorMessage = 'Erreur lors du chargement des discussions';
-        this.isLoading = false;  // Désactiver l'indicateur de chargement en cas d'erreur
-      }
+        this.isLoading = false;
+      },
     });
   }
-  
+
+  // Charger une discussion spécifique
   loadDiscussion(discussionId: number): void {
     this.discussionService.getDiscussionById(this.forumId, discussionId).subscribe({
       next: (data) => {
@@ -103,79 +116,82 @@ throw new Error('Method not implemented.');
       },
       error: (err) => {
         console.error('Erreur lors du chargement de la discussion', err);
-      }
+      },
     });
   }
-  
 
+  // Supprimer une discussion
   deleteDiscussion(discussionId: number): void {
-    console.log("ID de la discussion :", discussionId);  // Affiche l'ID dans la console
+    console.log("ID de la discussion :", discussionId);
     if (!discussionId || discussionId === undefined) {
       this.errorMessage = 'ID de la discussion invalide';
       return;
     }
     this.discussionService.deleteDiscussion(discussionId).subscribe({
       next: () => {
-        this.loadDiscussions();  // Recharge la liste des discussions après la suppression
+        this.loadDiscussions();
       },
       error: (err) => {
         this.errorMessage = 'Erreur lors de la suppression de la discussion';
-      }
+      },
     });
   }
 
-
+  // Modifier une discussion
   editDiscussion(discussion: any): void {
-    // Pour naviguer vers une discussion spécifique
-this.router.navigate(['/admin/forum', this.forumId, 'discussions', this.discussionId]);
-
-// Pour naviguer vers la liste des discussions (sans discussionId)
-this.router.navigate(['/admin/forum', this.forumId, 'discussions']);
-    console.log("Discussion sélectionnée :", discussion); // Vérifie l'objet reçu
-    this.editMode = true;
-    this.discussionId = discussion.id;
-  
-    console.log("ID de la discussion à modifier :", this.discussionId); // Vérifie si l'ID est défini
-  
-    if (!this.discussionId) {
-      console.error("ERREUR : ID de la discussion est undefined !");
+    console.log("Discussion sélectionnée :", discussion);
+    if (!discussion || !discussion.id) {
+      console.error("ERREUR : Discussion ou ID de la discussion est undefined !");
       return;
     }
+
+    this.editMode = true;
+    this.discussionId = discussion.id;
+    console.log("ID de la discussion à modifier :", this.discussionId);
+
     this.addDiscussionForm.patchValue({
       title: discussion.title,
       description: discussion.description,
     });
+
     this.showForm = true;
   }
-  
 
-  
-    
-
+  // Soumettre le formulaire
   onSubmit(): void {
     if (this.addDiscussionForm.invalid) {
       return;
     }
-  
+
     const formValues = this.addDiscussionForm.value;
-  
+
     if (this.editMode && this.discussionId) {
+      // Mode édition
       const updatedDiscussion = { id: this.discussionId, ...formValues };
-      console.log("Données envoyées à updateDiscussion:", updatedDiscussion); // Debug
-  
-      // Pass both discussion_id and discussion to the service
+      console.log("Données envoyées à updateDiscussion:", updatedDiscussion);
+
       this.discussionService.updateDiscussion(this.discussionId, updatedDiscussion).subscribe({
         next: () => {
-          this.toggleForm(); 
+          this.toggleForm();
           this.loadDiscussions();
+          this.router.navigate(['/admin/forum', this.forumId, 'discussions']);
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour de la discussion', err);
-        }
+        },
       });
     } else {
-      console.error("Erreur : discussionId est undefined !");
+      // Mode ajout
+      const userId = 1; // Remplacez par la vraie valeur de l'utilisateur
+      this.discussionService.addDiscussionToForum(formValues, userId, this.forumId).subscribe({
+        next: () => {
+          this.toggleForm();
+          this.loadDiscussions();
+        },
+        error: (err) => {
+          console.error('Erreur lors de l\'ajout de la discussion', err);
+        },
+      });
     }
   }
-  
 }
