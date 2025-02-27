@@ -1,52 +1,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-interface Discussion {
-  id?: number;
-  title: string;
-  description: string;
-  numberOfLikes: number;
-  publicationDate: string;
-}
+import { Discussion } from '../models/discussion1'; // Import the correct interface
 
 @Injectable({
   providedIn: 'root'
 })
 export class DiscussionService {
-
-  private apiUrl = 'http://localhost:8089/api/discussion';  // URL de l'API pour les discussions
+  private apiUrl = 'http://localhost:8089/api/discussion'; // Base URL for discussions
 
   constructor(private http: HttpClient) { }
 
-  // Récupérer toutes les discussions
+  // Get all discussions
   getAllDiscussions(): Observable<Discussion[]> {
     return this.http.get<Discussion[]>(`${this.apiUrl}/GetAllDiscussions`);
   }
-  
 
-  // Récupérer les discussions d'un forum spécifique
+  // Get discussions by forum ID
   getDiscussionsByForum(forumId: number): Observable<Discussion[]> {
     return this.http.get<Discussion[]>(`http://localhost:8089/forum/${forumId}`);
   }
 
- // Récupérer une discussion par son ID
-getDiscussionById(forumId: number, id: number): Observable<Discussion> {
-  return this.http.get<Discussion>(`http://localhost:8089/forum/${forumId}/GetDiscussionBy/${id}`);
-}
+  // Get a discussion by its ID
+  getDiscussionById(forumId: number, id: number): Observable<Discussion> {
+    return this.http.get<Discussion>(`http://localhost:8089/forum/${forumId}/GetDiscussionBy/${id}`);
+  }
 
-
-  // Ajouter une discussion à un forum
+  // Add a discussion to a forum
   addDiscussionToForum(discussion: Discussion, userId: number, forumId: number): Observable<Discussion> {
     return this.http.post<Discussion>(`http://localhost:8089/add/${userId}/${forumId}`, discussion);
   }
-  
-  // Mettre à jour une discussion
-  updateDiscussion(discussion: Discussion): Observable<Discussion> {
-    return this.http.put<Discussion>(`${this.apiUrl}/UpdateDiscussion/${discussion.id}`, discussion);
+
+  // Update a discussion
+  updateDiscussion(discussion_id: number, discussion: Discussion): Observable<Discussion> {
+    return this.http.put<Discussion>(`${this.apiUrl}/UpdateDiscussion/${discussion_id}`, discussion);
   }
 
-  // Supprimer une discussion
+  // Delete a discussion
   deleteDiscussion(discussionId: number): Observable<void> {
     return this.http.delete<void>(`http://localhost:8089/deleteDiscussion/${discussionId}`);
   }

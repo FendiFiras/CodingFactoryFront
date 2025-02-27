@@ -41,7 +41,8 @@ const routes: Routes = [
      component: AdminDiscussionComponent },
 
 
-
+     { path: 'admin/forum/:forumId/discussions/:discussionId', 
+      component: AdminDiscussionComponent },
 
 
 

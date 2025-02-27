@@ -1,58 +1,65 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { Discussion } from 'src/app/models/discussion1';
-import { CommonModule } from '@angular/common'; // Importez CommonModule
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
 import { FooterComponent } from "../../elements/footer/footer.component";
-import { FormsModule, NgModel } from '@angular/forms';
-
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-forum-discussions',
   templateUrl: './forum-discussions.component.html',
   styleUrls: ['./forum-discussions.component.scss'],
-  imports: [CommonModule, NavbarComponent, FooterComponent,FormsModule,]
+  imports: [CommonModule, NavbarComponent, FooterComponent, FormsModule]
 })
 export class ForumDiscussionsComponent implements OnInit {
   discussions: Discussion[] = [];
   isLoading = true;
-  showForm = false; // Variable pour afficher/masquer le formulaire
+  showForm = false;
   errorMessage = '';
-  forumId!: number; // ID du forum
-  newDiscussion = { title: '', description: '', numberOfLikes: 0, publicationDate: '' };
-
+  forumId!: number;
+  newDiscussion: Discussion = {
+    discussion_id: 0,
+    title: '',
+    description: '',
+    numberOfLikes: 0,
+    publicationDate: ''
+  };
+  selectedDiscussion: Discussion | null = null;
 
   constructor(
     private discussionService: DiscussionService,
-    private route: ActivatedRoute // Injectez ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Récupérez le paramètre forumId de l'URL
     this.route.params.subscribe(params => {
-      this.forumId = +params['forumId']; // Convertir en nombre
-      this.loadDiscussions(); // Load discussions for the forum
+      this.forumId = +params['forumId'];
+      this.loadDiscussions();
     });
   }
 
-  // Load discussions for the forum
   loadDiscussions(): void {
     this.isLoading = true;
     this.discussionService.getDiscussionsByForum(this.forumId).subscribe({
       next: (data) => {
-        this.discussions = data; // Store the fetched discussions
+        this.discussions = data;
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = 'Error loading discussions';
+        this.errorMessage = 'Erreur lors du chargement des discussions';
         this.isLoading = false;
       }
     });
   }
 
-  // Ajouter une nouvelle discussion
+  navigateToMessages(discussionId: number): void {
+    console.log('Navigating to messages for discussion ID:', discussionId);
+    this.router.navigate(['/discussion', discussionId, 'messages']);
+  }
+
   addDiscussion(): void {
     if (!this.newDiscussion.title || !this.newDiscussion.description) {
       alert('Veuillez remplir tous les champs.');
@@ -61,31 +68,60 @@ export class ForumDiscussionsComponent implements OnInit {
 
     this.newDiscussion.publicationDate = new Date().toISOString();
 
-    this.discussionService.addDiscussionToForum(this.newDiscussion, 1, this.forumId) // Remplace 1 par l'ID utilisateur si dispo
+    this.discussionService.addDiscussionToForum(this.newDiscussion, 1, this.forumId)
       .subscribe({
         next: (response) => {
           console.log('Discussion ajoutée:', response);
-          this.showForm = false; // Cacher le formulaire après ajout
-          this.newDiscussion = { title: '', description: '', numberOfLikes: 0, publicationDate: '' }; // Réinitialiser le formulaire
-          this.loadDiscussions(); 
+          this.showForm = false;
+          this.newDiscussion = {
+            discussion_id: 0,
+            title: '',
+            description: '',
+            numberOfLikes: 0,
+            publicationDate: ''
+          };
+          this.loadDiscussions();
         },
         error: (err) => {
           console.error('Erreur lors de l\'ajout de la discussion:', err);
         }
       });
   }
-  
-  // Supprimer une discussion
+
   deleteDiscussion(discussionId: number): void {
-    if (confirm('Are you sure you want to delete this discussion?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')) {
       this.discussionService.deleteDiscussion(discussionId).subscribe({
         next: () => {
-          this.discussions = this.discussions.filter(d => d.id !== discussionId); // Supprime la discussion de la liste
+          this.discussions = this.discussions.filter(d => d.discussion_id !== discussionId);
         },
         error: () => {
-          this.errorMessage = 'Error deleting discussion';
+          this.errorMessage = 'Erreur lors de la suppression de la discussion';
         }
       });
+    }
+  }
+
+  selectDiscussionForUpdate(discussion: Discussion): void {
+    this.selectedDiscussion = { ...discussion };
+  }
+
+  updateDiscussion(): void {
+    if (this.selectedDiscussion) {
+      this.discussionService.updateDiscussion(this.selectedDiscussion.discussion_id, this.selectedDiscussion)
+        .subscribe({
+          next: (updatedDiscussion) => {
+            console.log('Discussion mise à jour:', updatedDiscussion);
+            const index = this.discussions.findIndex(d => d.discussion_id === updatedDiscussion.discussion_id);
+            if (index !== -1) {
+              this.discussions[index] = updatedDiscussion;
+            }
+            this.selectedDiscussion = null;
+          },
+          error: (err) => {
+            console.error('Erreur lors de la mise à jour de la discussion:', err);
+            this.errorMessage = 'Erreur lors de la mise à jour de la discussion';
+          }
+        });
     }
   }
 }

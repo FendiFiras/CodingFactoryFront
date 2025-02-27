@@ -50,19 +50,19 @@ throw new Error('Method not implemented.');
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.forumId = +params['forumId'];  // Récupère forumId de l'URL
+      this.forumId = +params['forumId'];
       const discussionId = params['discussionId'];
+      console.log('Forum ID:', this.forumId); // Vérifiez le forumId
+      console.log('Discussion ID:', discussionId); // Vérifiez le discussionId
+  
       if (discussionId) {
         this.editMode = true;
-        this.discussionId = +discussionId;  // Assurez-vous que discussionId est converti en nombre
+        this.discussionId = +discussionId;
         this.loadDiscussion(this.discussionId);
-        this.showForm = true; // Afficher la sidebar en mode édition
+        this.showForm = true;
       } else {
-        this.loadDiscussions();  // Charger la liste des discussions lors de l'initialisation
+        this.loadDiscussions();
       }
-  
-      console.log('Forum ID:', this.forumId); // Vérifier le forumId
-      console.log('Discussion ID:', this.discussionId); // Vérifier le discussionId
     });
   }
 
@@ -126,6 +126,11 @@ throw new Error('Method not implemented.');
 
 
   editDiscussion(discussion: any): void {
+    // Pour naviguer vers une discussion spécifique
+this.router.navigate(['/admin/forum', this.forumId, 'discussions', this.discussionId]);
+
+// Pour naviguer vers la liste des discussions (sans discussionId)
+this.router.navigate(['/admin/forum', this.forumId, 'discussions']);
     console.log("Discussion sélectionnée :", discussion); // Vérifie l'objet reçu
     this.editMode = true;
     this.discussionId = discussion.id;
@@ -153,13 +158,13 @@ throw new Error('Method not implemented.');
     }
   
     const formValues = this.addDiscussionForm.value;
-    console.log("ID de la discussion envoyé :", this.discussionId); // Vérifie s'il est undefined
   
     if (this.editMode && this.discussionId) {
       const updatedDiscussion = { id: this.discussionId, ...formValues };
       console.log("Données envoyées à updateDiscussion:", updatedDiscussion); // Debug
   
-      this.discussionService.updateDiscussion(updatedDiscussion).subscribe({
+      // Pass both discussion_id and discussion to the service
+      this.discussionService.updateDiscussion(this.discussionId, updatedDiscussion).subscribe({
         next: () => {
           this.toggleForm(); 
           this.loadDiscussions();
@@ -172,7 +177,5 @@ throw new Error('Method not implemented.');
       console.error("Erreur : discussionId est undefined !");
     }
   }
-  
-  
   
 }
