@@ -1,0 +1,76 @@
+<app-navbar></app-navbar>
+<section class="accrodion-one">
+    <div class="container">
+        <div class="section-title  text-center">
+<h2 class="section-title__title">Explore Our Pfe Interships <br>Apply Here</h2>
+        </div>
+<div class="student-offers-container">
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <!-- Left Side: List of Offers -->
+        <div class="col-md-4">
+          <div class="list-group">
+            <div
+              *ngFor="let offer of offers"
+              class="list-group-item list-group-item-action"
+              (click)="onSelectOffer(offer)"
+              [class.active]="offer === selectedOffer"
+            >
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">{{ offer.title }}</h6>
+                  <small class="text-muted">{{ offer.duration }}</small>
+                </div>
+                <img
+                  *ngIf="offer.partnership?.companyLogo"
+                  [src]="offer.partnership.companyLogo"
+                  alt="Company Logo"
+                  class="img-thumbnail"
+                  style="width: 50px; height: 50px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Right Side: Offer Details -->
+        <div class="col-md-8">
+          <div *ngIf="selectedOffer" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ selectedOffer.title }}</h5>
+              <p class="card-text">{{ selectedOffer.description }}</p>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <strong>Location:</strong> {{ selectedOffer.duration }}
+                </li>
+                <li class="list-group-item">
+                  <strong>Company:</strong> {{ selectedOffer.partnership?.companyName }}
+                </li>
+                <li class="list-group-item">
+                  <strong>Employment Type:</strong> {{ selectedOffer.employmentType }}
+                </li>
+                <li class="list-group-item">
+                  <strong>Required Skills:</strong> {{ selectedOffer.requiredSkill }}
+                </li>
+                <li class="list-group-item">
+                  <strong>What We Offer:</strong> {{ selectedOffer.whatWeOffer }}
+                </li>
+              </ul>
+             <button
+  class="btn btn-primary"
+  (click)="onApply(selectedOffer.idOffer)"
+>
+  Apply Now
+</button>
+            </div>
+          </div>
+          <div *ngIf="!selectedOffer" class="text-center">
+            <p>Select an offer to view details.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+  <app-footer></app-footer>

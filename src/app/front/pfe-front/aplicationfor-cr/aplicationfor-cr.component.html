@@ -1,0 +1,84 @@
+<app-navbar></app-navbar>
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Applications for the Offer</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a href="/">Home</a></li>
+            <li><span>Applications</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="applications-page">
+    <div class="container">
+        <div class="applications-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Applicant ID</th>
+                        <th>CV</th>
+                        <th>Cover Letter</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let application of applications">
+                        <td>{{ application.userId }}</td>
+                        <td>{{ application.fieldofStudy }}</td>
+                        <td>{{ application.coverLetter }}</td>
+                        <td>
+                            <span class="status-badge" [ngClass]="{
+                                'status-pending': application.status === 'Pending',
+                                'status-reviewed': application.status === 'Reviewed',
+                                'status-accepted': application.status === 'Accepted',
+                                'status-rejected': application.status === 'Rejected'
+                            }">
+                                {{ application.status }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button (click)="openDetailsPopup(application)" class="btn btn-view">
+                              View Details
+                            </button>
+                            <button (click)="openAffectPopup(application)" class="btn btn-affect" [disabled]="!application.userId">
+                              Affect to Offer
+                            </button>
+                            <button class="btn btn-interview">
+                              Call for Interview
+                            </button>
+                          </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<!-- Details Popup -->
+<div *ngIf="showDetailsPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Application Details</h3>
+      <p><strong>Applicant ID:</strong> {{ selectedApplication?.userId }}</p>
+      <p><strong>Field of Study:</strong> {{ selectedApplication?.fieldofStudy }}</p>
+      <p><strong>Cover Letter:</strong> {{ selectedApplication?.coverLetter }}</p>
+      <p><strong>Status:</strong> {{ selectedApplication?.status }}</p>
+      <button (click)="closeDetailsPopup()" class="btn btn-close"></button>
+    </div>
+  </div>
+  
+  <!-- Affectation Popup -->
+  <div *ngIf="showAffectPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Affect Student to Offer</h3>
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" [(ngModel)]="startDate" />
+      <div class="popup-buttons">
+        <button (click)="confirmAffectation()" class="btn btn-affect">Affect</button>
+        <button (click)="closeAffectPopup()" class="btn btn-close"></button>
+      </div>
+    </div>
+  </div>
+<app-footer></app-footer>
+<router-outlet></router-outlet>

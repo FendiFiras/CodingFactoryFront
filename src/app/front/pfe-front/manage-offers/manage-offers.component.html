@@ -1,0 +1,125 @@
+<app-navbar></app-navbar>
+<div class="stricky-header stricked-menu main-menu main-header-two">
+  <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+</div><!-- /.stricky-header -->
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+  <div class="page-header__bg jarallax-img"></div><!-- /.page-header-bg -->
+  <div class="page-header__overlay"></div><!-- /.page-header-overlay -->
+  <div class="container text-center">
+      <h2 class="page-header__title">Manage Your Offers</h2><!-- /.page-title -->
+      <ul class="page-header__breadcrumb list-unstyled">
+          <li><a href="index.html">Home</a></li>
+          <li><span>Manage Offers</span></li>
+      </ul><!-- /.page-breadcrumb list-unstyled -->
+  </div><!-- /.container -->
+</section><!-- /.page-header -->
+<!-- Cart Start -->
+<section class="offer-management">
+    <div class="container">
+      <!-- Table Section -->
+      <div class="table-responsive">
+        <table class="offer-table">
+          <thead>
+            <tr>
+              <th>Offer Title</th>
+              <th>Duration</th>
+              <th>Applications</th>
+              <th>Affectations</th>
+              <th>Update</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop through offers using Angular *ngFor -->
+            <tr *ngFor="let offer of offers">
+              <td>
+                <div class="offer-title">
+                  <h3>{{ offer.title }}</h3>
+                </div>
+              </td>
+              <td>{{ offer.duration }}</td>
+              <td>
+                <a [routerLink]="['/applicationsforCR', offer.idOffer]" class="btn btn-primary">
+                  <span class="btn-curve"></span>Applications List
+                </a>
+              </td>
+              <td>
+                <a [routerLink]="['/assignments', offer.idOffer]" class="btn btn-primary">
+                  <span class="btn-curve"></span>Affectation List
+                </a>
+              </td>
+              <td>
+                <a (click)="toggleUpdateForm(offer)" class="btn btn-warning">
+                  <span class="btn-curve"></span>{{ isUpdating && selectedOffer?.idOffer === offer.idOffer ? 'Cancel' : 'Update' }}
+                </a>
+              </td>
+              <td>
+                <a (click)="deleteOffer(offer.idOffer)" class="btn btn-danger">
+                  <span class="icon-close"></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Update Form -->
+      <div *ngIf="isUpdating" class="update-form">
+        <h3 class="update-form-title">Update Offer</h3>
+        <form (ngSubmit)="onUpdate()" class="update-form-content">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" [(ngModel)]="selectedOffer.title" name="title" required minlength="10">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" [(ngModel)]="selectedOffer.description" name="description" required minlength="20"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="requiredSkill">Required Skill</label>
+            <input type="text" id="requiredSkill" [(ngModel)]="selectedOffer.requiredSkill" name="requiredSkill" required minlength="20">
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <select id="location" [(ngModel)]="selectedOffer.location" name="location" required>
+              <option value="" disabled>Select Location</option>
+              <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="duration">Duration</label>
+            <select id="duration" [(ngModel)]="selectedOffer.duration" name="duration" required>
+              <option value="" disabled>Select Duration</option>
+              <option value="3 months">3 Months</option>
+              <option value="6 months">6 Months</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="employmentType">Employment Type</label>
+            <select id="employmentType" [(ngModel)]="selectedOffer.employmentType" name="employmentType" required>
+              <option value="" disabled>Select Employment Type</option>
+              <option value="Remote">Remote</option>
+              <option value="On-site">On-site</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jobResponsibilities">Job Responsibilities</label>
+            <textarea id="jobResponsibilities" [(ngModel)]="selectedOffer.jobResponsibilities" name="jobResponsibilities" required minlength="20"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="whatWeOffer">What We Offer</label>
+            <textarea id="whatWeOffer" [(ngModel)]="selectedOffer.whatWeOffer" name="whatWeOffer" required minlength="20"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <span class="btn-curve"></span>Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+<app-footer></app-footer>
+<!-- Cart End -->
+ <router-outlet></router-outlet>

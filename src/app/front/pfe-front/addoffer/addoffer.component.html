@@ -1,0 +1,108 @@
+<app-navbar></app-navbar>
+<app-notif-pfe></app-notif-pfe>
+
+<section class="checkout-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6">
+          <div class="checkout-page__billing-address">
+            <h2 class="checkout-page__billing-address__title">Add New Offer</h2>
+            <form [formGroup]="addOfferForm" (ngSubmit)="onSubmit()" class="checkout-page__form">
+              <div class="row bs-gutter-x-20">
+                <!-- Title -->
+                <div class="col-xl-12">
+                  <div class="checkout-page__input-box">
+                    <input type="text" formControlName="title" placeholder="Title" required>
+                    <div *ngIf="addOfferForm.get('title')?.invalid && addOfferForm.get('title')?.touched" class="error-message">
+                      Title must be at least 10 characters.
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Description -->
+                <div class="col-xl-12">
+                  <div class="checkout-page__input-box">
+                    <textarea formControlName="description" placeholder="Description" required></textarea>
+                    <div *ngIf="addOfferForm.get('description')?.invalid && addOfferForm.get('description')?.touched" class="error-message">
+                      Description must be at least 20 characters.
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Required Skill -->
+                <div class="col-xl-12">
+                  <div class="checkout-page__input-box">
+                    <input type="text" formControlName="requiredSkill" placeholder="Required Skill" required>
+                    <div *ngIf="addOfferForm.get('requiredSkill')?.invalid && addOfferForm.get('requiredSkill')?.touched" class="error-message">
+                      Required Skill must be at least 20 characters.
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Location (Select Box) -->
+                <div class="col-xl-6">
+                  <div class="checkout-page__input-box">
+                    <select formControlName="location" required>
+                      <option value="" disabled selected>Select Location</option>
+                      <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <!-- Duration (Select Box) -->
+                <div class="col-xl-6">
+                  <div class="checkout-page__input-box">
+                    <select formControlName="duration" required>
+                      <option value="" disabled selected>Select Duration</option>
+                      <option value="3 months">3 Months</option>
+                      <option value="6 months">6 Months</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <!-- Employment Type (Select Box) -->
+                <div class="col-xl-6">
+                  <div class="checkout-page__input-box">
+                    <select formControlName="employmentType" required>
+                      <option value="" disabled selected>Select Employment Type</option>
+                      <option value="Remote">Remote</option>
+                      <option value="On-site">On-site</option>
+                      <option value="Hybrid">Hybrid</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <!-- Job Responsibilities -->
+                <div class="col-xl-12">
+                  <div class="checkout-page__input-box">
+                    <textarea formControlName="jobResponsibilities" placeholder="Job Responsibilities" required></textarea>
+                    <div *ngIf="addOfferForm.get('jobResponsibilities')?.invalid && addOfferForm.get('jobResponsibilities')?.touched" class="error-message">
+                      Job Responsibilities must be at least 20 characters.
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- What We Offer -->
+                <div class="col-xl-12">
+                  <div class="checkout-page__input-box">
+                    <textarea formControlName="whatWeOffer" placeholder="What We Offer" required></textarea>
+                    <div *ngIf="addOfferForm.get('whatWeOffer')?.invalid && addOfferForm.get('whatWeOffer')?.touched" class="error-message">
+                      What We Offer must be at least 20 characters.
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Submit Button -->
+              <div class="checkout-page__submit-button">
+                <button type="submit" [disabled]="addOfferForm.invalid" class="eduact-btn eduact-btn-second">
+                  <span class="eduact-btn__curve"></span>Submit Offer<i class="icon-arrow"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<app-footer></app-footer>

@@ -11,7 +11,7 @@ import { BreadcrumbsComponent } from '../../shared/components/breadcrumbs/breadc
 
 @Component({
   selector: 'app-admin',
-  imports: [NavBarComponent, NavigationComponent, RouterModule, CommonModule, ConfigurationComponent, BreadcrumbsComponent],
+  imports: [NavBarComponent, NavigationComponent, RouterModule, CommonModule, BreadcrumbsComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

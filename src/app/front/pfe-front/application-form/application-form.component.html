@@ -1,0 +1,76 @@
+<app-navbar></app-navbar>
+<app-notif-pfe></app-notif-pfe>
+<div class="container mt-4">
+  <h2>Apply for Offer</h2>
+  <br>
+  <br>
+  <br>
+
+  <!-- Step Navigation -->
+  <div class="step-navigation">
+    <div class="step" [class.active]="currentStep === 1"></div>
+    <div class="step" [class.active]="currentStep === 2"></div>
+  </div>
+
+  <!-- Step 1: Basic Information -->
+  <div *ngIf="currentStep === 1">
+    <form [formGroup]="applicationForm">
+      <div class="form-group">
+        <label>First Term Score</label>
+        <input type="number" formControlName="score" class="form-control" />
+        <div *ngIf="applicationForm.get('score').invalid && applicationForm.get('score').touched">
+          <small class="text-danger">Score is required and should be between 0 and 20.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Availability</label>
+        <input type="date" formControlName="availability" class="form-control" />
+        <div *ngIf="applicationForm.get('availability').invalid && applicationForm.get('availability').touched">
+          <small class="text-danger">Availability is required and must be a future date.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Field of Study</label>
+        <input type="text" formControlName="fieldofStudy" class="form-control" />
+        <div *ngIf="applicationForm.get('fieldofStudy').invalid && applicationForm.get('fieldofStudy').touched">
+          <small class="text-danger">Field of Study is required.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>University</label>
+        <input type="text" formControlName="university" class="form-control" />
+        <div *ngIf="applicationForm.get('university').invalid && applicationForm.get('university').touched">
+          <small class="text-danger">University is required and should be at least 5 characters long.</small>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+    </form>
+  </div>
+
+  <!-- Step 2: Cover Letter and CV -->
+  <div *ngIf="currentStep === 2">
+    <form [formGroup]="applicationForm">
+      <div class="form-group">
+        <label>Cover Letter</label>
+        <textarea formControlName="coverLetter" class="form-control"></textarea>
+        <div *ngIf="applicationForm.get('coverLetter').invalid && applicationForm.get('coverLetter').touched">
+          <small class="text-danger">Cover Letter is required and should be at least 15 characters long.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>CV</label>
+        <input type="file" (change)="onFileSelected($event)" class="form-control" />
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="previousStep()">Previous</button>
+      <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>

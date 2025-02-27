@@ -1,0 +1,142 @@
+<app-navbar></app-navbar>
+<app-notif-pfe></app-notif-pfe>
+<div class="page-wrapper">
+  <div class="stricky-header stricked-menu main-menu main-header-two">
+    <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+  </div><!-- /.stricky-header -->
+
+  <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div><!-- /.page-header-bg -->
+    <div class="page-header__overlay"></div><!-- /.page-header-overlay -->
+    <div class="container text-center">
+      <h2 class="page-header__title">Become a Partner</h2><!-- /.page-title -->
+      <ul class="page-header__breadcrumb list-unstyled">
+        <li><a href="index.html">Partnership</a></li>
+        <li><span>Become a Partner</span></li>
+      </ul><!-- /.page-breadcrumb list-unstyled -->
+    </div><!-- /.container -->
+  </section><!-- /.page-header -->
+
+  <section class="become-team">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 wow fadeInUp animated" data-wow-delay="300ms">
+          <div class="become-team__content">
+            <h3 class="become-team__title">Why Partner With Us?</h3>
+            <ul class="become-team__list">
+              <li>A results-driven approach focused on brand growth.</li>
+              <li>Creative expertise with over five years of industry experience.</li>
+              <li>A seamless process ensuring innovation and efficiency.</li>
+            </ul>
+            <h3 class="become-team__title">Collaboration Approach</h3>
+            <p class="become-team__text">
+              We are committed to providing tailored solutions that align with our partners' objectives. Our expertise
+              extends across social media branding, visual identity creation, and strategic content development.
+              We ensure that all projects reflect the highest professional standards.
+            </p>
+            <h3 class="become-team__title">Areas of Expertise</h3>
+            <p class="become-team__text">
+              Online Course Development – High-quality, engaging content tailored to various industries.
+              Interactive Learning Solutions – Cutting-edge technology to enhance user experience.
+              Corporate Training & Upskilling – Customized programs to meet organizational needs.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-5 wow fadeInUp animated" data-wow-delay="400ms">
+          <div class="become-team__form-box">
+            <h3 class="become-team__form-box__title">Apply for Partnership</h3>
+            
+            <form [formGroup]="partnershipForm" (ngSubmit)="onSubmit()" class="become-team__form">
+              <!-- Industry Selection -->
+              <div class="become-team__input-box">
+                <select formControlName="industry">
+                  <option value="" disabled selected>Select Industry</option>
+                  <option *ngFor="let industry of industries" [value]="industry">{{ industry }}</option>
+                </select>
+                <div *ngIf="partnershipForm.get('industry')?.invalid && partnershipForm.get('industry')?.touched" class="error-message">
+                  Industry is required.
+                </div>
+              </div>
+            
+              <!-- Company Website Input -->
+              <div class="become-team__input-box">
+                <input type="text" placeholder="Company Website" formControlName="companyWebsite">
+                <div *ngIf="partnershipForm.get('companyWebsite')?.invalid && partnershipForm.get('companyWebsite')?.touched" class="error-message">
+                  Enter a valid website (e.g., example.com).
+                </div>
+              </div>
+            
+              <!-- Company Logo File Upload -->
+              <div class="become-team__input-box text-message-box">
+                <input type="file" id="companyLogo" accept="image/*" (change)="onFileSelected($event)">
+                <label for="companyLogo">
+                  {{ fileSelected ? 'Logo Selected' : 'Upload Company Logo' }}
+                </label>
+                <div *ngIf="!fileSelected && partnershipForm.get('companyLogo')?.touched" class="error-message">
+                  Company Logo is required.
+                </div>
+              </div>
+            
+              <!-- Submit Button -->
+              <div class="become-team__btn-box">
+                <button type="submit" class="eduact-btn eduact-btn-second" [disabled]="partnershipForm.invalid">
+                  <span class="eduact-btn__curve"></span>Become a Partner <i class="icon-arrow"></i>
+                </button>
+              </div>
+            </form>
+            
+            
+            
+<!--
+            <form [formGroup]="partnershipForm" (ngSubmit)="onSubmit()" class="become-team__form">
+              <div class="become-team__input-box">
+                <input type="text" placeholder="Your Company Name" formControlName="companyName">
+                <div *ngIf="partnershipForm.get('companyName')?.invalid && partnershipForm.get('companyName')?.touched">
+                  Company Name is required.
+                </div>
+              </div>
+            
+              <div class="become-team__input-box">
+                <input type="text" placeholder="Industry" formControlName="industry">
+                <div *ngIf="partnershipForm.get('industry')?.invalid && partnershipForm.get('industry')?.touched">
+                  Industry is required.
+                </div>
+              </div>
+            
+              <div class="become-team__input-box">
+                <input type="text" placeholder="Company Website" formControlName="companyWebsite">
+                <div *ngIf="partnershipForm.get('companyWebsite')?.invalid && partnershipForm.get('companyWebsite')?.touched">
+                  Company Website is required.
+                </div>
+              </div>
+            
+              <div class="become-team__input-box text-message-box">
+                <input type="file" id="companyLogo" accept="image/*" (change)="onFileSelected($event)">
+                <label for="companyLogo">
+                  {{ fileSelected ? 'Logo Selected' : 'Upload Company Logo' }}
+                </label>
+                <div *ngIf="partnershipForm.get('companyLogo')?.invalid && partnershipForm.get('companyLogo')?.touched">
+                  Company Logo is required.
+                </div>
+              </div>
+            
+              <div class="become-team__btn-box">
+                <button type="submit" class="eduact-btn eduact-btn-second" [disabled]="partnershipForm.invalid">
+                  <span class="eduact-btn__curve"></span>Become a Partner <i class="icon-arrow"></i>
+                </button>
+              </div>
+            </form>-->
+            
+
+
+            
+            <div class="result"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>

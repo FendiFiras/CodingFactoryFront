@@ -1,0 +1,25 @@
+<div *ngIf="assignments.length > 0; else noAssignments">
+  <h2>Assignments for Offer ID: {{ offerId }}</h2>
+  <table class="assignments-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let assignment of assignments">
+        <td>{{ assignment.idAffectation }}</td>
+        <td>{{ assignment.status }}</td>
+        <td>{{ assignment.startDate | date }}</td>
+        <td>{{ assignment.endDate ? (assignment.endDate | date) : 'Not set' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noAssignments>
+  <p>No assignments found for this offer.</p>
+</ng-template>
