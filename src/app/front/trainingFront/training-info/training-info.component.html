@@ -27,9 +27,13 @@
                
                 <div class="course-details__tabs tabs-box wow fadeInUp">
                     <ul class="course-details__tabs__lists tab-buttons list-unstyled">
-                        <li data-tab="#overview" class="tab-btn active-btn"><span>Access Courses</span></li>
-                        <li data-tab="#curriculum" class="tab-btn"><span>Curriculum</span></li>
-                    </ul>
+                        <li data-tab="#overview" class="tab-btn active-btn">
+                            <span (click)="goToCourses()">Access Courses</span>
+                        </li>
+                        <li data-tab="#curriculum" class="tab-btn active-btn">
+                            <span *ngIf="quizId" (click)="goToQuiz()"> Take Quiz</span>
+                        </li>
+                                            </ul>
                     <div class="tabs-content">
                         <div class="tab fadeInUp animated active-tab" id="overview">
                             <div class="course-details__overview">

@@ -35,4 +35,9 @@ export class QuizService {
   deleteQuiz(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
+
+  // ✅ Récupérer les quiz d'une formation spécifique
+  getQuizzesByTraining(trainingId: number): Observable<Quiz[]> {
+    return this.http.get<Quiz[]>(`${this.apiUrl}/training/${trainingId}`);
+  }
 }

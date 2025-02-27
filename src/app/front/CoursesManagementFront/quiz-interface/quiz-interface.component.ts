@@ -6,9 +6,11 @@ import { QuizQuestionService } from '../../../Services/quiz-question.service';
 import { QuizService } from 'src/app/Services/quiz.service';
 import { CommonModule } from '@angular/common';
 import { QuizQuestion } from 'src/app/Models/quiz-question.model';
+import { NavbarComponent } from '../../elements/navbar/navbar.component';
+import { FooterComponent } from '../../elements/footer/footer.component';
 @Component({
   selector: 'app-quiz-interface',
-  imports: [CommonModule, ReactiveFormsModule,FormsModule],
+  imports: [CommonModule, ReactiveFormsModule,FormsModule,NavbarComponent,FooterComponent],
   templateUrl: './quiz-interface.component.html',
   styleUrl: './quiz-interface.component.scss'
 })
@@ -22,6 +24,7 @@ export class QuizInterfaceComponent {
   passed!: boolean;
   currentQuestionIndex = 0;
   selectedAnswers: { [key: number]: number | null } = {}; 
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -107,6 +110,15 @@ calculateScore(): void {
   );
 }
 
+getProgressColor(): string {
+  if (this.score >= this.quiz.maxGrade * 0.8) {
+      return '#4CAF50'; // Vert 🎯 (Réussi)
+  } else if (this.score >= this.quiz.maxGrade * 0.5) {
+      return '#FFC107'; // Jaune ⚠️ (Moyen)
+  } else {
+      return '#FF5722'; // Rouge ❌ (Échec)
+  }
+}
 
 
   reviewQuiz(): void {
