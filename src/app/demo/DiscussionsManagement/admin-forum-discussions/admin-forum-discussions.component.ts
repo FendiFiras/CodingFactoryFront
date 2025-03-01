@@ -246,4 +246,10 @@ export class AdminDiscussionComponent implements OnInit {
         });
       }
     }
+
+        // Méthode pour naviguer vers la page des messages d'une discussion
+        viewMessages(discussion_id: number): void {
+          console.log('Navigating to messages for discussion ID:', discussion_id);
+          this.router.navigate([`/admin/forum/${this.forumId}/discussion/${discussion_id}/messages`]);
+        }
 }

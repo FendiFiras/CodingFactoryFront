@@ -14,6 +14,7 @@ import { ForumsManagementComponent } from './demo/forums-management/forums-manag
 import { AdminDiscussionComponent } from './demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MessageComponent } from './front/Forum-Front/message-list/message-list.component';
+import { AdminDiscussionMessagesComponent } from './demo/Message-Managment/admin-discussion-messages/admin-discussion-messages.component';
 // import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
 // import { FourmsListComponent } from './front/Forum-Front/fourms-list/fourms-list.component';
 
@@ -49,6 +50,13 @@ const routes: Routes = [
         path: 'discussion/:discussionId/messages',
         component: MessageComponent
       },
+
+
+      {
+        path: 'admin/forum/:forumId/discussion/:discussionId/messages',
+        component: AdminDiscussionMessagesComponent,
+      },
+
     
  /* { path: 'admin/forum/:forumId/discussions/add',
      component: AdminAddDiscussionComponent },

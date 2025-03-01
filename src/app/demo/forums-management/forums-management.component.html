@@ -65,11 +65,7 @@
     </div>
     <div class="sidebar-body">
         <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
-            <!-- Champ User ID (visible uniquement en mode ajout) -->
-            <div class="form-group mb-3" *ngIf="!editMode">
-              <label for="userId">User ID</label>
-              <input id="userId" formControlName="userId" type="number" class="form-control" required />
-            </div>
+            
             <div class="form-group mb-3">
               <label for="title">Titre</label>
               <input id="title" formControlName="title" class="form-control" required />

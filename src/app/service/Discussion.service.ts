@@ -40,4 +40,5 @@ export class DiscussionService {
   deleteDiscussion(discussionId: number): Observable<void> {
     return this.http.delete<void>(`http://localhost:8089/deleteDiscussion/${discussionId}`);
   }
+
 }

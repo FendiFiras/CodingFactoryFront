@@ -35,9 +35,11 @@ export class ForumsManagementComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef, // Injecter ChangeDetectorRef
-  ) {
+  ) 
+  
+  
+  {
     this.addForumForm = this.fb.group({
-      userId: [null, Validators.required], // Ajouter le champ userId
       title: ['', Validators.required],
       description: ['', Validators.required],
       image: [null, Validators.required], // Ajout de la validation pour l'image si nécessaire
@@ -84,7 +86,11 @@ export class ForumsManagementComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.addForumForm.value.title);
     formData.append('description', this.addForumForm.value.description);
-    formData.append('userId', this.addForumForm.value.userId.toString()); // Ajouter userId
+    formData.append('userId','2'); // Ajouter userId
+
+
+
+
 
     if (this.addForumForm.value.image) {
       formData.append('image', this.addForumForm.value.image);

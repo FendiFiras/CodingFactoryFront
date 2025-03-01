@@ -1,0 +1,59 @@
+<app-navigation
+  class="pcoded-navbar"
+  [ngClass]="{
+    'navbar-collapsed': navCollapsed,
+    'mob-open': navCollapsedMob
+  }"
+  (NavCollapse)="navCollapsed = !navCollapsed"
+  (NavCollapsedMob)="navMobClick()"
+></app-navigation>
+
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <div class="container mt-4">
+          <div class="header-container">
+            <h2>Messages de la Discussion</h2>
+            <button class="btn btn-primary" (click)="goBack()">
+              <i class="fas fa-arrow-left"></i> Retour
+            </button>
+          </div>
+
+          <!-- Indicateur de chargement -->
+          <div *ngIf="isLoading" class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+
+          <!-- Message d'erreur -->
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Liste des messages -->
+          <div *ngIf="!isLoading && messages.length > 0" class="row">
+            <div *ngFor="let message of messages" class="col-md-12 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <!-- Affichez la description du message -->
+                  <p class="card-text">{{ message.description || 'Aucune description' }}</p>
+                  <!-- Affichez userId et la date du message -->
+                  <small class="text-muted">
+                    Publié par ({{ message.userId || 'Anonyme' }}) le: {{ message.messageDate | date: 'MMM d, y' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aucun message trouvé -->
+          <div *ngIf="!isLoading && messages.length === 0" class="alert alert-info">
+            Aucun message trouvé pour cette discussion.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,10 @@ export class MessageService {
     return this.http.get<Message[]>(`${this.apiUrl}/discussion/${discussionId}`);
   }
 
+  getMessagesByDiscussion(discussionId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/discussion/${discussionId}`);
+  }
+  
   // Ajouter un message à une discussion
   addMessage(userId: number, discussionId: number, description: string): Observable<Message> {
     const url = `${this.apiUrl}/add?userId=${userId}&discussionId=${discussionId}`;
