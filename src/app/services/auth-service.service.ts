@@ -8,18 +8,29 @@ import { Role, User } from '../models/user';
 })
 export class AuthService {
   private baseUrl = 'http://localhost:8089/codingFactory/auth'; // URL correcte du backend
+  apiUrl: string = `${this.baseUrl}`; // Correction: Enlevez la déclaration "any" pour "string" 
 
   constructor(private http: HttpClient) {}
 
   // Inscription d'un utilisateur
-  register(user: User): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/register`, user).pipe(
-      catchError(error => {
-        console.error("Erreur lors de l'inscription :", error);
-        return throwError(() => new Error("Erreur lors de l'inscription"));
-      })
-    );
+  register(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/register`, formData);
   }
+  
+
+  updateUser(id: number, user: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update/${id}`, user); // Utilisation correcte de l'URL
+  }
+
+  // Mettre à jour l'image de l'utilisateur
+  updateUserImage(userId: number, image: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', image);  // Ajouter l'image au FormData
+    return this.http.post<any>(`${this.apiUrl}/update/${userId}/image`, formData); // Utilisation de apiUrl
+  }
+  
+  
+  
 
   // Connexion d'un utilisateur
   login(user: any): Observable<{ token: string }> {

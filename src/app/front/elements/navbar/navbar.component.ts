@@ -1,72 +1,247 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service.service';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { UserService } from 'src/app/services/user.service'; // Importez le service UserService
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { UserPreferenceService } from 'src/app/services/user-preference.service';
+import { UserPreference } from 'src/app/models/user-preference';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule, SharedModule,NgbDropdownModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
   userInfo: any = null;  // Stocke l'utilisateur connecté
-  isEditing: boolean = false; // Pour basculer entre l'affichage et l'édition
-  editedUser: any = {}; // Stocke les modifications de l'utilisateur
+  editForm: FormGroup; // Formulaire de modification
+  selectedUser: any; // Utilisateur sélectionné pour l'édition
+  selectedImage: File | null = null;  // Image sélectionnée, avec type explicite
+  userPreference: UserPreference | null = null; // Préférences de l'utilisateur
+  preferenceForm: FormGroup;
+  isDropdownOpen: boolean = false; // Contrôle l'état du dropdown
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService // Injectez le service UserService
-  ) {}
+    private userService: UserService,
+    private userPreferenceService: UserPreferenceService,
+    private modalService: NgbModal,
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    // Initialisation du formulaire utilisateur
+    this.editForm = this.fb.group({
+      idUser: [''],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      address: ['', Validators.required],
+      role: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      gender: ['', Validators.required],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/)]]
+    });
+
+    // Initialisation du formulaire des préférences utilisateur
+    this.preferenceForm = this.fb.group({
+      theme: ['', Validators.required],
+      language: ['', Validators.required],
+      notificationEnabled: []
+    });
+  }
 
   ngOnInit(): void {
     this.loadUserInfo();
   }
 
+  /** Récupérer les informations de l'utilisateur connecté */
   loadUserInfo(): void {
     if (this.authService.isLoggedIn()) {
       this.authService.getUserInfo().subscribe({
         next: (response) => {
-          this.userInfo = response;  // Met à jour les infos utilisateur
-          this.editedUser = { ...response }; // Copie les infos pour l'édition
+          this.userInfo = response;
+          console.log('User Info chargé:', this.userInfo);
+          this.loadUserPreferences();
+          this.cdr.markForCheck(); // Forcer le rafraîchissement de la vue
         },
         error: (err) => {
           console.error('Erreur lors de la récupération des informations utilisateur:', err);
+          this.userInfo = null; // ou une valeur par défaut
+        }
+      });
+    } else {
+      this.userInfo = null; // ou une valeur par défaut
+    }
+  }
+
+  /** Récupérer les préférences de l'utilisateur connecté */
+  loadUserPreferences(): void {
+    if (this.userInfo) {
+      this.userPreferenceService.getUserPreference(this.userInfo.idUser).subscribe({
+        next: (preference) => {
+          this.userPreference = preference;
+          this.preferenceForm.patchValue(preference); // Remplir le formulaire avec les préférences existantes
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            console.warn('Aucune préférence trouvée pour cet utilisateur.');
+            // Ne pas appliquer de préférences par défaut
+            this.userPreference = null; // ou undefined, selon ce que vous préférez
+            this.preferenceForm.reset(); // Réinitialiser le formulaire
+          } else {
+            this.handleError(err, 'Erreur lors de la récupération des préférences utilisateur.');
+          }
         }
       });
     }
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.userInfo = null;  // Réinitialisation des données utilisateur
-    this.router.navigate(['/login']); // Redirection après logout
+  /** Gérer les erreurs de manière centralisée */
+  handleError(error: any, message: string): void {
+    console.error(message, error);
+    alert('Erreur : ' + message);  // Affichage d'un message utilisateur en français
   }
 
-  navigateToLogin(): void {
+  /** Ouvrir la modale des préférences */
+  openPreferenceModal(modal: TemplateRef<any>): void {
+    this.modalService.open(modal, { centered: true });
+  }
+
+  /** Soumettre les préférences utilisateur */
+  onPreferenceSubmit(): void {
+    if (!this.userInfo || !this.userInfo.idUser) {
+      console.error('Erreur: userInfo ou userInfo.idUser est undefined.');
+      return;
+    }
+  
+    if (this.preferenceForm.valid) {
+      const updatedPreference: UserPreference = {
+        ...this.preferenceForm.value,
+        idPreference: this.userPreference?.idPreference || undefined // Assurez-vous que l'idPreference est correctement passé
+      };
+  
+      console.log('Préférence envoyée:', updatedPreference);
+  
+      if (updatedPreference.idPreference) {
+        // Mettre à jour les préférences existantes
+        this.userPreferenceService.modifyUserPreference(updatedPreference).subscribe({
+          next: (response) => {
+            console.log('Préférence modifiée avec succès:', response);
+            this.userPreference = response;
+            this.modalService.dismissAll();
+            alert('Preferences updated successfully!');
+          },
+          error: (err) => this.handleError(err, 'Erreur lors de la mise à jour des préférences.')
+        });
+      } else {
+        // Ajouter de nouvelles préférences si elles n'existent pas
+        this.userPreferenceService.addUserPreference(updatedPreference, this.userInfo.idUser).subscribe({
+          next: (response) => {
+            console.log('Nouvelle préférence ajoutée:', response);
+            this.userPreference = response;
+            this.modalService.dismissAll();
+            alert('Preferences added successfully!');
+          },
+          error: (err) => this.handleError(err, 'Erreur lors de l\'ajout des préférences utilisateur.')
+        });
+      }
+    } else {
+      console.error('Formulaire invalide.');
+    }
+  }
+  /** Ouvrir la modale d'édition utilisateur */
+  openEditModal(user: any, modal: TemplateRef<any>): void {
+    this.selectedUser = user;
+    this.editForm.patchValue(user);
+    if (user.image) {
+      this.selectedImage = user.image; // Si une image est présente, on l'affiche
+    }
+    this.modalService.open(modal, { centered: true });
+  }
+  
+  /** Soumettre la modification de l'utilisateur */
+  onSubmit(): void {
+    if (this.editForm.valid) {
+      const userId = this.editForm.value.idUser;
+      const userData = this.editForm.value;
+  
+      const formData = new FormData();
+      for (let key in userData) {
+        if (userData[key] !== null && userData[key] !== undefined) {
+          formData.append(key, userData[key]);
+        }
+      }
+  
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      }
+  
+      this.authService.updateUser(userId, formData).subscribe({
+        next: (response) => {
+          console.log('Utilisateur mis à jour:', response);
+          this.loadUserInfo(); // Recharger les informations de l'utilisateur
+          this.loadUserPreferences();
+          // Forcer le rafraîchissement de la vue
+          this.cdr.markForCheck();
+  
+          // Fermer la modal
+          this.modalService.dismissAll();
+  
+          alert('Profile updated successfully!');
+        },
+        error: (err) => {
+          this.handleError(err, 'Erreur lors de la modification de l\'utilisateur.');
+        }
+      });
+    } else {
+      console.error('Formulaire invalide.');
+    }
+  }toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    this.cdr.markForCheck(); // Forcer la détection des changements
+  }
+  /** Mettre à jour l'image de l'utilisateur */
+  updateUserImage(): void {
+    if (this.selectedImage && this.userInfo?.idUser) {
+      this.authService.updateUserImage(this.userInfo.idUser, this.selectedImage).subscribe({
+        next: (response) => {
+          console.log('Image mise à jour:', response);
+          this.userInfo.image = response.imagePath; // Mettre à jour l'image de l'utilisateur
+          this.cdr.markForCheck(); // Forcer le rafraîchissement de la vue
+          this.modalService.dismissAll();
+          alert('Image updated successfully!'); // Message en anglais
+        },
+        error: (err) => {
+          this.handleError(err, 'Erreur lors de la mise à jour de l\'image.');
+        }
+      });
+    } else {
+      console.error('Aucune image sélectionnée ou utilisateur non identifié.');
+    }
+  }
+  
+  /** Gérer la sélection d'une image */
+  onFileChange(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedImage = event.target.files[0];
+    }
+  }
+
+  /** Déconnexion de l'utilisateur */
+  logout(): void {
+    this.authService.logout();
+    this.userInfo = null;
     this.router.navigate(['/login']);
   }
 
-  toggleEdit(): void {
-    this.isEditing = !this.isEditing; // Bascule entre l'affichage et l'édition
+  /** Redirection vers la page de connexion */
+  navigateToLogin(): void {
+    this.router.navigate(['/login']);
   }
-
-  saveChanges(): void {
-    this.userService.modifyUser(this.editedUser).subscribe({
-      next: (response) => {
-        this.userInfo = response; // Met à jour les infos utilisateur
-        this.isEditing = false; // Désactive le mode édition
-      },
-      error: (err) => {
-        console.error('Erreur lors de la modification des informations utilisateur:', err);
-      }
-    });
-  }
-} 
+}

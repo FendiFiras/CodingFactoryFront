@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { BanLogService } from 'src/app/services/banlog.service'; // Service de gestion des bans
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -25,29 +25,14 @@ export class InstructorComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal
   ) {
-    // Initialisation du formulaire de modification
-    this.editForm = this.fb.group({
-      idUser: [''],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [''],
-      address: [''],
-      role: [''],
-      speciality: [''],
-      cv: [''],
-      dateOfBirth: [''],
-      gender: [''],
-      image: [''],
-      password: ['']
-    });
+   
 
-    // Initialisation du formulaire de ban
-    this.banForm = this.fb.group({
-      banDuration: ['', Validators.required], // Date de fin du ban
-      banReason: ['', Validators.required], // Raison du ban
-      status: [Status.ACTIVE] // Statut par défaut
-    });
+   // Initialisation du formulaire de bannissement avec validation
+   this.banForm = this.fb.group({
+    banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
+    banReason: ['', Validators.required],
+    status: [Status.ACTIVE]
+  });
   }
 
   ngOnInit(): void {
@@ -67,12 +52,6 @@ export class InstructorComponent implements OnInit {
     );
   }
 
-  // Ouvrir la modale de modification
-  openEditModal(user: any, content: any): void {
-    this.selectedUser = user;
-    this.editForm.patchValue(user);
-    this.modalService.open(content, { ariaLabelledBy: 'editUserModalLabel' });
-  }
 
   // Ouvrir la modale pour ajouter un BanLog
   openBanModal(user: any, content: any): void {
@@ -81,22 +60,7 @@ export class InstructorComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'banUserModalLabel' });
   }
 
-  // Soumettre le formulaire de modification
-  onSubmit(): void {
-    if (this.editForm.valid) {
-      const updatedUser = this.editForm.value;
-      this.userService.modifyUser(updatedUser).subscribe(
-        (response) => {
-          console.log('Utilisateur modifié :', response);
-          this.getUsersByRole('INSTRUCTOR');
-          this.modalService.dismissAll();
-        },
-        (error) => {
-          console.error('Erreur lors de la modification de l\'utilisateur', error);
-        }
-      );
-    }
-  }
+
 
   // Soumettre le formulaire de ban
   onBanSubmit(): void {
@@ -106,7 +70,8 @@ export class InstructorComponent implements OnInit {
       const banLog: BanLog = {
         ...this.banForm.value,
         banDuration: banDurationISO, 
-        userId: this.selectedBanUser.idUser 
+        userId: this.selectedBanUser.idUser ,
+        status: Status.ACTIVE
       };
   
       this.banLogService.addBanLog(this.selectedBanUser.idUser, banLog).subscribe(
@@ -122,22 +87,22 @@ export class InstructorComponent implements OnInit {
     }
   }
 
-  // Supprimer un utilisateur
-  deleteUser(id: number): void {
-    if (!id) {
-      console.error('ID invalide');
-      return;
+  
+    // Validation pour s'assurer que la durée du ban est au moins un jour après aujourd'hui
+    minimumBanDurationValidator(control: AbstractControl) {
+      if (!control.value) {
+        return null;
+      }
+  
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      const selectedDate = new Date(control.value);
+      selectedDate.setHours(0, 0, 0, 0);
+  
+      if (selectedDate <= today) {
+        return { invalidBanDuration: true };
+      }
+      return null;
     }
-    if (confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
-      this.userService.deleteUser(id).subscribe(
-        () => {
-          console.log('Utilisateur supprimé avec succès');
-          this.getUsersByRole('INSTRUCTOR');
-        },
-        (error) => {
-          console.error('Erreur lors de la suppression de l\'utilisateur', error);
-        }
-      );
-    }
-  }
 }

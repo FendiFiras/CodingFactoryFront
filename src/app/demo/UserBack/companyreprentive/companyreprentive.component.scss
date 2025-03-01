@@ -1,0 +1,98 @@
+/* Style pour la grille de cartes */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Style pour chaque carte utilisateur */
+  .user-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style pour l'en-tête de la carte */
+  .user-card-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+  }
+  
+  .user-card-header h3 {
+    margin: 10px 0 5px;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .user-role {
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  /* Style pour le conteneur de l'avatar */
+  .user-avatar {
+    margin-bottom: 15px;
+  }
+  
+  /* Style pour l'image de profil */
+  .profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style pour le corps de la carte */
+  .user-card-body {
+    padding: 15px;
+  }
+  
+  .user-card-body p {
+    margin: 0 0 10px;
+    font-size: 0.875rem;
+    color: #555;
+  }
+  
+  .user-card-body p strong {
+    color: #333;
+  }
+  
+  /* Style pour le pied de la carte */
+  .user-card-footer {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+    text-align: right;
+  }
+  
+  /* Style pour les boutons */
+  .btn {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  
+  .btn-warning {
+    color: #fff;
+    background-color: #ffc107;
+    border-color: #ffc107;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+  }

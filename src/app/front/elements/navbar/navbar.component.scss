@@ -1,191 +1,128 @@
-/* Styles de base pour le header et le menu */
-.main-header-two {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
+/* Style général du dropdown */
+.dropdown {
+    position: relative; /* Nécessaire pour positionner le dropdown-menu */
 }
 
-.main-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.main-menu__logo img {
-    width: 160px;
-    height: 48px;
-}
-
-.main-menu__nav {
-    display: flex;
-    align-items: center;
-}
-
-.main-menu__list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.main-menu__list li {
-    position: relative;
-    margin: 0 10px;
-}
-
-.main-menu__list li a {
-    color: #333;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    transition: background-color 0.3s;
-}
-
-.main-menu__list li a:hover {
-    background-color: #f8f9fa;
-    border-radius: 4px;
-}
-
-/* Styles pour les dropdowns */
-.dropdown ul {
-    display: none;
+.dropdown-menu {
     position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    z-index: 1000;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-radius: 4px;
-}
-
-.dropdown:hover ul {
-    display: block;
-}
-
-.dropdown ul li {
-    margin: 0;
-}
-
-.dropdown ul li a {
-    padding: 10px 15px;
-    color: #333;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.3s;
-}
-
-.dropdown ul li a:hover {
-    background-color: #f8f9fa;
-}
-
-/* Styles pour la section utilisateur */
-.user-info-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.user-card, .edit-card {
+    top: 100%; /* Place le menu sous le parent */
+    left: 50%; /* Centre horizontalement */
+    transform: translateX(-50%); /* Ajuste pour qu'il soit parfaitement centré */
     background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 250px;
+    display: none; /* Caché par défaut */
+    flex-direction: column; /* Ajuste les éléments verticalement */
+    align-items: center; /* Centre le contenu horizontalement */
     text-align: center;
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-    transition: all 0.3s ease-in-out;
+    z-index: 1000; /* Assure qu'il est au-dessus des autres éléments */
+}
+
+/* Afficher le dropdown-menu lorsqu'il est actif */
+.dropdown.active .dropdown-menu,
+.dropdown-menu.show { /* Si Angular ajoute la classe .show */
+    display: flex; /* Affiche le menu */
+}
+
+/* Style pour la carte utilisateur */
+.user-card {
+    text-align: center;
+    width: 100%; /* Prend toute la largeur du dropdown-menu */
 }
 
 .user-avatar {
-    font-size: 60px;
-    color: #007bff;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover; /* Assure que l'image couvre la zone sans se déformer */
+    border: 3px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .user-details h3 {
-    font-size: 1.5rem;
+    margin: 10px 0 5px;
+    font-size: 1.25rem;
     color: #333;
-    margin-bottom: 10px;
 }
 
 .user-details p {
-    font-size: 1rem;
-    color: #666;
     margin: 5px 0;
+    font-size: 0.875rem;
+    color: #666;
 }
 
+/* Boutons d'action */
 .button-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
     margin-top: 15px;
+    display: flex;
+    flex-direction: column; /* Boutons empilés verticalement */
+    gap: 10px; /* Espace entre les boutons */
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: 0.3s;
-}
-
-.btn i {
-    margin-right: 8px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer; /* Indique que c'est cliquable */
+    border: none; /* Supprime la bordure par défaut */
+    text-align: center;
+    width: 100%; /* Boutons prennent toute la largeur */
 }
 
 .btn-edit {
-    background-color: #17a2b8;
-    color: white;
+    background-color: #007bff;
+    color: #fff;
 }
 
 .btn-edit:hover {
-    background-color: #138496;
+    background-color: #0056b3;
 }
 
 .btn-logout {
     background-color: #dc3545;
-    color: white;
+    color: #fff;
 }
 
 .btn-logout:hover {
-    background-color: #c82333;
+    background-color: #a71d2a;
+}
+
+/* Style pour le formulaire d'édition */
+.edit-card {
+    text-align: left;
+    width: 100%; /* Prend toute la largeur du dropdown-menu */
 }
 
 .edit-card h2 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: #333;
     margin-bottom: 15px;
 }
 
 .form-group {
-    text-align: left;
     margin-bottom: 15px;
 }
 
 .form-group label {
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.form-group label i {
-    margin-right: 8px;
-    color: #007bff;
+    display: block;
+    font-size: 0.875rem;
+    color: #555;
+    margin-bottom: 5px;
 }
 
 .form-control {
     width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.875rem;
 }
 
 .form-buttons {
@@ -194,40 +131,71 @@
     margin-top: 15px;
 }
 
-.form-buttons .btn {
-    width: 48%;
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
 }
 
-/* Styles pour les écrans mobiles */
-@media (max-width: 768px) {
-    .main-menu__list {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.btn-success:hover {
+    background-color: #218838;
+}
 
-    .main-menu__list li {
-        margin: 5px 0;
-    }
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
 
-    .dropdown ul {
-        position: static;
-        box-shadow: none;
-    }
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
 
-    .user-card, .edit-card {
-        width: 90%;
-    }
+/* Style pour le lien de connexion */
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    border-radius: 4px; /* Ajoute un arrondi pour un meilleur effet au survol */
+}
 
-    .button-group {
-        flex-direction: column;
-    }
+.dropdown-menu a:hover {
+    background-color: #f8f9fa;
+}
 
-    .form-buttons {
-        flex-direction: column;
-    }
+/* Style pour le conteneur de l'image de profil */
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
 
-    .form-buttons .btn {
-        width: 100%;
-        margin-bottom: 8px;
-    }
+/* Style pour le texte de bienvenue */
+.user-details h3 strong {
+    color: #000000; /* Couleur pour mettre en valeur le prénom */
+}
+
+/* Style pour les icônes */
+.fa {
+    margin-right: 5px; /* Espace entre l'icône et le texte */
+}
+
+/* Style pour l'icône des paramètres */
+.settings-icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.settings-icon {
+    font-size: 1.2em;
+    color: #333;
+    padding: 5px;
+    cursor: pointer; /* Indique que c'est cliquable */
+    transition: color 0.2s;
+}
+
+.settings-icon:hover {
+    color: #007bff;
 }

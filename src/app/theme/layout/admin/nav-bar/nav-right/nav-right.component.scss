@@ -1,0 +1,93 @@
+/* Gradient moderne */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+/* Profile Card */
+.profile-card {
+  width: 280px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.profile-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-image-container {
+  margin-bottom: 15px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-body {
+  padding: 20px;
+}
+
+.profile-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-details li {
+  margin-bottom: 15px;
+}
+
+.profile-details h5 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.profile-details p {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.profile-actions {
+  margin-top: 20px;
+}
+
+.profile-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.profile-actions .btn-primary {
+  background: #007bff;
+  border: none;
+}
+
+.profile-actions .btn-primary:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+
+.profile-actions .btn-danger {
+  background: #dc3545;
+  border: none;
+}
+
+.profile-actions .btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}

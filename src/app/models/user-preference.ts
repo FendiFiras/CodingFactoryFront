@@ -3,4 +3,5 @@ export class UserPreference {
   theme?: string;
   language?: string;
   notificationEnabled?: boolean;
+  
 }

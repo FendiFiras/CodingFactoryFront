@@ -1,30 +1,24 @@
 <div class="col-xl-12">
-    <app-card cardTitle="User List" [options]="false" blockClass="table-border-style">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Address</th>
-              <th>Role</th>
-              <th>Speciality</th>
-              <th>Company Name</th>
-              <th>CV</th>
-              <th>Date of Birth</th>
-              <th>Gender</th>
-              <th>Grade</th>
-              <th>Image</th>
-              <th>Level</th>
-              <th>Password</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of users; let i = index">
+  <app-card cardTitle="User List" [options]="false" blockClass="table-border-style">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th>Role</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users; let i = index">
+            <ng-container *ngIf="user.role !== 'ADMIN'">
               <th scope="row">{{ i + 1 }}</th>
               <td>{{ user.firstName }}</td>
               <td>{{ user.lastName }}</td>
@@ -32,122 +26,51 @@
               <td>{{ user.phoneNumber }}</td>
               <td>{{ user.address }}</td>
               <td>{{ user.role }}</td>
-              <td>{{ user.speciality || 'N/A' }}</td>
-              <td>{{ user.companyName || 'N/A' }}</td>
-              <td>{{ user.cv || 'N/A' }}</td>
               <td>{{ user.dateOfBirth | date:'yyyy-MM-dd' }}</td>
               <td>{{ user.gender || 'N/A' }}</td>
-              <td>{{ user.grade || 'N/A' }}</td>
-              <td>{{ user.image || 'N/A' }}</td>
-              <td>{{ user.level || 'N/A' }}</td>
-              <td>{{ user.password || 'N/A' }}</td>
+
               <td>
-                <button class="btn btn-primary btn-sm" (click)="openEditModal(user, editModal)">Edit</button>
-                <button class="btn btn-danger btn-sm" (click)="deleteUser(user.idUser)">Delete</button>
+
                 <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>
               </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </app-card>
-  </div>
-  
-  <!-- Modale pour la modification -->
-    <ng-template #editModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-      <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="modal-body">
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-        <input type="hidden" formControlName="idUser">
-        <div class="mb-3">
-          <label for="firstName" class="form-label">First Name</label>
-          <input type="text" class="form-control" id="firstName" formControlName="firstName">
-        </div>
-        <div class="mb-3">
-          <label for="lastName" class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="lastName" formControlName="lastName">
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" formControlName="email">
-        </div>
-        <div class="mb-3">
-          <label for="phoneNumber" class="form-label">Phone Number</label>
-          <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber">
-        </div>
-        <div class="mb-3">
-          <label for="address" class="form-label">Address</label>
-          <input type="text" class="form-control" id="address" formControlName="address">
-        </div>
-        <div class="mb-3">
-          <label for="role" class="form-label">Role</label>
-          <input type="text" class="form-control" id="role" formControlName="role">
-        </div>
-        <div class="mb-3">
-          <label for="speciality" class="form-label">Speciality</label>
-          <input type="text" class="form-control" id="speciality" formControlName="speciality">
-        </div>
-        <div class="mb-3">
-          <label for="companyName" class="form-label">Company Name</label>
-          <input type="text" class="form-control" id="companyName" formControlName="companyName">
-        </div>
-        <div class="mb-3">
-          <label for="dateOfBirth" class="form-label">Date of Birth</label>
-          <input type="date" class="form-control" id="dateOfBirth" formControlName="dateOfBirth">
-        </div>
-        <div class="mb-3">
-          <label for="gender" class="form-label">Gender</label>
-          <input type="text" class="form-control" id="gender" formControlName="gender">
-        </div>
-        <div class="mb-3">
-          <label for="grade" class="form-label">Grade</label>
-          <input type="text" class="form-control" id="grade" formControlName="grade">
-        </div>
-        <div class="mb-3">
-          <label for="image" class="form-label">Image</label>
-          <input type="text" class="form-control" id="image" formControlName="image">
-        </div>
-        <div class="mb-3">
-          <label for="level" class="form-label">Level</label>
-          <input type="text" class="form-control" id="level" formControlName="level">
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" formControlName="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-      </form>
-    </div>
-  </ng-template>
-  
-  <!-- Modale pour ajouter un BanLog -->
-  <!-- Modale pour ajouter un BanLog -->
+  </app-card>
+</div>
+
+
+
+<!-- Modale pour ajouter un BanLog -->
+<!-- Modale pour ajouter un BanLog -->
 <ng-template #banModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
-      <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
-        <div class="mb-3">
-          <label for="banDuration" class="form-label">Ban Duration</label>
-          <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
+  <div class="modal-header">
+    <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
+      <div class="mb-3">
+        <label for="banDuration" class="form-label">Ban Duration</label>
+        <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
+        <div *ngIf="banForm.controls['banDuration'].invalid && banForm.controls['banDuration'].touched" class="text-danger">
+          The ban duration must be at least one day from today.
         </div>
-        <div class="mb-3">
-          <label for="banReason" class="form-label">Ban Reason</label>
-          <input type="text" class="form-control" id="banReason" formControlName="banReason">
-        </div>
-        <div class="mb-3">
-          <label for="status" class="form-label">Status</label>
-          <select class="form-control" id="status" formControlName="status">
-            <option value="ACTIVE">Active</option>
-            <option value="EXPIRED">Expired</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-warning">Ban User</button>
-      </form>
-    </div>
-  </ng-template>
+      </div>
+      <div class="mb-3">
+        <label for="banReason" class="form-label">Ban Reason</label>
+        <input type="text" class="form-control" id="banReason" formControlName="banReason">
+      </div>
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-control" id="status" formControlName="status">
+          <option value="ACTIVE">Active</option>
+          <option value="EXPIRED">Expired</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-warning">Ban User</button>
+    </form>
+  </div>
+</ng-template>

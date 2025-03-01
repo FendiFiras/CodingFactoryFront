@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-import { BanLogService } from 'src/app/services/banlog.service'; // Service pour bannir les utilisateurs
+import { BanLogService } from 'src/app/services/banlog.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BanLog, Status } from 'src/app/models/ban-log';
@@ -14,44 +14,34 @@ import { BanLog, Status } from 'src/app/models/ban-log';
 })
 export class StudentComponent implements OnInit {
   users: any[] = []; // Liste des étudiants
-  editForm: FormGroup; // Formulaire pour modifier un étudiant
-  banForm: FormGroup; // Formulaire pour bannir un étudiant
+  editForm: FormGroup; // Formulaire de modification
+  banForm: FormGroup; // Formulaire de bannissement
   selectedUser: any; // Étudiant sélectionné pour modification
   selectedBanUser: any; // Étudiant sélectionné pour bannissement
+  errorMessage: string | null = null;
 
   constructor(
     private userService: UserService,
-    private banLogService: BanLogService, // Injection du service BanLog
+    private banLogService: BanLogService,
     private fb: FormBuilder,
     private modalService: NgbModal
   ) {
-    // Initialisation du formulaire de modification
-    this.editForm = this.fb.group({
-      idUser: [''],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [''],
-      address: [''],
-      role: [''],
-      cv: [''],
-      dateOfBirth: [''],
-      gender: [''],
-      image: [''],
-      level: [''],
-      password: ['']
-    });
+ 
+      
+      
+      
+     
 
-    // Initialisation du formulaire de bannissement
+    // Initialisation du formulaire de bannissement avec validation
     this.banForm = this.fb.group({
-      banDuration: ['', Validators.required], // Date de fin du bannissement
-      banReason: ['', Validators.required], // Raison du bannissement
-      status: [Status.ACTIVE] // Statut par défaut
+      banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
+      banReason: ['', Validators.required],
+      status: [Status.ACTIVE]
     });
   }
 
   ngOnInit(): void {
-    this.getUsersByRole('STUDENT'); // Charger la liste des étudiants au démarrage
+    this.getUsersByRole('STUDENT');
   }
 
   // Récupérer la liste des étudiants
@@ -70,7 +60,11 @@ export class StudentComponent implements OnInit {
   // Ouvrir la modale de modification
   openEditModal(user: any, content: any): void {
     this.selectedUser = user;
-    this.editForm.patchValue(user);
+    const formattedDateOfBirth = user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '';
+    this.editForm.patchValue({
+      ...user,
+      dateOfBirth: formattedDateOfBirth
+    });
     this.modalService.open(content, { ariaLabelledBy: 'editUserModalLabel' });
   }
 
@@ -85,6 +79,9 @@ export class StudentComponent implements OnInit {
   onSubmit(): void {
     if (this.editForm.valid) {
       const updatedUser = this.editForm.value;
+      if (updatedUser.dateOfBirth) {
+        updatedUser.dateOfBirth = new Date(updatedUser.dateOfBirth).toISOString();
+      }
       this.userService.modifyUser(updatedUser).subscribe(
         (response) => {
           console.log('Étudiant modifié :', response);
@@ -106,7 +103,8 @@ export class StudentComponent implements OnInit {
       const banLog: BanLog = {
         ...this.banForm.value,
         banDuration: banDurationISO, 
-        userId: this.selectedBanUser.idUser 
+        userId: this.selectedBanUser.idUser,
+        status: Status.ACTIVE
       };
   
       this.banLogService.addBanLog(this.selectedBanUser.idUser, banLog).subscribe(
@@ -140,4 +138,22 @@ export class StudentComponent implements OnInit {
       );
     }
   }
-}
+
+  // Validation pour s'assurer que la durée du ban est au moins un jour après aujourd'hui
+  minimumBanDurationValidator(control: AbstractControl) {
+    if (!control.value) {
+      return null;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(control.value);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate <= today) {
+      return { invalidBanDuration: true };
+    }
+    return null;
+  }
+} 

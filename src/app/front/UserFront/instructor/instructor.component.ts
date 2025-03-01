@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-instructor',
@@ -24,7 +25,7 @@ export class InstructorComponent {
   Gender = Gender;
   errors: any = {};
 
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
   validateForm(): boolean {
     this.errors = {}; // Reset errors
@@ -83,25 +84,40 @@ export class InstructorComponent {
     if (!this.validateForm()) {
       return;
     }
-
+  
     this.newUser.role = Role.INSTRUCTOR;
-
+  
     if (this.newUser.dateOfBirth) {
-      this.newUser.dateOfBirth = new Date(this.newUser.dateOfBirth).toISOString();
+      this.newUser.dateOfBirth = new Date(this.newUser.dateOfBirth).toISOString(); // S'assurer que la date est correcte
     }
-
-    this.userService.registerUser(this.newUser).subscribe({
+  
+    // Créer un FormData
+    const formData = new FormData();
+    formData.append('firstName', this.newUser.firstName);
+    formData.append('lastName', this.newUser.lastName);
+    formData.append('email', this.newUser.email);
+    formData.append('password', this.newUser.password);
+    formData.append('phoneNumber', this.newUser.phoneNumber);
+    formData.append('address', this.newUser.address);
+    formData.append('speciality', this.newUser.speciality);
+    formData.append('gender', this.newUser.gender);
+    formData.append('role', this.newUser.role);
+    formData.append('dateOfBirth', this.newUser.dateOfBirth);
+  
+    // Si tu as une image à envoyer, il faudrait l'ajouter à FormData (si applicable)
+    // formData.append('image', this.selectedFile, this.selectedFile.name);  // Si une image est disponible
+  
+    // Envoi des données sous forme de FormData
+    this.authService.register(formData).subscribe({
       next: (response) => {
-        console.log("Instructor registered successfully:", response);
-        this.successMessage = 'Your request has been added.';
+        this.successMessage = response?.message || 'Instructor registered successfully!';
         this.errorMessage = '';
         this.newUser = new User();
+        this.errors = {};
       },
       error: (error) => {
-        console.error('Error registering instructor:', error);
         this.errorMessage = error.error?.message || 'Failed to register instructor. Please try again.';
-        this.successMessage = '';
       }
     });
   }
-}
+}  

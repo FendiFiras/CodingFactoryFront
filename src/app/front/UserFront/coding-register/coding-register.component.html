@@ -8,46 +8,67 @@
                     </div>
 
                     <form (ngSubmit)="registerUser()">
-                        <input class="form-control" type="text" [(ngModel)]="newUser.firstName" name="firstName" placeholder="First Name" required>
+                        <input class="form-control" type="text" [(ngModel)]="newUser.firstName" name="firstName"
+                            placeholder="First Name" required>
                         <p *ngIf="errors.firstName" class="error-message">{{ errors.firstName }}</p>
 
-                        <input class="form-control" type="text" [(ngModel)]="newUser.lastName" name="lastName" placeholder="Last Name" required>
+                        <input class="form-control" type="text" [(ngModel)]="newUser.lastName" name="lastName"
+                            placeholder="Last Name" required>
                         <p *ngIf="errors.lastName" class="error-message">{{ errors.lastName }}</p>
 
-                        <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email" placeholder="E-mail Address" required>
+                        <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email"
+                            placeholder="E-mail Address" required>
                         <p *ngIf="errors.email" class="error-message">{{ errors.email }}</p>
 
-                        <input class="form-control" type="password" [(ngModel)]="newUser.password" name="password" placeholder="Password" required>
+                        <input class="form-control" type="password" [(ngModel)]="newUser.password" name="password"
+                            placeholder="Password" required>
                         <p *ngIf="errors.password" class="error-message">{{ errors.password }}</p>
 
-                        <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth" required>
+                        <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth"
+                            required>
                         <p *ngIf="errors.dateOfBirth" class="error-message">{{ errors.dateOfBirth }}</p>
 
                         <select class="form-control" [(ngModel)]="newUser.gender" name="gender" required>
-                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Select Gender" disabled selected>Select Gender</option>
                             <option [value]="Gender.MALE">Male</option>
                             <option [value]="Gender.FEMALE">Female</option>
                         </select>
                         <p *ngIf="errors.gender" class="error-message">{{ errors.gender }}</p>
 
-                        <input class="form-control" type="tel" [(ngModel)]="newUser.phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
+                        <input class="form-control" type="tel" [(ngModel)]="newUser.phoneNumber" name="phoneNumber"
+                            placeholder="Phone Number" required>
                         <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
 
-                        <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address" placeholder="Address" required>
+                        <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address"
+                            placeholder="Address" required>
                         <p *ngIf="errors.address" class="error-message">{{ errors.address }}</p>
+                        <!-- Champ pour uploader une image -->
+                        <div class="form-group">
+                            <label for="imageUpload" class="form-label">Profile Picture</label>
+                            <input id="imageUpload" class="form-control" type="file" (change)="onFileSelected($event)">
+                            <p *ngIf="errors.image" class="error-message">{{ errors.image }}</p>
+                        </div>
+
+                        <!-- Aperçu de l'image sélectionnée -->
+                        <div class="image-preview" *ngIf="selectedFile">
+                            <p>Selected Image:</p>
+                            <img [src]="imagePreview" alt="Preview" class="preview-img">
+                        </div>
 
                         <div class="role-selection">
                             <h5>Who are you?</h5>
                             <div class="role-options">
                                 <label class="role-card">
-                                    <input type="radio" [(ngModel)]="newUser.role" name="role" [value]="Role.STUDENT" required>
+                                    <input type="radio" [(ngModel)]="newUser.role" name="role" [value]="Role.STUDENT"
+                                        required>
                                     <div class="role-content">
                                         <i class="fas fa-user-graduate"></i>
                                         <span>Student</span>
                                     </div>
                                 </label>
                                 <label class="role-card">
-                                    <input type="radio" [(ngModel)]="newUser.role" name="role" [value]="Role.COMPANYREPRESENTIVE" required>
+                                    <input type="radio" [(ngModel)]="newUser.role" name="role"
+                                        [value]="Role.COMPANYREPRESENTIVE" required>
                                     <div class="role-content">
                                         <i class="fas fa-building"></i>
                                         <span>Company Representative</span>

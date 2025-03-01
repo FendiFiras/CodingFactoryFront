@@ -3,7 +3,7 @@ import { BanLogService } from 'src/app/services/banlog.service';
 import { BanLog } from 'src/app/models/ban-log';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { User } from 'src/app/models/user';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -81,4 +81,20 @@ export class BannedUsersComponent implements OnInit {
       );
     }
   }
+   minimumBanDurationValidator(control: AbstractControl) {
+      if (!control.value) {
+        return null;
+      }
+  
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      const selectedDate = new Date(control.value);
+      selectedDate.setHours(0, 0, 0, 0);
+  
+      if (selectedDate <= today) {
+        return { invalidBanDuration: true };
+      }
+      return null;
+    }
 }

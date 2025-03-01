@@ -1,113 +1,103 @@
 <ul class="navbar-nav">
+  <!-- Notifications Dropdown -->
   <li>
     <div class="dropdown" ngbDropdown placement="auto">
-      <a ngbDropdownToggle href="javascript:" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>
-      <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
-        <div class="notification-head">
-          <h6 class="d-inline-block m-b-0">Notifications</h6>
+      <a ngbDropdownToggle href="javascript:" aria-haspopup="true" aria-expanded="false" class="nav-icon">
+        <i class="icon feather icon-bell"></i>
+        <span class="badge bg-danger pulse">3</span> <!-- Indicateur de nouvelles notifications avec effet de pulsation -->
+      </a>
+      <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification-card">
+        <div class="notification-header bg-gradient-primary">
+          <h6 class="d-inline-block m-0 text-white">Notifications</h6>
           <div class="float-end">
-            <a href="javascript:" class="m-r-10 text-decoration-none">mark as read</a>
-            <a href="javascript:" class="text-decoration-none">clear all</a>
+            <a href="javascript:" class="text-white text-decoration-none me-2">Mark as read</a>
+            <a href="javascript:" class="text-white text-decoration-none">Clear all</a>
           </div>
         </div>
-        <ul class="notification-body">
+        <ul class="notification-list">
           <li class="n-title">
-            <p class="m-b-0">NEW</p>
+            <p class="text-muted m-0">NEW</p>
           </li>
-          <li class="notification">
-            <div class="d-flex">
-              <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image" />
-              <div class="flex-grow-1">
-                <p>
+          <li class="notification-item">
+            <div class="d-flex align-items-center">
+              <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="John Doe" />
+              <div class="flex-grow-1 ms-3">
+                <p class="m-0">
                   <strong>John Doe</strong>
                   <span class="n-time text-muted">
-                    <i class="icon feather icon-clock m-r-10"></i>
-                    now
+                    <i class="icon feather icon-clock me-2"></i>Just now
                   </span>
                 </p>
-                <p>New ticket Added</p>
+                <p class="text-muted m-0">New ticket added</p>
               </div>
             </div>
           </li>
           <li class="n-title">
-            <p class="m-b-0">EARLIER</p>
+            <p class="text-muted m-0">EARLIER</p>
           </li>
-          <li class="notification">
-            <div class="d-flex">
-              <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image" />
-              <div class="flex-grow-1">
-                <p>
+          <li class="notification-item">
+            <div class="d-flex align-items-center">
+              <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Joseph William" />
+              <div class="flex-grow-1 ms-3">
+                <p class="m-0">
                   <strong>Joseph William</strong>
                   <span class="n-time text-muted">
-                    <i class="icon feather icon-clock m-r-10"></i>
-                    10 min
+                    <i class="icon feather icon-clock me-2"></i>10 min ago
                   </span>
                 </p>
-                <p>Prchace New Theme and make payment</p>
+                <p class="text-muted m-0">Purchased new theme</p>
               </div>
             </div>
           </li>
-          <li class="notification">
-            <div class="d-flex">
-              <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Generic placeholder image" />
-              <div class="flex-grow-1">
-                <p>
+          <li class="notification-item">
+            <div class="d-flex align-items-center">
+              <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Sara Soudein" />
+              <div class="flex-grow-1 ms-3">
+                <p class="m-0">
                   <strong>Sara Soudein</strong>
                   <span class="n-time text-muted">
-                    <i class="icon feather icon-clock m-r-10"></i>
-                    30 min
+                    <i class="icon feather icon-clock me-2"></i>30 min ago
                   </span>
                 </p>
-                <p>currently login</p>
+                <p class="text-muted m-0">Currently logged in</p>
               </div>
             </div>
           </li>
         </ul>
-        <div class="notification-footer">
-          <a href="javascript:">show all</a>
+        <div class="notification-footer text-center bg-light">
+          <a href="javascript:" class="text-primary text-decoration-none fw-bold">Show all</a>
         </div>
       </div>
     </div>
   </li>
+
+  <!-- User Dropdown -->
   <li>
     <div class="dropdown drp-user" ngbDropdown placement="auto">
-      <a href="javascript:" ngbDropdownToggle data-toggle="dropdown">
-        <i class="icon feather icon-settings"></i>
+      <a href="javascript:" ngbDropdownToggle class="nav-icon">
+        <i class="icon feather icon-user"></i>
       </a>
-      <div class="dropdown-menu dropdown-menu-end profile-notification" ngbDropdownMenu>
-        <div class="pro-head">
-          <img src="assets/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image" />
-          <span>John Doe</span>
-          <a href="javascript:" class="dud-logout" title="Logout">
-            <i class="feather icon-log-out"></i>
-          </a>
+      <div class="dropdown-menu dropdown-menu-end profile-card" ngbDropdownMenu>
+        <div class="profile-header text-center bg-gradient-primary">
+          <div class="profile-image-container">
+            <img [src]="'http://localhost:8089/codingFactory/auth/images/' + userInfo.image" alt="Profile Image"
+              class="profile-image">
+          </div>
+
         </div>
-        <ul class="pro-body">
-          <li>
-            <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-settings"></i>
-              Settings
-            </a>
-          </li>
-          <li>
-            <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-user"></i>
-              Profile
-            </a>
-          </li>
-          <li>
-            <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-mail"></i>
-              My Messages
-            </a>
-          </li>
-          <li>
-            <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-lock"></i>
-              Lock Screen
-            </a>
-          </li>
-        </ul>
+        <div class="profile-body">
+          <ul class="profile-details">
+            <li class="text-center">
+              <h5 class="text-dark">Welcome , <strong>{{ userInfo?.firstName }} </strong>!</h5>
+              <p class="text-muted"><i class="fa fa-envelope me-2"></i>{{ userInfo?.email }}</p>
+              <p class="text-muted"><i class="fa fa-briefcase me-2"></i>{{ userInfo?.role }}</p>
+            </li>
+          </ul>
+          <div class="profile-actions text-center">
+            
+            <a href="javascript:" (click)="logout()" class="btn btn-danger btn-sm">Logout</a>
+          </div>
+        </div>
       </div>
     </div>
   </li>
