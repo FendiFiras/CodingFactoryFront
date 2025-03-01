@@ -19,7 +19,7 @@ export class ForumDiscussionsComponent implements OnInit {
   showForm = false;
   errorMessage = '';
   forumId!: number;
-  newDiscussion = {  discussion_id: 0, // Optionnel, selon les besoins de l'API
+  newDiscussion = {  discussion_id: 0,  
     title: '', description: '', numberOfLikes: 0, publicationDate: '' };
   selectedDiscussion: Discussion | null = null;
 

@@ -22,8 +22,8 @@ export class DiscussionService {
   }
 
   // Get a discussion by its ID
-  getDiscussionById(forumId: number, id: number): Observable<Discussion> {
-    return this.http.get<Discussion>(`http://localhost:8089/forum/${forumId}/GetDiscussionBy/${id}`);
+  getDiscussionById(forumId: number, discussionId: number): Observable<Discussion> {
+    return this.http.get<Discussion>(`http://localhost:8089/forum/${forumId}/GetDiscussionBy/${discussionId}`);
   }
 
   // Add a discussion to a forum
@@ -31,10 +31,11 @@ export class DiscussionService {
     return this.http.post<Discussion>(`http://localhost:8089/add/${userId}/${forumId}`, discussion);
   }
 
+   // Update a discussion 
   updateDiscussion(discussionId: number, updatedDiscussion: any): Observable<any> {
-    const url = ('http://localhost:8089/UpdateDiscussion/${discussionId}');
-    return this.http.put(url, updatedDiscussion);
+    return this.http.put(`http://localhost:8089/UpdateDiscussion/${discussionId}`, updatedDiscussion);
   }
+
   // Delete a discussion
   deleteDiscussion(discussionId: number): Observable<void> {
     return this.http.delete<void>(`http://localhost:8089/deleteDiscussion/${discussionId}`);

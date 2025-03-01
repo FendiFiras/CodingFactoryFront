@@ -41,14 +41,14 @@ export class AdminDiscussionComponent implements OnInit {
   ) {
 
      // Simule un ID utilisateur connecté (remplacez par votre logique)
-  const userId = 1; // Remplacez par votre vrai ID utilisateur
+  const userId = 2; // Remplacez par votre vrai ID utilisateur
 
     // Initialisation du formulaire avec des validateurs
     this.addDiscussionForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100), 
+      title: ['', [Validators.required, Validators.maxLength(100), 
         this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>]/), 
         this.noWhitespaceValidator(), this.noAllCapsValidator()]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500), 
+      description: ['', [Validators.required, Validators.maxLength(500), 
         this.forbiddenWordsValidator(['motInterdit1', 'motInterdit2']), 
         this.noWhitespaceValidator(), this.noAllCapsValidator()]],
       userId: [userId, Validators.required] // ✅ Assigne directement l'ID utilisateur
@@ -118,6 +118,8 @@ export class AdminDiscussionComponent implements OnInit {
       this.editMode = false;
       this.discussion_id = undefined;
       this.addDiscussionForm.reset();
+      this.addDiscussionForm.patchValue({ userId: 2 }); // Re-set the userId if needed
+
     }
   }
 
@@ -183,55 +185,65 @@ export class AdminDiscussionComponent implements OnInit {
   // Modifier une discussion
   editDiscussion(discussion: any): void {
     console.log("Discussion sélectionnée :", discussion);
-    if (!discussion || !discussion.id) {
+    if (!discussion || !discussion.discussion_id) {
       console.error("ERREUR : Discussion ou ID de la discussion est undefined !");
       return;
     }
-
+  
     this.editMode = true;
-    this.discussion_id = discussion.id;
+    this.discussion_id = discussion.discussion_id;
     console.log("ID de la discussion à modifier :", this.discussion_id);
-
+  
     this.addDiscussionForm.patchValue({
       title: discussion.title,
       description: discussion.description,
     });
-
+  
     this.showForm = true;
   }
+  
 
   // Soumettre le formulaire
- 
-  onSubmit(): void {
-    if (this.addDiscussionForm.invalid) {
-      return;
+    onSubmit(): void {
+      if (this.addDiscussionForm.invalid) {
+        return;
+      }
+    
+      const formValues = this.addDiscussionForm.value;
+      console.log('Valeurs du formulaire avant soumission :', formValues);
+    
+      if (this.editMode && this.discussion_id) {
+
+        const updatedDiscussion = {
+          discussion_id: this.discussion_id, // Ensure this matches the backend's expected field name
+          title: formValues.title,
+          description: formValues.description,
+          numberOfLikes: 0, // Add this field if required
+          publicationDate: new Date().toISOString() // Add this field if required
+        };
+        
+        this.discussionService.updateDiscussion(this.discussion_id, updatedDiscussion).subscribe({
+          next: () => {
+            this.toggleForm();
+            this.loadDiscussions();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la mise à jour de la discussion', err);
+            if (err.error) {
+              console.error('Détails de l\'erreur:', err.error); 
+            }
+          },
+        });
+      } else {
+        this.discussionService.addDiscussionToForum(formValues, formValues.userId, this.forumId).subscribe({
+          next: () => {
+            this.toggleForm();
+            this.loadDiscussions();
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'ajout de la discussion', err);
+          },
+        });
+      }
     }
-  
-    const formValues = this.addDiscussionForm.value;
-    console.log('Valeurs du formulaire avant soumission :', formValues);
-  
-    if (this.editMode && this.discussion_id) {
-      const updatedDiscussion = { id: this.discussion_id, ...formValues };
-      this.discussionService.updateDiscussion(this.discussion_id, updatedDiscussion).subscribe({
-        next: () => {
-          this.toggleForm();
-          this.loadDiscussions();
-        },
-        error: (err) => {
-          console.error('Erreur lors de la mise à jour de la discussion', err);
-        },
-      });
-    } else {
-      this.discussionService.addDiscussionToForum(formValues, formValues.userId, this.forumId).subscribe({
-        next: () => {
-          this.toggleForm();
-          this.loadDiscussions();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'ajout de la discussion', err);
-        },
-      });
-    }
-  }
-  
 }
