@@ -13,7 +13,6 @@
     <div class="pcoded-content">
       <div class="pcoded-inner-content">
         <div class="container mt-4">
-          <!-- Conteneur pour le titre et le bouton "Ajouter" -->
           <div class="header-container">
             <h2>Discussions du Forum</h2>
             <button class="btn btn-primary" (click)="toggleForm()">
@@ -21,28 +20,23 @@
             </button>
           </div>
 
-          <!-- Indicateur de chargement -->
           <div *ngIf="isLoading" class="text-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
 
-          <!-- Message d'erreur -->
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
           </div>
 
-          <!-- Liste des discussions -->
           <div *ngIf="!isLoading && discussions.length > 0" class="row">
             <div *ngFor="let discussion of discussions" class="col-md-4 mb-4">
               <div class="card h-100 shadow-sm">
                 <div class="card-body">
-                  <!-- Ajouter "Title" avant le titre de la discussion -->
                   <h5 class="card-title">
                     <span class="label-title">Title:</span> {{ discussion.title }}
                   </h5>
-                  <!-- Ajouter "Description" avant la description de la discussion -->
                   <p class="card-text">
                     <span class="label-description">Description:</span> {{ discussion.description }}
                   </p>
@@ -50,7 +44,7 @@
                     <small class="text-muted">Publié le: {{ discussion.publicationDate | date }}</small>
                   </p>
                   <div class="button-container">
-                    <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.id)">
+                    <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.discussion_id)">
                       <i class="fas fa-trash"></i> Supprimer
                     </button>
                     <button class="btn btn-warning btn-sm" (click)="editDiscussion(discussion)">
@@ -62,13 +56,11 @@
             </div>
           </div>
 
-          <!-- Aucune discussion trouvée -->
           <div *ngIf="!isLoading && discussions.length === 0" class="alert alert-info">
             Aucune discussion trouvée.
           </div>
         </div>
 
-        <!-- Sidebar pour le formulaire -->
         <div class="sidebar" [class.active]="showForm">
           <div class="sidebar-header">
             <h5>{{ editMode ? 'Modifier la Discussion' : 'Ajouter une Discussion' }}</h5>
@@ -76,27 +68,19 @@
           </div>
           <div class="sidebar-body">
             <form [formGroup]="addDiscussionForm" (ngSubmit)="onSubmit()">
+              <!-- Champ caché pour userId -->
+              <input type="hidden" formControlName="userId" />
+            
+              <!-- Autres champs du formulaire -->
               <div class="form-group mb-3">
                 <label for="title">Titre</label>
                 <input id="title" formControlName="title" class="form-control" required />
                 <!-- Messages d'erreur pour le champ "title" -->
-                <div *ngIf="addDiscussionForm.get('title').invalid && addDiscussionForm.get('title').touched" class="text-danger">
-                  <div *ngIf="addDiscussionForm.get('title').errors?.['required']">Le titre est requis.</div>
-                  <div *ngIf="addDiscussionForm.get('title').errors?.['minlength']">Le titre doit contenir au moins 5 caractères.</div>
-                  <div *ngIf="addDiscussionForm.get('title').errors?.['maxlength']">Le titre ne doit pas dépasser 100 caractères.</div>
-                  <div *ngIf="addDiscussionForm.get('title').errors?.['forbiddenCharacters']">Le titre contient des caractères interdits.</div>
-                </div>
               </div>
               <div class="form-group mb-3">
                 <label for="description">Description</label>
                 <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
                 <!-- Messages d'erreur pour le champ "description" -->
-                <div *ngIf="addDiscussionForm.get('description').invalid && addDiscussionForm.get('description').touched" class="text-danger">
-                  <div *ngIf="addDiscussionForm.get('description').errors?.['required']">La description est requise.</div>
-                  <div *ngIf="addDiscussionForm.get('description').errors?.['minlength']">La description doit contenir au moins 10 caractères.</div>
-                  <div *ngIf="addDiscussionForm.get('description').errors?.['maxlength']">La description ne doit pas dépasser 500 caractères.</div>
-                  <div *ngIf="addDiscussionForm.get('description').errors?.['forbiddenWords']">La description contient des mots interdits.</div>
-                </div>
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
@@ -110,7 +94,6 @@
           </div>
         </div>
 
-        <!-- Overlay pour l'arrière-plan -->
         <div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
       </div>
     </div>

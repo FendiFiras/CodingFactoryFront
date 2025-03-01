@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -22,7 +22,7 @@ export class AdminDiscussionComponent implements OnInit {
   addDiscussionForm: FormGroup;
   forumId!: number;
   editMode = false;
-  discussionId?: number;
+  discussion_id?: number;
   errorMessage: string = '';
   discussions: any[] = [];
   isLoading: boolean = false;
@@ -37,25 +37,35 @@ export class AdminDiscussionComponent implements OnInit {
     private discussionService: DiscussionService,
     private route: ActivatedRoute,
     private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {
+
+     // Simule un ID utilisateur connecté (remplacez par votre logique)
+  const userId = 1; // Remplacez par votre vrai ID utilisateur
+
     // Initialisation du formulaire avec des validateurs
     this.addDiscussionForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100), this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>]/)]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500), this.forbiddenWordsValidator(['motInterdit1', 'motInterdit2'])]],
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100), 
+        this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>]/), 
+        this.noWhitespaceValidator(), this.noAllCapsValidator()]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500), 
+        this.forbiddenWordsValidator(['motInterdit1', 'motInterdit2']), 
+        this.noWhitespaceValidator(), this.noAllCapsValidator()]],
+      userId: [userId, Validators.required] // ✅ Assigne directement l'ID utilisateur
     });
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.forumId = +params['forumId'];
-      const discussionId = params['discussionId'];
+      const discussion_id = params['discussion_id'];
       console.log('Forum ID:', this.forumId);
-      console.log('Discussion ID:', discussionId);
+      console.log('Discussion ID:', discussion_id);
 
-      if (discussionId) {
+      if (discussion_id) {
         this.editMode = true;
-        this.discussionId = +discussionId;
-        this.loadDiscussion(this.discussionId);
+        this.discussion_id = +discussion_id;
+        this.loadDiscussion(this.discussion_id);
         this.showForm = true;
       } else {
         this.loadDiscussions();
@@ -74,8 +84,30 @@ export class AdminDiscussionComponent implements OnInit {
   // Validateur personnalisé pour les mots interdits
   forbiddenWordsValidator(forbiddenWords: string[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const forbidden = forbiddenWords.some(word => control.value.includes(word));
+      const value = control.value; // Récupérez la valeur du champ
+    if (!value) { // Si la valeur est null, undefined ou une chaîne vide
+      return null; // Ne pas valider, car il n'y a rien à vérifier
+    }
+      const forbidden = forbiddenWords.some(word => control.value.toLowerCase().includes(word.toLowerCase()));
       return forbidden ? { forbiddenWords: { value: control.value } } : null;
+    };
+  }
+
+  // Validateur pour les espaces superflus
+  noWhitespaceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const isWhitespace = (control.value || '').trim().length === 0;
+      const isValid = !isWhitespace;
+      return isValid ? null : { whitespace: true };
+    };
+  }
+
+  // Validateur pour les mots en majuscules
+  noAllCapsValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value || '';
+      const isAllCaps = value === value.toUpperCase();
+      return isAllCaps ? { allCaps: true } : null;
     };
   }
 
@@ -84,7 +116,7 @@ export class AdminDiscussionComponent implements OnInit {
     this.showForm = !this.showForm;
     if (!this.showForm) {
       this.editMode = false;
-      this.discussionId = undefined;
+      this.discussion_id = undefined;
       this.addDiscussionForm.reset();
     }
   }
@@ -94,8 +126,9 @@ export class AdminDiscussionComponent implements OnInit {
     this.isLoading = true;
     this.discussionService.getDiscussionsByForum(this.forumId).subscribe({
       next: (data) => {
-        console.log("Discussions chargées :", data);
+        console.log("Discussions chargées :", data); // Vérifiez la structure des données
         this.discussions = data;
+        console.log("Liste des discussions mise à jour :", this.discussions); // Vérifiez que la liste est bien mise à jour
         this.isLoading = false;
       },
       error: (err) => {
@@ -104,10 +137,11 @@ export class AdminDiscussionComponent implements OnInit {
       },
     });
   }
+  
 
   // Charger une discussion spécifique
-  loadDiscussion(discussionId: number): void {
-    this.discussionService.getDiscussionById(this.forumId, discussionId).subscribe({
+  loadDiscussion(discussion_id: number): void {
+    this.discussionService.getDiscussionById(this.forumId, discussion_id).subscribe({
       next: (data) => {
         this.addDiscussionForm.patchValue({
           title: data.title,
@@ -121,14 +155,21 @@ export class AdminDiscussionComponent implements OnInit {
   }
 
   // Supprimer une discussion
-  deleteDiscussion(discussionId: number): void {
-    console.log("ID de la discussion :", discussionId);
-    if (!discussionId || discussionId === undefined) {
+  deleteDiscussion(discussion_id: number): void {
+    console.log("ID de la discussion avant suppression:", discussion_id); // Vérification de l'ID
+    if (!discussion_id || discussion_id === undefined) {
       this.errorMessage = 'ID de la discussion invalide';
       return;
     }
-    this.discussionService.deleteDiscussion(discussionId).subscribe({
+    this.discussionService.deleteDiscussion(discussion_id).subscribe({
       next: () => {
+        // Met à jour la liste des discussions localement avant de recharger
+        this.discussions = this.discussions.filter(d => d.discussion_id !== discussion_id);
+        // Force la détection des changements après la mise à jour
+        this.cdRef.detectChanges();
+  
+        // Recharge les discussions après la suppression
+        console.log("Rechargement des discussions...");
         this.loadDiscussions();
       },
       error: (err) => {
@@ -136,6 +177,8 @@ export class AdminDiscussionComponent implements OnInit {
       },
     });
   }
+  
+  
 
   // Modifier une discussion
   editDiscussion(discussion: any): void {
@@ -146,8 +189,8 @@ export class AdminDiscussionComponent implements OnInit {
     }
 
     this.editMode = true;
-    this.discussionId = discussion.id;
-    console.log("ID de la discussion à modifier :", this.discussionId);
+    this.discussion_id = discussion.id;
+    console.log("ID de la discussion à modifier :", this.discussion_id);
 
     this.addDiscussionForm.patchValue({
       title: discussion.title,
@@ -158,32 +201,28 @@ export class AdminDiscussionComponent implements OnInit {
   }
 
   // Soumettre le formulaire
+ 
   onSubmit(): void {
     if (this.addDiscussionForm.invalid) {
       return;
     }
-
+  
     const formValues = this.addDiscussionForm.value;
-
-    if (this.editMode && this.discussionId) {
-      // Mode édition
-      const updatedDiscussion = { id: this.discussionId, ...formValues };
-      console.log("Données envoyées à updateDiscussion:", updatedDiscussion);
-
-      this.discussionService.updateDiscussion(this.discussionId, updatedDiscussion).subscribe({
+    console.log('Valeurs du formulaire avant soumission :', formValues);
+  
+    if (this.editMode && this.discussion_id) {
+      const updatedDiscussion = { id: this.discussion_id, ...formValues };
+      this.discussionService.updateDiscussion(this.discussion_id, updatedDiscussion).subscribe({
         next: () => {
           this.toggleForm();
           this.loadDiscussions();
-          this.router.navigate(['/admin/forum', this.forumId, 'discussions']);
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour de la discussion', err);
         },
       });
     } else {
-      // Mode ajout
-      const userId = 1; // Remplacez par la vraie valeur de l'utilisateur
-      this.discussionService.addDiscussionToForum(formValues, userId, this.forumId).subscribe({
+      this.discussionService.addDiscussionToForum(formValues, formValues.userId, this.forumId).subscribe({
         next: () => {
           this.toggleForm();
           this.loadDiscussions();
@@ -194,4 +233,5 @@ export class AdminDiscussionComponent implements OnInit {
       });
     }
   }
+  
 }

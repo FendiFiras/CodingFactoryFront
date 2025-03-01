@@ -208,8 +208,9 @@ export class ForumsManagementComponent implements OnInit {
   // Gestion de la soumission du formulaire
   onSubmit(): void {
     if (this.addForumForm.invalid) {
+      alert('Veuillez corriger les erreurs du formulaire.');
+
       console.log('Formulaire invalide', this.addForumForm.value);
-      this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
   
