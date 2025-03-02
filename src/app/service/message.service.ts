@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { tap } from 'rxjs/operators'; // Importez tap depuis rxjs/operators
@@ -25,16 +25,14 @@ export class MessageService {
 
   // Ajouter un message à une discussion
   addMessage(userId: number, discussionId: number, description: string): Observable<Message> {
-    const url = `${this.apiUrl}/add?userId=${userId}&discussionId=${discussionId}`;
-    const body = {
-      message_id: 0,
-      description: description,
-      image: "string", // Remplacez par une valeur appropriée ou laissez vide si non utilisé
-      messageDate: new Date().toISOString()
-    };
-    console.log('Envoi de la requête POST avec le corps :', body); // Log du corps de la requête
-    return this.http.post<Message>(url, body);
-  }
+    const url = `${this.apiUrl}/add`; // Endpoint URL
+    const params = new HttpParams()
+        .set('userId', userId.toString())
+        .set('discussionId', discussionId.toString())
+        .set('description', description);
+
+    return this.http.post<Message>(url, null, { params }); // Send params as query parameters
+}
 
   // Modifier un message existant
   updateMessage(messageId: number, description: string): Observable<Message> {
@@ -56,7 +54,7 @@ export class MessageService {
   }
 
     // Méthode pour ajouter un message avec une image
-    addMessageWithImage(formData: FormData): Observable<any> {
-      return this.http.post(`${this.apiUrl}/add-with-image`, formData);
+    addMessageWithImage(formData: FormData): Observable<Message> {
+      return this.http.post<Message>(`${this.apiUrl}/add-with-image`, formData);
     }
 }

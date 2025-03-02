@@ -22,6 +22,7 @@ export class ForumDiscussionsComponent implements OnInit {
   newDiscussion = {  discussion_id: 0,  
     title: '', description: '', numberOfLikes: 0, publicationDate: '' };
   selectedDiscussion: Discussion | null = null;
+  editingDiscussionId: number | null = null; // Pour suivre la discussion en cours d'édition
 
   constructor(
     private discussionService: DiscussionService,
@@ -94,6 +95,21 @@ export class ForumDiscussionsComponent implements OnInit {
   selectDiscussionForUpdate(discussion: Discussion): void {
     this.selectedDiscussion = { ...discussion };
   }
+   // Méthode pour vérifier si une discussion est en mode édition
+   isEditing(discussionId: number): boolean {
+    return this.editingDiscussionId === discussionId;
+}
+
+// Méthode pour démarrer l'édition d'une discussion
+startEditing(discussion: any): void {
+    this.editingDiscussionId = discussion.discussion_id;
+}
+
+// Méthode pour annuler l'édition
+cancelEditing(discussionId: number): void {
+    this.editingDiscussionId = null;
+}
+
 
   updateDiscussion(): void {
     if (this.selectedDiscussion) {

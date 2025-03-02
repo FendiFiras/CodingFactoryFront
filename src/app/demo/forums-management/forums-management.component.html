@@ -1,94 +1,94 @@
 <div class="container mt-4">
-    <!-- Conteneur pour le titre et le bouton "Ajouter" -->
-    <div class="header-container">
-      <h2>FORUM LIST</h2>
-      <!-- Bouton "Ajouter" -->
-      <button class="btn btn-primary" (click)="toggleAddForm()">
-        <i class="fas fa-plus"></i> Ajouter
-      </button>
+  <!-- Conteneur pour le titre et le bouton "Ajouter" -->
+  <div class="header-container">
+    <h2>FORUM LIST</h2>
+    <!-- Bouton "Ajouter" -->
+    <button class="btn btn-primary" (click)="toggleAddForm()">
+      <i class="fas fa-plus"></i> Ajouter
+    </button>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
     </div>
-  
-    <!-- Indicateur de chargement -->
-    <div *ngIf="isLoading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Chargement...</span>
-      </div>
-    </div>
-  
-    <!-- Message d'erreur -->
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-  
-    <!-- Liste des forums -->
-    <div *ngIf="!isLoading && forums.length > 0" class="row">
-      <div *ngFor="let forum of forums" class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <span class="label-title">Title:</span> {{ forum.title }}
-                  </h5>               
-                  <p class="card-text">
-                    <span class="label-description">Description:</span> {{ forum.description }}
-                  </p>
-                <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Image du forum" class="img-fluid mb-3 rounded">
-                <div class="button-container">
-                  <!-- Bouton "Voir Discussions" -->
-                  <button class="btn btn-info" (click)="navigateToDiscussions(forum.forum_id)">
-                    <i class="fas fa-comments"></i> Voir Discussions
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Liste des forums -->
+  <div *ngIf="!isLoading && forums.length > 0" class="row">
+    <div *ngFor="let forum of forums" class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+          <div class="card-body">
+              <h5 class="card-title">
+                  <span class="label-title">Title:</span> {{ forum.title }}
+                </h5>               
+                <p class="card-text">
+                  <span class="label-description">Description:</span> {{ forum.description }}
+                </p>
+              <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Image du forum" class="img-fluid mb-3 rounded">
+              <div class="button-container">
+                <!-- Bouton "Voir Discussions" -->
+                <button class="btn btn-info" (click)="navigateToDiscussions(forum.forum_id)">
+                  <i class="fas fa-comments"></i> Voir Discussions
+                </button>
+                <!-- Boutons "Modifier" et "Supprimer" -->
+                <div class="button-row">
+                  <button class="btn btn-warning" (click)="editForum(forum)">
+                    <i class="fas fa-edit"></i> Modifier
                   </button>
-                  <!-- Boutons "Modifier" et "Supprimer" -->
-                  <div class="button-row">
-                    <button class="btn btn-warning" (click)="editForum(forum)">
-                      <i class="fas fa-edit"></i> Modifier
-                    </button>
-                    <button class="btn btn-danger" (click)="confirmDelete(forum.forum_id)">
-                      <i class="fas fa-trash"></i> Supprimer
-                    </button>
-                  </div>
+                  <button class="btn btn-danger" (click)="confirmDelete(forum.forum_id)">
+                    <i class="fas fa-trash"></i> Supprimer
+                  </button>
                 </div>
               </div>
-      </div>
-    </div>
-  
-    <!-- Aucun forum trouvé -->
-    <div *ngIf="!isLoading && forums.length === 0" class="alert alert-info">
-      Aucun forum trouvé.
+            </div>
     </div>
   </div>
-  
-  <!-- Sidebar pour le formulaire -->
-  <div class="sidebar" [class.active]="showAddForm">
-    <div class="sidebar-header">
-      <h5>{{ editMode ? 'Modifier le Forum' : 'Ajouter un Forum' }}</h5>
-      <button type="button" class="btn-close" (click)="toggleAddForm()" aria-label="Close"></button>
-    </div>
-    <div class="sidebar-body">
-        <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
-            
-            <div class="form-group mb-3">
-              <label for="title">Titre</label>
-              <input id="title" formControlName="title" class="form-control" required />
-            </div>
-            <div class="form-group mb-3">
-              <label for="description">Description</label>
-              <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
-            </div>
-            <div class="form-group mb-3">
-              <label for="image">Image</label>
-              <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" />
-            </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-success">
-                {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
-              </button>
-              <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">
-                Annuler
-              </button>
-            </div>
-          </form>
-    </div>
+
+  <!-- Aucun forum trouvé -->
+  <div *ngIf="!isLoading && forums.length === 0" class="alert alert-info">
+    Aucun forum trouvé.
   </div>
-  
-  <!-- Overlay pour l'arrière-plan -->
-  <div class="overlay" [class.active]="showAddForm" (click)="toggleAddForm()"></div>
+</div>
+
+<!-- Sidebar pour le formulaire -->
+<div class="sidebar" [class.active]="showAddForm">
+  <div class="sidebar-header">
+    <h5>{{ editMode ? 'Modifier le Forum' : 'Ajouter un Forum' }}</h5>
+    <button type="button" class="btn-close" (click)="toggleAddForm()" aria-label="Close"></button>
+  </div>
+  <div class="sidebar-body">
+      <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
+          
+          <div class="form-group mb-3">
+            <label for="title">Titre</label>
+            <input id="title" formControlName="title" class="form-control" required />
+          </div>
+          <div class="form-group mb-3">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+          </div>
+          <div class="form-group mb-3">
+            <label for="image">Image</label>
+            <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" />
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">
+              Annuler
+            </button>
+          </div>
+        </form>
+  </div>
+</div>
+
+<!-- Overlay pour l'arrière-plan -->
+<div class="overlay" [class.active]="showAddForm" (click)="toggleAddForm()"></div>

@@ -2,6 +2,32 @@
 <div class="container mt-4">
   <h2>List of Forums</h2>
 
+  <!-- Bouton pour ajouter un forum -->
+  <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
+    {{ showAddForm ? 'Masquer le formulaire' : 'Ajouter un forum' }}
+  </button>
+
+  <!-- Formulaire d'ajout (visible uniquement si showAddForm est true) -->
+  <div *ngIf="showAddForm && !editMode" class="mb-4">
+    <h4>Ajouter un nouveau forum</h4>
+    <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
+      
+      <div class="mb-3">
+        <label class="form-label">Titre</label>
+        <input type="text" class="form-control" formControlName="title" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" formControlName="description"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Image</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
+    </form>
+  </div>
+
   <!-- Parent Row -->
   <div class="row">
     <!-- Left Sidebar -->
@@ -46,10 +72,10 @@
 
             <!-- Edit Form (Inside the Card) -->
             <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
-              <h4>Edit Forum</h4>
+              <h4>Modifier le forum</h4>
               <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
                 <div class="mb-3">
-                  <label class="form-label">Title</label>
+                  <label class="form-label">Titre</label>
                   <input type="text" class="form-control" formControlName="title" />
                 </div>
                 <div class="mb-3">
@@ -60,8 +86,8 @@
                   <label class="form-label">Image</label>
                   <input type="file" class="form-control" (change)="onFileSelected($event)" />
                 </div>
-                <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Save</button>
-                <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Cancel</button>
+                <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Enregistrer</button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Annuler</button>
               </form>
             </div>
           </div><!-- /.blog-two-one -->
@@ -79,30 +105,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Add Forum Form (when not in edit mode) -->
-  <div *ngIf="!editMode">
-    <h4>Add a New Forum</h4>
-    <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
-      <div class="mb-3">
-        <label class="form-label">User ID</label>
-        <input type="text" class="form-control" formControlName="userId" />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" formControlName="title" />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea class="form-control" formControlName="description"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Image</label>
-        <input type="file" class="form-control" (change)="onFileSelected($event)" />
-      </div>
-      <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Submit</button>
-    </form>
   </div>
 </div>
 <app-footer></app-footer>
@@ -137,5 +139,4 @@
   object-fit: cover; /* Recadre l'image sans déformation */
   border-radius: 8px; /* Coins arrondis pour un meilleur design */
 }
-
 </style>

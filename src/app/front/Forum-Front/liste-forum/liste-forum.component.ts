@@ -31,14 +31,19 @@ export class ListeForumComponent implements OnInit {
   forums: Forum[] = [];
   isLoading = true;
   errorMessage = '';
-  showAddForm = false;
+  showAddForm : boolean = false;
   addForumForm: FormGroup;
+    // ID utilisateur statique
+    staticUserId: number = 3; 
 
-  constructor(private forumService: ForumService, private fb: FormBuilder,   private cdr: ChangeDetectorRef ,    private router: Router // Injectez Router
 
+  constructor(
+     private forumService: ForumService,
+     private fb: FormBuilder,
+     private cdr: ChangeDetectorRef,
+     private router: Router 
   ) {
     this.addForumForm = this.fb.group({
-      userId: ['', Validators.required],  // Ajout de l'ID utilisateur
       title: ['', Validators.required],
       description: ['', Validators.required],
       image: [null] // Changer la valeur initiale à null
@@ -75,11 +80,11 @@ export class ListeForumComponent implements OnInit {
 
   addForum(): void {
     if (this.addForumForm.invalid) return;
-    const {userId, title, description, image } = this.addForumForm.value;
+    const { title, description, image } = this.addForumForm.value;
     
     // Créer un FormData pour envoyer les données du formulaire et l'image
     const formData = new FormData();
-    formData.append('userId', userId); // Ajouter l'ID de l'utilisateur
+    formData.append('userId', this.staticUserId.toString()); // Utiliser l'ID utilisateur statique
     formData.append('title', title);
     formData.append('description', description);
     if (image) {

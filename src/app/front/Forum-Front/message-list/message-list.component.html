@@ -15,10 +15,25 @@
 
   <!-- Zone de messages -->
   <div class="message-list">
-    <div *ngFor="let message of filteredMessages" class="message" >
+    <div *ngFor="let message of filteredMessages" class="message" [ngClass]="{'sent': message.userId === currentUserId, 'received': message.userId !== currentUserId}">
       <div class="message-content">
-        <p>{{ message.description }}</p>
-        <small>{{ message.messageDate | date:'short' }}</small>
+        <!-- Afficher le message ou le formulaire d'édition -->
+        <div *ngIf="editingMessage?.message_id !== message.message_id">
+          <p>{{ message.description }}</p>
+          <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image">
+          <small>{{ message.messageDate | date:'short' }}</small>
+          <!-- Boutons d'action -->
+          <div *ngIf="message.userId === currentUserId" class="message-actions">
+            <button (click)="startEdit(message)">✏️</button>
+            <button (click)="deleteMessage(message.message_id)">🗑️</button>
+          </div>
+        </div>
+        <!-- Formulaire d'édition -->
+        <div *ngIf="editingMessage?.message_id === message.message_id">
+          <textarea [(ngModel)]="editingMessage.description"></textarea>
+          <button (click)="updateMessage()">💾 Enregistrer</button>
+          <button (click)="cancelEdit()">❌ Annuler</button>
+        </div>
       </div>
     </div>
   </div>
@@ -26,12 +41,12 @@
   <!-- Zone de saisie -->
   <div class="message-input">
     <textarea [(ngModel)]="newMessage.description" placeholder="💬 Écrivez un message..." (keydown.enter)="addMessage()"></textarea>
+    <input type="file" (change)="onFileSelected($event)" accept="image/*">
     <button (click)="addMessage()">🚀 Envoyer</button>
   </div>
 </div>
 
 <app-footer></app-footer>
-
 <style>
 /* 🌟 Modernisation du design */
 

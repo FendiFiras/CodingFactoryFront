@@ -2,6 +2,31 @@
 <div class="container mt-4">
     <h2 class="blog-details__comment__title">Forum Discussions</h2>
 
+    <!-- Add Discussion Button -->
+    <button (click)="showForm = !showForm" class="btn btn-primary mb-4">
+        {{ showForm ? 'Masquer le formulaire' : 'Ajouter une discussion' }}
+    </button>
+
+    <!-- Formulaire pour ajouter une discussion -->
+    <div *ngIf="showForm" class="card mb-4">
+        <div class="card-body">
+            <form (ngSubmit)="addDiscussion()">
+                <div class="form-group mb-3">
+                    <label for="title">Titre :</label>
+                    <input type="text" id="title" [(ngModel)]="newDiscussion.title" name="title" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="description">Description :</label>
+                    <textarea id="description" [(ngModel)]="newDiscussion.description" name="description" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success me-2">Ajouter</button>
+                <button type="button" class="btn btn-secondary" (click)="showForm = false">Annuler</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="text-center">
         <div class="spinner-border" role="status">
@@ -14,6 +39,7 @@
         {{ errorMessage }}
     </div>
 
+    <!-- Discussions List -->
     <div *ngIf="!isLoading && discussions.length > 0" class="row">
         <div *ngFor="let discussion of discussions" class="col-md-6 mb-4">
             <div class="card discussion-card" (click)="navigateToMessages(discussion.discussion_id)">
@@ -41,36 +67,10 @@
             </div>
         </div>
     </div>
-    
 
     <!-- No Discussions Message -->
     <div *ngIf="!isLoading && discussions.length === 0" class="alert alert-info">
         No discussions found.
-    </div>
-
-    <!-- Add Discussion Button -->
-    <button (click)="showForm = !showForm" class="btn btn-primary mb-4">
-        Ajouter une discussion
-    </button>
-
-    <!-- Formulaire pour ajouter une discussion -->
-    <div *ngIf="showForm" class="card mb-4">
-        <div class="card-body">
-            <form (ngSubmit)="addDiscussion()">
-                <div class="form-group mb-3">
-                    <label for="title">Titre :</label>
-                    <input type="text" id="title" [(ngModel)]="newDiscussion.title" name="title" class="form-control" required />
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="description">Description :</label>
-                    <textarea id="description" [(ngModel)]="newDiscussion.description" name="description" class="form-control" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-success me-2">Ajouter</button>
-                <button type="button" class="btn btn-secondary" (click)="showForm = false">Annuler</button>
-            </form>
-        </div>
     </div>
 
     <!-- Formulaire pour modifier une discussion -->
