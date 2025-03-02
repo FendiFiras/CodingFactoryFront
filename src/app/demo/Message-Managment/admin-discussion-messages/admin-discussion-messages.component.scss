@@ -1,0 +1,36 @@
+/* Style pour les cartes de messages */
+.message-card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .message-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Style pour les boutons */
+  .btn {
+    margin: 5px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .btn:hover {
+    opacity: 0.9;
+  }
+  
+  /* Style pour le formulaire */
+  .bg-light {
+    background-color: #f8f9fa !important;
+  }
+  
+  /* Style pour les alertes */
+  .alert {
+    border-radius: 10px;
+  }
+  
+  /* Style pour le texte dans les cartes */
+  .card-text {
+    font-size: 1rem;
+    color: #333;
+  }

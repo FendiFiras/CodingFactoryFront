@@ -4,4 +4,6 @@ export class Message {
     image?: string; // Optionnel
     numberOfLikes!: number;
     messageDate!: Date;
+    userId!: number; // Ajoutez ce champ
+
 }

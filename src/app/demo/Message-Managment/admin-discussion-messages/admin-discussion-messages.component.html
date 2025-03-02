@@ -13,36 +13,81 @@
     <div class="pcoded-content">
       <div class="pcoded-inner-content">
         <div class="container mt-4">
-          <div class="header-container">
-            <h2>Messages de la Discussion</h2>
+          <div class="header-container d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Messages de la Discussion</h2>
             <button class="btn btn-primary" (click)="goBack()">
               <i class="fas fa-arrow-left"></i> Retour
             </button>
           </div>
 
+          <!-- Formulaire pour ajouter un message -->
+          <div class="mb-4 p-3 bg-light rounded">
+            <textarea
+              class="form-control mb-3"
+              [(ngModel)]="newMessageDescription"
+              placeholder="Entrez votre message..."
+              rows="3"
+            ></textarea>
+            <button class="btn btn-success" (click)="addMessage()">
+              <i class="fas fa-plus"></i> Ajouter un message
+            </button>
+          </div>
+
           <!-- Indicateur de chargement -->
-          <div *ngIf="isLoading" class="text-center">
-            <div class="spinner-border" role="status">
+          <div *ngIf="isLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
 
           <!-- Message d'erreur -->
-          <div *ngIf="errorMessage" class="alert alert-danger">
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ errorMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
 
           <!-- Liste des messages -->
           <div *ngIf="!isLoading && messages.length > 0" class="row">
             <div *ngFor="let message of messages" class="col-md-12 mb-3">
-              <div class="card">
+              <div class="card message-card shadow-sm">
                 <div class="card-body">
-                  <!-- Affichez la description du message -->
-                  <p class="card-text">{{ message.description || 'Aucune description' }}</p>
-                  <!-- Affichez userId et la date du message -->
-                  <small class="text-muted">
-                    Publié par ({{ message.userId || 'Anonyme' }}) le: {{ message.messageDate | date: 'MMM d, y' }}
-                  </small>
+                  <div class="d-flex align-items-center mb-3">
+                    <div>
+                      <h5 class="card-title mb-0">{{ message.userId || 'Inconnu' }}</h5>
+                      <small class="text-muted">{{ message.messageDate | date: 'd MMM, y' }}</small>
+                    </div>
+                  </div>
+                  <p class="card-text">
+                    <span *ngIf="editMessageId !== message.message_id">{{ message.description || 'Aucune description' }}</span>
+                    <textarea
+                      *ngIf="editMessageId === message.message_id"
+                      class="form-control"
+                      [(ngModel)]="editMessageDescription"
+                      rows="3"
+                    ></textarea>
+                  </p>
+                  <div class="d-flex justify-content-end">
+                    <button
+                      *ngIf="editMessageId !== message.message_id"
+                      class="btn btn-sm btn-warning me-2"
+                      (click)="editMessage(message.message_id, message.description)"
+                    >
+                      <i class="fas fa-edit"></i> Modifier
+                    </button>
+                    <button
+                      *ngIf="editMessageId === message.message_id"
+                      class="btn btn-sm btn-success me-2"
+                      (click)="saveMessage()"
+                    >
+                      <i class="fas fa-save"></i> Sauvegarder
+                    </button>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="deleteMessage(message.message_id)"
+                    >
+                      <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

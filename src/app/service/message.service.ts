@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
+import { tap } from 'rxjs/operators'; // Importez tap depuis rxjs/operators
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,11 @@ export class MessageService {
   }
 
   getMessagesByDiscussion(discussionId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/discussion/${discussionId}`);
+    return this.http.get(`${this.apiUrl}/discussion/${discussionId}`).pipe(
+      tap(data => console.log('Données reçues de l\'API :', data)) // Utilisez tap pour inspecter les données
+    );
   }
-  
+
   // Ajouter un message à une discussion
   addMessage(userId: number, discussionId: number, description: string): Observable<Message> {
     const url = `${this.apiUrl}/add?userId=${userId}&discussionId=${discussionId}`;
@@ -31,5 +34,20 @@ export class MessageService {
     };
     console.log('Envoi de la requête POST avec le corps :', body); // Log du corps de la requête
     return this.http.post<Message>(url, body);
+  }
+
+  // Modifier un message existant
+  updateMessage(messageId: number, description: string): Observable<Message> {
+    const url = `${this.apiUrl}/update/${messageId}`;
+    const body = {
+      description: description,
+    };
+    return this.http.put<Message>(url, body);
+  }
+
+  // Supprimer un message
+  deleteMessage(messageId: number): Observable<void> {
+    const url = `${this.apiUrl}/delete/${messageId}`;
+    return this.http.delete<void>(url);
   }
 }
