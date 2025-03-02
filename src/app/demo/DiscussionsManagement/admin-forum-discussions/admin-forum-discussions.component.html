@@ -1,108 +1,73 @@
-<app-navigation
-  class="pcoded-navbar"
-  [ngClass]="{
-    'navbar-collapsed': navCollapsed,
-    'mob-open': navCollapsedMob
-  }"
-  (NavCollapse)="navCollapsed = !navCollapsed"
-  (NavCollapsedMob)="navMobClick()"
-></app-navigation>
+<div class="main-container">
+  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }" (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
 
-<div class="pcoded-main-container">
-  <div class="pcoded-wrapper">
-    <div class="pcoded-content">
-      <div class="pcoded-inner-content">
-        <div class="container mt-4">
-          <div class="header-container">
-            <h2>Discussions du Forum</h2>
-            <button class="btn btn-primary" (click)="toggleForm()">
-              <i class="fas fa-plus"></i> Ajouter
+  <div class="forum-container">
+    <div class="forum-header">
+      <h2>Discussions du Forum</h2>
+      <button class="btn btn-primary" (click)="toggleForm()">
+        <i class="fas fa-plus"></i> Ajouter
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="!isLoading && discussions.length > 0" class="discussion-grid">
+      <div *ngFor="let discussion of discussions" class="discussion-card">
+        <div class="card-content">
+          <h5 class="card-title">{{ discussion.title }}</h5>
+          <p class="card-description">{{ discussion.description }}</p>
+          <p class="card-date">Publié le: {{ discussion.publicationDate | date }}</p>
+          <div class="card-actions">
+            <button class="btn btn-info" (click)="viewMessages(discussion.discussion_id)">
+              <i class="fas fa-comments"></i> Voir les messages
+            </button>
+            <button class="btn btn-danger" (click)="deleteDiscussion(discussion.discussion_id)">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
+            <button class="btn btn-warning" (click)="editDiscussion(discussion)">
+              <i class="fas fa-edit"></i> Modifier
             </button>
           </div>
-
-          <div *ngIf="isLoading" class="text-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-
-          <div *ngIf="errorMessage" class="alert alert-danger">
-            {{ errorMessage }}
-          </div>
-
-          <div *ngIf="!isLoading && discussions.length > 0" class="row">
-            <div *ngFor="let discussion of discussions" class="col-md-4 mb-4">
-              <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <span class="label-title">Title:</span> {{ discussion.title }}
-                  </h5>
-                  <p class="card-text">
-                    <span class="label-description">Description:</span> {{ discussion.description }}
-                  </p>
-                  <p class="card-text">
-                    <small class="text-muted">Publié le: {{ discussion.publicationDate | date }}</small>
-                  </p>
-                  <div class="button-container">
-                    <!-- Bouton "Voir les messages" -->
-                    <button class="btn btn-info btn-sm me-2" (click)="viewMessages(discussion.discussion_id)">
-                      <i class="fas fa-comments"></i> Voir les messages
-                    </button>
-                  <div class="button-container">
-                    <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.discussion_id)">
-                      <i class="fas fa-trash"></i> Supprimer
-                    </button>
-                    <button class="btn btn-warning btn-sm" (click)="editDiscussion(discussion)">
-                      <i class="fas fa-edit"></i> Modifier
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="!isLoading && discussions.length === 0" class="alert alert-info">
-            Aucune discussion trouvée.
-          </div>
         </div>
-
-        <div class="sidebar" [class.active]="showForm">
-          <div class="sidebar-header">
-            <h5>{{ editMode ? 'Modifier la Discussion' : 'Ajouter une Discussion' }}</h5>
-            <button type="button" class="btn-close" (click)="toggleForm()" aria-label="Close"></button>
-          </div>
-          <div class="sidebar-body">
-            <form [formGroup]="addDiscussionForm" (ngSubmit)="onSubmit()">
-              <!-- Champ caché pour userId -->
-              <input type="hidden" formControlName="userId" />
-            
-              <!-- Autres champs du formulaire -->
-              <div class="form-group mb-3">
-                <label for="title">Titre</label>
-                <input id="title" formControlName="title" class="form-control" required />
-                <!-- Messages d'erreur pour le champ "title" -->
-              </div>
-              <div class="form-group mb-3">
-                <label for="description">Description</label>
-                <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
-                <!-- Messages d'erreur pour le champ "description" -->
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
-                  {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
-                </button>
-                <button type="button" class="btn btn-secondary ms-2" (click)="toggleForm()">
-                  Annuler
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
       </div>
     </div>
-  </div>
-</div>
 
-<app-configuration></app-configuration>
+    <div *ngIf="!isLoading && discussions.length === 0" class="no-discussions">
+      Aucune discussion trouvée.
+    </div>
+  </div>
+
+  <!-- Sidebar Form -->
+  <div class="sidebar" [class.active]="showForm">
+    <div class="sidebar-header">
+      <h5>{{ editMode ? 'Modifier la Discussion' : 'Ajouter une Discussion' }}</h5>
+      <button type="button" class="btn-close" (click)="toggleForm()"></button>
+    </div>
+    <div class="sidebar-body">
+      <form [formGroup]="addDiscussionForm" (ngSubmit)="onSubmit()">
+        <input type="hidden" formControlName="userId" />
+        <div class="form-group">
+          <label for="title">Titre</label>
+          <input id="title" formControlName="title" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
+            {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="toggleForm()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
+</div>

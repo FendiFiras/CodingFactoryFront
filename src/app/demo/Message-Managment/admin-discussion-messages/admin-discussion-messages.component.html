@@ -6,13 +6,16 @@
   }"
   (NavCollapse)="navCollapsed = !navCollapsed"
   (NavCollapsedMob)="navMobClick()"
-></app-navigation>
+>  </app-navigation>
 
 <div class="pcoded-main-container">
   <div class="pcoded-wrapper">
     <div class="pcoded-content">
       <div class="pcoded-inner-content">
         <div class="container mt-4">
+
+            
+          <!-- Bouton de retour -->
           <div class="header-container d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">Messages de la Discussion</h2>
             <button class="btn btn-primary" (click)="goBack()">
@@ -28,77 +31,93 @@
               placeholder="Entrez votre message..."
               rows="3"
             ></textarea>
+
+            <!-- Champ pour sélectionner une image -->
+            <input
+              type="file"
+              class="form-control mb-3"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+            />
+
+            <!-- Aperçu de l'image sélectionnée -->
+            <div *ngIf="selectedImage" class="mb-3">
+              <img [src]="selectedImage" alt="Aperçu de l'image" class="img-thumbnail" style="max-width: 200px;" />
+            </div>
+
             <button class="btn btn-success" (click)="addMessage()">
               <i class="fas fa-plus"></i> Ajouter un message
             </button>
           </div>
 
-          <!-- Indicateur de chargement -->
-          <div *ngIf="isLoading" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-
-          <!-- Message d'erreur -->
-          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ errorMessage }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-
           <!-- Liste des messages -->
-          <div *ngIf="!isLoading && messages.length > 0" class="row">
-            <div *ngFor="let message of messages" class="col-md-12 mb-3">
-              <div class="card message-card shadow-sm">
-                <div class="card-body">
-                  <div class="d-flex align-items-center mb-3">
-                    <div>
-                      <h5 class="card-title mb-0">{{ message.userId || 'Inconnu' }}</h5>
-                      <small class="text-muted">{{ message.messageDate | date: 'd MMM, y' }}</small>
-                    </div>
+          <div *ngFor="let message of messages" class="col-md-12 mb-3">
+            <div class="card message-card shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <div>
+                    <h5 class="card-title mb-0">{{ message.userId || 'Inconnu' }}</h5>
+                    <small class="text-muted">{{ message.messageDate | date: 'd MMM, y' }}</small>
                   </div>
-                  <p class="card-text">
-                    <span *ngIf="editMessageId !== message.message_id">{{ message.description || 'Aucune description' }}</span>
-                    <textarea
-                      *ngIf="editMessageId === message.message_id"
-                      class="form-control"
-                      [(ngModel)]="editMessageDescription"
-                      rows="3"
-                    ></textarea>
-                  </p>
-                  <div class="d-flex justify-content-end">
-                    <button
-                      *ngIf="editMessageId !== message.message_id"
-                      class="btn btn-sm btn-warning me-2"
-                      (click)="editMessage(message.message_id, message.description)"
-                    >
-                      <i class="fas fa-edit"></i> Modifier
-                    </button>
-                    <button
-                      *ngIf="editMessageId === message.message_id"
-                      class="btn btn-sm btn-success me-2"
-                      (click)="saveMessage()"
-                    >
-                      <i class="fas fa-save"></i> Sauvegarder
-                    </button>
-                    <button
-                      class="btn btn-sm btn-danger"
-                      (click)="deleteMessage(message.message_id)"
-                    >
-                      <i class="fas fa-trash"></i> Supprimer
-                    </button>
+                </div>
+                <p class="card-text">
+                  <span *ngIf="editMessageId !== message.message_id">{{ message.description || 'Aucune description' }}</span>
+                  <textarea
+                    *ngIf="editMessageId === message.message_id"
+                    class="form-control"
+                    [(ngModel)]="editMessageDescription"
+                    rows="3"
+                  ></textarea>
+                </p>
+
+               <!-- Afficher l'image actuelle uniquement si le message n'est pas en mode édition -->
+<div *ngIf="message.image && editMessageId !== message.message_id" class="mb-3">
+    <img [src]="'http://localhost:8089/images/' + message.image" alt="Image du message" class="img-fluid" />
+  </div>
+
+                <!-- Champ pour sélectionner une nouvelle image lors de la modification -->
+                <div *ngIf="editMessageId === message.message_id" class="mb-3">
+                  <input
+                    type="file"
+                    class="form-control"
+                    (change)="onEditFileSelected($event)"
+                    accept="image/*"
+                  />
+                  <!-- Aperçu de la nouvelle image sélectionnée -->
+                  <div *ngIf="editSelectedImage" class="mt-2">
+                    <img [src]="editSelectedImage" alt="Nouvelle image sélectionnée" class="img-thumbnail" style="max-width: 200px;" />
                   </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <!-- Boutons Modifier, Sauvegarder, Supprimer -->
+                  <button
+                    *ngIf="editMessageId !== message.message_id"
+                    class="btn btn-sm btn-warning me-2"
+                    (click)="editMessage(message.message_id, message.description, message.image)"
+                  >
+                    <i class="fas fa-edit"></i> Modifier
+                  </button>
+                  <button
+                    *ngIf="editMessageId === message.message_id"
+                    class="btn btn-sm btn-success me-2"
+                    (click)="saveMessage()"
+                  >
+                    <i class="fas fa-save"></i> Sauvegarder
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteMessage(message.message_id)"
+                  >
+                    <i class="fas fa-trash"></i> Supprimer
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Aucun message trouvé -->
-          <div *ngIf="!isLoading && messages.length === 0" class="alert alert-info">
-            Aucun message trouvé pour cette discussion.
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<app-configuration></app-configuration>

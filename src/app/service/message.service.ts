@@ -45,9 +45,18 @@ export class MessageService {
     return this.http.put<Message>(url, body);
   }
 
+
+  updateMessageWithImage(messageId: number, formData: FormData): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${messageId}/update-with-image`, formData);
+}
   // Supprimer un message
   deleteMessage(messageId: number): Observable<void> {
     const url = `${this.apiUrl}/delete/${messageId}`;
     return this.http.delete<void>(url);
   }
+
+    // Méthode pour ajouter un message avec une image
+    addMessageWithImage(formData: FormData): Observable<any> {
+      return this.http.post(`${this.apiUrl}/add-with-image`, formData);
+    }
 }
