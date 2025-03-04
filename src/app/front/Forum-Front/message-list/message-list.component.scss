@@ -1,94 +1,107 @@
 .message-input {
-    display: flex;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    position: sticky;
-    bottom: 0;
-  }
-  
-  .message-input textarea {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    resize: none;
-    font-size: 0.9em;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .message-input button {
-    padding: 10px 15px;
-    background: linear-gradient(135deg, #4A90E2, #6E49F5);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-left: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s;
-  }
-  
-  .message-input button:hover {
-    transform: scale(1.05);
-  }
-  .message {
-    display: flex;
-    margin-bottom: 12px;
-    align-items: flex-end;
-  }
-  
-  .message.sent {
-    justify-content: flex-end;
-  }
-  
-  .message.received {
-    justify-content: flex-start;
-  }
-  
-  .message .message-content {
-    max-width: 75%;
-    padding: 12px;
-    border-radius: 15px;
-    font-size: 0.9em;
-    word-wrap: break-word;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .message.sent .message-content {
-    background: linear-gradient(135deg, #4A90E2, #6E49F5);
-    color: white;
-    border-bottom-right-radius: 5px;
-  }
-  
-  .message.received .message-content {
-    background: rgba(255, 255, 255, 0.8);
-    color: #333;
-    border-bottom-left-radius: 5px;
-  }
-  
-  .message small {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.75em;
-    opacity: 0.7;
-  }
-  .message-actions {
-    display: flex;
-    gap: 5px;
-    margin-top: 10px;
-  }
-  
-  .message-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1em;
-    color: #666;
-  }
-  
-  .message-actions button:hover {
-    color: #333;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.input-container {
+  position: relative;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 1em;
+  resize: none;
+  transition: all 0.3s;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+textarea:focus {
+  border-color: #6E49F5;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(110, 73, 245, 0.2);
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 0.8em;
+  color: #666;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-upload {
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s;
+}
+
+.file-upload:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
+.file-upload input {
+  display: none;
+}
+
+.anonymous-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #333;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.anonymous-checkbox:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.send-button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #6E49F5, #4A90E2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-grow: 1;
+}
+
+.send-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.send-button:not(:disabled):hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}

@@ -23,16 +23,23 @@ export class MessageService {
     );
   }
 
-  // Ajouter un message à une discussion
-  addMessage(userId: number, discussionId: number, description: string): Observable<Message> {
-    const url = `${this.apiUrl}/add`; // Endpoint URL
-    const params = new HttpParams()
-        .set('userId', userId.toString())
-        .set('discussionId', discussionId.toString())
-        .set('description', description);
+// Ajouter un message à une discussion avec ou sans anonymat
+addMessage(userId: number, discussionId: number, description: string, anonymous: boolean = false): Observable<Message> {
+  const url = `${this.apiUrl}/add`; // Endpoint URL
+  const params = new HttpParams()
+      .set('userId', userId.toString())
+      .set('discussionId', discussionId.toString())
+      .set('description', description)
+      .set('anonymous', anonymous.toString());
 
-    return this.http.post<Message>(url, null, { params }); // Send params as query parameters
+  return this.http.post<Message>(url, null, { params }); // Send params as query parameters
 }
+   // Ajouter un message avec une image et l'option d'anonymat
+   addMessageWithImage(formData: FormData, anonymous: boolean = false): Observable<Message> {
+    const url = `${this.apiUrl}/add-with-image`;
+    formData.append('anonymous', anonymous.toString());
+    return this.http.post<Message>(url, formData);
+  }
 
   // Modifier un message existant
   updateMessage(messageId: number, description: string): Observable<Message> {
@@ -53,8 +60,9 @@ export class MessageService {
     return this.http.delete<void>(url);
   }
 
-    // Méthode pour ajouter un message avec une image
+   /* // Méthode pour ajouter un message avec une image
     addMessageWithImage(formData: FormData): Observable<Message> {
       return this.http.post<Message>(`${this.apiUrl}/add-with-image`, formData);
     }
+      */
 }

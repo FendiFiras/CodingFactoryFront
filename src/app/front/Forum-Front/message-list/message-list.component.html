@@ -40,11 +40,32 @@
 
   <!-- Zone de saisie -->
   <div class="message-input">
-    <textarea [(ngModel)]="newMessage.description" placeholder="💬 Écrivez un message..." (keydown.enter)="addMessage()"></textarea>
-    <input type="file" (change)="onFileSelected($event)" accept="image/*">
-    <button (click)="addMessage()">🚀 Envoyer</button>
+    <div class="input-container">
+      <textarea
+        [(ngModel)]="newMessage.description"
+        placeholder="💬 Écrivez un message..."
+        maxlength="500"
+      ></textarea>
+      <div class="char-counter">{{ newMessage.description.length }}/500</div>
+    </div>
+    <div class="actions">
+      <label class="file-upload">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        📎
+      </label>
+      <label class="anonymous-checkbox">
+        <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
+        <span>Anonyme</span>
+      </label>
+      <button
+        (click)="addMessage()"
+        [disabled]="!newMessage.description && !newMessage.image"
+        class="send-button"
+      >
+        🚀 Envoyer
+      </button>
+    </div>
   </div>
-</div>
 
 <app-footer></app-footer>
 <style>

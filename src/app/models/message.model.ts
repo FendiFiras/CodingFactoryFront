@@ -5,5 +5,9 @@ export class Message {
     numberOfLikes!: number;
     messageDate!: Date;
     userId!: number; // Ajoutez ce champ
-
+    likes: number; // Nombre de likes pour ce message
+    dislikes: number; // Nombre de dislikes pour ce message
+    isLikedByCurrentUser: boolean; // Nouvelle propriété
+    isDislikedByCurrentUser: boolean; // Nouvelle propriété
+    userName?: string; // Ajoutez cette ligne
 }
