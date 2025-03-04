@@ -8,6 +8,9 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { QuizService } from 'src/app/Services/quiz.service';
 import { Quiz } from 'src/app/Models/quiz.model';
+import { PaymentService } from 'src/app/Services/payment.service';
+import { Stripe, loadStripe } from '@stripe/stripe-js'; // ✅ Charger Stripe.js
+import { environment } from 'src/environments/environment'; // ✅ Importer les clés Stripe
 
 @Component({
   selector: 'app-training-info',
@@ -23,6 +26,9 @@ export class TrainingInfoComponent implements OnInit {
   quizzes: Quiz[] = [];
   quiz!: Quiz | null;
   quizId: number | null = null;  // ✅ Stocker l'ID du quiz ici
+  userId: number = 2; // ✅ Fixe l'ID de l'utilisateur
+
+  stripe!: Stripe; // ✅ Stocker l'instance Stripe
 
 
   constructor(
@@ -30,19 +36,23 @@ export class TrainingInfoComponent implements OnInit {
     private router: Router,
     private trainingService: TrainingService,
     private cdr: ChangeDetectorRef,  // 🛠️ Ajout de ChangeDetectorRef
-    private quizService: QuizService
+    private quizService: QuizService,
+    private paymentService: PaymentService // ✅ Injecte le PaymentService
+
 
   ) {}
 
-  ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const trainingId = Number(params.get('id')); // Récupération de l'ID
-      if (!isNaN(trainingId)) {
-        this.getTrainingDetails(trainingId);
-        this.loadQuiz(trainingId); // ✅ Charger le quiz associé
+  async ngOnInit() {
+    this.stripe = await loadStripe(environment.stripePublicKey); // ✅ Charge Stripe.js
 
+    this.route.paramMap.subscribe(params => {
+      const trainingId = Number(params.get('id'));
+      if (!isNaN(trainingId)) {
+        this.trainingId = trainingId;
+        this.getTrainingDetails(trainingId);
+        this.loadQuiz(trainingId);
       } else {
-        this.router.navigate(['/TrainingList']); // Redirection si ID invalide
+        this.router.navigate(['/TrainingList']);
       }
     });
   }
@@ -117,7 +127,34 @@ loadQuiz(trainingId: number): void {
     }
   );
 }
+async enrollInTraining() {
+  if (!this.selectedTraining || !this.stripe) {
+    console.error("❌ Erreur : Formation ou Stripe non initialisé !");
+    return;
+  }
 
+  console.log("Tentative de paiement pour userId:", this.userId, "trainingId:", this.selectedTraining.trainingId);
 
+  this.paymentService.createStripeSession(this.userId, this.selectedTraining.trainingId).subscribe(
+    (response) => {
+      if (response && response.id) {
+        console.log("✅ Session Stripe créée :", response.id, response.url);
+        this.stripe?.redirectToCheckout({ sessionId: response.id }).then(result => {
+          if (result.error) {
+            console.error("❌ Erreur lors de la redirection Stripe :", result.error.message);
+            alert("Erreur de redirection vers Stripe : " + result.error.message);
+          }
+        });
+      } else {
+        console.error("❌ Erreur : Réponse Stripe invalide !");
+        alert("Erreur lors de la création de la session de paiement.");
+      }
+    },
+    (error) => {
+      console.error("❌ Erreur lors de la création de la session Stripe :", error);
+      alert("Erreur de paiement ! Veuillez réessayer.");
+    }
+  );
+}
 
 }
