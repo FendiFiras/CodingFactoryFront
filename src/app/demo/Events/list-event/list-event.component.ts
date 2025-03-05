@@ -51,10 +51,23 @@ export class ListEventComponent implements OnInit {
   }
 
   openModifyPopup(event: EventModel): void {
-    this.selectedEvent = { ...event }; // Copie l'événement sélectionné pour modification
+    this.selectedEvent = { ...event }; // Copie l'événement sélectionné
 
-    console.log('Open modify popup for:', event);
+    // Convertir les dates avant affichage
+    if (this.selectedEvent.startDate) {
+      this.selectedEvent.startDate = this.formatDateForInput(this.selectedEvent.startDate);
   }
+  if (this.selectedEvent.endDate) {
+      this.selectedEvent.endDate = this.formatDateForInput(this.selectedEvent.endDate);
+  }
+  if (this.selectedEvent.registrationDeadline) {
+      this.selectedEvent.registrationDeadline = this.formatDateForInput(this.selectedEvent.registrationDeadline);
+  
+    }
+
+  console.log('Event chargé pour modification:', this.selectedEvent);
+}
+
 
   updateEvent(): void {
     if (this.selectedEvent) {
@@ -90,4 +103,23 @@ export class ListEventComponent implements OnInit {
       }).catch(error => console.error('Upload failed', error));
     }
   }
+
+
+  formatDateForInput(dateString: string ): string {
+    if (!dateString) return '';
+  
+    let dateObj = new Date(dateString);
+  
+    if (isNaN(dateObj.getTime())) {
+      // Si la date est sous forme de string "YYYY-MM-DD HH:mm:ss.ffffff", il faut la parser correctement
+      const parts = dateString.split(' ');
+      const datePart = parts[0]; // "2025-03-01"
+      const timePart = parts[1] ? parts[1].substring(0, 5) : '00:00'; // "12:00"
+  
+      return `${datePart}T${timePart}`; // Format attendu par datetime-local
+    }
+  
+    return dateObj.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
+  }
+  
 }

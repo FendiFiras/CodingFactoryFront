@@ -1,86 +1,196 @@
-
 <div class="feedback-container">
-    <h3>Participants inscrits</h3>
-    
-    <!-- Vérifie si des participants existent -->
-    <div *ngIf="registrations.length > 0; else noRegistration">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Utilisateur</th>
-              <th>Date d'inscription</th>
-              <th>Confirmation</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let registration of registrations">
-              <td>{{ registration.user?.firstName }} {{ registration.user?.lastName }}</td>
-              <td>{{ registration.registrationDate | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ registration.confirmation ? 'Confirmé' : 'Non confirmé' }}</td>
-              <td>
-                <button class="styled-delete-button" (click)="deleteRegistration(registration.idRegistration)">
-                  <span>Supprimer</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <h3>Participants inscrits</h3>
+  
+  <!-- Vérifie si des participants existent -->
+  <div *ngIf="registrations.length > 0; else noRegistration">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Date d'inscription</th>
+            <th>Confirmation</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registration of registrations">
+            <td>{{ registration.user?.firstName }} {{ registration.user?.lastName }}</td>
+            <td>{{ registration.registrationDate | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ registration.confirmation ? 'Confirmé' : 'Non confirmé' }}</td>
+            <td>
+              <button class="styled-delete-button" (click)="deleteRegistration(registration.idRegistration)">
+                <span>Supprimer</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  <!-- Si aucun participant n'est disponible -->
+  <ng-template #noRegistration>
+    <p>Aucun participant inscrit à cet événement.</p>
+  </ng-template>
   
-    <!-- Si aucun participant n'est disponible -->
-    <ng-template #noRegistration>
-      <p>Aucun participant inscrit à cet événement.</p>
-    </ng-template>
-    
-    <h3>Commentaires des utilisateurs</h3>
-  
-    <!-- Vérifie si des feedbacks existent -->
-    <div *ngIf="feedbacks.length > 0; else noFeedback">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Utilisateur</th>
-              <th>Date</th>
-              <th>Commentaire</th>
-              <th>Note</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let feedback of feedbacks">
-              <td>{{ feedback.user?.firstName }} {{ feedback.user?.lastName }}</td>
-              <td>{{ feedback.feedbackDate ? (feedback.feedbackDate | date: 'dd/MM/yyyy') : 'Non spécifiée' }}</td>
-              <td>"{{ feedback.comments }}"</td>
-              <td>
-                <div class="feedback-rating">
-                  <span *ngFor="let star of [].constructor(feedback.rating)" class="fa fa-star"></span>
-                </div>
-              </td>
-              <td>
-                <button class="styled-delete-button" (click)="deleteFeedBack(feedback.idFeedback)">
-                  <span>Supprimer</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <h3>Commentaires des utilisateurs</h3>
+
+  <!-- Vérifie si des feedbacks existent -->
+  <div *ngIf="feedbacks.length > 0; else noFeedback">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Commentaire</th>
+            <th>Note</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feedback of feedbacks">
+            <td>{{ feedback.user?.firstName }} {{ feedback.user?.lastName }}</td>
+            <td>{{ feedback.feedbackDate ? (feedback.feedbackDate | date: 'dd/MM/yyyy') : 'Non spécifiée' }}</td>
+            <td>"{{ feedback.comments }}"</td>
+            <td>
+              <div class="feedback-rating">
+                <span *ngFor="let star of [].constructor(feedback.rating)" class="fa fa-star"></span>
+              </div>
+            </td>
+            <td>
+              <button class="styled-delete-button" (click)="deleteFeedBack(feedback.idFeedback)">
+                <span>Supprimer</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  
-    <!-- Si aucun commentaire n'est disponible -->
-    <ng-template #noFeedback>
-      <p>Aucun commentaire pour cet événement.</p>
-    </ng-template>
-  
+  </div>
+
+  <!-- Si aucun commentaire n'est disponible -->
+  <ng-template #noFeedback>
+    <p>Aucun commentaire pour cet événement.</p>
+  </ng-template>
+
+  <h3>Plannings des événements</h3>
+
+  <!-- Bouton pour ouvrir le modal -->
+  <button class="btn btn-primary" (click)="openPlanningModal()">Ajouter un Planning</button>
+
+  <!-- Vérifie si des plannings existent -->
+  <div *ngIf="plannings.length > 0; else noPlanning">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Description</th>
+            <th>Vidéo</th>
+            <th>Type de Localisation</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let planning of plannings" (dblclick)="openEditPlanningModal(planning)">
+            <td>{{ planning.startDatetime | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ planning.endDatetime | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ planning.description }}</td>
+            <td>
+              <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="50" width="50" controls></video>
+            </td>
+            <td>{{ planning.locationType }}</td>
+            <td>
+              <button class="styled-delete-button" (click)="deletePlanning(planning.idPlanning)">
+                <span>Supprimer</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 6h18M9 6V4h6v2m2 0v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  
+  </div>
+
+  <!-- Si aucun planning n'est disponible -->
+  <ng-template #noPlanning>
+    <p>Aucun planning disponible pour cet événement.</p>
+  </ng-template>
+
+  <!-- Modal pour ajouter un planning -->
+  <div *ngIf="isPlanningModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closePlanningModal()">&times;</span>
+      <h3>Ajouter un Planning</h3>
+      <form (submit)="submitPlanning()" #eventForm="ngForm">
+        <label for="startDatetime">Date de début :</label>
+        <input type="datetime-local" id="startDatetime" [(ngModel)]="newPlanning.startDatetime" name="startDatetime" required>
+
+        <label for="endDatetime">Date de fin :</label>
+        <input type="datetime-local" id="endDatetime" [(ngModel)]="newPlanning.endDatetime" name="endDatetime" required>
+
+        <label for="description">Description :</label>
+        <input type="text" id="description" [(ngModel)]="newPlanning.description" name="description" required>
+ <!-- Champ pour la vidéo -->
+ <div class="form-group">
+  <label for="videoFile">Vidéo:</label>
+  <input
+    type="file"
+    id="videoFile"
+    name="video"
+    (change)="onVideoSelected($event)"
+    accept="video/*"
+    class="form-control"
+  />
+</div>
+
+        <label for="locationType">Type de localisation :</label>
+
+        <select [(ngModel)]="newPlanning.locationType" name="locationType" required>
+          <option *ngFor="let type of locationType" [value]="type">{{ type }}</option>
+        </select>
+        <button type="submit" class="btn btn-success">Ajouter</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Modal pour modifier un planning -->
+<div *ngIf="isEditPlanningModalOpen" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeEditPlanningModal()">&times;</span>
+    <h3>Modifier le Planning</h3>
+    <form (submit)="submitEditPlanning()" #editEventForm="ngForm">
+      <label for="editStartDatetime">Date de début :</label>
+      <input type="datetime-local" id="editStartDatetime" [(ngModel)]="selectedPlanning.startDatetime" name="editStartDatetime" required>
+
+      <label for="editEndDatetime">Date de fin :</label>
+      <input type="datetime-local" id="editEndDatetime" [(ngModel)]="selectedPlanning.endDatetime" name="editEndDatetime" required>
+
+      <label for="editDescription">Description :</label>
+      <input type="text" id="editDescription" [(ngModel)]="selectedPlanning.description" name="editDescription" required>
+<!-- Video Upload -->
+<label for="video">Event Video:</label>
+<input type="file" (change)="onVideoSelected($event)" />
+<video *ngIf="selectedPlanning.video" [src]="'http://localhost:8089/event/' + selectedPlanning.video" width="200" controls></video>
+      <label for="editLocationType">Type de localisation :</label>
+      <select [(ngModel)]="selectedPlanning.locationType" name="editLocationType" required>
+        <option *ngFor="let type of locationType" [value]="type">{{ type }}</option>
+      </select>
+      <button type="submit" class="btn btn-success">Modifier</button>
+    </form>
+  </div>
+</div>

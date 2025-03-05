@@ -4,11 +4,11 @@ export class Event {
   idEvent: number = 0;
   title: string = '';
   description: string = '';
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
   location: string = '';
   maxParticipants: number = 0;
-  registrationDeadline?: Date;
+  registrationDeadline?: string;
   price: number = 0;
   imageUrl: string = '';
   videoUrl: string = '';

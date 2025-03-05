@@ -130,3 +130,25 @@
     color: #333;
   }
   
+  .styled-detail-button {
+    background-color: #007bff; /* Bleu vif */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .styled-detail-button:hover {
+    background-color: #0056b3; /* Bleu plus foncé au survol */
+  }
+  
+  .styled-detail-button:active {
+    transform: scale(0.95); /* Effet d'appui */
+  }
+  

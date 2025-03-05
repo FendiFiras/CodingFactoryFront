@@ -4,7 +4,6 @@ export interface LocationEvent {
     address: string;
     latitude: number;
     longitude: number;
-    locationType: string;
-    virtualLink: string;
+    
   }
   

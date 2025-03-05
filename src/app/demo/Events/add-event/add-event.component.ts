@@ -75,6 +75,8 @@ export class AddEventComponent {
       await this.saveEvent();
       console.log('Événement ajouté avec succès');
      // this.router.navigate(['/events']); // Redirige vers la page des événements
+           this.router.navigate(['/listevents']); // Redirection ici
+
     
   }
 }

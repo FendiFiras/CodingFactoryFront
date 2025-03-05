@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Event } from '../Model/event.model'; // Adjust the path as needed
 import { HttpClient } from '@angular/common/http';
+import { Planning } from '../Model/planning.model';
 
 @Injectable({
   providedIn: 'root'
@@ -91,4 +92,29 @@ export class EventService {
   checkUserParticipation(eventId: number, userId: number): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/checkparticipant/${eventId}/${userId}`);
   }
+
+
+
+  // PLANNING 
+  getPlanning(eventId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/planningevent/${eventId}`);
+  }
+
+  addPlanning(planning: any, eventId: number,locationId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/addplanning/${eventId}/${locationId}`, planning);
+  }
+
+  deletePlanning(idPlanning: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/deleteplanning/${idPlanning}`);
+  }
+
+
+  updatePlanning(planning: Planning,idEvent: number, idLocationEvent: number): Observable<Planning> {
+    return this.http.put<Planning>(`${this.apiUrl}/updateplanning/${idEvent}/${idLocationEvent}`, planning);
+  }
+
+  getQRCode(eventId: number): Observable<Blob> {
+    return this.http.get(`http://localhost:8089/event/qrcode/${eventId}`, { responseType: 'blob' });
+}
+  
 }
