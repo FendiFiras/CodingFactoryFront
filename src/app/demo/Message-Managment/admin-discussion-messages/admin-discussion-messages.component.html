@@ -21,6 +21,17 @@
             </button>
           </div>
 
+          <!-- Barre de recherche -->
+          <div class="mb-4">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="searchQuery"
+              (input)="onSearch()"
+              placeholder="Rechercher un message..."
+            />
+          </div>
+
           <!-- Bouton pour ouvrir le formulaire -->
           <button class="btn btn-success mb-4" (click)="toggleForm()">
             <i class="fas fa-plus"></i> Ajouter un message
@@ -28,7 +39,7 @@
 
           <!-- Liste des messages en grille -->
           <div class="messages-grid">
-            <div *ngFor="let message of messages" class="message-card">
+            <div *ngFor="let message of getPaginatedMessages()" class="message-card">
               <!-- Image du message -->
               <div *ngIf="message.image" class="text-center mt-3">
                 <img
@@ -63,6 +74,29 @@
               </div>
             </div>
           </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                [class.active]="currentPage === i + 1"
+              >
+                <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
