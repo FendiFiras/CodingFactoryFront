@@ -81,21 +81,17 @@ export class ListeForumComponent implements OnInit {
   addForum(): void {
     if (this.addForumForm.invalid) return;
     const { title, description, image } = this.addForumForm.value;
-    
-    // Créer un FormData pour envoyer les données du formulaire et l'image
     const formData = new FormData();
-    formData.append('userId', this.staticUserId.toString()); // Utiliser l'ID utilisateur statique
+    formData.append('userId', this.staticUserId.toString());
     formData.append('title', title);
     formData.append('description', description);
     if (image) {
       formData.append('image', image, image.name);
     }
-    
-
-    // Appeler le service pour ajouter le forum
+  
     this.forumService.addForum(formData).subscribe({
-      next: (newForum) => {
-        this.forums.push(newForum);
+      next: () => {
+        this.loadForums(); // Recharger la liste des forums après l'ajout
         this.addForumForm.reset();
         this.showAddForm = false;
       },
@@ -104,6 +100,7 @@ export class ListeForumComponent implements OnInit {
       }
     });
   }
+  
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

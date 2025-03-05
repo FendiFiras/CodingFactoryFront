@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MessageService } from 'src/app/service/message.service';
 import { Message } from 'src/app/models/message.model';
@@ -21,12 +21,12 @@ export class MessageComponent implements OnInit {
   errorMessage = '';
   filteredMessages: Message[] = []; // Messages filtrés
   searchQuery = ''; // Requête de recherche
-  currentUserId = 1; // Remplacez par l'ID de l'utilisateur actuel
+  currentUserId = 2; // Remplacez par l'ID de l'utilisateur actuel
 
 
   // Nouveau message
   newMessage = {
-    userId: 1, // Remplacez par l'ID de l'utilisateur actuel
+    userId: 2, // Remplacez par l'ID de l'utilisateur actuel
     discussionId: 0, // Sera mis à jour avec l'ID de la discussion
     description: '', // Utilisez description si c'est ce que l'API attend
     image: null as File | null, // Ajoutez cette ligne pour définir la propriété `image`
@@ -38,7 +38,9 @@ editingMessage: Message | null = null;
 
   constructor(
     private messageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef  // Injecter le service
+
   ) {}
 
   ngOnInit(): void {
@@ -49,20 +51,7 @@ editingMessage: Message | null = null;
     });
   }
 
-  loadMessages(): void {
-    this.isLoading = true;
-    this.messageService.getMessagesForDiscussion(this.discussionId).subscribe({
-      next: (data) => {
-        this.messages = data;
-        this.filteredMessages = data; // Initialiser les messages filtrés
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.errorMessage = 'Erreur lors du chargement des messages';
-        this.isLoading = false;
-      }
-    });
-  }
+ 
 
 
   startEdit(message: Message): void {
@@ -160,10 +149,11 @@ editingMessage: Message | null = null;
         this.messageService.addMessageWithImage(formData).subscribe({
           next: (response) => {
             console.log('Réponse de l\'API :', response);
+            this.messages.push(response); // Ajoutez le message directement à la liste des messages
+            this.filteredMessages = [...this.messages]; // Mettez à jour les messages filtrés
             this.newMessage.description = '';
             this.newMessage.image = null;
-            this.newMessage.anonymous = false; // Réinitialiser l'option d'anonymat
-            this.loadMessages();
+            this.newMessage.anonymous = false;
           },
           error: (err) => {
             console.error('Erreur lors de l\'ajout du message:', err);
@@ -173,9 +163,10 @@ editingMessage: Message | null = null;
         this.messageService.addMessage(this.newMessage.userId, this.newMessage.discussionId, this.newMessage.description, this.newMessage.anonymous).subscribe({
           next: (response) => {
             console.log('Réponse de l\'API :', response);
+            this.messages.push(response); // Ajoutez le message directement à la liste des messages
+            this.filteredMessages = [...this.messages]; // Mettez à jour les messages filtrés
             this.newMessage.description = '';
-            this.newMessage.anonymous = false; // Réinitialiser l'option d'anonymat
-            this.loadMessages();
+            this.newMessage.anonymous = false;
           },
           error: (err) => {
             console.error('Erreur lors de l\'ajout du message:', err);
@@ -183,5 +174,25 @@ editingMessage: Message | null = null;
         });
       }
     }
+    
+    
 
+    loadMessages(): void {
+      this.isLoading = true;
+      this.messageService.getMessagesForDiscussion(this.discussionId).subscribe({
+        next: (data) => {
+          console.log('Messages récupérés :', data);
+          this.messages = data;
+          this.filteredMessages = data;
+          this.isLoading = false;
+          this.cdr.detectChanges();  // Force la détection des changements
+        },
+        error: (err) => {
+          this.errorMessage = 'Erreur lors du chargement des messages';
+          this.isLoading = false;
+        }
+      });
+    }
+    
+    
   }

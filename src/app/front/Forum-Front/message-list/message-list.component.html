@@ -23,6 +23,8 @@
           </div>
           <div *ngIf="editingMessage?.message_id !== message.message_id">
             <p>{{ message.description }}</p>
+            <p>Posté le : {{ message.messageDate | date:'short' }}</p>
+            <p>Par utilisateur : {{ message.userId }}</p>
             <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image">
             <small>{{ message.messageDate | date:'short' }}</small>
             <div *ngIf="message.userId === currentUserId" class="message-actions">
