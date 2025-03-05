@@ -148,7 +148,7 @@ editingMessage: Message | null = null;
         alert('Veuillez entrer un message ou sélectionner une image.');
         return;
       }
-  
+    
       if (this.newMessage.image) {
         const formData = new FormData();
         formData.append('userId', this.newMessage.userId.toString());
@@ -156,13 +156,13 @@ editingMessage: Message | null = null;
         formData.append('description', this.newMessage.description);
         formData.append('anonymous', this.newMessage.anonymous.toString());
         formData.append('image', this.newMessage.image);
-  
-        this.messageService.addMessageWithImage(formData, this.newMessage.anonymous).subscribe({
+    
+        this.messageService.addMessageWithImage(formData).subscribe({
           next: (response) => {
             console.log('Réponse de l\'API :', response);
             this.newMessage.description = '';
-            this.newMessage.image = null; // Reset the image property
-            this.newMessage.anonymous = false; // Reset the anonymous property
+            this.newMessage.image = null;
+            this.newMessage.anonymous = false; // Réinitialiser l'option d'anonymat
             this.loadMessages();
           },
           error: (err) => {
@@ -174,7 +174,7 @@ editingMessage: Message | null = null;
           next: (response) => {
             console.log('Réponse de l\'API :', response);
             this.newMessage.description = '';
-            this.newMessage.anonymous = false; // Reset the anonymous property
+            this.newMessage.anonymous = false; // Réinitialiser l'option d'anonymat
             this.loadMessages();
           },
           error: (err) => {
@@ -183,4 +183,5 @@ editingMessage: Message | null = null;
         });
       }
     }
+
   }

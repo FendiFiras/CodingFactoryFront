@@ -10,4 +10,6 @@ export class Message {
     isLikedByCurrentUser: boolean; // Nouvelle propriété
     isDislikedByCurrentUser: boolean; // Nouvelle propriété
     userName?: string; // Ajoutez cette ligne
+    anonymous!: boolean; // Indique si le message est anonyme
+
 }

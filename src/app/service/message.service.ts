@@ -25,14 +25,14 @@ export class MessageService {
 
 // Ajouter un message à une discussion avec ou sans anonymat
 addMessage(userId: number, discussionId: number, description: string, anonymous: boolean = false): Observable<Message> {
-  const url = `${this.apiUrl}/add`; // Endpoint URL
+  const url = `${this.apiUrl}/add`;
   const params = new HttpParams()
-      .set('userId', userId.toString())
-      .set('discussionId', discussionId.toString())
-      .set('description', description)
-      .set('anonymous', anonymous.toString());
+    .set('userId', userId.toString())
+    .set('discussionId', discussionId.toString())
+    .set('description', description)
+    .set('anonymous', anonymous.toString());
 
-  return this.http.post<Message>(url, null, { params }); // Send params as query parameters
+  return this.http.post<Message>(url, null, { params });
 }
    // Ajouter un message avec une image et l'option d'anonymat
    addMessageWithImage(formData: FormData, anonymous: boolean = false): Observable<Message> {
