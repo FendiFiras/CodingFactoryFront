@@ -18,13 +18,12 @@
             <div class="col-xl-8">
                 <div class="course-details__thumb wow fadeInUp">
                     <img src="assets1/images/course/course-2-1.png">
-
                 </div>
-                
+
                 <div class="course-details__meta wow fadeInUp">
                     <h3 class="course-details__title">{{ selectedTraining.trainingName }}</h3>
                 </div>
-               
+
                 <div class="course-details__tabs tabs-box wow fadeInUp">
                     <ul class="course-details__tabs__lists tab-buttons list-unstyled">
                         <li data-tab="#overview" class="tab-btn active-btn">
@@ -33,7 +32,7 @@
                         <li data-tab="#curriculum" class="tab-btn active-btn">
                             <span *ngIf="quizId" (click)="goToQuiz()"> Take Quiz</span>
                         </li>
-                                            </ul>
+                    </ul>
                     <div class="tabs-content">
                         <div class="tab fadeInUp animated active-tab" id="overview">
                             <div class="course-details__overview">
@@ -49,10 +48,10 @@
                                         <span class="icon-check"></span>
                                         End Date: {{ selectedTraining.endDate | date:'d MMMM yyyy' }}
                                     </li>
-                                
                                     <li>
                                         <span class="icon-check"></span>
                                         This learning experience is designed to be completed in {{ trainingDuration }} days.                                    
+                                    </li>
                                     <li>
                                         <span class="icon-check"></span>
                                         Price: {{ selectedTraining.price | currency:'EUR' }}
@@ -68,26 +67,41 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ✅ Barre latérale (Cours et Paiement) -->
             <div class="col-xl-4 wow fadeInRight">
                 <div class="course-details__sidebar">
-                    <h3 class="course-details__sidebar__title">Join Us as a Student</h3>
-                    <ul class="course-details__sidebar__lists">
-                        <li><i class="icon-tag"></i> 
-                            Price: 
-                            <span>{{ selectedTraining.price | currency:'EUR' }}</span>
-                        </li>
-                        <li><i class="icon-envelope"></i> 
-                            <span style="color: #ff6600; font-weight: bold;">
-                                Upon successful payment, an email will be sent with more details.
-                            </span>
-                        </li>
-                        
-                    </ul>
-                    
-                    <a (click)="enrollInTraining()" class="eduact-btn eduact-btn-second wow pulse">Enroll Now</a>
 
-                                    </div>
+                    <!-- ✅ SI L'UTILISATEUR EST INSCRIT -->
+                    <div *ngIf="isUserEnrolled">
+                        <h3 class="course-details__sidebar__title">🎉 Vous êtes inscrit à cette formation !</h3>
+                        <ul class="course-details__sidebar__lists">
+                            <li><i class="icon-check"></i> 
+                                <button (click)="goToCourses()" class="eduact-btn">📖 Accéder aux cours</button>
+                            </li>
+                            <li><i class="icon-check"></i> 
+                                <button *ngIf="quizId" (click)="goToQuiz()" class="eduact-btn">📝 Passer le quiz</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- ❌ SI L'UTILISATEUR N'EST PAS INSCRIT -->
+                    <div *ngIf="!isUserEnrolled">
+                        <h3 class="course-details__sidebar__title">Join Us as a Student</h3>
+                        <ul class="course-details__sidebar__lists">
+                            <li><i class="icon-tag"></i> Price: <span>{{ selectedTraining.price | currency:'EUR' }}</span></li>
+                            <li><i class="icon-envelope"></i> 
+                                <span style="color: #ff6600; font-weight: bold;">
+                                    Upon successful payment, an email will be sent with more details.
+                                </span>
+                            </li>
+                        </ul>
+                        <a (click)="enrollInTraining()" class="eduact-btn eduact-btn-second wow pulse">Enroll Now</a>
+                    </div>
+
+                </div>
             </div>
+
         </div>
     </div>
 </section>

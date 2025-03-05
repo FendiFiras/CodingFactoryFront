@@ -56,6 +56,9 @@ getTrainingsByQuiz(quizId: number): Observable<Training[]> {
 getTrainingsForCourse(courseId: number): Observable<Training[]> {
   return this.http.get<Training[]>(`${this.apiUrl}/courses/${courseId}`);
 }
+isUserEnrolled(userId: number, trainingId: number): Observable<boolean> {
+  return this.http.get<boolean>(`${this.apiUrl}/is-enrolled/${userId}/${trainingId}`);
+}
 
 
 }
