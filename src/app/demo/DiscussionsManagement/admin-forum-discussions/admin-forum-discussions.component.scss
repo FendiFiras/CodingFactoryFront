@@ -233,3 +233,28 @@ body {
   display: block;
   opacity: 1;
 }
+
+
+
+
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.page-link {
+  cursor: pointer;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.page-link:hover {
+  background-color: #f8f9fa;
+}

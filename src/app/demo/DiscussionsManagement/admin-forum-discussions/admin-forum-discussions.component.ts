@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn, FormsModule } from '@angular/forms';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,12 +8,13 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavigationComponent } from 'src/app/theme/layout/admin/navigation/navigation.component';
 import { ConfigurationComponent } from 'src/app/theme/layout/admin/configuration/configuration.component';
 import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumbs/breadcrumbs.component';
+import { Discussion } from 'src/app/models/discussion1';
 
 @Component({
   selector: 'app-admin-add-discussion',
   templateUrl: './admin-forum-discussions.component.html',
   styleUrls: ['./admin-forum-discussions.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule, NavigationComponent, RouterModule, ConfigurationComponent],
+  imports: [ReactiveFormsModule, CommonModule, NavigationComponent, RouterModule, ConfigurationComponent, FormsModule],
 })
 export class AdminDiscussionComponent implements OnInit {
   navMobClick() {
@@ -27,6 +28,10 @@ export class AdminDiscussionComponent implements OnInit {
   discussions: any[] = [];
   isLoading: boolean = false;
   showForm: boolean = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 6; // Nombre d'éléments par page
+  searchQuery: string = ''; // Propriété pour la recherche
+  filteredDiscussions: any[] = []; // Liste filtrée des discussions
 
   // Propriétés pour la navigation
   navCollapsed = false;
@@ -128,9 +133,9 @@ export class AdminDiscussionComponent implements OnInit {
     this.isLoading = true;
     this.discussionService.getDiscussionsByForum(this.forumId).subscribe({
       next: (data) => {
-        console.log("Discussions chargées :", data); // Vérifiez la structure des données
+        console.log("Discussions chargées :", data);
         this.discussions = data;
-        console.log("Liste des discussions mise à jour :", this.discussions); // Vérifiez que la liste est bien mise à jour
+        this.filteredDiscussions = data; // Initialiser filteredDiscussions avec les données chargées
         this.isLoading = false;
       },
       error: (err) => {
@@ -204,52 +209,109 @@ export class AdminDiscussionComponent implements OnInit {
   
 
   // Soumettre le formulaire
-    onSubmit(): void {
-      if (this.addDiscussionForm.invalid) {
-        return;
-      }
-    
-      const formValues = this.addDiscussionForm.value;
-      console.log('Valeurs du formulaire avant soumission :', formValues);
-    
-      if (this.editMode && this.discussion_id) {
-
-        const updatedDiscussion = {
-          discussion_id: this.discussion_id, // Ensure this matches the backend's expected field name
-          title: formValues.title,
-          description: formValues.description,
-          numberOfLikes: 0, // Add this field if required
-          publicationDate: new Date().toISOString() // Add this field if required
-        };
-        
-        this.discussionService.updateDiscussion(this.discussion_id, updatedDiscussion).subscribe({
-          next: () => {
-            this.toggleForm();
-            this.loadDiscussions();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la mise à jour de la discussion', err);
-            if (err.error) {
-              console.error('Détails de l\'erreur:', err.error); 
-            }
-          },
-        });
-      } else {
-        this.discussionService.addDiscussionToForum(formValues, formValues.userId, this.forumId).subscribe({
-          next: () => {
-            this.toggleForm();
-            this.loadDiscussions();
-          },
-          error: (err) => {
-            console.error('Erreur lors de l\'ajout de la discussion', err);
-          },
-        });
-      }
+  onSubmit(): void {
+    if (this.addDiscussionForm.invalid) {
+      return;
     }
+  
+    const formValues = this.addDiscussionForm.value;
+    console.log('Form Values:', formValues); // Log form values
+  
+    const discussion: Discussion = {
+      title: formValues.title,
+      description: formValues.description,
+      numberOfLikes: 0, // Default value
+      publicationDate: new Date().toISOString() // Default value
+    };
+  
+    console.log('Payload being sent:', discussion); // Log the payload
+  
+    if (this.editMode && this.discussion_id) {
+      discussion.discussion_id = this.discussion_id;
+      this.discussionService.updateDiscussion(this.discussion_id, discussion).subscribe({
+        next: () => {
+          this.toggleForm();
+          this.loadDiscussions();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la mise à jour de la discussion', err);
+          if (err.error) {
+            console.error('Détails de l\'erreur:', err.error);
+          }
+        },
+      });
+    } else {
+      this.discussionService.addDiscussionToForum(discussion, formValues.userId, this.forumId).subscribe({
+        next: () => {
+          this.toggleForm();
+          this.loadDiscussions();
+        },
+        error: (err) => {
+          console.error('Erreur lors de l\'ajout de la discussion', err);
+          if (err.error) {
+            console.error('Détails de l\'erreur:', err.error);
+          }
+        },
+      });
+    }
+  }
 
         // Méthode pour naviguer vers la page des messages d'une discussion
         viewMessages(discussion_id: number): void {
           console.log('Navigating to messages for discussion ID:', discussion_id);
           this.router.navigate([`/admin/forum/${this.forumId}/discussion/${discussion_id}/messages`]);
         }
+
+        // Méthode pour filtrer les discussions en fonction de la recherche
+  applyFilter(): void {
+    if (!this.searchQuery) {
+      this.filteredDiscussions = this.discussions; // Si la recherche est vide, afficher toutes les discussions
+    } else {
+      this.filteredDiscussions = this.discussions.filter(
+        (discussion) =>
+          discussion.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          discussion.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+    this.currentPage = 1; // Réinitialiser la pagination à la première page
+  }
+
+  // Méthode pour obtenir les discussions paginées
+  get paginatedDiscussions(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredDiscussions.slice(startIndex, endIndex);
+  }
+
+  // Méthode pour obtenir le nombre total de pages
+  getTotalPages(): number {
+    return Math.ceil(this.filteredDiscussions.length / this.itemsPerPage);
+  }
+
+  // Méthode pour obtenir la liste des pages
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // Méthode pour aller à une page spécifique
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+    }
+  }
+
+  // Méthode pour aller à la page précédente
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Méthode pour aller à la page suivante
+  nextPage(): void {
+    if (this.currentPage < this.getTotalPages()) {
+      this.currentPage++;
+    }
+  }
 }

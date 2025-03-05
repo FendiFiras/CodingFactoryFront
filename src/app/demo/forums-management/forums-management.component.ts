@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ForumService } from 'src/app/service/forum.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigurationComponent } from "../../theme/layout/admin/configuration/configuration.component";
@@ -19,16 +19,20 @@ interface Forum {
   selector: 'app-forums-management',
   templateUrl: './forums-management.component.html',
   styleUrls: ['./forums-management.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule, ConfigurationComponent],
+  imports: [ReactiveFormsModule, CommonModule, ConfigurationComponent, FormsModule],
 })
 export class ForumsManagementComponent implements OnInit {
   forums: Forum[] = [];
+  filteredForums: Forum[] = []; // Nouvelle propriété pour les forums filtrés
+  searchQuery: string = ''; // Nouvelle propriété pour la recherche
   isLoading = true;
   errorMessage = '';
   addForumForm: FormGroup;
   forumToEdit: Forum | null = null;
   showAddForm: boolean = false; // Contrôle l'affichage de la sidebar
   editMode: boolean = false; // Contrôle le mode édition
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
 
   constructor(
     private forumService: ForumService,
@@ -50,6 +54,8 @@ export class ForumsManagementComponent implements OnInit {
     this.loadForums();
   }
 
+
+
   // Méthode pour basculer l'affichage de la sidebar
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
@@ -65,6 +71,7 @@ export class ForumsManagementComponent implements OnInit {
     this.forumService.getAllForums().subscribe({
       next: (data) => {
         this.forums = data;
+        this.filteredForums = data; // Initialiser filteredForums avec les forums chargés
         console.log('Forums chargés :', this.forums);
         this.isLoading = false;
       },
@@ -138,10 +145,12 @@ export class ForumsManagementComponent implements OnInit {
       image: null, // Réinitialiser l'image pour éviter les conflits
     });
   
-    // Supprimer la validation de userId en mode édition
+    // Supprimer la validation requise en mode édition
     if (this.editMode) {
-      this.addForumForm.get('userId')?.clearValidators();
-      this.addForumForm.get('userId')?.updateValueAndValidity();
+      this.addForumForm.get('title')?.clearValidators();
+      this.addForumForm.get('title')?.updateValueAndValidity();
+      this.addForumForm.get('description')?.clearValidators();
+      this.addForumForm.get('description')?.updateValueAndValidity();
     }
   }
 
@@ -150,14 +159,14 @@ export class ForumsManagementComponent implements OnInit {
     if (!this.forumToEdit) return;
   
     const { title, description, image } = this.addForumForm.value;
-    const formData = new FormData();
-    formData.append('forum_id', this.forumToEdit.forum_id!.toString()); // Inclure forum_id
-    formData.append('title', title);
-    formData.append('description', description);
-  
-    if (image) {
-      formData.append('image', image);
-    }
+  const formData = new FormData();
+  formData.append('forum_id', this.forumToEdit.forum_id!.toString()); // Inclure forum_id
+  formData.append('title', title); // Champ obligatoire
+  formData.append('description', description); // Champ obligatoire
+
+  if (image) {
+    formData.append('image', image); // Champ obligatoire
+  }
   
     this.forumService.updateForum(this.forumToEdit.forum_id!, formData).subscribe({
       next: (updatedForum) => {
@@ -214,18 +223,77 @@ export class ForumsManagementComponent implements OnInit {
   // Gestion de la soumission du formulaire
   onSubmit(): void {
     if (this.addForumForm.invalid) {
-      alert('Veuillez corriger les erreurs du formulaire.');
-
-      console.log('Formulaire invalide', this.addForumForm.value);
+      alert('Veuillez remplir tous les champs obligatoires.');
       return;
     }
   
     if (this.editMode && this.forumToEdit) {
-      // Mode édition : mettre à jour le forum existant
+      // Mode édition : mettre à jour le forum existant sans vérifier la validité du formulaire
       this.updateForum();
     } else {
-      // Mode ajout : créer un nouveau forum
+      // Mode ajout : créer un nouveau forum avec validation du formulaire
+      if (this.addForumForm.invalid) {
+        alert('Veuillez corriger les erreurs du formulaire.');
+        console.log('Formulaire invalide', this.addForumForm.value);
+        return;
+      }
       this.addForum();
     }
+  }
+
+  // Méthode pour obtenir les forums paginés
+  get paginatedForums(): Forum[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredForums.slice(startIndex, endIndex); // Utilise this.filteredForums
+  }
+
+  // Méthode pour obtenir le nombre total de pages
+  getTotalPages(): number {
+    return Math.ceil(this.forums.length / this.itemsPerPage);
+  }
+
+  // Méthode pour obtenir la liste des pages
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // Méthode pour aller à une page spécifique
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+    }
+  }
+
+  // Méthode pour aller à la page précédente
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Méthode pour aller à la page suivante
+  nextPage(): void {
+    if (this.currentPage < this.getTotalPages()) {
+      this.currentPage++;
+    }
+  }
+
+  applyFilter(): void {
+    console.log('Recherche en cours :', this.searchQuery); // Debug
+    if (!this.searchQuery) {
+      this.filteredForums = this.forums;
+    } else {
+      this.filteredForums = this.forums.filter(
+        (forum) =>
+          forum.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          forum.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+    console.log('Forums filtrés :', this.filteredForums); // Debug
+    this.currentPage = 1;
+    this.cdr.detectChanges(); // Forcer la détection des changements
+
   }
 }

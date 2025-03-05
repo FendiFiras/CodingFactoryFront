@@ -1,46 +1,109 @@
+/* Conteneur pour la grille de messages */
+.messages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colonnes de taille égale */
+  gap: 20px; /* Espace entre les cartes */
+  padding: 20px;
+}
+
 /* Style pour les cartes de messages */
 .message-card {
-    border: none;
-    border-radius: 10px;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .message-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  /* Style pour les boutons */
-  .btn {
-    margin: 5px;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .btn:hover {
-    opacity: 0.9;
-  }
-  
-  /* Style pour le formulaire */
-  .bg-light {
-    background-color: #f8f9fa !important;
-  }
-  
-  /* Style pour les alertes */
-  .alert {
-    border-radius: 10px;
-  }
-  
-  /* Style pour le texte dans les cartes */
-  .card-text {
-    font-size: 1rem;
-    color: #333;
-  }
-  .img-thumbnail {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-  }
-  
-  .img-fluid {
-    max-width: 100%;
-    height: auto;
-  }
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  margin-bottom: 20px;
+}
+
+.message-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Style pour l'image en cercle */
+.message-image {
+  width: 100px; /* Taille fixe pour toutes les images */
+  height: 100px; /* Taille fixe pour toutes les images */
+  border-radius: 50%; /* Rendre l'image circulaire */
+  object-fit: cover; /* Assurer que l'image couvre tout l'espace */
+  margin: 0 auto; /* Centrer l'image */
+  display: block; /* Assurer que l'image est un bloc */
+  margin-top: 15px; /* Espace au-dessus de l'image */
+  border: 3px solid #fff; /* Bordure blanche pour l'image */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour l'image */
+}
+
+/* Style pour le corps de la carte */
+.card-body {
+  text-align: center; /* Centrer le texte */
+  padding: 15px;
+}
+
+/* Style pour le texte dans les cartes */
+.card-text {
+  font-size: 1rem;
+  color: #333;
+  margin-top: 10px; /* Espace entre l'image et le texte */
+}
+
+/* Style pour les boutons */
+.btn {
+  margin: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Style pour la sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Caché par défaut */
+  width: 400px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  right: 0; /* Afficher la sidebar */
+}
+
+.sidebar-header {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-body {
+  padding: 15px;
+}
+
+/* Style pour l'overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.overlay.active {
+  display: block; /* Afficher l'overlay */
+}
+
+/* Style pour le bouton de fermeture */
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

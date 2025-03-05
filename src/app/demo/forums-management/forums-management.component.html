@@ -8,6 +8,11 @@
     </button>
   </div>
 
+  <!-- Champ de recherche -->
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Rechercher un forum..." [(ngModel)]="searchQuery" (input)="applyFilter()">
+  </div>
+
   <!-- Indicateur de chargement -->
   <div *ngIf="isLoading" class="text-center">
     <div class="spinner-border" role="status">
@@ -21,8 +26,8 @@
   </div>
 
   <!-- Liste des forums -->
-  <div *ngIf="!isLoading && forums.length > 0" class="row">
-    <div *ngFor="let forum of forums" class="col-md-4 mb-4">
+  <div *ngIf="!isLoading && filteredForums.length > 0" class="row">
+    <div *ngFor="let forum of paginatedForums" class="col-md-4 mb-4">
       <div class="card h-100 shadow-sm">
           <div class="card-body">
               <h5 class="card-title">
@@ -51,8 +56,29 @@
     </div>
   </div>
 
+   <!-- Pagination -->
+   <nav *ngIf="forums.length > itemsPerPage" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="previousPage()" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+        <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+        <a class="page-link" (click)="nextPage()" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
   <!-- Aucun forum trouvé -->
-  <div *ngIf="!isLoading && forums.length === 0" class="alert alert-info">
+  <div *ngIf="!isLoading && filteredForums.length === 0" class="alert alert-info">
     Aucun forum trouvé.
   </div>
 </div>
@@ -66,18 +92,27 @@
   <div class="sidebar-body">
       <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
           
-          <div class="form-group mb-3">
-            <label for="title">Titre</label>
-            <input id="title" formControlName="title" class="form-control" required />
+        <div class="form-group mb-3">
+          <label for="title">Titre</label>
+          <input id="title" formControlName="title" class="form-control" required />
+          <div *ngIf="addForumForm.get('title')?.invalid && addForumForm.get('title')?.touched" class="text-danger">
+            Le titre est obligatoire.
           </div>
-          <div class="form-group mb-3">
-            <label for="description">Description</label>
-            <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="form-group mb-3">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+          <div *ngIf="addForumForm.get('description')?.invalid && addForumForm.get('description')?.touched" class="text-danger">
+            La description est obligatoire.
           </div>
-          <div class="form-group mb-3">
-            <label for="image">Image</label>
-            <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="image">Image</label>
+          <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" required />
+          <div *ngIf="addForumForm.get('image')?.invalid && addForumForm.get('image')?.touched" class="text-danger">
+            L'image est obligatoire.
           </div>
+        </div>
           <div class="form-group">
             <button type="submit" class="btn btn-success">
               {{ editMode ? 'Mettre à jour' : 'Ajouter' }}

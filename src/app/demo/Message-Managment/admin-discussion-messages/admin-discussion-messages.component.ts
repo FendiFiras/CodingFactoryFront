@@ -29,6 +29,10 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   errorMessage: string = '';
    navCollapsed = false;
    navCollapsedMob = false;
+   showForm: boolean = false; // Contrôle l'affichage du formulaire
+   isEditMode: boolean = false; // Pour distinguer entre ajout et modification
+   currentMessageDescription: string = ''; // Propriété intermédiaire pour le champ de texte
+
 
    // Variables pour gérer l'ajout et la modification de messages
   newMessageDescription: string = '';
@@ -48,6 +52,21 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   // Méthode pour revenir à la liste des discussions
   goBack(): void {
     this.router.navigate([`/admin/forum/${this.forumId}/discussions`]); 
+  }
+
+   // Méthode pour basculer l'affichage du formulaire
+   toggleForm(): void {
+    this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.newMessageDescription = '';
+      this.currentMessageDescription = '';
+      this.selectedImage = null;
+      this.selectedFile = null;
+      this.isEditMode = false;
+      this.editMessageId = null; // Réinitialiser l'ID du message en cours d'édition
+      this.editSelectedImage = null;
+      this.editSelectedFile = null;
+    }
   }
 
   ngOnInit(): void {
@@ -94,29 +113,32 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   // Ajouter un message
   // Méthode pour ajouter un message avec une image
   addMessage(): void {
-    if (!this.newMessageDescription.trim()) {
+    if (!this.currentMessageDescription.trim()) {
       this.errorMessage = 'Veuillez entrer une description pour le message.';
       return;
     }
-
+  
     const userId = 1; // Remplacez par l'ID de l'utilisateur connecté
-
+  
     // Créer un FormData pour envoyer le message et l'image
     const formData = new FormData();
     formData.append('userId', '1'); // Remplacez par l'ID de l'utilisateur connecté
     formData.append('discussionId', this.discussionId.toString());
-    formData.append('description', this.newMessageDescription);
+    formData.append('description', this.currentMessageDescription); // Utiliser currentMessageDescription
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-
+  
     this.messageService.addMessageWithImage(formData).subscribe({
       next: (message) => {
         this.messages.push(message); // Ajouter le nouveau message à la liste
-        this.newMessageDescription = ''; // Réinitialiser le champ de saisie
+        this.currentMessageDescription = ''; // Réinitialiser le champ de saisie
         this.selectedImage = null; // Réinitialiser l'aperçu de l'image
         this.selectedFile = null; // Réinitialiser le fichier sélectionné
         this.errorMessage = '';
+  
+        // Fermer le formulaire après l'ajout réussi
+        this.toggleForm();
       },
       error: (err) => {
         this.errorMessage = 'Erreur lors de l\'ajout du message';
@@ -124,39 +146,27 @@ export class AdminDiscussionMessagesComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-  
-      // Afficher un aperçu de l'image
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.selectedImage = reader.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
 
  // Méthode pour démarrer la modification d'un message
  editMessage(messageId: number, description: string, imageUrl: string): void {
+  this.isEditMode = true; // Activer le mode édition
   this.editMessageId = messageId;
-  this.editMessageDescription = description;
+  this.currentMessageDescription = description; // Utiliser la propriété intermédiaire
   this.editSelectedImage = imageUrl ? 'http://localhost:8089/images/' + imageUrl : null; // Afficher l'image actuelle
   this.editSelectedFile = null; // Réinitialiser le fichier sélectionné
+  this.showForm = true; // Ouvrir la sidebar
 }
 
 // Méthode pour sauvegarder les modifications d'un message
 saveMessage(): void {
-  if (!this.editMessageDescription.trim()) {
+  if (!this.currentMessageDescription.trim()) {
     this.errorMessage = 'Veuillez entrer une description pour le message.';
     return;
   }
 
   if (this.editMessageId !== null) {
     const formData = new FormData();
-    formData.append('description', this.editMessageDescription);
+    formData.append('description', this.currentMessageDescription); // Utiliser currentMessageDescription
     if (this.editSelectedFile) {
       formData.append('image', this.editSelectedFile);
     }
@@ -169,10 +179,11 @@ saveMessage(): void {
           this.messages[index].image = message.image; // Mettre à jour l'image
         }
         this.editMessageId = null; // Réinitialiser l'édition
-        this.editMessageDescription = '';
+        this.currentMessageDescription = ''; // Réinitialiser la description
         this.editSelectedImage = null;
         this.editSelectedFile = null;
         this.errorMessage = '';
+        this.showForm = false; // Fermer la sidebar après la sauvegarde
       },
       error: (err) => {
         this.errorMessage = 'Erreur lors de la modification du message';
@@ -197,5 +208,19 @@ saveMessage(): void {
     }
   }
 
+  // Méthode pour gérer la sélection de fichier lors de l'ajout d'un message
+onFileSelected(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+
+    // Afficher un aperçu de l'image
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.selectedImage = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
 }

@@ -9,14 +9,26 @@
       </button>
     </div>
 
+    <!-- Barre de recherche -->
+    <div class="search-bar">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Rechercher une discussion..."
+        [(ngModel)]="searchQuery"
+        (input)="applyFilter()"
+      />
+    </div>
+
     <div *ngIf="isLoading" class="loading-container">
       <div class="spinner"></div>
     </div>
 
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-    <div *ngIf="!isLoading && discussions.length > 0" class="discussion-grid">
-      <div *ngFor="let discussion of discussions" class="discussion-card">
+    <!-- Liste des discussions -->
+    <div *ngIf="!isLoading && filteredDiscussions.length > 0" class="discussion-grid">
+      <div *ngFor="let discussion of paginatedDiscussions" class="discussion-card">
         <div class="card-content">
           <h5 class="card-title">{{ discussion.title }}</h5>
           <p class="card-description">{{ discussion.description }}</p>
@@ -36,7 +48,26 @@
       </div>
     </div>
 
-    <div *ngIf="!isLoading && discussions.length === 0" class="no-discussions">
+    <!-- Pagination -->
+    <nav *ngIf="filteredDiscussions.length > itemsPerPage" aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="previousPage()" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+          <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+          <a class="page-link" (click)="nextPage()" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div *ngIf="!isLoading && filteredDiscussions.length === 0" class="no-discussions">
       Aucune discussion trouvée.
     </div>
   </div>
