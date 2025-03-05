@@ -1,0 +1,38 @@
+.enrollment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.enrollment-box {
+    background: #ffffff; /* Fond blanc */
+    padding: 35px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    border: 2px solid #ff6600; /* Bordure orange */
+}
+
+.enrollment-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff6600; /* Texte orange */
+    margin-bottom: 20px;
+}
+
+.enrollment-message {
+    font-size: 18px;
+    color: #ff6600; /* Texte orange */
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.enrollment-thanks {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff6600; /* Texte orange */
+    margin-top: 20px;
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}

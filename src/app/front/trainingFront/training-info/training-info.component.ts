@@ -30,7 +30,8 @@ export class TrainingInfoComponent implements OnInit {
 
   stripe!: Stripe; // ✅ Stocker l'instance Stripe
   isUserEnrolled: boolean = false; // ✅ Par défaut, on considère qu'il n'est pas inscrit.
-
+  latestTrainings: Training[] = [];
+  notEnrolledTrainings: Training[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -45,21 +46,28 @@ export class TrainingInfoComponent implements OnInit {
 
   async ngOnInit() {
     this.stripe = await loadStripe(environment.stripePublicKey); // ✅ Charger Stripe.js
-  
+
     this.route.paramMap.subscribe(params => {
       const trainingId = Number(params.get('id'));
       if (!isNaN(trainingId)) {
         this.trainingId = trainingId;
         this.getTrainingDetails(trainingId);
         this.loadQuiz(trainingId);
-  
+
         // ✅ Vérifier si l'utilisateur est déjà inscrit
         this.checkUserEnrollment();
+
+        // ✅ Charger les formations récentes
+        this.getLatestTrainings();
+
+        // ✅ Charger les formations non achetées
+        this.getTrainingsNotEnrolled();
       } else {
         this.router.navigate(['/TrainingList']);
       }
     });
-  }
+}
+
   
 
   getTrainingDetails(trainingId: number) {
@@ -190,5 +198,30 @@ checkUserEnrollment() {
     }
   );
 }
+
+
+
+
+
+// ✅ Récupérer les dernières formations ajoutées
+getLatestTrainings() {
+  this.trainingService.getLatestTrainings().subscribe(
+      (trainings) => this.latestTrainings = trainings,
+      (error) => console.error("❌ Erreur récupération formations récentes :", error)
+  );
+}
+
+// ✅ Récupérer les formations auxquelles l'utilisateur n'est pas inscrit
+getTrainingsNotEnrolled() {
+  this.trainingService.getTrainingsNotEnrolled(this.userId).subscribe(
+      (trainings) => this.notEnrolledTrainings = trainings,
+      (error) => console.error("❌ Erreur récupération formations non achetées :", error)
+  );
+}
+goToTraining(trainingId: number) {
+  this.router.navigate(['/TrainingInfo', trainingId]);
+}
+
+
 
 }

@@ -61,4 +61,15 @@ isUserEnrolled(userId: number, trainingId: number): Observable<boolean> {
 }
 
 
+ // ✅ Récupérer les dernières formations ajoutées
+ getLatestTrainings(): Observable<Training[]> {
+  return this.http.get<Training[]>(`${this.apiUrl}/latest-trainings`);
+}
+
+// ✅ Récupérer les formations auxquelles l'utilisateur n'est PAS inscrit
+getTrainingsNotEnrolled(userId: number): Observable<Training[]> {
+  return this.http.get<Training[]>(`${this.apiUrl}/not-enrolled/${userId}`);
+}
+
+
 }

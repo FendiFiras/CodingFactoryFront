@@ -26,11 +26,11 @@
 
                 <div class="course-details__tabs tabs-box wow fadeInUp">
                     <ul class="course-details__tabs__lists tab-buttons list-unstyled">
-                        <li data-tab="#overview" class="tab-btn active-btn">
-                            <span (click)="goToCourses()">Access Courses</span>
+                        <li data-tab="#overview" class="tab-btn active-btn" *ngIf="isUserEnrolled">
+                            <span (click)="goToCourses()">📖 Access Courses</span>
                         </li>
-                        <li data-tab="#curriculum" class="tab-btn active-btn">
-                            <span *ngIf="quizId" (click)="goToQuiz()"> Take Quiz</span>
+                        <li data-tab="#curriculum" class="tab-btn active-btn" *ngIf="isUserEnrolled && quizId">
+                            <span (click)="goToQuiz()">📝 Take Quiz</span>
                         </li>
                     </ul>
                     <div class="tabs-content">
@@ -50,7 +50,7 @@
                                     </li>
                                     <li>
                                         <span class="icon-check"></span>
-                                        This learning experience is designed to be completed in {{ trainingDuration }} days.                                    
+                                        Duration: {{ trainingDuration }} days.                                    
                                     </li>
                                     <li>
                                         <span class="icon-check"></span>
@@ -71,23 +71,25 @@
             <!-- ✅ Barre latérale (Cours et Paiement) -->
             <div class="col-xl-4 wow fadeInRight">
                 <div class="course-details__sidebar">
-
-                    <!-- ✅ SI L'UTILISATEUR EST INSCRIT -->
-                    <div *ngIf="isUserEnrolled">
-                        <h3 class="course-details__sidebar__title">🎉 Vous êtes inscrit à cette formation !</h3>
-                        <ul class="course-details__sidebar__lists">
-                            <li><i class="icon-check"></i> 
-                                <button (click)="goToCourses()" class="eduact-btn">📖 Accéder aux cours</button>
-                            </li>
-                            <li><i class="icon-check"></i> 
-                                <button *ngIf="quizId" (click)="goToQuiz()" class="eduact-btn">📝 Passer le quiz</button>
-                            </li>
-                        </ul>
+                    
+                    <!-- ✅ Message si l'utilisateur est inscrit -->
+                    <div *ngIf="isUserEnrolled" class="enrollment-container">
+                        <div class="enrollment-box">
+                            <h2 class="enrollment-title">🎓 Welcome Back, Our Student!</h2>
+                            <p class="enrollment-message">
+                                📚 You now have full access to this training program.  
+                                Click on <strong>"Add Courses"</strong> to explore all available courses.  
+                            </p>
+                            <p class="enrollment-message">
+                                📝 If a quiz is available, you will be able to take it.  
+                            </p>
+                            <p class="enrollment-thanks">🙏 Thank you for your dedication and commitment!</p>
+                        </div>
                     </div>
 
-                    <!-- ❌ SI L'UTILISATEUR N'EST PAS INSCRIT -->
+                    <!-- ❌ Affichage pour un utilisateur non inscrit -->
                     <div *ngIf="!isUserEnrolled">
-                        <h3 class="course-details__sidebar__title">Join Us as a Student</h3>
+                        <h3 class="course-details__sidebar__title">Join Us As A Student</h3>
                         <ul class="course-details__sidebar__lists">
                             <li><i class="icon-tag"></i> Price: <span>{{ selectedTraining.price | currency:'EUR' }}</span></li>
                             <li><i class="icon-envelope"></i> 
