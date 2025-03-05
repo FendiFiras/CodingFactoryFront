@@ -11,10 +11,11 @@ import { Quiz } from 'src/app/Models/quiz.model';
 import { PaymentService } from 'src/app/Services/payment.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js'; // ✅ Charger Stripe.js
 import { environment } from 'src/environments/environment'; // ✅ Importer les clés Stripe
+import { FormsModule } from '@angular/forms';  // ✅ Ajouter FormsModule
 
 @Component({
   selector: 'app-training-info',
-  imports: [NavbarComponent, FooterComponent, CommonModule,],
+  imports: [NavbarComponent, FooterComponent, CommonModule,FormsModule],
   standalone: true,
   templateUrl: './training-info.component.html',
   styleUrl: './training-info.component.scss'
@@ -32,7 +33,10 @@ export class TrainingInfoComponent implements OnInit {
   isUserEnrolled: boolean = false; // ✅ Par défaut, on considère qu'il n'est pas inscrit.
   latestTrainings: Training[] = [];
   notEnrolledTrainings: Training[] = [];
-
+  isEligibleForDiscount: boolean = false;
+  promoCode: string = "";
+  isPromoApplied: boolean = false;
+  discountedPrice!: number;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -62,11 +66,15 @@ export class TrainingInfoComponent implements OnInit {
 
         // ✅ Charger les formations non achetées
         this.getTrainingsNotEnrolled();
+
+        // ✅ Vérifier si l'utilisateur est éligible au discount
+        this.checkUserDiscount();
       } else {
         this.router.navigate(['/TrainingList']);
       }
     });
 }
+
 
   
 
@@ -221,7 +229,49 @@ getTrainingsNotEnrolled() {
 goToTraining(trainingId: number) {
   this.router.navigate(['/TrainingInfo', trainingId]);
 }
+checkUserDiscount() {
+  console.log("🔍 Vérification de l'éligibilité au discount...");
+  this.trainingService.isUserEligibleForDiscount(this.userId).subscribe(
+    (promoCode) => {
+      if (promoCode) { // ✅ Si un code promo est renvoyé
+        this.isEligibleForDiscount = true;
+        this.promoCode = promoCode;
+        console.log("📩 Code promo récupéré :", this.promoCode);
+      } else {
+        this.isEligibleForDiscount = false;
+        console.warn("⚠️ Pas de code promo pour cet utilisateur.");
+      }
+    },
+    (error) => {
+      console.error("❌ Erreur lors de la vérification du discount :", error);
+    }
+  );
+}
 
+
+applyPromoCode() {
+  if (!this.promoCode.trim()) {
+    alert("❌ Please enter a promo code.");
+    return;
+  }
+
+  this.trainingService.validatePromoCode(this.userId, this.promoCode).subscribe(
+    (isValid) => {
+      if (isValid) { // ✅ Code promo correct
+        this.discountedPrice = this.selectedTraining!.price * 0.7; // ✅ Appliquer 30% de réduction
+        this.isPromoApplied = true;
+        alert("🎉 Promo code applied successfully!");
+        console.log("✅ Promo applied:", this.discountedPrice);
+      } else { // ❌ Code promo incorrect
+        alert("❌ Invalid promo code. Please try again.");
+      }
+    },
+    (error) => {
+      console.error("❌ Erreur de validation du code promo :", error);
+      alert("❌ An error occurred. Please try again.");
+    }
+  );
+}
 
 
 }

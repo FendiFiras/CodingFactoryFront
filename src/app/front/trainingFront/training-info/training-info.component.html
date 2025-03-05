@@ -15,6 +15,7 @@
 <section class="course-details" *ngIf="selectedTraining">
     <div class="container">
         <div class="row">
+            <!-- ✅ Section de gauche : Détails du training -->
             <div class="col-xl-8">
                 <div class="course-details__thumb wow fadeInUp">
                     <img src="assets1/images/course/course-2-1.png">
@@ -26,40 +27,39 @@
 
                 <div class="course-details__tabs tabs-box wow fadeInUp">
                     <ul class="course-details__tabs__lists tab-buttons list-unstyled">
-                        <li data-tab="#overview" class="tab-btn active-btn" *ngIf="isUserEnrolled">
+                        <li class="tab-btn active-btn" *ngIf="isUserEnrolled">
                             <span (click)="goToCourses()">📖 Access Courses</span>
                         </li>
-                        <li data-tab="#curriculum" class="tab-btn active-btn" *ngIf="isUserEnrolled && quizId">
+                        <li class="tab-btn active-btn" *ngIf="isUserEnrolled && quizId">
                             <span (click)="goToQuiz()">📝 Take Quiz</span>
                         </li>
                     </ul>
                     <div class="tabs-content">
-                        <div class="tab fadeInUp animated active-tab" id="overview">
+                        <div class="tab fadeInUp animated active-tab">
                             <div class="course-details__overview">
                                 <p class="course-details__overview__text">
                                     Details of our training: {{ selectedTraining.trainingName }}.
                                 </p>
                                 <ul class="list-unstyled course-details__overview__lists">
+                                    <li><span class="icon-check"></span> Start Date: {{ selectedTraining.startDate | date:'d MMMM yyyy' }}</li>
+                                    <li><span class="icon-check"></span> End Date: {{ selectedTraining.endDate | date:'d MMMM yyyy' }}</li>
                                     <li>
-                                        <span class="icon-check"></span>
-                                        Start Date: {{ selectedTraining.startDate | date:'d MMMM yyyy' }}
+                                        
+                                        
+                                        <span class="icon-check"></span> 
+                                        
+                                        This learning experience is designed to be completed in {{ trainingDuration }} days.                                      
+                                    
+                                    
+                                    
+                                    
+                                    
                                     </li>
-                                    <li>
-                                        <span class="icon-check"></span>
-                                        End Date: {{ selectedTraining.endDate | date:'d MMMM yyyy' }}
-                                    </li>
-                                    <li>
-                                        <span class="icon-check"></span>
-                                        Duration: {{ trainingDuration }} days.                                    
-                                    </li>
-                                    <li>
-                                        <span class="icon-check"></span>
-                                        Price: {{ selectedTraining.price | currency:'EUR' }}
-                                    </li>
+                                   
                                 </ul>
                             </div>
                         </div>
-                        <div class="tab fadeInUp animated" id="curriculum">
+                        <div class="tab fadeInUp animated">
                             <div class="course-details__curriculum">
                                 <h4 class="course-details__curriculum__title">Training Type: {{ selectedTraining.type }}</h4>
                             </div>
@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- ✅ Barre latérale (Cours et Paiement) -->
+            <!-- ✅ Section de droite : Paiement & inscription -->
             <div class="col-xl-4 wow fadeInRight">
                 <div class="course-details__sidebar">
                     
@@ -76,13 +76,8 @@
                     <div *ngIf="isUserEnrolled" class="enrollment-container">
                         <div class="enrollment-box">
                             <h2 class="enrollment-title">🎓 Welcome Back, Our Student!</h2>
-                            <p class="enrollment-message">
-                                📚 You now have full access to this training program.  
-                                Click on <strong>"Add Courses"</strong> to explore all available courses.  
-                            </p>
-                            <p class="enrollment-message">
-                                📝 If a quiz is available, you will be able to take it.  
-                            </p>
+                            <p class="enrollment-message">📚 You now have full access to this training program.</p>
+                            <p class="enrollment-message">📝 If a quiz is available, you will be able to take it.</p>
                             <p class="enrollment-thanks">🙏 Thank you for your dedication and commitment!</p>
                         </div>
                     </div>
@@ -91,13 +86,30 @@
                     <div *ngIf="!isUserEnrolled">
                         <h3 class="course-details__sidebar__title">Join Us As A Student</h3>
                         <ul class="course-details__sidebar__lists">
-                            <li><i class="icon-tag"></i> Price: <span>{{ selectedTraining.price | currency:'EUR' }}</span></li>
+                            <li><i class="icon-tag"></i> 
+                                Price: 
+                                <span *ngIf="!isPromoApplied">
+                                    {{ selectedTraining.price | currency:'EUR' }}
+                                </span>
+                                <span *ngIf="isPromoApplied">
+                                    <del>{{ selectedTraining.price | currency:'EUR' }}</del>  
+                                    <strong>{{ discountedPrice | currency:'EUR' }}</strong> ✅ Discount Applied!
+                                </span>
+                            </li>
                             <li><i class="icon-envelope"></i> 
                                 <span style="color: #ff6600; font-weight: bold;">
                                     Upon successful payment, an email will be sent with more details.
                                 </span>
                             </li>
                         </ul>
+
+                        <!-- ✅ Champ pour entrer et appliquer le code promo -->
+                        <div class="promo-code-container">
+                            <label for="promoCode">🎟️ Apply Promo Code:</label>
+                            <input type="text" id="promoCode" [(ngModel)]="promoCode" placeholder="Enter your code">
+                            <button (click)="applyPromoCode()" class="btn-apply">Apply</button>
+                        </div>
+
                         <a (click)="enrollInTraining()" class="eduact-btn eduact-btn-second wow pulse">Enroll Now</a>
                     </div>
 

@@ -70,6 +70,17 @@ isUserEnrolled(userId: number, trainingId: number): Observable<boolean> {
 getTrainingsNotEnrolled(userId: number): Observable<Training[]> {
   return this.http.get<Training[]>(`${this.apiUrl}/not-enrolled/${userId}`);
 }
+// ✅ Vérifier si l'utilisateur est éligible à un discount et récupérer le code promo
+isUserEligibleForDiscount(userId: number): Observable<string | null> {
+  return this.http.get<string>(`${this.apiUrl}/is-eligible-for-discount/${userId}`);
+}
+
+// ✅ Vérifier si le code promo entré par l'utilisateur est valide
+validatePromoCode(userId: number, enteredCode: string): Observable<boolean> {
+  return this.http.get<boolean>(`${this.apiUrl}/validate-promo/${userId}/${enteredCode}`);
+}
+
+
 
 
 }
