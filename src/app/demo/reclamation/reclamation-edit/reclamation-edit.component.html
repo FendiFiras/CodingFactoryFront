@@ -1,0 +1,70 @@
+<div class="container">
+    <h2>Edit Reclamation</h2>
+  
+    <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+  
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" formControlName="title" class="form-control"
+          [ngClass]="{'is-invalid': reclamationForm.get('title')?.invalid && reclamationForm.get('title')?.touched}">
+        <div *ngIf="reclamationForm.get('title')?.touched" class="invalid-feedback">
+          <div *ngIf="reclamationForm.get('title')?.errors?.['required']">Title is required.</div>
+          <div *ngIf="reclamationForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters.</div>
+          <div *ngIf="reclamationForm.get('title')?.errors?.['maxlength']">Title cannot exceed 100 characters.</div>
+        </div>
+      </div>
+  
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" rows="4" class="form-control"
+          [ngClass]="{'is-invalid': reclamationForm.get('description')?.invalid && reclamationForm.get('description')?.touched}"></textarea>
+        <div *ngIf="reclamationForm.get('description')?.touched" class="invalid-feedback">
+          <div *ngIf="reclamationForm.get('description')?.errors?.['required']">Description is required.</div>
+          <div *ngIf="reclamationForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters.</div>
+          <div *ngIf="reclamationForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500 characters.</div>
+        </div>
+      </div>
+  
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status" class="form-control"
+          [ngClass]="{'is-invalid': reclamationForm.get('status')?.invalid && reclamationForm.get('status')?.touched}">
+          <option *ngFor="let status of statusTypes" [value]="status">{{ status }}</option>
+        </select>
+        <div *ngIf="reclamationForm.get('status')?.touched && reclamationForm.get('status')?.invalid" class="invalid-feedback">
+          Status is required.
+        </div>
+      </div>
+  
+      <!-- Urgency Level -->
+      <div class="form-group">
+        <label for="urgencyLevel">Urgency Level</label>
+        <div class="urgency-selector">
+          <div *ngFor="let level of urgencyLevels" class="urgency-option"
+            [ngClass]="{
+              'selected': reclamationForm.get('urgencyLevel')?.value === level.value,
+              'low': level.value === 1,
+              'medium': level.value === 2,
+              'high': level.value === 3,
+              'critical': level.value === 4
+            }"
+            (click)="reclamationForm.get('urgencyLevel')?.setValue(level.value)">
+            {{ level.label }}
+          </div>
+        </div>
+      </div>
+  
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="reclamationForm.invalid || isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Save Changes
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>
+  

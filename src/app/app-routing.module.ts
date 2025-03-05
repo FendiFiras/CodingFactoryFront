@@ -4,6 +4,9 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
 import { LoginPageComponent } from './front/login-page/login-page.component';
+import { ReclamationAddComponent } from './front/reclamation/reclamation-add/reclamation-add.component';
+import { ReclamationComponent } from './demo/reclamation/reclamation/reclamation.component';
+import { ReclamationEditComponent } from './demo/reclamation/reclamation-edit/reclamation-edit.component';
 
 const routes: Routes = [
   {
@@ -46,6 +49,38 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/extra/sample-page/sample-page.component')
+      },
+      {
+        path: 'suppliers',
+        loadComponent: () => import('./demo/supplier/supplier-list/supplier-list.component').then(c => c.SupplierListComponent)
+      },
+      {
+        path: 'supplier-form',
+        loadComponent: () => import('./demo/supplier/supplier-form/supplier-form.component').then(c => c.SupplierFormComponent)
+      },
+      {
+        path: 'supplier-form/:id',
+        loadComponent: () => import('./demo/supplier/supplier-form/supplier-form.component').then(c => c.SupplierFormComponent)
+      },
+      {
+        path: 'materials',
+        loadComponent: () => import('./demo/material/material-list/material-list.component').then(c => c.MaterialListComponent)
+      },
+      {
+        path: 'material-form',
+        loadComponent: () => import('./demo/material/material-form/material-form.component').then(c => c.MaterialFormComponent)
+      },
+      {
+        path: 'material-form/:id',
+        loadComponent: () => import('./demo/material/material-form/material-form.component').then(c => c.MaterialFormComponent)
+      },
+      {
+          path: 'admin/reclamations',
+          loadComponent: () => import('./demo/reclamation/reclamation/reclamation.component').then(c => c.ReclamationComponent)
+      },
+      {
+          path: 'admin/reclamation-edit/:id',
+          loadComponent: () => import('./demo/reclamation/reclamation-edit/reclamation-edit.component').then(c => c.ReclamationEditComponent)
       }
     ]
   },
@@ -56,9 +91,22 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
-      }
+      },
+      {
+        path: 'user/reclamations',
+        loadComponent: () => import('./front/reclamation/reclamation-list/reclamation-list.component').then(c => c.ReclamationListComponent)
+      },
+      {
+        path: 'user/reclamation-edit/:id',
+        loadComponent: () => import('./front/reclamation/reclamation-edit/reclamation-edit.component').then(c => c.ReclamationEditComponent)
+      },
+      {
+        path: 'user/reclamations/add',
+        loadComponent: () => import('./front/reclamation/reclamation-add/reclamation-add.component').then(c => c.ReclamationAddComponent)
+      },
     ]
-  }
+  },
+
 ];
 
 

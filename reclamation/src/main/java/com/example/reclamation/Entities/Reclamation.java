@@ -36,4 +36,6 @@ public class Reclamation {
             inverseJoinColumns = @JoinColumn(name = "material_id")
     )
     private List<Material> materials;
+
+    private int idUser;
 }

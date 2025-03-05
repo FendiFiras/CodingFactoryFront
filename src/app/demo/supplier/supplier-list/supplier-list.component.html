@@ -1,0 +1,43 @@
+<div class="supplier-list-container">
+    <h2>Suppliers</h2>
+    
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let supplier of suppliers">
+        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.email }}</td>
+        <td>{{ supplier.address }}</td>
+        <td>{{ supplier.phone }}</td>
+        <td>
+          <button 
+            class="btn btn-edit" 
+            [routerLink]="['/supplier-form', supplier.idSupplier]">
+            Edit
+          </button>
+          <button 
+            class="btn btn-delete" 
+            (click)="deleteSupplier(supplier.idSupplier)">
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="suppliers.length === 0">
+        <td colspan="5" class="no-data">
+          No suppliers available. Click "Add Supplier" to get started!
+        </td>
+      </tr>
+    </table>
+    
+    <button 
+      class="btn btn-add" 
+      [routerLink]="['/supplier-form']">
+      Add Supplier
+    </button>
+  </div>
+  

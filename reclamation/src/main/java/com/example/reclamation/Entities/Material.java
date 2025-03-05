@@ -22,7 +22,7 @@ public class Material {
 
     private Integer quantity;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "material")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "material", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private Supplier supplier;
 }

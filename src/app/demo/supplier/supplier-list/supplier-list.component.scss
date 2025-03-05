@@ -1,0 +1,82 @@
+.supplier-list-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+    h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #333;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: white;
+      border-radius: 5px;
+      overflow: hidden;
+  
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+  
+      tr:hover {
+        background-color: #e9ecef;
+      }
+    }
+  
+    .btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+  
+      &.btn-delete {
+        background-color: #ff4d4f;
+        color: white;
+  
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+  
+      &.btn-edit {
+        background-color: #ffc107;
+        color: #333;
+  
+        &:hover {
+          background-color: #e0a800;
+        }
+      }
+  
+      &.btn-add {
+        background-color: #28a745;
+        color: white;
+        margin-top: 10px;
+  
+        &:hover {
+          background-color: #218838;
+        }
+      }
+    }
+  }
+  

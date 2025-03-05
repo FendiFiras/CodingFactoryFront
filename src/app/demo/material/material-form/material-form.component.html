@@ -1,0 +1,15 @@
+<div class="material-form-container">
+    <h2>{{ isEdit ? 'Edit' : 'Add' }} Material</h2>
+    <form (ngSubmit)="saveMaterial()">
+      <div class="form-group">
+        <label for="label">Label:</label>
+        <input [(ngModel)]="material.label" name="label" placeholder="Material Label" required>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input [(ngModel)]="material.quantity" name="quantity" type="number" placeholder="Quantity" required>
+      </div>
+      <button type="submit" class="btn btn-save">{{ isEdit ? 'Update' : 'Create' }}</button>
+    </form>
+  </div>
+  

@@ -1,0 +1,58 @@
+<div class="container">
+    <h2 class="mb-4">Reclamations Management</h2>
+  
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <table *ngIf="!isLoading && reclamations.length" class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Urgency</th>
+          <th>Creation Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reclamation of reclamations">
+          <td>{{ reclamation.title }}</td>
+          <td>{{ reclamation.description }}</td>
+          <td>{{ reclamation.type }}</td>
+          <td>{{ reclamation.status }}</td>
+          <td>
+            <span [ngClass]="{
+                'badge bg-success': reclamation.urgencyLevel === 1,
+                'badge bg-warning text-dark': reclamation.urgencyLevel === 2,
+                'badge bg-danger': reclamation.urgencyLevel === 3,
+                'badge bg-dark': reclamation.urgencyLevel === 4
+              }">
+              {{ getUrgencyLabel(reclamation.urgencyLevel) }}
+            </span>
+          </td>
+          
+          <td>{{ reclamation.creationDate | date:'short' }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-2" (click)="editReclamation(reclamation.idReclamation)">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteReclamation(reclamation.idReclamation)">
+              <i class="fas fa-trash-alt"></i> Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="!isLoading && !reclamations.length" class="alert alert-info">
+      No reclamations found.
+    </div>
+  </div>
+  

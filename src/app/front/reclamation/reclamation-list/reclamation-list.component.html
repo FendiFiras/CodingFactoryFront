@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+
+<div class="reclamation-list-container">
+    <h2>Reclamations</h2>
+  
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Urgency</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let rec of reclamations">
+        <td>{{ rec.title }}</td>
+        <td>{{ rec.description }}</td>
+        <td>{{ rec.type }}</td>
+        <td>{{ rec.urgencyLevel }}</td>
+        <td>{{ rec.status }}</td>
+        <td>
+          <button class="btn btn-edit" (click)="editReclamation(rec.idReclamation)">Edit</button>
+          <button class="btn btn-delete" (click)="deleteReclamation(rec.idReclamation)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="reclamations.length === 0">
+        <td colspan="6" class="no-data">No reclamations available.</td>
+      </tr>
+    </table>
+  
+    <button class="btn btn-add" [routerLink]="['/user/reclamations/add']">Add New Reclamation</button>
+  </div>
+  

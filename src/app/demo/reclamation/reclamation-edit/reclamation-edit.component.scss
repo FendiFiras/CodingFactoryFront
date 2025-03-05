@@ -1,0 +1,26 @@
+.urgency-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  
+    .urgency-option {
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+  
+      &.low { background-color: #d4edda; color: #155724; }
+      &.medium { background-color: #fff3cd; color: #856404; }
+      &.high { background-color: #f8d7da; color: #721c24; }
+      &.critical { background-color: #f5c6cb; color: #721c24; }
+  
+      &.selected {
+        border-color: #007bff;
+        font-weight: bold;
+      }
+    }
+  }
+  

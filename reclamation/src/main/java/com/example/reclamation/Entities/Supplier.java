@@ -23,7 +23,7 @@ public class Supplier {
 
     private String phone;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "material_id")
     @JsonManagedReference
     private Material material;
