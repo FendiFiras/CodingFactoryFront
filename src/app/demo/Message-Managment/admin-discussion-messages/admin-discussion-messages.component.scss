@@ -13,10 +13,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   margin-bottom: 20px;
+  background-color: #ffffff; /* Couleur de fond des cartes */
 }
 
 .message-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Ombre plus marquée au survol */
 }
 
 /* Style pour l'image en cercle */
@@ -39,20 +41,65 @@
 }
 
 /* Style pour le texte dans les cartes */
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
 .card-text {
   font-size: 1rem;
-  color: #333;
+  color: #555; /* Couleur plus douce pour le texte */
   margin-top: 10px; /* Espace entre l'image et le texte */
 }
 
 /* Style pour les boutons */
 .btn {
   margin: 5px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
   transition: background-color 0.2s ease-in-out;
 }
 
 .btn:hover {
   opacity: 0.9;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
 }
 
 /* Style pour la sidebar */
@@ -78,6 +125,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.sidebar-header h5 {
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .sidebar-body {
@@ -106,4 +158,79 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: #333;
+}
+
+.btn-close:hover {
+  color: #007bff;
+}
+
+/* Style pour la barre de recherche */
+.search-bar input {
+  width: 100%; /* Agrandir la barre de recherche */
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 25px; /* Bordures arrondies pour un look moderne */
+  border: 2px solid #ccc;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #007bff; /* Couleur au focus */
+  background-color: #ffffff;
+}
+
+/* Style pour le grand titre "Messages de la Discussion" */
+h2 {
+  font-size: 2.5rem; /* Taille de la police du titre */
+  font-weight: bold; /* Texte en gras */
+  color: #2c3e50; /* Couleur foncée pour un style élégant */
+  text-align: center; /* Centrer le texte */
+  text-transform: uppercase; /* Texte en majuscules */
+  letter-spacing: 2px; /* Espacement entre les lettres */
+  margin-bottom: 10px; /* Espacement en bas */
+  font-family: 'Poppins', sans-serif; /* Police moderne et élégante */
+  background: linear-gradient(90deg, #17a2b8, #138496); /* Dégradé de bleu */
+  -webkit-background-clip: text; /* Appliquer le dégradé au texte */
+  -webkit-text-fill-color: transparent; /* Rendre le texte transparent pour le dégradé */
+}
+
+/* Ligne de séparation entre le titre et le bouton */
+h2::after {
+  content: ''; /* Ajouter une pseudo-ligne */
+  display: block;
+  width: 60%; /* Largeur de la ligne */
+  height: 3px; /* Hauteur de la ligne */
+  background-color: #17a2b8; /* Couleur de la ligne (bleu clair) */
+  margin: 10px auto; /* Centrer la ligne et ajouter de l'espace autour */
+}
+
+/* Styles pour le bouton retour */
+.sidebar-header .btn-back {
+  background-color: #ffffff; /* Couleur de fond du bouton */
+  color: #17a2b8; /* Couleur du texte (bleu clair) */
+  font-size: 1.2rem; /* Taille de la police */
+  border: 2px solid #17a2b8; /* Bordure bleue autour du bouton */
+  padding: 8px 16px; /* Espacement interne du bouton */
+  border-radius: 8px; /* Coins arrondis */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease; /* Animation fluide */
+  cursor: pointer; /* Curseur de clic */
+}
+
+/* Effet au survol pour le bouton retour */
+.sidebar-header .btn-back:hover {
+  background-color: #17a2b8; /* Couleur de fond au survol */
+  color: white; /* Couleur du texte au survol */
+  transform: translateY(-2px); /* Légère élévation */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée plus marquée */
+}
+
+/* Effet au clic pour le bouton retour */
+.sidebar-header .btn-back:active {
+  transform: translateY(0); /* Retour à la position initiale */
 }

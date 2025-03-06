@@ -21,21 +21,24 @@
             </button>
           </div>
 
-          <!-- Barre de recherche -->
-          <div class="mb-4">
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="searchQuery"
-              (input)="onSearch()"
-              placeholder="Rechercher un message..."
-            />
-          </div>
+          <!-- Barre de recherche et bouton Ajouter -->
+          <div class="search-and-add-container d-flex justify-content-between align-items-center mb-4">
+            <!-- Barre de recherche -->
+            <div class="search-bar">
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+                placeholder="Rechercher un message..."
+              />
+            </div>
 
-          <!-- Bouton pour ouvrir le formulaire -->
-          <button class="btn btn-success mb-4" (click)="toggleForm()">
-            <i class="fas fa-plus"></i> Ajouter un message
-          </button>
+            <!-- Bouton pour ouvrir le formulaire -->
+            <button class="btn btn-success" (click)="toggleForm()">
+              <i class="fas fa-plus"></i> Ajouter un message
+            </button>
+          </div>
 
           <!-- Liste des messages en grille -->
           <div class="messages-grid">
@@ -117,7 +120,12 @@
         [(ngModel)]="currentMessageDescription"
         placeholder="Entrez votre message..."
         rows="3"
+        [class.is-invalid]="!isDescriptionValid && currentMessageDescription.length > 0"
       ></textarea>
+      <!-- Message d'erreur pour champ vide -->
+      <div *ngIf="errorMessage && !currentMessageDescription.trim()" class="text-danger">
+        {{ errorMessage }}
+      </div>
 
       <!-- Champ pour sélectionner une image -->
       <input

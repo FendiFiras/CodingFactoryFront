@@ -90,38 +90,40 @@
     <button type="button" class="btn-close" (click)="toggleAddForm()" aria-label="Close"></button>
   </div>
   <div class="sidebar-body">
-      <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
-          
-        <div class="form-group mb-3">
-          <label for="title">Titre</label>
-          <input id="title" formControlName="title" class="form-control" required />
-          <div *ngIf="addForumForm.get('title')?.invalid && addForumForm.get('title')?.touched" class="text-danger">
-            Le titre est obligatoire.
+    <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="title">Titre</label>
+        <input id="title" formControlName="title" class="form-control" required />
+        <div *ngIf="addForumForm.get('title')?.invalid && addForumForm.get('title')?.touched" class="text-danger">
+          <div *ngIf="addForumForm.get('title')?.errors?.['required']">Le titre est obligatoire.</div>
+          <div *ngIf="addForumForm.get('title')?.errors?.['invalidTitle']">
+            Le titre doit contenir au moins 2 caractères alphabétiques sans chiffres ni caractères spéciaux.
           </div>
         </div>
-        <div class="form-group mb-3">
-          <label for="description">Description</label>
-          <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
-          <div *ngIf="addForumForm.get('description')?.invalid && addForumForm.get('description')?.touched" class="text-danger">
-            La description est obligatoire.
+      </div>
+      <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+        <div *ngIf="addForumForm.get('description')?.invalid && addForumForm.get('description')?.touched" class="text-danger">
+          <div *ngIf="addForumForm.get('description')?.errors?.['required']">La description est obligatoire.</div>
+          <div *ngIf="addForumForm.get('description')?.errors?.['invalidDescription']">
+            La description doit contenir entre 10 et 100 caractères.
           </div>
         </div>
-        <div class="form-group mb-3">
-          <label for="image">Image</label>
-          <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" required />
-          <div *ngIf="addForumForm.get('image')?.invalid && addForumForm.get('image')?.touched" class="text-danger">
-            L'image est obligatoire.
-          </div>
-        </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-success">
-              {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
-            </button>
-            <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">
-              Annuler
-            </button>
-          </div>
-        </form>
+      </div>
+      <div class="form-group mb-3">
+        <label for="image">Image</label>
+        <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">
+          {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="toggleAddForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 

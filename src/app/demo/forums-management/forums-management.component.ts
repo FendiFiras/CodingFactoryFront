@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ForumService } from 'src/app/service/forum.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigurationComponent } from "../../theme/layout/admin/configuration/configuration.component";
@@ -13,6 +13,25 @@ interface Forum {
   image?: string;
   creationDate?: Date;
   
+}
+
+// Fonction de validation personnalisée pour le titre
+function titleValidator(control: AbstractControl): { [key: string]: any } | null {
+  const value = control.value;
+  const regex = /^[a-zA-Z\s]{2,}$/; // Au moins 2 caractères alphabétiques
+  if (!regex.test(value)) {
+    return { 'invalidTitle': true };
+  }
+  return null;
+}
+
+// Fonction de validation personnalisée pour la description
+function descriptionValidator(control: AbstractControl): { [key: string]: any } | null {
+  const value = control.value;
+  if (value.length < 10 || value.length > 100) {
+    return { 'invalidDescription': true };
+  }
+  return null;
 }
 
 @Component({
@@ -44,9 +63,9 @@ export class ForumsManagementComponent implements OnInit {
   
   {
     this.addForumForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      image: [null, Validators.required], // Ajout de la validation pour l'image si nécessaire
+      title: ['', [Validators.required, titleValidator]], // Ajoutez titleValidator
+      description: ['', [Validators.required, descriptionValidator]], // Ajoutez descriptionValidator
+      image: [null], // L'image peut être vide
     });
   }
 
@@ -89,26 +108,24 @@ export class ForumsManagementComponent implements OnInit {
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('title', this.addForumForm.value.title);
     formData.append('description', this.addForumForm.value.description);
-    formData.append('userId','2'); // Ajouter userId
-
-
-
-
-
+    formData.append('userId', '2'); // Ajouter userId
+  
     if (this.addForumForm.value.image) {
       formData.append('image', this.addForumForm.value.image);
     }
-
+  
     this.forumService.addForum(formData).subscribe({
       next: (newForum) => {
-        this.forums.push(newForum);
-        this.addForumForm.reset();
-        this.showAddForm = false;
-        this.errorMessage = '';
+        this.forums.push(newForum); // Ajouter le nouveau forum à la liste locale
+        this.filteredForums = [...this.forums]; // Mettre à jour la liste filtrée
+        this.addForumForm.reset(); // Réinitialiser le formulaire
+        this.showAddForm = false; // Masquer le formulaire
+        this.errorMessage = ''; // Réinitialiser le message d'erreur
+        this.cdr.detectChanges(); // Forcer la détection des changements
       },
       error: (err) => {
         console.error("Erreur lors de l'ajout du forum :", err);
@@ -138,20 +155,24 @@ export class ForumsManagementComponent implements OnInit {
     this.editMode = true;
     this.forumToEdit = { ...forum }; // Conserver l'objet forum à modifier
     this.showAddForm = true;
+
+     // Réappliquer les validateurs
+  this.addForumForm.get('title')?.setValidators([Validators.required, titleValidator]);
+  this.addForumForm.get('description')?.setValidators([Validators.required, descriptionValidator]);
+
     this.addForumForm.patchValue({
       forum_id: forum.forum_id, // Ajouter forum_id au formulaire
       title: forum.title,
       description: forum.description,
       image: null, // Réinitialiser l'image pour éviter les conflits
     });
+
+     // Mettre à jour la validation
+  this.addForumForm.get('title')?.updateValueAndValidity();
+  this.addForumForm.get('description')?.updateValueAndValidity();
   
     // Supprimer la validation requise en mode édition
-    if (this.editMode) {
-      this.addForumForm.get('title')?.clearValidators();
-      this.addForumForm.get('title')?.updateValueAndValidity();
-      this.addForumForm.get('description')?.clearValidators();
-      this.addForumForm.get('description')?.updateValueAndValidity();
-    }
+    
   }
 
   // Mise à jour d'un forum
@@ -159,14 +180,14 @@ export class ForumsManagementComponent implements OnInit {
     if (!this.forumToEdit) return;
   
     const { title, description, image } = this.addForumForm.value;
-  const formData = new FormData();
-  formData.append('forum_id', this.forumToEdit.forum_id!.toString()); // Inclure forum_id
-  formData.append('title', title); // Champ obligatoire
-  formData.append('description', description); // Champ obligatoire
-
-  if (image) {
-    formData.append('image', image); // Champ obligatoire
-  }
+    const formData = new FormData();
+    formData.append('forum_id', this.forumToEdit.forum_id!.toString()); // Inclure forum_id
+    formData.append('title', title); // Champ obligatoire
+    formData.append('description', description); // Champ obligatoire
+  
+    if (image) {
+      formData.append('image', image); // Champ optionnel
+    }
   
     this.forumService.updateForum(this.forumToEdit.forum_id!, formData).subscribe({
       next: (updatedForum) => {
@@ -176,8 +197,9 @@ export class ForumsManagementComponent implements OnInit {
         this.forums = this.forums.map((forum) =>
           forum.forum_id === this.forumToEdit!.forum_id ? { ...forum, ...updatedForum } : forum
         );
+        this.filteredForums = [...this.forums]; // Mettre à jour la liste filtrée
   
-        this.cdr.detectChanges(); // Forcer la mise à jour de l'affichage
+        this.cdr.detectChanges(); // Forcer la détection des changements
   
         console.log('Forum mis à jour :', updatedForum);
         this.editMode = false;
@@ -192,7 +214,6 @@ export class ForumsManagementComponent implements OnInit {
       },
     });
   }
-
   // Suppression d'un forum
   confirmDelete(forumId: number | undefined): void {
     if (forumId === undefined || forumId === null) {

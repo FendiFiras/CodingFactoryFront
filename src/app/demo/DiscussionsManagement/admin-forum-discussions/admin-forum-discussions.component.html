@@ -1,5 +1,6 @@
 <div class="main-container">
-  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }" (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
+  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }"
+    (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
 
   <div class="forum-container">
     <div class="forum-header">
@@ -11,13 +12,8 @@
 
     <!-- Barre de recherche -->
     <div class="search-bar">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Rechercher une discussion..."
-        [(ngModel)]="searchQuery"
-        (input)="applyFilter()"
-      />
+      <input type="text" class="form-control" placeholder="Rechercher une discussion..." [(ngModel)]="searchQuery"
+        (input)="applyFilter()" />
     </div>
 
     <div *ngIf="isLoading" class="loading-container">
@@ -84,11 +80,27 @@
         <div class="form-group">
           <label for="title">Titre</label>
           <input id="title" formControlName="title" class="form-control" required />
+          <div *ngIf="addDiscussionForm.get('title')?.invalid && addDiscussionForm.get('title')?.touched" class="error">
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['required']">The title is required.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['maxLength']">Max 100 caractères.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['forbiddenCharacters']">Caractères spéciaux interdits.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['allCaps']">Do not use only uppercase letters.</span>
+          </div>
         </div>
+
         <div class="form-group">
           <label for="description">Description</label>
           <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+          <div *ngIf="addDiscussionForm.get('description')?.invalid && addDiscussionForm.get('description')?.touched"
+            class="error">
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['required']">The description is required. </span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['minLength']">Min 10 caractères.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['maxLength']">Max 500 caractères.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['forbiddenWords']">Mots interdits détectés.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['allCaps']">Do not write in uppercase letters.</span>
+          </div>
         </div>
+
         <div class="form-actions">
           <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
             {{ editMode ? 'Mettre à jour' : 'Ajouter' }}

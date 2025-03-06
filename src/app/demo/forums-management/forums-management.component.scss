@@ -15,21 +15,6 @@
     right: 0;
   }
   
-  .sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f8f9fa;
-  }
-  
-  .sidebar-header h5 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
-  }
   
   .sidebar-body {
     padding: 20px;
@@ -52,6 +37,22 @@
     opacity: 1;
   }
 
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+  }
+  
+  .sidebar-header h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
 
 
  /* Styles spécifiques pour le bouton "Ajouter" */

@@ -51,12 +51,13 @@ export class AdminDiscussionComponent implements OnInit {
     // Initialisation du formulaire avec des validateurs
     this.addDiscussionForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100), 
-        this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>]/), 
+        this.forbiddenCharactersValidator(/[!@#$%^&*(),.?":{}|<>+\-%=]/), 
         this.noWhitespaceValidator(), this.noAllCapsValidator()]],
-      description: ['', [Validators.required, Validators.maxLength(500), 
+      
+      description: ['', [Validators.required,Validators.minLength(10), Validators.maxLength(500), 
         this.forbiddenWordsValidator(['motInterdit1', 'motInterdit2']), 
         this.noWhitespaceValidator(), this.noAllCapsValidator()]],
-      userId: [userId, Validators.required] // ✅ Assigne directement l'ID utilisateur
+      userId: [userId, Validators.required]
     });
   }
 
@@ -78,41 +79,28 @@ export class AdminDiscussionComponent implements OnInit {
     });
   }
 
-  // Validateur personnalisé pour les caractères interdits
   forbiddenCharactersValidator(forbiddenChars: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const forbidden = forbiddenChars.test(control.value);
-      return forbidden ? { forbiddenCharacters: { value: control.value } } : null;
+      return forbiddenChars.test(control.value) ? { forbiddenCharacters: true } : null;
     };
   }
 
-  // Validateur personnalisé pour les mots interdits
   forbiddenWordsValidator(forbiddenWords: string[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value; // Récupérez la valeur du champ
-    if (!value) { // Si la valeur est null, undefined ou une chaîne vide
-      return null; // Ne pas valider, car il n'y a rien à vérifier
-    }
-      const forbidden = forbiddenWords.some(word => control.value.toLowerCase().includes(word.toLowerCase()));
-      return forbidden ? { forbiddenWords: { value: control.value } } : null;
+      if (!control.value) return null;
+      return forbiddenWords.some(word => control.value.toLowerCase().includes(word.toLowerCase())) ? { forbiddenWords: true } : null;
     };
   }
 
-  // Validateur pour les espaces superflus
   noWhitespaceValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const isWhitespace = (control.value || '').trim().length === 0;
-      const isValid = !isWhitespace;
-      return isValid ? null : { whitespace: true };
+      return (control.value || '').trim().length === 0 ? { whitespace: true } : null;
     };
   }
 
-  // Validateur pour les mots en majuscules
   noAllCapsValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value || '';
-      const isAllCaps = value === value.toUpperCase();
-      return isAllCaps ? { allCaps: true } : null;
+      return control.value === control.value.toUpperCase() ? { allCaps: true } : null;
     };
   }
 

@@ -1,44 +1,297 @@
-/* Styles généraux */
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
+  /* Styles généraux */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
-.forum-container {
-  flex: 1;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+  .forum-container {
+    flex: 1;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-/* En-tête du forum */
-.forum-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  /* En-tête du forum */
+  .forum-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
+  .forum-header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .forum-header button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .forum-header button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Cartes de discussion */
+  .discussion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .discussion-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .discussion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+
+  .card-date {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 15px;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .card-actions button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .card-actions .btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+
+  .card-actions .btn-info:hover {
+    background-color: #138496;
+  }
+
+  .card-actions .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .card-actions .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .card-actions .btn-warning {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .card-actions .btn-warning:hover {
+    background-color: #e0a800;
+  }
+
+  /* Message d'erreur */
+  .error-message {
+    padding: 15px;
+    background-color: #dc3545;
+    color: #ff0000;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+
+  /* Aucune discussion */
+  .no-discussions {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #777;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Chargement */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Sidebar (inchangé) */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+  }
+
+  .sidebar.active {
+    right: 0;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+  }
+
+  .sidebar-header h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .sidebar-body {
+    padding: 20px;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+
+
+
+
+  .search-bar {
+    margin-bottom: 20px;
+  }
+
+  .pagination {
+    margin-top: 20px;
+  }
+
+  .page-link {
+    cursor: pointer;
+  }
+
+  .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .page-link:hover {
+    background-color: #f8f9fa;
+  }
+  /* Style pour le titre "Discussions du Forum" */
 .forum-header h2 {
   margin: 0;
   font-size: 1.75rem;
   font-weight: 600;
   color: #2c3e50;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, #17a2b8, #138496); /* Dégradé de bleu */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
+/* Ligne de séparation sous le titre */
+.forum-header h2::after {
+  content: ''; /* Ajouter une pseudo-ligne */
+  display: block;
+  width: 60%; /* Largeur de la ligne */
+  height: 3px; /* Hauteur de la ligne */
+  background-color: #17a2b8; /* Couleur de la ligne (bleu clair) */
+  margin: 10px auto; /* Centrer la ligne et ajouter de l'espace autour */
+}
+
+/* Le bouton retour dans l'en-tête */
 .forum-header button {
   font-size: 1rem;
   padding: 10px 20px;
@@ -52,209 +305,4 @@ body {
 
 .forum-header button:hover {
   background-color: #0056b3;
-}
-
-/* Cartes de discussion */
-.discussion-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.discussion-card {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.discussion-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.card-content {
-  padding: 20px;
-}
-
-.card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.card-description {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 15px;
-}
-
-.card-date {
-  font-size: 0.85rem;
-  color: #777;
-  margin-bottom: 15px;
-}
-
-.card-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.card-actions button {
-  font-size: 0.9rem;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.card-actions .btn-info {
-  background-color: #17a2b8;
-  color: #fff;
-}
-
-.card-actions .btn-info:hover {
-  background-color: #138496;
-}
-
-.card-actions .btn-danger {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.card-actions .btn-danger:hover {
-  background-color: #c82333;
-}
-
-.card-actions .btn-warning {
-  background-color: #ffc107;
-  color: #000;
-}
-
-.card-actions .btn-warning:hover {
-  background-color: #e0a800;
-}
-
-/* Message d'erreur */
-.error-message {
-  padding: 15px;
-  background-color: #dc3545;
-  color: #fff;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* Aucune discussion */
-.no-discussions {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #777;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Chargement */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Sidebar (inchangé) */
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: -400px;
-  width: 400px;
-  height: 100vh;
-  background-color: #ffffff;
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease-in-out;
-  z-index: 1000;
-}
-
-.sidebar.active {
-  right: 0;
-}
-
-.sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f8f9fa;
-}
-
-.sidebar-header h5 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.sidebar-body {
-  padding: 20px;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 999;
-  display: none;
-  transition: opacity 0.3s ease;
-}
-
-.overlay.active {
-  display: block;
-  opacity: 1;
-}
-
-
-
-
-
-.search-bar {
-  margin-bottom: 20px;
-}
-
-.pagination {
-  margin-top: 20px;
-}
-
-.page-link {
-  cursor: pointer;
-}
-
-.page-item.active .page-link {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.page-link:hover {
-  background-color: #f8f9fa;
 }

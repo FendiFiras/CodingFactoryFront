@@ -33,6 +33,11 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   isEditMode: boolean = false; // Pour distinguer entre ajout et modification
   currentMessageDescription: string = ''; // Propriété intermédiaire pour le champ de texte
 
+  // Validation de la description
+  get isDescriptionValid(): boolean {
+    return this.currentMessageDescription.trim().length > 0;
+  }
+
   // Variables pour gérer l'ajout et la modification de messages
   newMessageDescription: string = '';
   editMessageId: number | null = null;
