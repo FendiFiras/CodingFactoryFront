@@ -4,7 +4,7 @@
 
     <!-- Add Discussion Button -->
     <button (click)="showForm = !showForm" class="btn btn-primary mb-4">
-        {{ showForm ? 'Masquer le formulaire' : 'Ajouter une discussion' }}
+        {{ showForm ? 'Masquer le formulaire' : 'Add New Discussion' }}
     </button>
 
     <!-- Formulaire pour ajouter une discussion -->
@@ -12,7 +12,7 @@
         <div class="card-body">
             <form (ngSubmit)="addDiscussion()">
                 <div class="form-group mb-3">
-                    <label for="title">Titre :</label>
+                    <label for="title">Title :</label>
                     <input type="text" id="title" [(ngModel)]="newDiscussion.title" name="title" class="form-control" required />
                 </div>
 
@@ -21,8 +21,8 @@
                     <textarea id="description" [(ngModel)]="newDiscussion.description" name="description" class="form-control" required></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success me-2">Ajouter</button>
-                <button type="button" class="btn btn-secondary" (click)="showForm = false">Annuler</button>
+                <button type="submit" class="btn btn-success me-2">Add</button>
+                <button type="button" class="btn btn-secondary" (click)="showForm = false">Cancel</button>
             </form>
         </div>
     </div>
@@ -76,10 +76,10 @@
     <!-- Formulaire pour modifier une discussion -->
     <div *ngIf="selectedDiscussion" class="card mb-4">
         <div class="card-body">
-            <h3>Modifier la discussion</h3>
+            <h3>Modify Discussion</h3>
             <form (ngSubmit)="updateDiscussion()">
                 <div class="form-group mb-3">
-                    <label for="edit-title">Titre :</label>
+                    <label for="edit-title">Title :</label>
                     <input type="text" id="edit-title" [(ngModel)]="selectedDiscussion.title" name="edit-title" class="form-control" required />
                 </div>
 
@@ -88,8 +88,8 @@
                     <textarea id="edit-description" [(ngModel)]="selectedDiscussion.description" name="edit-description" class="form-control" required></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-warning me-2">Mettre à jour</button>
-                <button type="button" class="btn btn-secondary" (click)="selectedDiscussion = null">Annuler</button>
+                <button type="submit" class="btn btn-warning me-2">Update</button>
+                <button type="button" class="btn btn-secondary" (click)="selectedDiscussion = null">Cancel</button>
             </form>
         </div>
     </div>

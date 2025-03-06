@@ -4,7 +4,7 @@
   <div class="messenger-container">
     <!-- En-tête avec les infos de l'utilisateur actuel -->
     <div class="messenger-header">
-      <h2>Messagerie</h2>
+      <h2>Messaging</h2>
       <div class="current-user-display">
         <img [src]="currentUserImage" alt="User Image" class="user-image" />
         <span class="user-name">{{ currentUserName }}</span>
@@ -13,9 +13,9 @@
     
     <!-- Barre d'outils -->
     <div class="toolbar">
-      <button (click)="filterMessages('today')">Aujourd'hui</button>
-      <button (click)="filterMessages('week')">Cette semaine</button>
-      <input type="text" [(ngModel)]="searchQuery" placeholder="🔍 Rechercher..." (input)="searchMessages()" />
+      <button (click)="filterMessages('today')">Today</button>
+      <button (click)="filterMessages('week')">This Week</button>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="🔍 Research..." (input)="searchMessages()" />
     </div>
     
     <div class="message-list">
@@ -54,7 +54,7 @@
     <!-- Zone de saisie -->
     <div class="message-input">
       <div class="input-container">
-        <textarea [(ngModel)]="newMessage.description" placeholder="💬 Écrivez un message..." maxlength="500"></textarea>
+        <textarea [(ngModel)]="newMessage.description" placeholder="💬 Your Message..." maxlength="500"></textarea>
         <div class="char-counter" [ngClass]="{'warning': newMessage.description.length > 400}">
           {{ newMessage.description.length }}/500
         </div>
@@ -74,7 +74,7 @@
           
         </div>
         <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
-          🚀 Envoyer
+          🚀 Send
         </button>
       </div>
     </div>

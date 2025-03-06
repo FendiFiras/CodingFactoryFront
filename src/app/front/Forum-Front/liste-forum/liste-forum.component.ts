@@ -41,8 +41,18 @@ export class ListeForumComponent implements OnInit {
     private router: Router
   ) {
     this.addForumForm = this.fb.group({
-      title: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]] ,
-      description: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      title: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(/^[A-Za-z\s]+$/)
+      ]],
+      description: ['', [
+        Validators.required,
+        Validators.minLength(20),
+        Validators.maxLength(150),
+        Validators.pattern(/^[A-Za-z\s]+$/)
+      ]],
       image: [null],
     });
   }

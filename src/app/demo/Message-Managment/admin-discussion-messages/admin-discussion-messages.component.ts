@@ -91,7 +91,7 @@ export class AdminDiscussionMessagesComponent implements OnInit {
       next: (data) => {
         this.messages = data.map((message) => ({
           ...message,
-          userId: message.userId ?? 'Inconnu',
+          userId: message.userId ?? 'zitouni',
         }));
         this.filteredMessages = [...this.messages]; // Initialiser les messages filtrés
         this.updatePagination();
@@ -122,7 +122,7 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   // Ajouter un message
   addMessage(): void {
     if (!this.currentMessageDescription.trim()) {
-      this.errorMessage = 'Veuillez entrer une description pour le message.';
+      this.errorMessage = 'Please enter a description for the message.';
       return;
     }
 
@@ -169,7 +169,7 @@ export class AdminDiscussionMessagesComponent implements OnInit {
   // Méthode pour sauvegarder les modifications d'un message
   saveMessage(): void {
     if (!this.currentMessageDescription.trim()) {
-      this.errorMessage = 'Veuillez entrer une description pour le message.';
+      this.errorMessage = 'Please enter a description for the message.';
       return;
     }
 

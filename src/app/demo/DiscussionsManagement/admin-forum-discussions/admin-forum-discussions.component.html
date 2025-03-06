@@ -6,13 +6,13 @@
     <div class="forum-header">
       <h2>Discussions du Forum</h2>
       <button class="btn btn-primary" (click)="toggleForm()">
-        <i class="fas fa-plus"></i> Ajouter
+        <i class="fas fa-plus"></i> Add
       </button>
     </div>
 
     <!-- Barre de recherche -->
     <div class="search-bar">
-      <input type="text" class="form-control" placeholder="Rechercher une discussion..." [(ngModel)]="searchQuery"
+      <input type="text" class="form-control" placeholder="Research ..." [(ngModel)]="searchQuery"
         (input)="applyFilter()" />
     </div>
 
@@ -31,13 +31,13 @@
           <p class="card-date">Publié le: {{ discussion.publicationDate | date }}</p>
           <div class="card-actions">
             <button class="btn btn-info" (click)="viewMessages(discussion.discussion_id)">
-              <i class="fas fa-comments"></i> Voir les messages
+              <i class="fas fa-comments"></i> View Message
             </button>
             <button class="btn btn-danger" (click)="deleteDiscussion(discussion.discussion_id)">
-              <i class="fas fa-trash"></i> Supprimer
+              <i class="fas fa-trash"></i> Delete
             </button>
             <button class="btn btn-warning" (click)="editDiscussion(discussion)">
-              <i class="fas fa-edit"></i> Modifier
+              <i class="fas fa-edit"></i> Modify
             </button>
           </div>
         </div>
@@ -78,7 +78,7 @@
       <form [formGroup]="addDiscussionForm" (ngSubmit)="onSubmit()">
         <input type="hidden" formControlName="userId" />
         <div class="form-group">
-          <label for="title">Titre</label>
+          <label for="title">Title</label>
           <input id="title" formControlName="title" class="form-control" required />
           <div *ngIf="addDiscussionForm.get('title')?.invalid && addDiscussionForm.get('title')?.touched" class="error">
             <span *ngIf="addDiscussionForm.get('title')?.errors?.['required']">The title is required.</span>
@@ -94,18 +94,17 @@
           <div *ngIf="addDiscussionForm.get('description')?.invalid && addDiscussionForm.get('description')?.touched"
             class="error">
             <span *ngIf="addDiscussionForm.get('description')?.errors?.['required']">The description is required. </span>
-            <span *ngIf="addDiscussionForm.get('description')?.errors?.['minLength']">Min 10 caractères.</span>
-            <span *ngIf="addDiscussionForm.get('description')?.errors?.['maxLength']">Max 500 caractères.</span>
-            <span *ngIf="addDiscussionForm.get('description')?.errors?.['forbiddenWords']">Mots interdits détectés.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['minLength']">Min 10 caractere.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['maxLength']">Max 500 caractere.</span>
             <span *ngIf="addDiscussionForm.get('description')?.errors?.['allCaps']">Do not write in uppercase letters.</span>
           </div>
         </div>
 
         <div class="form-actions">
           <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
-            {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+            {{ editMode ? 'Mettre à jour' : 'Add' }}
           </button>
-          <button type="button" class="btn btn-secondary" (click)="toggleForm()">Annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="toggleForm()">Cancel</button>
         </div>
       </form>
     </div>

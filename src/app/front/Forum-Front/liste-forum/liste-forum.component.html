@@ -13,37 +13,42 @@
 
       <!-- Bouton pour ajouter un forum -->
       <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
-        {{ showAddForm ? 'Masquer le formulaire' : 'Ajouter un forum' }}
+        {{ showAddForm ? 'Hide the form' : 'Add New Forum' }}
       </button>
 
-      <!-- Formulaire d'ajout -->
-      <div *ngIf="showAddForm && !editMode" class="mb-4">
-        <h4>Ajouter un nouveau forum</h4>
-        <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
-          <div class="mb-3">
-            <label class="form-label">Titre</label>
-            <input type="text" class="form-control" formControlName="title" />
-            <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
-              <div *ngIf="addForumForm.get('title').errors">on n'accepte pas des chiffres dans le titre.</div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" formControlName="description"></textarea>
-            <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
-              <div *ngIf="addForumForm.get('description').errors">on n'accepte pas des chiffres dans la description.</div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" class="form-control" (change)="onFileSelected($event)" />
-          </div>
-
-          <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
-        </form>
+     <!-- Formulaire d'ajout -->
+<div *ngIf="showAddForm && !editMode" class="mb-4">
+  <h4>Add New Forum</h4>
+  <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
+    <div class="mb-3">
+      <label class="form-label">Titre</label>
+      <input type="text" class="form-control" formControlName="title" />
+      <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+        <div *ngIf="addForumForm.get('title').errors?.['required']">Le titre est requis.</div>
+        <div *ngIf="addForumForm.get('title').errors?.['minlength']">Le titre doit contenir au moins 2 caractères.</div>
+        <div *ngIf="addForumForm.get('title').errors?.['maxlength']">Le titre ne doit pas dépasser 50 caractères.</div>
       </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" formControlName="description"></textarea>
+      <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+        <div *ngIf="addForumForm.get('description').errors?.['required']">La description est requise.</div>
+        <div *ngIf="addForumForm.get('description').errors?.['minlength']">La description doit contenir au moins 20 caractères.</div>
+        <div *ngIf="addForumForm.get('description').errors?.['maxlength']">La description ne doit pas dépasser 150 caractères.</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image</label>
+      <input type="file" class="form-control" (change)="onFileSelected($event)" />
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
+  </form>
+</div>
+
 
       <!-- Forums List -->
       <div class="row">
@@ -67,39 +72,46 @@
               <p class="blog-two__text">{{ forum.description }}</p>
 
               <div class="blog-two__meta">
-                <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modifier</button>
-                <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Supprimer</button>
+                <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modify </button>
+                <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Delete</button>
               </div>
             </div>
 
             <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
-              <h4>Modifier le forum</h4>
+              <h4>Modify forum</h4>
               <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
                 <div class="mb-3">
-                  <label class="form-label">Titre</label>
+                  <label class="form-label">Title</label>
                   <input type="text" class="form-control" formControlName="title" />
                   <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
-                    <div *ngIf="addForumForm.get('title').errors">Chiffres interdit.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['required']">Title is required.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['minlength']">The title must contain at least 2 characters.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['maxlength']">The title must not exceed 50 characters.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['pattern']">The title must contain only letters and spaces.</div>
                   </div>
                 </div>
-
+            
                 <div class="mb-3">
                   <label class="form-label">Description</label>
                   <textarea class="form-control" formControlName="description"></textarea>
                   <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
-                    <div *ngIf="addForumForm.get('description').errors">Chiffres interdit.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['required']"> Description is required.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['minlength']"> Ddescription must contain at least 20 characters.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['maxlength']"> Description must not exceed 150 characters.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['pattern']"> Description must contain only letters and spaces.</div>
                   </div>
                 </div>
-
+            
                 <div class="mb-3">
                   <label class="form-label">Image</label>
                   <input type="file" class="form-control" (change)="onFileSelected($event)" />
                 </div>
-
+            
                 <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Enregistrer</button>
                 <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Annuler</button>
               </form>
             </div>
+            
           </div>
         </div>
       </div>

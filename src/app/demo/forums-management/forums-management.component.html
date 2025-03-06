@@ -10,7 +10,7 @@
 
   <!-- Champ de recherche -->
   <div class="mb-3">
-    <input type="text" class="form-control" placeholder="Rechercher un forum..." [(ngModel)]="searchQuery" (input)="applyFilter()">
+    <input type="text" class="form-control" placeholder="Research for forum..." [(ngModel)]="searchQuery" (input)="applyFilter()">
   </div>
 
   <!-- Indicateur de chargement -->
@@ -86,18 +86,18 @@
 <!-- Sidebar pour le formulaire -->
 <div class="sidebar" [class.active]="showAddForm">
   <div class="sidebar-header">
-    <h5>{{ editMode ? 'Modifier le Forum' : 'Ajouter un Forum' }}</h5>
+    <h5>{{ editMode ? 'Modify Forum' : 'Add Forum' }}</h5>
     <button type="button" class="btn-close" (click)="toggleAddForm()" aria-label="Close"></button>
   </div>
   <div class="sidebar-body">
     <form [formGroup]="addForumForm" (ngSubmit)="onSubmit()">
       <div class="form-group mb-3">
-        <label for="title">Titre</label>
+        <label for="title">Title</label>
         <input id="title" formControlName="title" class="form-control" required />
         <div *ngIf="addForumForm.get('title')?.invalid && addForumForm.get('title')?.touched" class="text-danger">
-          <div *ngIf="addForumForm.get('title')?.errors?.['required']">Le titre est obligatoire.</div>
+          <div *ngIf="addForumForm.get('title')?.errors?.['required']">The title is required</div>
           <div *ngIf="addForumForm.get('title')?.errors?.['invalidTitle']">
-            Le titre doit contenir au moins 2 caractères alphabétiques sans chiffres ni caractères spéciaux.
+            The title must contain at least 2 alphabetical characters, without numbers or special characters.
           </div>
         </div>
       </div>
@@ -105,9 +105,9 @@
         <label for="description">Description</label>
         <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
         <div *ngIf="addForumForm.get('description')?.invalid && addForumForm.get('description')?.touched" class="text-danger">
-          <div *ngIf="addForumForm.get('description')?.errors?.['required']">La description est obligatoire.</div>
+          <div *ngIf="addForumForm.get('description')?.errors?.['required']"> Description is required.</div>
           <div *ngIf="addForumForm.get('description')?.errors?.['invalidDescription']">
-            La description doit contenir entre 10 et 100 caractères.
+            The description must contain between 10 and 100 characters.
           </div>
         </div>
       </div>

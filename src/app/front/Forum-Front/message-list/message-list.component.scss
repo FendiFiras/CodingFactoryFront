@@ -22,20 +22,20 @@ body {
   overflow: hidden;
 }
 
-/* Messenger Container */
 .messenger-container {
   width: 100%;
   max-width: 600px;
-  background: #ffffff; /* Fond clair pour un contraste agréable */
+  background: #ffffff;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1); /* Ombre plus douce */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 20px;
   min-height: 600px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px); /* Réduire la hauteur de la barre de navigation pour plus de place */
 }
+
 
 /* Messenger Header */
 .messenger-header {
@@ -113,13 +113,14 @@ body {
 /* Message List */
 .message-list {
   flex: 1;
-  max-height: 350px; /* Taille optimale */
+  max-height: 500px; /* Augmenter la hauteur maximale pour afficher plus de messages */
   overflow-y: auto;
   padding: 20px;
   border-radius: 10px;
-  background: #eaf2f8; /* Fond doux et lumineux pour les messages */
-  color: #000000; /* Texte des messages en noir */
+  background: #eaf2f8;
+  color: #000000;
 }
+
 
 /* Message */
 .message {
