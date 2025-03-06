@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -46,13 +46,12 @@ deleteForum(forumId: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/delete/${forumId}`, {
     observe: 'response', // Observer la réponse complète
   }).pipe(
-    tap((response) => {
+    tap((response: HttpResponse<void>) => {
       if (response.status === 200) {
         console.log('Forum supprimé avec succès');
       }
     }),
-    map(() => null) // Ignorer la réponse et retourner `void`
+    map(() => null) // Ignorer la réponse et retourner void
   );
 }
-  
 }

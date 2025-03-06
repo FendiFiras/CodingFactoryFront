@@ -12,18 +12,31 @@
     <h4>Ajouter un nouveau forum</h4>
     <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
       
+      <!-- Champ Titre -->
       <div class="mb-3">
         <label class="form-label">Titre</label>
         <input type="text" class="form-control" formControlName="title" />
+        <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+          <div *ngIf="addForumForm.get('title').errors">on n'accepte pas des chiffres dans le titre .</div>
+        </div>
       </div>
+
+      <!-- Champ Description -->
       <div class="mb-3">
         <label class="form-label">Description</label>
         <textarea class="form-control" formControlName="description"></textarea>
+        <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+          <div *ngIf="addForumForm.get('description').errors">on n'accepte pas des chiffres dans la description.</div>
+        </div>
       </div>
+
+      <!-- Champ Image -->
       <div class="mb-3">
         <label class="form-label">Image</label>
         <input type="file" class="form-control" (change)="onFileSelected($event)" />
       </div>
+
+      <!-- Bouton de soumission -->
       <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
     </form>
   </div>
@@ -74,18 +87,31 @@
             <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
               <h4>Modifier le forum</h4>
               <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
+                <!-- Champ Titre -->
                 <div class="mb-3">
                   <label class="form-label">Titre</label>
                   <input type="text" class="form-control" formControlName="title" />
+                  <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+                    <div *ngIf="addForumForm.get('title').errors">Chiffres interdit.</div>
+                  </div>
                 </div>
+
+                <!-- Champ Description -->
                 <div class="mb-3">
                   <label class="form-label">Description</label>
                   <textarea class="form-control" formControlName="description"></textarea>
+                  <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+                    <div *ngIf="addForumForm.get('description').errors">Chiffres interdit.</div>
+                  </div>
                 </div>
+
+                <!-- Champ Image -->
                 <div class="mb-3">
                   <label class="form-label">Image</label>
                   <input type="file" class="form-control" (change)="onFileSelected($event)" />
                 </div>
+
+                <!-- Boutons de soumission et d'annulation -->
                 <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Enregistrer</button>
                 <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Annuler</button>
               </form>

@@ -46,7 +46,7 @@ export class AdminDiscussionComponent implements OnInit {
   ) {
 
      // Simule un ID utilisateur connecté (remplacez par votre logique)
-  const userId = 2; // Remplacez par votre vrai ID utilisateur
+  const userId = 1; // Remplacez par votre vrai ID utilisateur
 
     // Initialisation du formulaire avec des validateurs
     this.addDiscussionForm = this.fb.group({
@@ -111,7 +111,7 @@ export class AdminDiscussionComponent implements OnInit {
       this.editMode = false;
       this.discussion_id = undefined;
       this.addDiscussionForm.reset();
-      this.addDiscussionForm.patchValue({ userId: 2 }); // Re-set the userId if needed
+      this.addDiscussionForm.patchValue({ userId: 1 }); // Re-set the userId if needed
 
     }
   }

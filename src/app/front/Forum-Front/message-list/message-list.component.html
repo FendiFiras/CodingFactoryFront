@@ -2,60 +2,77 @@
 
 <div class="page-wrapper">
   <div class="messenger-container">
-    <!-- En-tête -->
+    <!-- En-tête avec les infos de l'utilisateur actuel -->
     <div class="messenger-header">
       <h2>Messagerie</h2>
+      <div class="current-user-display">
+        <img [src]="currentUserImage" alt="User Image" class="user-image" />
+        <span class="user-name">{{ currentUserName }}</span>
+      </div>
     </div>
-
+    
     <!-- Barre d'outils -->
     <div class="toolbar">
       <button (click)="filterMessages('today')">Aujourd'hui</button>
       <button (click)="filterMessages('week')">Cette semaine</button>
       <input type="text" [(ngModel)]="searchQuery" placeholder="🔍 Rechercher..." (input)="searchMessages()" />
     </div>
-
-    <!-- Liste des messages -->
+    
     <div class="message-list">
       <div *ngFor="let message of filteredMessages" class="message" [ngClass]="{'sent': message.userId === currentUserId, 'received': message.userId !== currentUserId}">
+        <!-- Affichage des informations de l'utilisateur -->
+        <div class="user-info">
+          <img [src]="currentUserImage" alt="User Image" class="user-image" />
+          <span class="user-name">{{ message.anonymous ? 'Membre anonyme' : 'zitouni' }}</span>
+        </div>
+        
+        <!-- Contenu du message -->
         <div class="message-content">
-          <div class="message-header">
-            <strong>{{ message.anonymous ? 'Membre anonyme' : message.userName }}</strong>
+          <p>{{ message.description }}</p>
+          <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image" class="message-img">
+          <small class="message-date">{{ message.messageDate | date:'short' }}</small>
+          
+          <!-- Boutons de Like et Dislike -->
+          <div class="like-dislike">
+            <button (click)="toggleLike(message)" [class.liked]="isLiked(message.message_id)">
+              👍 {{ message.likes || 0 }}
+            </button>
+            <button (click)="toggleDislike(message)" [class.disliked]="isDisliked(message.message_id)">
+              👎 {{ message.dislikes || 0 }}
+            </button>
           </div>
-          <div *ngIf="editingMessage?.message_id !== message.message_id">
-            <p>{{ message.description }}</p>
-            <p>Posté le : {{ message.messageDate | date:'short' }}</p>
-            <p>Par utilisateur : {{ message.userId }}</p>
-            <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image">
-            <small>{{ message.messageDate | date:'short' }}</small>
-            <div *ngIf="message.userId === currentUserId" class="message-actions">
-              <button (click)="startEdit(message)">✏️</button>
-              <button (click)="deleteMessage(message.message_id)">🗑️</button>
-            </div>
-          </div>
-          <div *ngIf="editingMessage?.message_id === message.message_id">
-            <textarea [(ngModel)]="editingMessage.description"></textarea>
-            <button (click)="updateMessage()">💾 Enregistrer</button>
-            <button (click)="cancelEdit()">❌ Annuler</button>
+          
+          <!-- Actions de l'utilisateur -->
+          <div *ngIf="message.userId === currentUserId" class="message-actions">
+            <button (click)="startEdit(message)" class="edit-btn">✏️</button>
+            <button (click)="deleteMessage(message.message_id)" class="delete-btn">🗑️</button>
           </div>
         </div>
       </div>
     </div>
-
+    
     <!-- Zone de saisie -->
     <div class="message-input">
       <div class="input-container">
         <textarea [(ngModel)]="newMessage.description" placeholder="💬 Écrivez un message..." maxlength="500"></textarea>
-        <div class="char-counter">{{ newMessage.description.length }}/500</div>
+        <div class="char-counter" [ngClass]="{'warning': newMessage.description.length > 400}">
+          {{ newMessage.description.length }}/500
+        </div>
       </div>
       <div class="actions">
         <label class="file-upload">
           <input type="file" (change)="onFileSelected($event)" accept="image/*" />
           📎
+          <span *ngIf="newMessage.image" class="file-name">Image sélectionnée</span>
         </label>
-        <label class="anonymous-checkbox">
-          <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
-          <span>Anonyme</span>
-        </label>
+        <div class="user-controls">
+          <label class="anonymous-checkbox">
+            <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
+            <span>Anonyme</span>
+          </label>
+          
+          
+        </div>
         <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
           🚀 Envoyer
         </button>
@@ -65,3 +82,369 @@
 </div>
 
 <app-footer></app-footer>
+<style>
+/* Messenger Header */
+/* Base de la page */
+.page-wrapper {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  overflow: hidden;
+}
+
+/* Container de la messagerie */
+.messenger-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px);
+  min-height: 600px;
+}
+
+/* En-tête de la messagerie */
+.messenger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #0078d4;
+  color: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.messenger-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.current-user-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+/* Barre d'outils */
+.toolbar {
+  display: flex;
+  padding: 12px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 10px;
+}
+
+.toolbar button {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toolbar button:hover {
+  background-color: #e9e9e9;
+}
+
+.toolbar input {
+  flex-grow: 1;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 12px;
+  outline: none;
+}
+
+.toolbar input:focus {
+  border-color: #0078d4;
+}
+
+/* Liste des messages */
+.message-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #f0f0f0;
+}
+
+/* Style des messages */
+.message {
+  max-width: 80%;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  position: relative;
+  transition: transform 0.1s ease-in-out;
+}
+
+.message:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.sent {
+  align-self: flex-end;
+  background-color: #dcf8c6;
+  border-bottom-right-radius: 4px;
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #ffffff;
+  border-bottom-left-radius: 4px;
+}
+
+/* Info utilisateur dans les messages */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Contenu du message */
+.message-content {
+  position: relative;
+}
+
+.message-content p {
+  margin: 0 0 10px 0;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.message-img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.message-date {
+  display: block;
+  font-size: 11px;
+  color: #777;
+  text-align: right;
+  margin-top: 6px;
+}
+
+/* Like et Dislike */
+.like-dislike {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.like-dislike button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.like-dislike button:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.liked {
+  color: #1877f2;
+  font-weight: bold;
+}
+
+.disliked {
+  color: #e41e3f;
+  font-weight: bold;
+}
+
+/* Actions sur le message */
+.message-actions {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.message:hover .message-actions {
+  opacity: 1;
+}
+
+.message-actions button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #f0f9ff;
+  border-color: #0078d4;
+}
+
+.delete-btn:hover {
+  background-color: #fff0f0;
+  border-color: #e41e3f;
+}
+
+/* Zone de saisie du message */
+.message-input {
+  padding: 16px;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.message-input textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.message-input textarea:focus {
+  border-color: #0078d4;
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 12px;
+  color: #777;
+}
+
+.char-counter.warning {
+  color: #e41e3f;
+}
+
+/* Actions sous la zone de texte */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-upload {
+  position: relative;
+  cursor: pointer;
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.file-name {
+  font-size: 12px;
+  color: #0078d4;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.anonymous-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.user-name-display {
+  font-size: 14px;
+}
+
+/* Bouton d'envoi */
+.send-button {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.send-button:hover {
+  background-color: #006abc;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .message {
+    max-width: 90%;
+  }
+  
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .send-button {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+</style>

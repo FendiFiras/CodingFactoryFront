@@ -4,7 +4,7 @@
     <h2>FORUM LIST</h2>
     <!-- Bouton "Ajouter" -->
     <button class="btn btn-primary" (click)="toggleAddForm()">
-      <i class="fas fa-plus"></i> Ajouter
+      <i class="fas fa-plus"></i> Add 
     </button>
   </div>
 
@@ -40,15 +40,15 @@
               <div class="button-container">
                 <!-- Bouton "Voir Discussions" -->
                 <button class="btn btn-info" (click)="navigateToDiscussions(forum.forum_id)">
-                  <i class="fas fa-comments"></i> Voir Discussions
+                  <i class="fas fa-comments"></i> View Discussions
                 </button>
                 <!-- Boutons "Modifier" et "Supprimer" -->
                 <div class="button-row">
                   <button class="btn btn-warning" (click)="editForum(forum)">
-                    <i class="fas fa-edit"></i> Modifier
+                    <i class="fas fa-edit"></i> Modify
                   </button>
                   <button class="btn btn-danger" (click)="confirmDelete(forum.forum_id)">
-                    <i class="fas fa-trash"></i> Supprimer
+                    <i class="fas fa-trash"></i> Delete 
                   </button>
                 </div>
               </div>

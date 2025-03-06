@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit , ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ForumService } from 'src/app/service/forum.service';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router'; // Import RouterModule
-import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component'; // Import the component
-
-
+import { RouterModule } from '@angular/router';
+import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component';
 
 interface Forum {
   forum_id?: number;
@@ -23,63 +21,60 @@ interface Forum {
   selector: 'app-liste-forum',
   templateUrl: './liste-forum.component.html',
   styleUrls: ['./liste-forum.component.scss'],
-  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent,RouterModule,LeftSideBarComponent]
-
-
+  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent, RouterModule, LeftSideBarComponent],
+  standalone: true,
 })
 export class ListeForumComponent implements OnInit {
   forums: Forum[] = [];
   isLoading = true;
   errorMessage = '';
-  showAddForm : boolean = false;
+  showAddForm: boolean = false;
   addForumForm: FormGroup;
-    // ID utilisateur statique
-    staticUserId: number = 3; 
-
+  staticUserId: number = 3; // ID utilisateur statique
+  editMode = false;
+  forumToEdit: Forum | null = null;
 
   constructor(
-     private forumService: ForumService,
-     private fb: FormBuilder,
-     private cdr: ChangeDetectorRef,
-     private router: Router 
+    private forumService: ForumService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.addForumForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      image: [null] // Changer la valeur initiale à null
+      title: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]] ,
+      description: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      image: [null],
     });
   }
 
   ngOnInit(): void {
     this.loadForums();
   }
-  navigateToForum(forumId: number): void {
-    this.router.navigate(['/forum', forumId]); // Navigue vers la route forum/:forumId
-  }
+
   loadForums(): void {
     this.isLoading = true;
     this.forumService.getAllForums().subscribe({
       next: (data) => {
         this.forums = data;
-        console.log("Forums after loading:", this.forums); // Vérifiez les données après chargement
         this.isLoading = false;
       },
       error: (err) => {
         this.errorMessage = 'Error loading forums';
         this.isLoading = false;
-      }
+      },
     });
   }
-  
-  
-  
 
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
+    if (!this.showAddForm) {
+      this.addForumForm.reset();
+    }
   }
 
   addForum(): void {
     if (this.addForumForm.invalid) return;
+
     const { title, description, image } = this.addForumForm.value;
     const formData = new FormData();
     formData.append('userId', this.staticUserId.toString());
@@ -88,19 +83,18 @@ export class ListeForumComponent implements OnInit {
     if (image) {
       formData.append('image', image, image.name);
     }
-  
+
     this.forumService.addForum(formData).subscribe({
-      next: () => {
-        this.loadForums(); // Recharger la liste des forums après l'ajout
+      next: (newForum) => {
+        this.forums.push(newForum);
         this.addForumForm.reset();
         this.showAddForm = false;
       },
       error: () => {
         this.errorMessage = 'Error adding forum';
-      }
+      },
     });
   }
-  
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -110,63 +104,84 @@ export class ListeForumComponent implements OnInit {
     }
   }
 
-  editMode = false;
-forumToEdit: Forum | null = null;
-
-editForum(forum: Forum): void {
-  this.editMode = true;
-  this.forumToEdit = { ...forum };
-  this.addForumForm.patchValue({
-    title: forum.title,
-    description: forum.description
-  });
-}
-
-
-updateForum(): void {
-  if (!this.forumToEdit) return;
-
-  const { title, description, image } = this.addForumForm.value;
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('description', description);
-  if (image) {
-    formData.append('image', image, image.name);
-  }
-
-  this.forumService.updateForum(this.forumToEdit!.forum_id!, formData).subscribe({
-    next: (updatedForum) => {
-      this.forums = this.forums.map(f => f.forum_id === updatedForum.id ? updatedForum : f);
-      this.editMode = false;
-      this.forumToEdit = null;
-      this.addForumForm.reset();
-    },
-    error: () => {
-      this.errorMessage = "Error updating forum";
-    }
-  });
-}
-confirmDelete(forum_id: number | undefined): void {
-  if (forum_id === undefined || forum_id === null) {
-    this.errorMessage = "Invalid forum ID.";
-    return;
-  }
-
-  if (confirm("Are you sure you want to delete this forum?")) {
-    this.forumService.deleteForum(forum_id).subscribe({
-      next: () => {
-        // Supprimer l'élément localement
-        this.forums = this.forums.filter(forum => forum.forum_id !== forum_id);
-
-        // Forcer la détection des changements
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.errorMessage = "Error deleting forum";
-      }
+  editForum(forum: Forum): void {
+    this.editMode = true;
+    this.forumToEdit = { ...forum };
+    this.addForumForm.patchValue({
+      title: forum.title,
+      description: forum.description,
     });
   }
-}
+
+  updateForum(): void {
+    if (!this.forumToEdit) return;
+  
+    const { title, description, image } = this.addForumForm.value;
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    if (image) {
+      formData.append('image', image, image.name);
+    }
+  
+    this.forumService.updateForum(this.forumToEdit.forum_id!, formData).subscribe({
+      next: () => {
+        // Call the getAll method to refresh the forums list
+        this.forumService.getAllForums().subscribe({
+          next: (forums) => {
+            // Update the local state with the latest data
+            this.forums = forums;
+  
+            // Reset the form and edit mode
+            this.editMode = false;
+            this.forumToEdit = null;
+            this.addForumForm.reset();
+          },
+          error: () => {
+            this.errorMessage = 'Error fetching forums after update';
+          },
+        });
+      },
+      error: () => {
+        this.errorMessage = 'Error updating forum';
+      },
+    });
+  }
+ 
+  confirmDelete(forum_id: number | undefined): void {
+    if (forum_id === undefined || forum_id === null) {
+      this.errorMessage = "Invalid forum ID.";
+      return;
+    }
+  
+    if (confirm("Are you sure you want to delete this forum?")) {
+      console.log('Deleting forum with ID:', forum_id);
+  
+      this.forumService.deleteForum(forum_id).subscribe({
+        next: () => {
+          console.log('Forum deleted successfully.');
+  
+          // Fetch the latest list of forums
+          this.forumService.getAllForums().subscribe({
+            next: (forums) => {
+              console.log('Fetched forums after deletion:', forums);
+              this.forums = forums; // Update the local state
+              this.cdr.detectChanges(); // Force change detection
+            },
+            error: (error) => {
+              console.error('Error fetching forums:', error);
+              this.errorMessage = "Error fetching forums after delete";
+            },
+          });
+        },
+        error: (error) => {
+          console.error('Error deleting forum:', error);
+          console.error('Error details:', error.error); // Log the response body
+          this.errorMessage = "Error deleting forum";
+        }
+      });
+    }
+  }
 
 
 

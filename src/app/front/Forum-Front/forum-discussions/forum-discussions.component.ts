@@ -82,16 +82,20 @@ export class ForumDiscussionsComponent implements OnInit {
   deleteDiscussion(discussionId: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')) {
       this.discussionService.deleteDiscussion(discussionId).subscribe({
-        next: () => {
-          this.discussions = this.discussions.filter(d => d.discussion_id !== discussionId); // Utilisez discussion_id
+        next: (response) => {
+          this.discussions = this.discussions.filter(d => d.discussion_id !== discussionId); // Mettre à jour la liste locale
         },
-        error: () => {
-          this.errorMessage = 'Erreur lors de la suppression de la discussion';
-        }
+        error: (error) => {
+          console.error('Erreur lors de la suppression de la discussion:', error);
+          if (error.status === 404) {
+            this.errorMessage = error.error.error; // Afficher le message d'erreur du serveur
+          } else {
+            this.errorMessage = 'Erreur lors de la suppression de la discussion';
+          }
+        },
       });
     }
   }
-
   selectDiscussionForUpdate(discussion: Discussion): void {
     this.selectedDiscussion = { ...discussion };
   }

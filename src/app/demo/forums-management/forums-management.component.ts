@@ -112,7 +112,7 @@ export class ForumsManagementComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.addForumForm.value.title);
     formData.append('description', this.addForumForm.value.description);
-    formData.append('userId', '2'); // Ajouter userId
+    formData.append('userId', '1'); // Ajouter userId
   
     if (this.addForumForm.value.image) {
       formData.append('image', this.addForumForm.value.image);
