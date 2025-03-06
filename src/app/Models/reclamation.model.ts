@@ -11,5 +11,6 @@ export interface Reclamation {
   status?: TypeStatut;
   urgencyLevel: number;
   materials: Material[];
-  idUser: number; // Static for now
+  quantity: number;
+  idUser: number;
 }

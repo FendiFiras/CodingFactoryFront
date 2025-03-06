@@ -191,7 +191,7 @@
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "19.0.2"
 
-"@angular/animations@19.0.5":
+"@angular/animations@^19.0.5":
   "integrity" "sha512-HCOF2CrhUvjoZWusd4nh32VOxpUrg6bV+3Z8Q36Ix3aZdni8v0qoP2rl5wGbotaPtYg5RtyDH60Z2AOPKqlrZg=="
   "resolved" "https://registry.npmjs.org/@angular/animations/-/animations-19.0.5.tgz"
   "version" "19.0.5"
@@ -232,10 +232,10 @@
   optionalDependencies:
     "lmdb" "3.2.2"
 
-"@angular/cdk@19.0.4":
-  "integrity" "sha512-P8V1n6AFFjBUJG3YRgw8DiiNDWPZVrwQ42wbwgZxd4s2TQAuNFg3YY8h/DSMVxt2sXpavrshZsoLtP9yLKZjHA=="
-  "resolved" "https://registry.npmjs.org/@angular/cdk/-/cdk-19.0.4.tgz"
-  "version" "19.0.4"
+"@angular/cdk@^19.0.5":
+  "integrity" "sha512-+D++QUrJlDuwk5RhQBDTejQseb0ZP6c6S4r8wBBab7UPtrwigySudSb0PxhiAzp2YHr5Ch3klhkTf/NSWeUXUQ=="
+  "resolved" "https://registry.npmjs.org/@angular/cdk/-/cdk-19.0.5.tgz"
+  "version" "19.0.5"
   dependencies:
     "tslib" "^2.3.0"
   optionalDependencies:
@@ -315,6 +315,13 @@
     "@types/babel__core" "7.20.5"
     "fast-glob" "3.3.2"
     "yargs" "^17.2.1"
+
+"@angular/material@^19.0.5":
+  "integrity" "sha512-yiW/ZJNkOPlQdqgj5U8DHTu3r7OHMI5R1cAbCpOmHlsVHEoc/Vw4V3RFUgpWLqCGgdRIkayoilMAooT52gG2Dg=="
+  "resolved" "https://registry.npmjs.org/@angular/material/-/material-19.0.5.tgz"
+  "version" "19.0.5"
+  dependencies:
+    "tslib" "^2.3.0"
 
 "@angular/platform-browser-dynamic@19.0.5":
   "integrity" "sha512-KKFdue/uJVxkWdrntRAXkz+ycp4nD3SuGOH5pPf2svCBxieuHuFlWDi+DYVuFSEpC/ICCmlhrtzIAm44A4qzzQ=="

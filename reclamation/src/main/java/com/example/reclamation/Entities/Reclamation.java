@@ -1,5 +1,6 @@
 package com.example.reclamation.Entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,11 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Reclamation {
 
     @Id
@@ -36,6 +39,8 @@ public class Reclamation {
             inverseJoinColumns = @JoinColumn(name = "material_id")
     )
     private List<Material> materials;
+
+    private Integer quantity;
 
     private int idUser;
 }

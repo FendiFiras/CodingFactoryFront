@@ -48,7 +48,8 @@ export class ReclamationAddComponent implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       type: [Type.MATERIAL, Validators.required],
       urgencyLevel: [2, Validators.required],
-      materials: [[], Validators.required]
+      materials: [[], Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -71,37 +72,37 @@ export class ReclamationAddComponent implements OnInit {
 
   onSubmit(): void {
     if (this.reclamationForm.invalid) {
-      this.reclamationForm.markAllAsTouched();
-      return;
+        this.reclamationForm.markAllAsTouched();
+        return;
     }
 
     this.isSubmitting = true;
     this.formError = '';
 
-    const selectedMaterialIds = this.reclamationForm.get('materials')?.value;
-    const selectedMaterials = this.materials.filter(material =>
-      selectedMaterialIds.includes(material.idMaterial)
-    );
+    const selectedMaterials: Material[] = this.reclamationForm.get('materials')?.value || [];
+    const quantity: number = this.reclamationForm.get('quantity')?.value || 1;
 
     const reclamation: Reclamation = {
-      ...this.reclamationForm.value,
-      materials: selectedMaterials,
-      creationDate: new Date(),
-      idUser: 1
+        ...this.reclamationForm.value,
+        materials: selectedMaterials,
+        quantity,
+        creationDate: new Date(),
+        idUser: 1
     };
 
     console.log('Submitting Reclamation:', reclamation);
 
     this.reclamationService.addReclamation(reclamation).subscribe(
-      () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/home']);
-      },
-      (error) => {
-        this.isSubmitting = false;
-        console.error('Error submitting reclamation:', error);
-        this.formError = 'Failed to submit reclamation. Please try again.';
-      }
+        () => {
+            this.isSubmitting = false;
+            this.resetForm(); // Reset the form after successful submission
+            this.router.navigate(['/home']);
+        },
+        (error) => {
+            this.isSubmitting = false;
+            console.error('Error submitting reclamation:', error);
+            this.formError = 'Failed to submit reclamation. Please try again.';
+        }
     );
   }
 
@@ -111,7 +112,8 @@ export class ReclamationAddComponent implements OnInit {
       description: '',
       type: Type.MATERIAL,
       urgencyLevel: 2,
-      materials: []
+      materials: [],
+      quantity: 1 // Ensure quantity is reset properly
     });
   }
 }

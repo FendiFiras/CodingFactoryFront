@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Material } from 'src/app/Models/material';
 import { Reclamation } from 'src/app/Models/reclamation.model';
 import { TypeStatut } from 'src/app/Models/type-statut';
+import { MaterialService } from 'src/app/services/material.service';
 import { ReclamationService } from 'src/app/services/reclamation.service';
 
 @Component({
@@ -21,7 +23,9 @@ export class ReclamationEditComponent implements OnInit {
   reclamationForm: FormGroup;
   reclamationId!: number;
   isSubmitting = false;
+  formError = '';
   statusTypes = Object.values(TypeStatut); // Load TypeStatut values for dropdown
+  materials: Material[] = [];
   urgencyLevels = [
     { value: 1, label: 'Low' },
     { value: 2, label: 'Medium' },
@@ -33,26 +37,52 @@ export class ReclamationEditComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private reclamationService: ReclamationService
+    private reclamationService: ReclamationService,
+    private materialService: MaterialService
   ) {
     this.reclamationForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       type: ['', Validators.required],
       status: [TypeStatut.IN_WAIT, Validators.required], // Default status
-      urgencyLevel: [2, Validators.required]
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      urgencyLevel: [2, Validators.required],
+      materials: [[], Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.reclamationId = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadReclamation();
+    if (this.reclamationId) {
+      this.loadReclamation(this.reclamationId);
+    }
+    this.loadMaterials();
   }
 
-  loadReclamation(): void {
-    this.reclamationService.getReclamationById(this.reclamationId).subscribe((reclamation) => {
-      this.reclamationForm.patchValue(reclamation);
-    });
+  loadMaterials(): void {
+    this.materialService.getAllMaterials().subscribe(
+      (data) => this.materials = data,
+      (error) => console.error('Error loading materials:', error)
+    );
+  }
+
+  loadReclamation(id: number): void {
+    this.reclamationService.getReclamationById(id).subscribe(
+      (reclamation) => {
+        this.reclamationForm.patchValue({
+          title: reclamation.title,
+          description: reclamation.description,
+          type: reclamation.type,
+          urgencyLevel: reclamation.urgencyLevel,
+          quantity: reclamation.quantity, // ✅ Load the quantity value
+          materials: reclamation.materials
+        });
+      },
+      (error) => {
+        console.error('Error loading reclamation:', error);
+        this.formError = 'Failed to load reclamation. Please try again later.';
+      }
+    );
   }
 
   onSubmit(): void {

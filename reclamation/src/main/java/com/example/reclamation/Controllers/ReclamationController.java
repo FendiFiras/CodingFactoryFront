@@ -3,6 +3,7 @@ package com.example.reclamation.Controllers;
 import com.example.reclamation.Entities.Reclamation;
 import com.example.reclamation.Services.ReclamationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class ReclamationController {
     @Autowired
     private ReclamationService reclamationService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Reclamation addReclamation(@RequestBody Reclamation reclamation) {
         System.out.println("Received Reclamation: " + reclamation);
         return reclamationService.addReclamation(reclamation);
@@ -38,5 +39,10 @@ public class ReclamationController {
     @GetMapping
     public List<Reclamation> getAllReclamations() {
         return reclamationService.getAllReclamations();
+    }
+
+    @PutMapping("/treat/{id}")
+    public Reclamation treatReclamation(@PathVariable Long id) {
+        return reclamationService.treatReclamation(id);
     }
 }

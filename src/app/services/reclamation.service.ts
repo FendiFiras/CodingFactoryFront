@@ -25,7 +25,21 @@ export class ReclamationService {
   }
 
   addReclamation(reclamation: Reclamation): Observable<Reclamation> {
-    return this.http.post<Reclamation>(this.API_URL, reclamation);
+    return this.http.post<Reclamation>(this.API_URL, reclamation, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+  }
+
+  treatReclamation(id: number, quantityToAdd: number): Observable<Reclamation> {
+    return this.http.put<Reclamation>(`${this.API_URL}/treat/${id}`, { quantityToAdd }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
   }
 
   updateReclamation(reclamation: Reclamation): Observable<Reclamation> {

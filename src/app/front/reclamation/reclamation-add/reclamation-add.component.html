@@ -65,16 +65,24 @@
           <!-- Materials -->
           <div class="form-group">
             <label for="materials">Materials</label>
-            <select id="materials" formControlName="materials" class="form-control" multiple
-              [ngClass]="{'is-invalid': reclamationForm.get('materials')?.invalid && reclamationForm.get('materials')?.touched}">
+            <select id="materials" formControlName="materials" class="form-control" multiple>
               <option *ngFor="let material of materials" [ngValue]="material">
                 {{ material.label }}
               </option>
             </select>
-            <div *ngIf="reclamationForm.get('materials')?.touched && reclamationForm.get('materials')?.hasError('required')" class="invalid-feedback">
-              At least one material must be selected.
-            </div>
           </div>
+          
+            <div class="form-group" *ngFor="let material of materials">
+              <label for="material-quantity-{{material.idMaterial}}">Quantity for {{ material.label }}</label>
+              <input 
+                  type="number" 
+                  id="quantity" 
+                  formControlName="quantity" 
+                  min="1" 
+                  class="form-control" 
+                  placeholder="Enter quantity"
+              />
+            </div>        
   
           <!-- Form Actions -->
           <div class="form-actions">

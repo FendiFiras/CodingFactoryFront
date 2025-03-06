@@ -43,6 +43,23 @@
           <option *ngFor="let material of materials" [ngValue]="material">{{ material.label }}</option>
         </select>
       </div>
+
+      <!-- Quantity -->
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input 
+            type="number" 
+            id="quantity" 
+            formControlName="quantity" 
+            class="form-control" 
+            placeholder="Enter the quantity"
+            min="1"
+        />
+        <div *ngIf="reclamationForm.get('quantity')?.touched && reclamationForm.get('quantity')?.invalid" class="invalid-feedback">
+            <div *ngIf="reclamationForm.get('quantity')?.errors?.['required']">Quantity is required.</div>
+            <div *ngIf="reclamationForm.get('quantity')?.errors?.['min']">Quantity must be at least 1.</div>
+        </div>
+      </div>
   
       <!-- Form Actions -->
       <div class="form-actions">
