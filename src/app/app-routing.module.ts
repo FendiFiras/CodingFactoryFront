@@ -15,6 +15,7 @@ import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists
 import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/quiz-questions-management/quiz-questions-management.component'
 import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-student/courses-student.component'
 import {PaymentSuccessComponent} from './front/trainingFront/payment-success-component/payment-success-component.component'
+import { StatTrainingComponent } from './demo/training-management/stat-training/stat-training.component';
 const routes: Routes = [
   {
     path: '',
@@ -78,6 +79,10 @@ const routes: Routes = [
     component: CoursesStudentComponent },
     { path: 'PassQuiz/:quizId',
        component: QuizInterfaceComponent },// ✅ Passage du quiz avec ID
+
+
+       { path: 'StatTraining',
+        component: StatTrainingComponent },
 
 
        { path: 'payment-success', component: PaymentSuccessComponent },

@@ -33,6 +33,7 @@
     "angularx-flatpickr": "^8.1.0",
     "apexcharts": "3.49.2",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.8",
     "flatpickr": "^4.6.13",
     "ng-apexcharts": "1.11.0",
     "ngx-scrollbar": "16.1.1",

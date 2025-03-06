@@ -28,6 +28,26 @@
                   <app-add-training *ngIf="showAddTraining"></app-add-training>
 
                   <div *ngIf="!showAddTraining" class="table-responsive">
+                    <div class="filter-container">
+                      <!-- Champ de recherche -->
+                      <input type="text" class="form-control search-input" placeholder="🔍 Search Training..." [(ngModel)]="searchTraining" (input)="filterTrainings()" />
+                    
+                      <!-- Filtre par type -->
+                      <select class="form-select filter-dropdown" [(ngModel)]="selectedTrainingType" (change)="filterTrainings()">
+                        <option value="">All Types</option>
+                        <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
+                      </select>
+                    
+                      <!-- Bouton de tri -->
+                      <button class="btn btn-outline-primary sort-btn" (click)="toggleSortOrder()">
+                        <i class="fas" [ngClass]="sortAscending ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
+                        Sort by Price: {{ sortAscending ? 'Ascending' : 'Descending' }}
+                      </button>
+                    </div>
+                    
+                    
+                    
+                    
                     <table class="table">
                       <thead>
                         <tr>
@@ -41,7 +61,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let training of trainings; let i = index">
+                        <tr *ngFor="let training of filteredTrainings; let i = index">
                           <th scope="row">{{ i + 1 }}</th>
                           <td (dblclick)="enableEditing('trainingName', training)">
                             <input *ngIf="isEditing(training, 'trainingName')" [(ngModel)]="training.trainingName" (blur)="updateTraining(training)" />
@@ -95,7 +115,10 @@
     <!-- Affichage du formulaire -->
     <app-add-session *ngIf="showAddSession"></app-add-session>
   </div>
-
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="🔍 Search Session..." [(ngModel)]="searchSession" (input)="filterSessions()" />
+  </div>
+  
   <!-- Table des sessions -->
   <div *ngIf="!showAddSession" class="table-responsive">
     <table class="table">
@@ -110,7 +133,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let session of sessions; let i = index">
+        <tr *ngFor="let session of filteredSessions; let i = index">
           <th scope="row">{{ i + 1 }}</th>
           
           <!-- ✅ Location -->
@@ -158,6 +181,9 @@
   </div>
 </app-card>
 
+<div class="mb-3">
+  <input type="text" class="form-control" placeholder="🔍 Search Course..." [(ngModel)]="searchCourse" (input)="filterCourses()" />
+</div>
 
 
                 <!-- Liste des cours -->
@@ -173,7 +199,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let course of courses; let i = index">
+                        <tr *ngFor="let course of filteredCourses; let i = index">
                           <th scope="row">{{ i + 1 }}</th>
                           <td>{{ course.courseName }}</td>
                           <td>{{ course.courseDescription }}</td>

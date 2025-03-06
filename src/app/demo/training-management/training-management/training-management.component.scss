@@ -205,3 +205,56 @@
       padding: 10px 0;
     }
   }
+
+
+  .btn-primary {
+    background-color: #007bff; /* Bleu */
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 8px; /* Coins arrondis */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Bleu foncé au survol */
+    transform: scale(1.05); /* Effet zoom léger */
+  }
+  
+  .btn-primary i {
+    font-size: 16px; /* Taille de l'icône */
+  }
+  .filter-container {
+    display: flex;
+    gap: 15px; /* Espacement entre les filtres */
+  }
+  
+  .search-input {
+    flex: 1; /* Prend toute la largeur disponible */
+    max-width: 300px;
+  }
+  
+  .filter-dropdown {
+    width: 200px;
+    border-radius: 8px;
+  }
+  
+  .sort-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sort-btn:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .sort-btn i {
+    font-size: 16px;
+  }
+  

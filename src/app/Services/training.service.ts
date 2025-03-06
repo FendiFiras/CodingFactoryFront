@@ -79,8 +79,14 @@ isUserEligibleForDiscount(userId: number): Observable<string | null> {
 validatePromoCode(userId: number, enteredCode: string): Observable<boolean> {
   return this.http.get<boolean>(`${this.apiUrl}/validate-promo/${userId}/${enteredCode}`);
 }
+getTrainingRevenue(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/revenue`);
+}
 
 
+getRevenueByHour(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/revenue-by-hour`);
+}
 
 
 }
