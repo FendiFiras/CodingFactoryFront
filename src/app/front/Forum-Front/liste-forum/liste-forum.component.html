@@ -1,93 +1,80 @@
 <app-navbar></app-navbar>
+
 <div class="container mt-4">
-  <h2>List of Forums</h2>
-
-  <!-- Bouton pour ajouter un forum -->
-  <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
-    {{ showAddForm ? 'Masquer le formulaire' : 'Ajouter un forum' }}
-  </button>
-
-  <!-- Formulaire d'ajout (visible uniquement si showAddForm est true) -->
-  <div *ngIf="showAddForm && !editMode" class="mb-4">
-    <h4>Ajouter un nouveau forum</h4>
-    <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
-      
-      <!-- Champ Titre -->
-      <div class="mb-3">
-        <label class="form-label">Titre</label>
-        <input type="text" class="form-control" formControlName="title" />
-        <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
-          <div *ngIf="addForumForm.get('title').errors">on n'accepte pas des chiffres dans le titre .</div>
-        </div>
-      </div>
-
-      <!-- Champ Description -->
-      <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea class="form-control" formControlName="description"></textarea>
-        <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
-          <div *ngIf="addForumForm.get('description').errors">on n'accepte pas des chiffres dans la description.</div>
-        </div>
-      </div>
-
-      <!-- Champ Image -->
-      <div class="mb-3">
-        <label class="form-label">Image</label>
-        <input type="file" class="form-control" (change)="onFileSelected($event)" />
-      </div>
-
-      <!-- Bouton de soumission -->
-      <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
-    </form>
-  </div>
-
-  <!-- Parent Row -->
   <div class="row">
     <!-- Left Sidebar -->
-    <div class="col-xl-4 col-lg-5">
+    <div class="col-xl-4 col-lg-4 sidebar-container">
       <app-left-side-bar></app-left-side-bar>
     </div>
 
     <!-- Forums List -->
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-xl-8 col-lg-8">
+      <h2>List of Forums</h2>
+
+      <!-- Bouton pour ajouter un forum -->
+      <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
+        {{ showAddForm ? 'Masquer le formulaire' : 'Ajouter un forum' }}
+      </button>
+
+      <!-- Formulaire d'ajout -->
+      <div *ngIf="showAddForm && !editMode" class="mb-4">
+        <h4>Ajouter un nouveau forum</h4>
+        <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
+          <div class="mb-3">
+            <label class="form-label">Titre</label>
+            <input type="text" class="form-control" formControlName="title" />
+            <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+              <div *ngIf="addForumForm.get('title').errors">on n'accepte pas des chiffres dans le titre.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description"></textarea>
+            <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+              <div *ngIf="addForumForm.get('description').errors">on n'accepte pas des chiffres dans la description.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" class="form-control" (change)="onFileSelected($event)" />
+          </div>
+
+          <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Soumettre</button>
+        </form>
+      </div>
+
+      <!-- Forums List -->
       <div class="row">
-        <div class="col-xl-12 col-lg-12 col-md-12 wow fadeInUp" *ngFor="let forum of forums">
+        <div class="col-xl-12" *ngFor="let forum of forums">
           <div class="blog-two__item blog-two__item--list">
-            <!-- Forum Image -->
             <div class="blog-two__image">
               <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
               <a [routerLink]="['/forum', forum.forum_id]"></a>
-            </div><!-- /.blog-image -->
+            </div>
 
-            <!-- Forum Content -->
             <div class="blog-two__content">
-              <!-- Top Meta (Category and Date) -->
               <div class="blog-two__top-meta">
-                <div class="blog-two__cats"><a href="#">Forum</a></div><!-- /.blog-cats -->
-                <div class="blog-two__date"><i class="icon-clock"></i>{{ forum.creationDate | date: 'medium' }}</div><!-- /.blog-date -->
+                <div class="blog-two__cats"><a href="#">Forum</a></div>
+                <div class="blog-two__date"><i class="icon-clock"></i>{{ forum.creationDate | date: 'medium' }}</div>
               </div>
 
               <h3 class="blog-two__title">
                 <a [routerLink]="['/forum', forum.forum_id, 'discussions']">{{ forum.title }}</a>
               </h3>
 
-              <!-- Forum Description -->
-              <p class="blog-two__text">
-                {{ forum.description }}
-              </p><!-- /.blog-content -->
+              <p class="blog-two__text">{{ forum.description }}</p>
 
-              <!-- Forum Meta (Author and Actions) -->
               <div class="blog-two__meta">
                 <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modifier</button>
                 <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Supprimer</button>
-              </div><!-- /.blog-meta -->
-            </div><!-- /.blog-content -->
+              </div>
+            </div>
 
-            <!-- Edit Form (Inside the Card) -->
             <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
               <h4>Modifier le forum</h4>
               <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
-                <!-- Champ Titre -->
                 <div class="mb-3">
                   <label class="form-label">Titre</label>
                   <input type="text" class="form-control" formControlName="title" />
@@ -96,7 +83,6 @@
                   </div>
                 </div>
 
-                <!-- Champ Description -->
                 <div class="mb-3">
                   <label class="form-label">Description</label>
                   <textarea class="form-control" formControlName="description"></textarea>
@@ -105,18 +91,16 @@
                   </div>
                 </div>
 
-                <!-- Champ Image -->
                 <div class="mb-3">
                   <label class="form-label">Image</label>
                   <input type="file" class="form-control" (change)="onFileSelected($event)" />
                 </div>
 
-                <!-- Boutons de soumission et d'annulation -->
                 <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Enregistrer</button>
                 <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Annuler</button>
               </form>
             </div>
-          </div><!-- /.blog-two-one -->
+          </div>
         </div>
       </div>
 
@@ -133,7 +117,9 @@
     </div>
   </div>
 </div>
+
 <app-footer></app-footer>
+
 <style>
   /* Ensure the parent container uses flexbox */
 .row {

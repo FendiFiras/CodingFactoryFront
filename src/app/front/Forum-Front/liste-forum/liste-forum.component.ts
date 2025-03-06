@@ -67,6 +67,8 @@ export class ListeForumComponent implements OnInit {
 
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
+    this.editMode = false; // Désactiver le mode édition si activé
+
     if (!this.showAddForm) {
       this.addForumForm.reset();
     }
