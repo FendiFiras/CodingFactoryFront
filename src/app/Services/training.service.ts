@@ -89,4 +89,9 @@ getRevenueByHour(): Observable<any[]> {
 }
 
 
+/** 📊 Récupérer la prédiction des revenus par heure */
+getPredictedHourlyRevenue(): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/predicted-hourly-revenue`);
+}
+
 }

@@ -16,6 +16,10 @@
                   <h2 class="stat-title">💵 Total Revenue: 
                     <span class="revenue-amount">${{ totalRevenue | number:'1.2-2' }}</span>
                   </h2>
+                  <h3 class="stat-title">🔮 Predicted Hourly Revenue: 
+                    <span class="revenue-amount">${{ predictedRevenue | number:'1.2-2' }}</span>
+                  </h3>
+                  
                   <button class="btn btn-success" (click)="refreshData()">🔄 Refresh Data</button>
                   <button class="btn btn-outline-secondary" (click)="exportChart()">📤 Export Graph</button>
                   <button class="btn btn-warning" (click)="toggleLiveUpdate()">
@@ -48,6 +52,7 @@
                     <canvas id="revenueByHourChart"></canvas>
                   </div>
                 </app-card>
+              
 
                 <!-- 🌙 Mode sombre -->
                 <button class="btn btn-dark mt-3" (click)="toggleDarkMode()">🌙 Toggle Dark Mode</button>

@@ -43,8 +43,13 @@
                         <i class="fas" [ngClass]="sortAscending ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
                         Sort by Price: {{ sortAscending ? 'Ascending' : 'Descending' }}
                       </button>
+                        <!-- ✅ Bouton "View Stats" qui redirige vers la page StatTraining -->
+                    <button class="btn btn-info ms-2" (click)="navigateToStats()">
+                      📊 View Stats
+                                                          </button>
+
                     </div>
-                    
+                  
                     
                     
                     

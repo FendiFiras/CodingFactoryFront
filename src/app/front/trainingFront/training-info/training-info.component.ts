@@ -27,7 +27,8 @@ export class TrainingInfoComponent implements OnInit {
   quizzes: Quiz[] = [];
   quiz!: Quiz | null;
   quizId: number | null = null;  // ✅ Stocker l'ID du quiz ici
-  userId: number = 2; // ✅ Fixe l'ID de l'utilisateur
+  userId: number = 4; // ✅ Fixe l'ID de l'utilisateur
+  predictedRevenue: number = 0;
 
   stripe!: Stripe; // ✅ Stocker l'instance Stripe
   isUserEnrolled: boolean = false; // ✅ Par défaut, on considère qu'il n'est pas inscrit.

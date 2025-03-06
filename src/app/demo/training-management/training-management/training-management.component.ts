@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TrainingService } from 'src/app/Services/training.service';
 import { Training,TrainingType  } from '../../../Models/training.model';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavigationComponent } from 'src/app/theme/layout/admin/navigation/navigation.component';
@@ -16,6 +15,8 @@ import { CourseService } from 'src/app/Services/courses.service';
 import { Session } from '../../../Models/session.model';
 import {SessionService} from '../../../Services/session.service';
 import { AddSessionComponent } from '../add-session/add-session.component';
+import { Router, RouterModule, Routes } from '@angular/router';
+
 @Component({
   selector: 'app-training-management',
   templateUrl: './training-management.component.html',
@@ -59,7 +60,8 @@ export class TrainingManagementComponent implements OnInit {
   constructor(
     private trainingService: TrainingService,
     private courseService: CourseService,
-    private sessionService :SessionService
+    private sessionService :SessionService,
+    private router: Router
   
   ) {}
   ngOnInit(): void {
@@ -366,7 +368,10 @@ filterSessions() {
     });
   }
 
-
+/** 🔄 Redirige vers la page des statistiques */
+navigateToStats() {
+  this.router.navigate(['/StatTraining']); // ✅ Navigation vers StatTraining
+}
 
 
 }

@@ -29,14 +29,18 @@ export class StatTrainingComponent implements OnInit {
   revenueData: any[] = [];
   revenueByHourData: any[] = [];
   totalRevenue: number = 0;
+  predictedRevenue: number = 0;
   chart!: Chart;
   chartByHour!: Chart;
   chartType: 'bar' | 'line' = 'bar';
-  darkMode: boolean = false; // 🌙 Mode sombre
+  darkMode: boolean = false;
   liveUpdate: boolean = false;
   intervalId: any;
-  chartColor = 'rgba(54, 162, 235, 1)'; // 🎨 Couleur par défaut
-  selectedTimeRange = 'day'; // 📅 Filtrage des périodes
+  chartColor = 'rgba(54, 162, 235, 1)';
+  selectedTimeRange = 'day';
+  showTrainingChart = true;
+  showHourlyChart = true;
+  chartPredicted!: Chart; // 🎯 Ajouter un graphique pour la prédiction
 
   constructor(private trainingService: TrainingService) {
     Chart.register(...registerables);
@@ -45,6 +49,13 @@ export class StatTrainingComponent implements OnInit {
   ngOnInit(): void {
     this.getTrainingRevenue();
     this.getRevenueByHour();
+    this.getPredictedHourlyRevenue(); // 🔮 Charger la prédiction
+
+
+    setInterval(() => {
+      this.getPredictedHourlyRevenue(); // 🔄 Mise à jour auto toutes les 10 sec
+    }, 10000);
+
   }
 
   /** 🔥 Récupère les revenus par formation */
@@ -53,7 +64,7 @@ export class StatTrainingComponent implements OnInit {
       (data) => {
         this.revenueData = data;
         this.totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
-        this.createChart();
+        if (this.showTrainingChart) this.createChart();
       },
       (error) => console.error("❌ Error loading revenue data:", error)
     );
@@ -64,11 +75,15 @@ export class StatTrainingComponent implements OnInit {
     this.trainingService.getRevenueByHour().subscribe(
       (data) => {
         this.revenueByHourData = this.formatHourlyData(data);
-        this.createRevenueByHourChart();
+        if (this.showHourlyChart) this.createRevenueByHourChart();
       },
       (error) => console.error("❌ Error loading hourly revenue data:", error)
     );
   }
+
+  /** 🔮 Récupère la prédiction de revenus */
+
+  
 
   /** 🕒 Assure un affichage de toutes les heures 00h - 23h */
   formatHourlyData(data: any[]): any[] {
@@ -84,8 +99,9 @@ export class StatTrainingComponent implements OnInit {
     return hourlyData;
   }
 
-  /** 🔄 Création du graphique de revenu par formation */
+  /** 📊 Création du graphique des revenus par formation */
   createChart() {
+    if (!this.showTrainingChart) return;
     if (this.chart) this.chart.destroy();
 
     const ctx = document.getElementById('trainingRevenueChart') as HTMLCanvasElement;
@@ -97,7 +113,7 @@ export class StatTrainingComponent implements OnInit {
         datasets: [{
           label: 'Revenue ($)',
           data: this.revenueData.map(d => d.revenue),
-          backgroundColor: this.chartType === 'bar' ? this.chartColor : 'transparent',
+          backgroundColor: this.chartColor,
           borderColor: this.chartColor,
           borderWidth: 2,
           fill: false,
@@ -112,13 +128,43 @@ export class StatTrainingComponent implements OnInit {
     });
   }
 
-  /** 📈 Création du graphique de revenu par heure avec animations */
+  createPredictedRevenueChart() {
+    if (this.chartPredicted) this.chartPredicted.destroy();
+  
+    const ctx = document.getElementById('predictedRevenueChart') as HTMLCanvasElement;
+    const gradient = ctx.getContext('2d')!.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(255, 206, 86, 0.5)'); // Jaune clair
+    gradient.addColorStop(1, 'rgba(255, 206, 86, 0)');
+  
+    this.chartPredicted = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: this.revenueByHourData.map(d => `${d.hour}:00`),
+        datasets: [{
+          label: 'Predicted Hourly Revenue ($)',
+          data: this.revenueByHourData.map(d => this.predictedRevenue), // 🔮 Valeur constante
+          borderColor: 'rgba(255, 206, 86, 1)', // Jaune vif
+          backgroundColor: gradient,
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 2000, easing: 'easeInOutQuart' },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  }
+  /** 📈 Création du graphique des revenus par heure */
   createRevenueByHourChart() {
+    if (!this.showHourlyChart) return;
     if (this.chartByHour) this.chartByHour.destroy();
 
     const ctx = document.getElementById('revenueByHourChart') as HTMLCanvasElement;
     const gradient = ctx.getContext('2d')!.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(255, 99, 132, 0.5)');
+    gradient.addColorStop(0, this.darkMode ? 'rgba(255, 99, 132, 0.9)' : 'rgba(255, 99, 132, 0.5)');
     gradient.addColorStop(1, 'rgba(255, 99, 132, 0)');
 
     this.chartByHour = new Chart(ctx, {
@@ -157,7 +203,7 @@ export class StatTrainingComponent implements OnInit {
     link.click();
   }
 
-  /** 🌙 Changer entre mode clair et mode sombre */
+  /** 🌙 Activation du mode sombre */
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     this.createRevenueByHourChart();
@@ -185,4 +231,28 @@ export class StatTrainingComponent implements OnInit {
     this.chartType = this.chartType === 'bar' ? 'line' : 'bar';
     this.createChart();
   }
+
+  /** 👀 Afficher/Masquer le graphique des formations */
+  toggleTrainingChart() {
+    this.showTrainingChart = !this.showTrainingChart;
+    if (this.showTrainingChart) this.createChart();
+  }
+
+  /** ⏳ Afficher/Masquer le graphique des revenus horaires */
+  toggleHourlyChart() {
+    this.showHourlyChart = !this.showHourlyChart;
+    if (this.showHourlyChart) this.createRevenueByHourChart();
+  }
+
+
+
+  getPredictedHourlyRevenue() {
+    this.trainingService.getPredictedHourlyRevenue().subscribe(
+      (data) => {
+        this.predictedRevenue = data; // Mise à jour de la valeur
+      },
+      (error) => console.error("❌ Error loading predicted hourly revenue:", error)
+    );
+  }
+  
 }

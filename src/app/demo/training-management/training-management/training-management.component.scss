@@ -257,4 +257,14 @@
   .sort-btn i {
     font-size: 16px;
   }
+  .view-stats-btn {
+    background-color: #17a2b8; // Bleu clair
+    border-color: #17a2b8;
+    color: white;
+    transition: 0.3s ease-in-out;
+  }
   
+  .view-stats-btn:hover {
+    background-color: #138496; // 🏆 Effet hover plus foncé
+    border-color: #117a8b;
+  }
