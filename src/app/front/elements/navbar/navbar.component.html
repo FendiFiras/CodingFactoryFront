@@ -72,14 +72,12 @@
                     <li><a href="contact.html">Reclamation</a></li>
 
                     <!-- Menu utilisateur -->
-                    <li class="dropdown user-menu">
+                    <li class="dropdown user-menu" *ngIf="isLoggedIn(); else loginRegisterMenu">
                         <div class="dropdown drp-user" ngbDropdown placement="auto">
                             <!-- Icône utilisateur -->
-                            <a href="javascript:" ngbDropdownToggle class="nav-icon" aria-label="User Menu"
-                                (click)="toggleDropdown()">
+                            <a href="javascript:" ngbDropdownToggle class="nav-icon" aria-label="User Menu">
                                 <i class="icon feather icon-user"></i>
                             </a>
-
                             <!-- Dropdown utilisateur -->
                             <div class="dropdown-menu dropdown-menu-end profile-card" ngbDropdownMenu>
                                 <!-- Icône des paramètres -->
@@ -177,17 +175,6 @@
                 </div>
             </div>
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" formControlName="email"
-                    aria-describedby="emailError">
-                <div id="emailError" class="text-danger"
-                    *ngIf="editForm.get('email').invalid && editForm.get('email').touched">
-                    Enter a valid email address.
-                </div>
-            </div>
-
             <!-- Téléphone -->
             <div class="mb-3">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
@@ -220,29 +207,22 @@
                     Date of Birth is required.
                 </div>
             </div>
-
-            <!-- Genre -->
             <div class="mb-3">
                 <label for="gender" class="form-label">Gender</label>
-                <input type="text" class="form-control" id="gender" formControlName="gender"
-                    aria-describedby="genderError">
+                <select class="form-control" id="gender" formControlName="gender">
+                    <option value="" disabled>Select Gender</option>
+                    <option [value]="'MALE'">Male</option>
+                    <option [value]="'FEMALE'">Female</option>
+                </select>
                 <div id="genderError" class="text-danger"
                     *ngIf="editForm.get('gender').invalid && editForm.get('gender').touched">
                     Gender is required.
                 </div>
             </div>
+            
 
-            <!-- Mot de passe -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" formControlName="password"
-                    aria-describedby="passwordError">
-                <div id="passwordError" class="text-danger"
-                    *ngIf="editForm.get('password').invalid && editForm.get('password').touched">
-                    Password must be at least 6 characters and contain at least one uppercase letter, one lowercase
-                    letter, and one number.
-                </div>
-            </div>
+  
+           
 
             <!-- Bouton de soumission -->
             <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Save changes</button>
@@ -287,4 +267,14 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
+</ng-template>
+<!-- Si l'utilisateur n'est pas connecté, affiche Login/Register -->
+<ng-template #loginRegisterMenu>
+    <li class="dropdown">
+        <a href="#">Account</a>
+        <ul>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        </ul>
+    </li>
 </ng-template>

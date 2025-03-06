@@ -5,22 +5,21 @@
         <div class="user-card-header">
           <!-- Conteneur pour l'image de l'utilisateur -->
           <div class="user-avatar">
-            <img *ngIf="user.image"
-                 [src]="'http://localhost:8089/codingFactory/auth/images/' + user.image"
-                 alt="User Image" class="profile-image">
+            <img *ngIf="user.image" [src]="'http://localhost:8089/codingFactory/auth/images/' + user.image"
+              alt="User Image" class="profile-image">
             <img *ngIf="!user.image" src="assets/images/default-avatar.png" alt="Default Image" class="profile-image">
           </div>
           <h3>{{ user.firstName }} {{ user.lastName }}</h3>
-          <span class="user-role">{{ user.role }}</span>
+          <i class="fa fa-briefcase"></i>&nbsp;<span class="user-role">{{ user.role }}</span>
         </div>
         <div class="user-card-body">
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Phone:</strong> {{ user.phoneNumber }}</p>
-          <p><strong>Address:</strong> {{ user.address }}</p>
-          <p><strong>Company Name:</strong> {{ user.companyName || 'N/A' }}</p>
-          <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date:'yyyy-MM-dd' }}</p>
-          <p><strong>Gender:</strong> {{ user.gender || 'N/A' }}</p>
-          <p><strong>Grade:</strong> {{ user.grade || 'N/A' }}</p>
+          <p><strong>Email :</strong> {{ user.email }}</p>
+          <p><strong>Phone :</strong> {{ user.phoneNumber }}</p>
+          <p><strong>Address :</strong> {{ user.address }}</p>
+          <p><strong>Company Name :</strong> {{ user.companyName || 'N/A' }}</p>
+          <p><strong>Date of Birth :</strong> {{ user.dateOfBirth | date:'yyyy-MM-dd' }}</p>
+          <p><strong>Gender :</strong> {{ user.gender || 'N/A' }}</p>
+          <p><strong>Grade :</strong> {{ user.grade || 'N/A' }}</p>
         </div>
         <div class="user-card-footer">
           <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>

@@ -1,115 +1,235 @@
 /* Style pour la grille de cartes */
 .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Style pour chaque carte utilisateur */
+.user-card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeIn 0.5s ease-out; /* Animation d'apparition */
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  /* Style pour chaque carte utilisateur */
-  .user-card {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .user-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Style pour l'en-tête de la carte */
-  .user-card-header {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .user-card-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #333;
-  }
-  
-  .user-role {
-    font-size: 0.875rem;
-    color: #666;
-  }
-  
-  /* Style pour le corps de la carte */
-  .user-card-body {
-    padding: 15px;
-  }
-  
-  .user-card-body p {
-    margin: 0 0 10px;
-    font-size: 0.875rem;
-    color: #555;
-  }
-  
-  .user-card-body p strong {
-    color: #333;
-  }
-  
-  /* Style pour le pied de la carte */
-  .user-card-footer {
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #eee;
-    text-align: right;
-  }
-  
-  /* Style pour les boutons */
-  .btn {
-    padding: 5px 10px;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-  
-  .btn-warning {
-    color: #fff;
-    background-color: #ffc107;
-    border-color: #ffc107;
-  }
-  
-  .btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
-  }/* Style pour le conteneur de l'avatar */
+}
+
+/* Style pour l'en-tête de la carte */
+.user-card-header {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.user-card-header h3 {
+  margin: 10px 0 5px;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.user-role {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+/* Style pour le conteneur de l'avatar */
 .user-avatar {
-    text-align: center;
-    margin-bottom: 15px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Style pour l'image de profil */
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour le corps de la carte */
+.user-card-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligner les éléments à gauche */
+}
+
+/* Style pour le bouton "View CV" */
+.btn-view-cv {
+  display: inline-block; /* Changer de block à inline-block */
+  margin: 5px 0px; /* Réduire la marge supérieure pour le placer plus haut */
+  padding: 15px;
+  font-size: 0.875rem;
+  border-radius: 200px; /* Bouton arrondi */
+  background-color: #b70b0b;
+  color: #fff;
+  border: none;
+  transition: background-color 0.2s;
+  align-items: left; /* Aligner les éléments à gauche */
+}
+@media (max-width: 768px) {
+  .user-card {
+    margin: 10px 0;
   }
-  
-  /* Style pour l'image de profil */
-  .profile-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .modal-body iframe {
+    height: 300px; /* Réduire la hauteur de l'iframe sur les petits écrans */
   }
-  
-  /* Style pour l'en-tête de la carte */
-  .user-card-header {
-    text-align: center;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .user-card-header h3 {
-    margin: 10px 0 5px;
-    font-size: 1.25rem;
-    color: #333;
-  }
-  
-  .user-role {
-    font-size: 0.875rem;
-    color: #666;
-  }
+}
+.btn-view-cv:hover {
+  background-color: #138496; /* Changement de couleur au survol */
+}
+
+/* Style pour les paragraphes dans le corps de la carte */
+.user-card-body p {
+  margin: 5px 0; /* Espacement cohérent entre les paragraphes */
+  font-size: 0.875rem;
+  color: #555;
+  text-align: left; /* Aligner le texte à gauche */
+}
+
+.user-card-body p strong {
+  color: #333;
+}
+/* Style pour le pied de la carte */
+.user-card-footer {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+/* Style pour les boutons */
+.btn {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn i {
+  font-size: 0.875rem;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-warning {
+  color: #fff;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.btn-info {
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Style pour les modales */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  padding: 15px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.modal-body {
+  padding: 15px;
+}
+
+.modal-body .form-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.modal-body .form-control {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 0.875rem;
+}
+
+.modal-body .form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Style pour les messages d'erreur */
+.text-danger {
+  font-size: 0.75rem;
+  color: #dc3545;
+  margin-top: 5px;
+}
+
+/* Style pour l'iframe du CV */
+iframe {
+  border: none;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}

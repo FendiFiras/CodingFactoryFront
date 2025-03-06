@@ -116,7 +116,7 @@
       
       .error-message {
         color: red;
-        font-size: 1,4em;
+        font-size: 2,4em;
       }
       
       .success-message {
@@ -124,15 +124,14 @@
         font-size: 1,4em;
       }
       .image-preview {
-        margin-top: 10px;
-        text-align: center;
-    }
-    
-    .image-preview img {
-        max-width: 150px;
-        max-height: 150px;
-        border-radius: 50%;
-        border: 2px solid #ddd;
-        padding: 5px;
-    }
-    
+    margin-top: 10px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    padding: 5px;
+}

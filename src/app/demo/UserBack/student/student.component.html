@@ -10,7 +10,7 @@
             <img *ngIf="!user.image" src="assets/images/default-avatar.png" alt="Default Image" class="profile-image">
           </div>
           <h3>{{ user.firstName }} {{ user.lastName }}</h3>
-          <span class="user-role">{{ user.role }}</span>
+          <i class="fa fa-briefcase"></i>&nbsp;<span class="user-role">{{ user.role }}</span>
         </div>
         <div class="user-card-body">
           <p><strong>Email:</strong> {{ user.email }}</p>

@@ -1,6 +1,6 @@
 /* Gradient moderne */
 .bg-gradient-primary {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, #3F4D67, #3F4D67);
 }
 
 /* Profile Card */
@@ -20,7 +20,7 @@
 
 .profile-header {
   padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(168, 80, 80, 0.1);
 }
 
 .profile-image-container {
@@ -85,9 +85,13 @@
 .profile-actions .btn-danger {
   background: #dc3545;
   border: none;
+  color: white; /* Texte en blanc */
+
 }
 
 .profile-actions .btn-danger:hover {
   background: #c82333;
   transform: translateY(-2px);
+  color: white; /* Assurer que le texte reste blanc même au survol */
+
 }

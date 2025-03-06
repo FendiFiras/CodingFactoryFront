@@ -3,15 +3,13 @@
     <div class="card-grid">
       <div *ngFor="let user of users; let i = index" class="user-card">
         <div class="user-card-header">
-          <!-- Conteneur pour l'image de l'utilisateur -->
           <div class="user-avatar">
-            <img *ngIf="user.image"
-                 [src]="'http://localhost:8089/codingFactory/auth/images/' + user.image"
-                 alt="User Image" class="profile-image">
+            <img *ngIf="user.image" [src]="'http://localhost:8089/codingFactory/auth/images/' + user.image"
+              alt="User Image" class="profile-image">
             <img *ngIf="!user.image" src="assets/images/default-avatar.png" alt="Default Image" class="profile-image">
           </div>
           <h3>{{ user.firstName }} {{ user.lastName }}</h3>
-          <span class="user-role">{{ user.role }}</span>
+          <i class="fa fa-briefcase"></i>&nbsp;<span class="user-role">{{ user.role }}</span>
         </div>
         <div class="user-card-body">
           <p><strong>Email:</strong> {{ user.email }}</p>
@@ -20,16 +18,31 @@
           <p><strong>Speciality:</strong> {{ user.speciality || 'N/A' }}</p>
           <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date:'yyyy-MM-dd' }}</p>
           <p><strong>Gender:</strong> {{ user.gender || 'N/A' }}</p>
+          <div class="text-center">
+            <button class="btn btn-view-cv" (click)="openCvModal(user, cvModal)">
+              <i class="fa fa-file-pdf"></i> View CV
+            </button>
+          </div>
         </div>
         <div class="user-card-footer">
-          <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>
+          <button *ngIf="user.accepted == null" class="btn btn-success btn-sm" (click)="accept(user.idUser)">
+            <i class="fa fa-check"></i> Accept Apply
+          </button>
+          
+          <button *ngIf="user.accepted == null" class="btn btn-danger btn-sm" (click)="openRejectModal(user, rejectModal)">
+            <i class="fa fa-times"></i> Reject Apply
+          </button>
+          
+          <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">
+            <i class="fa fa-ban"></i> Ban User
+          </button>
         </div>
       </div>
     </div>
   </app-card>
 </div>
 
-<!-- Modale pour ajouter un BanLog -->
+<!-- Modal for Ban User -->
 <ng-template #banModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
@@ -39,7 +52,7 @@
     <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
       <div class="mb-3">
         <label for="banDuration" class="form-label">Ban Duration</label>
-        <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
+        <input type="date" class="form-control" id="banDuration" formControlName="banDuration" required>
         <div *ngIf="banForm.controls['banDuration'].invalid && banForm.controls['banDuration'].touched"
           class="text-danger">
           The ban duration must be at least one day from today.
@@ -47,9 +60,54 @@
       </div>
       <div class="mb-3">
         <label for="banReason" class="form-label">Ban Reason</label>
-        <input type="text" class="form-control" id="banReason" formControlName="banReason">
+        <input type="text" class="form-control" id="banReason" formControlName="banReason" required>
       </div>
-      <button type="submit" class="btn btn-warning">Ban User</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+        <button type="submit" class="btn btn-warning" [disabled]="banForm.invalid">
+          <i class="fa fa-ban"></i> Ban User
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Modal for User CV -->
+<ng-template #cvModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">CV {{ selectedUser?.firstName }}</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="cvUrl; else noCv">
+      <iframe [src]="cvUrl" width="100%" height="500px"></iframe>
+    </div>
+    <ng-template #noCv>
+      <p>CV not available.</p>
+    </ng-template>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+  </div>
+</ng-template>
+<!-- Modal for Reject User -->
+<ng-template #rejectModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="rejectUserModalLabel">Reject User</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="rejectForm" (ngSubmit)="onRejectSubmit()">
+      <div class="mb-3">
+        <label for="rejectReason" class="form-label">Reject Reason</label>
+        <textarea class="form-control" id="rejectReason" formControlName="rejectReason" rows="3" required></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+        <button type="submit" class="btn btn-danger" [disabled]="rejectForm.invalid">
+          <i class="fa fa-times"></i> Reject User
+        </button>
+      </div>
     </form>
   </div>
 </ng-template>

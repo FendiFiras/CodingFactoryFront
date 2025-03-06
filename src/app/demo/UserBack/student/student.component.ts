@@ -120,24 +120,7 @@ export class StudentComponent implements OnInit {
     }
   }
 
-  // Supprimer un étudiant
-  deleteUser(id: number): void {
-    if (!id) {
-      console.error('ID invalide');
-      return;
-    }
-    if (confirm('Do you really want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe(
-        () => {
-          console.log('User successfully deleted');
-          this.getUsersByRole('STUDENT');
-        },
-        (error) => {
-          console.error('Erreur lors de la suppression de l\'étudiant', error);
-        }
-      );
-    }
-  }
+
 
   // Validation pour s'assurer que la durée du ban est au moins un jour après aujourd'hui
   minimumBanDurationValidator(control: AbstractControl) {
@@ -156,4 +139,5 @@ export class StudentComponent implements OnInit {
     }
     return null;
   }
+  
 } 

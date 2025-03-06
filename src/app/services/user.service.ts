@@ -19,6 +19,7 @@ export class UserService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<User>(this.apiUrl, user, { headers });
   }
+ 
   getUsersByRole(role: string): Observable<User[]> {
     const url = `${this.apiUrl}/role/${role}`; // Endpoint pour récupérer les utilisateurs par rôle
     return this.http.get<User[]>(url);

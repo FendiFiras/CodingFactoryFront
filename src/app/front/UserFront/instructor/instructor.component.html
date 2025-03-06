@@ -23,7 +23,8 @@
                     <h3 class="become-team__title">Instructor Rules</h3>
                     <ul class="become-team__list">
                         <li>There are many variations of passages of Lorem Ipsum available</li>
-                        <li>suffered alteration in some form, by injected humour, or randomised words which don't look</li>
+                        <li>suffered alteration in some form, by injected humour, or randomised words which don't look
+                        </li>
                         <li>ou need to be sure there isn't anything embarrassing hidden</li>
                         <li>If you are going to use a passage of Lorem Ipsum, </li>
                         <li>There are many variations of passages of Lorem Ipsum available</li>
@@ -51,50 +52,71 @@
             <div class="col-lg-5 wow fadeInUp animated" data-wow-delay="400ms">
                 <div class="become-team__form-box">
                     <h3 class="become-team__form-box__title">Apply for Registration</h3>
-                    
+
                     <form (ngSubmit)="registerInstructor()" enctype="multipart/form-data">
+                        <!-- Aperçu de l'image sélectionnée -->
+                        <div class="image-preview" *ngIf="selectedFile">
+                            <p>Selected Image:</p>
+                            <img [src]="imagePreview" alt="Preview" class="preview-img">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUpload" class="form-label">Profile Picture</label>
+                            <input id="imageUpload" class="form-control" type="file" (change)="onFileSelected2($event)">
+                            <p *ngIf="errors.image" class="error-message">{{ errors.image }}</p>
+                        </div>
+
+
+
                         <div class="become-team__input-box">
-                            <input type="text" placeholder="Your First Name" [(ngModel)]="newUser.firstName" name="firstName" required>
+                            <input class="form-control" type="text" [(ngModel)]="newUser.firstName" name="firstName"
+                                placeholder="First Name" required (blur)="validateFirstName()">
                             <p *ngIf="errors.firstName" class="error-message">{{ errors.firstName }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <input type="text" placeholder="Your Last Name" [(ngModel)]="newUser.lastName" name="lastName" required>
+                            <input class="form-control" type="text" [(ngModel)]="newUser.lastName" name="lastName"
+                                placeholder="Last Name" required (blur)="validateLastName()">
                             <p *ngIf="errors.lastName" class="error-message">{{ errors.lastName }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <input type="email" placeholder="Email Address" [(ngModel)]="newUser.email" name="email" required>
+                            <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email"
+                                placeholder="E-mail Address" required (blur)="validateEmail()">
                             <p *ngIf="errors.email" class="error-message">{{ errors.email }}</p>
                         </div>
+
                         <div class="become-team__input-box">
-                            <input type="password" placeholder="Password" [(ngModel)]="newUser.password" name="password" required>
-                            <p *ngIf="errors.password" class="error-message">{{ errors.password }}</p>
+                            <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth"
+                                required (blur)="validateDateOfBirth()">
+                            <p *ngIf="errors.dateOfBirth" class="error-message">{{ errors.dateOfBirth }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <input type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth" required>
-                        </div>
-                        <div class="become-team__input-box">
-                            <input type="text" placeholder="Phone Number" [(ngModel)]="newUser.phoneNumber" name="phoneNumber" required>
+                            <input class="form-control" type="text" [(ngModel)]="newUser.phoneNumber" name="phoneNumber"
+                                required placeholder="phone Number" (blur)="validatePhoneNumber()">
                             <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <input type="text" placeholder="Address" [(ngModel)]="newUser.address" name="address" required>
+                            <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address"
+                                required placeholder="address" (blur)="validateAddress()">
                             <p *ngIf="errors.address" class="error-message">{{ errors.address }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <input type="text" placeholder="Speciality" [(ngModel)]="newUser.speciality" name="speciality" required>
+                            <input class="form-control" type="text" [(ngModel)]="newUser.speciality" name="speciality"
+                                required placeholder="speciality" (blur)="validateSpeciality()">
                             <p *ngIf="errors.speciality" class="error-message">{{ errors.speciality }}</p>
                         </div>
                         <div class="become-team__input-box">
-                            <select [(ngModel)]="newUser.gender" name="gender" required>
+                            <select class="form-control" [(ngModel)]="newUser.gender" name="gender" required
+                                (blur)="validateGender()">
                                 <option value="" disabled selected>Select Gender</option>
                                 <option [value]="Gender.MALE">Male</option>
                                 <option [value]="Gender.FEMALE">Female</option>
                             </select>
                             <p *ngIf="errors.gender" class="error-message">{{ errors.gender }}</p>
                         </div>
+
                         <div class="become-team__input-box">
                             <label for="cv">Upload CV</label>
-                            <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+                            <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx"
+                                (change)="onFileSelected($event)">
                         </div>
                         <div class="become-team__btn-box">
                             <button type="submit" class="eduact-btn eduact-btn-second">
@@ -108,7 +130,7 @@
                             {{ errorMessage }}
                         </div>
                     </form>
-                    
+
                     <div class="result"></div>
                 </div>
             </div>

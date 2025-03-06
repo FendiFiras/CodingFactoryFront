@@ -1,18 +1,18 @@
- import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service.service';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { UserPreferenceService } from 'src/app/services/user-preference.service';
 import { UserPreference } from 'src/app/models/user-preference';
-import { Component, OnInit, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef, NgModule } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule, SharedModule,NgbDropdownModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule ,SharedModule,NgbDropdownModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
@@ -33,19 +33,18 @@ export class NavbarComponent implements OnInit {
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
+
   ) {
     // Initialisation du formulaire utilisateur
     this.editForm = this.fb.group({
       idUser: [''],
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
       address: ['', Validators.required],
       role: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
-      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/)]]
     });
 
     // Initialisation du formulaire des préférences utilisateur
@@ -59,6 +58,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserInfo();
   }
+  isLoggedIn(): boolean {
+    return !!this.userInfo; // Vérifie si userInfo est défini
+  }
+  
 
   /** Récupérer les informations de l'utilisateur connecté */
   loadUserInfo(): void {

@@ -7,60 +7,54 @@
                         <a href="login">Login</a><a href="register" class="active">Register</a>
                     </div>
 
-                    <form (ngSubmit)="registerUser()">
+                    <!-- Étape 1 : Informations de base -->
+                    <form *ngIf="currentStep === 1" (ngSubmit)="nextStep()" #step1Form="ngForm">
+                        <!-- Champ Prénom -->
                         <input class="form-control" type="text" [(ngModel)]="newUser.firstName" name="firstName"
-                            placeholder="First Name" required>
+                            placeholder="First Name" required (blur)="validateFirstName()">
                         <p *ngIf="errors.firstName" class="error-message">{{ errors.firstName }}</p>
 
+                        <!-- Champ Nom -->
                         <input class="form-control" type="text" [(ngModel)]="newUser.lastName" name="lastName"
-                            placeholder="Last Name" required>
+                            placeholder="Last Name" required (blur)="validateLastName()">
                         <p *ngIf="errors.lastName" class="error-message">{{ errors.lastName }}</p>
 
+                        <!-- Champ Email -->
                         <input class="form-control" type="email" [(ngModel)]="newUser.email" name="email"
-                            placeholder="E-mail Address" required>
+                            placeholder="E-mail Address" required (blur)="validateEmail()">
                         <p *ngIf="errors.email" class="error-message">{{ errors.email }}</p>
 
+                        <!-- Champ Mot de passe -->
                         <input class="form-control" type="password" [(ngModel)]="newUser.password" name="password"
-                            placeholder="Password" required>
+                            placeholder="Password" required (blur)="validatePassword()">
                         <p *ngIf="errors.password" class="error-message">{{ errors.password }}</p>
 
+                        <input class="form-control" type="password" [(ngModel)]="confirmPassword"
+                        name="confirmPassword" placeholder="Confirm Password" required
+                        (blur)="validateConfirmPassword()">
+                    <p *ngIf="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</p>
+                    
+                        <!-- Champ Date de naissance -->
                         <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth"
-                            required>
+                            required (blur)="validateDateOfBirth()">
                         <p *ngIf="errors.dateOfBirth" class="error-message">{{ errors.dateOfBirth }}</p>
 
-                        <select class="form-control" [(ngModel)]="newUser.gender" name="gender" required>
-                            <option value="Select Gender" disabled selected>Select Gender</option>
+                        <!-- Champ Genre -->
+                        <select class="form-control" [(ngModel)]="newUser.gender" name="gender" required
+                            (blur)="validateGender()">
+                            <option value="" disabled selected>Select Gender</option>
                             <option [value]="Gender.MALE">Male</option>
                             <option [value]="Gender.FEMALE">Female</option>
                         </select>
                         <p *ngIf="errors.gender" class="error-message">{{ errors.gender }}</p>
 
-                        <input class="form-control" type="tel" [(ngModel)]="newUser.phoneNumber" name="phoneNumber"
-                            placeholder="Phone Number" required>
-                        <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
-
-                        <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address"
-                            placeholder="Address" required>
-                        <p *ngIf="errors.address" class="error-message">{{ errors.address }}</p>
-                        <!-- Champ pour uploader une image -->
-                        <div class="form-group">
-                            <label for="imageUpload" class="form-label">Profile Picture</label>
-                            <input id="imageUpload" class="form-control" type="file" (change)="onFileSelected($event)">
-                            <p *ngIf="errors.image" class="error-message">{{ errors.image }}</p>
-                        </div>
-
-                        <!-- Aperçu de l'image sélectionnée -->
-                        <div class="image-preview" *ngIf="selectedFile">
-                            <p>Selected Image:</p>
-                            <img [src]="imagePreview" alt="Preview" class="preview-img">
-                        </div>
-
+                        <!-- Champ Rôle -->
                         <div class="role-selection">
                             <h5>Who are you?</h5>
                             <div class="role-options">
                                 <label class="role-card">
                                     <input type="radio" [(ngModel)]="newUser.role" name="role" [value]="Role.STUDENT"
-                                        required>
+                                        required (blur)="validateRole()">
                                     <div class="role-content">
                                         <i class="fas fa-user-graduate"></i>
                                         <span>Student</span>
@@ -68,7 +62,7 @@
                                 </label>
                                 <label class="role-card">
                                     <input type="radio" [(ngModel)]="newUser.role" name="role"
-                                        [value]="Role.COMPANYREPRESENTIVE" required>
+                                        [value]="Role.COMPANYREPRESENTIVE" required (blur)="validateRole()">
                                     <div class="role-content">
                                         <i class="fas fa-building"></i>
                                         <span>Company Representative</span>
@@ -78,8 +72,62 @@
                         </div>
                         <p *ngIf="errors.role" class="error-message">{{ errors.role }}</p>
 
+                        <!-- Bouton "Next" -->
                         <div class="form-button">
-                            <button id="submit" type="submit" class="ibtn">Register</button>
+                            <button type="submit" class="ibtn" [disabled]="!step1Form.form.valid">Next</button>
+                        </div>
+                    </form>
+
+                    <!-- Étape 2 : Informations spécifiques au rôle -->
+                    <form *ngIf="currentStep === 2" (ngSubmit)="registerUser()" #step2Form="ngForm">
+                        <!-- Étudiant -->
+                        <div *ngIf="newUser.role === Role.STUDENT">
+                            <input class="form-control" type="text" [(ngModel)]="newUser.level" name="level" required
+                                placeholder="level" (blur)="validateLevel()">
+                            <p *ngIf="errors.level" class="error-message">{{ errors.level }}</p>
+                        </div>
+
+
+
+
+                        <!-- Représentant d'entreprise -->
+                        <div *ngIf="newUser.role === Role.COMPANYREPRESENTIVE">
+                            <input class="form-control" type="text" [(ngModel)]="newUser.companyName" name="companyName"
+                                required placeholder="Company Name" (blur)="validateCompanyName()">
+                            <p *ngIf="errors.companyName" class="error-message">{{ errors.companyName }}</p>
+
+                            <input class="form-control" type="text" [(ngModel)]="newUser.grade" name="grade" required
+                                placeholder="grade" (blur)="validateGrade()">
+                            <p *ngIf="errors.grade" class="error-message">{{ errors.grade }}</p>
+                        </div>
+
+                        <!-- Champs communs -->
+                        <input class="form-control" type="text" [(ngModel)]="newUser.phoneNumber" name="phoneNumber"
+                            required placeholder="phone Number" (blur)="validatePhoneNumber()">
+                        <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
+
+                        <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address" required
+                            placeholder="address" (blur)="validateAddress()">
+                        <p *ngIf="errors.address" class="error-message">{{ errors.address }}</p>
+
+                        <div class="form-group">
+                            <label for="imageUpload" class="form-label">
+                                {{ newUser.role === Role.STUDENT ? 'Profile Picture' : 'Company Logo' }} <span
+                                    class="required"></span>
+                            </label>
+                            <input id="imageUpload" class="form-control" type="file" (change)="onFileSelected($event)"
+                                required>
+                            <p *ngIf="errors.image" class="error-message">{{ errors.image }}</p>
+                        </div>
+
+                        <div class="image-preview" *ngIf="selectedFile">
+                            <p>Selected Image:</p>
+                            <img [src]="imagePreview" alt="Preview" class="preview-img">
+                        </div>
+
+                        <div class="form-button">
+                            <button type="button" class="ibtn" (click)="currentStep = 1">Back</button>
+                            <button type="submit" class="ibtn">Register</button>
                         </div>
                     </form>
 
