@@ -26,3 +26,10 @@ th, td {
 .text-danger {
     font-size: 0.875rem;
 }
+.error-message {
+    font-family: 'Arial', sans-serif; /* Police uniforme */
+    font-size: 14px; /* Taille identique */
+    font-weight: normal; /* Poids normal */
+    display: block; /* Affichage en bloc pour l'alignement */
+  }
+  

@@ -113,3 +113,12 @@
     font-size: 0.875rem;
     color: #666;
   }
+  .error-message {
+    font-family: 'Arial', sans-serif; /* Police uniforme */
+    font-size: 14px; /* Taille identique */
+    font-weight: normal; /* Poids normal */
+    display: block; /* Affichage en bloc pour l'alignement */
+  }
+  .btn {
+    border-radius: 20px;
+}

@@ -1,7 +1,7 @@
 <div class="col-xl-12">
   <app-card cardTitle="Instructor List" [options]="false" blockClass="card-grid-style">
     <div class="card-grid">
-      <div *ngFor="let user of users; let i = index" class="user-card">
+      <div *ngFor="let user of paginatedUsers; let i = index" class="user-card">
         <div class="user-card-header">
           <!-- Conteneur pour l'image de l'utilisateur -->
           <div class="user-avatar">
@@ -21,7 +21,9 @@
           <p><strong>Gender:</strong> {{ user.gender || 'N/A' }}</p>
         </div>
         <div class="user-card-footer">
-          <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>
+          <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">
+            <i class="fa fa-ban"></i> Ban User
+          </button>
         </div>
       </div>
     </div>
@@ -35,21 +37,49 @@
   </div>
   <div class="modal-body">
     <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
+      
+      <!-- Ban Duration -->
       <div class="mb-3">
         <label for="banDuration" class="form-label">Ban Duration</label>
         <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
-        <div *ngIf="banForm.controls['banDuration'].invalid && banForm.controls['banDuration'].touched"
-          class="text-danger">
-          The ban duration must be at least one day from today.
+        <div *ngIf="banForm.controls['banDuration'].invalid && banForm.controls['banDuration'].touched" class="text-danger">
+          <small class="error-message">The ban duration must be at least one day from today.</small>
         </div>
       </div>
 
+      <!-- Ban Reason -->
       <div class="mb-3">
         <label for="banReason" class="form-label">Ban Reason</label>
         <input type="text" class="form-control" id="banReason" formControlName="banReason">
+        <div *ngIf="banForm.get('banReason')?.invalid && (banForm.get('banReason')?.dirty || banForm.get('banReason')?.touched)" class="text-danger">
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('required')">Ban reason is required.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('minlength')">Ban reason must be at least 10 characters long.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('maxlength')">Ban reason must not exceed 200 characters.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('pattern')">Ban reason can only contain letters, numbers, spaces, and punctuation (. , ! ?).</small>
+        </div>
       </div>
 
       <button type="submit" class="btn btn-warning">Ban User</button>
     </form>
   </div>
 </ng-template>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="javascript:" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">1</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">2</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">3</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">Next</a>
+    </li>
+  </ul>
+</nav>
+

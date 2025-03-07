@@ -36,10 +36,17 @@ export class ListeUsersComponent implements OnInit {
    // Initialisation du formulaire de bannissement avec validation
    this.banForm = this.fb.group({
     banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
-    banReason: ['', Validators.required],
+    banReason: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(200),
+        Validators.pattern(/^[a-zA-Z0-9.,!? ]+$/)
+      ]
+    ],
     status: [Status.ACTIVE]
-  });
-  }
+  });}
 
   ngOnInit(): void {
     this.getUsers(); // Charger la liste des utilisateurs au démarrage

@@ -19,6 +19,13 @@ export class StudentComponent implements OnInit {
   selectedUser: any; // Étudiant sélectionné pour modification
   selectedBanUser: any; // Étudiant sélectionné pour bannissement
   errorMessage: string | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 5; // Nombre d'éléments par page
+  totalItems: number = 0;
+  paginatedUsers: any[] = [];
+  Math = Math; // Ajoute cette ligne dans ta classe StudentComponent
+
+
 
   constructor(
     private userService: UserService,
@@ -26,16 +33,24 @@ export class StudentComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal
   ) {
- 
-      
-      
-      
-     
+
+
+
+
+
 
     // Initialisation du formulaire de bannissement avec validation
     this.banForm = this.fb.group({
       banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
-      banReason: ['', Validators.required],
+      banReason: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(200),
+          Validators.pattern(/^[a-zA-Z0-9.,!? ]+$/)
+        ]
+      ],
       status: [Status.ACTIVE]
     });
   }
@@ -49,13 +64,26 @@ export class StudentComponent implements OnInit {
     this.userService.getUsersByRole(role).subscribe(
       (data) => {
         this.users = data;
-        console.log('Étudiants récupérés:', this.users);
+        this.totalItems = this.users.length;
+        this.updatePaginatedUsers();
       },
       (error) => {
         console.error('Erreur lors de la récupération des étudiants', error);
       }
     );
   }
+  updatePaginatedUsers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(startIndex, endIndex);
+  }
+  changePage(page: number): void {
+    if (page >= 1 && page <= Math.ceil(this.totalItems / this.itemsPerPage)) {
+      this.currentPage = page;
+      this.updatePaginatedUsers();
+    }
+  }
+    
 
   // Ouvrir la modale de modification
   openEditModal(user: any, content: any): void {
@@ -70,8 +98,8 @@ export class StudentComponent implements OnInit {
 
   // Ouvrir la modale pour bannir un étudiant
   openBanModal(user: any, content: any): void {
-    this.selectedBanUser = user; 
-    this.banForm.reset({ status: Status.ACTIVE }); 
+    this.selectedBanUser = user;
+    this.banForm.reset({ status: Status.ACTIVE });
     this.modalService.open(content, { ariaLabelledBy: 'banUserModalLabel' });
   }
 
@@ -99,14 +127,14 @@ export class StudentComponent implements OnInit {
   onBanSubmit(): void {
     if (this.banForm.valid && this.selectedBanUser) {
       const banDurationISO = new Date(this.banForm.value.banDuration).toISOString();
-  
+
       const banLog: BanLog = {
         ...this.banForm.value,
-        banDuration: banDurationISO, 
+        banDuration: banDurationISO,
         userId: this.selectedBanUser.idUser,
         status: Status.ACTIVE
       };
-  
+
       this.banLogService.addBanLog(this.selectedBanUser.idUser, banLog).subscribe(
         (response) => {
           console.log('BanLog ajouté :', response);
@@ -139,5 +167,5 @@ export class StudentComponent implements OnInit {
     }
     return null;
   }
-  
+
 } 

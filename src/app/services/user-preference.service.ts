@@ -15,17 +15,24 @@
     constructor(private http: HttpClient) {}
   
     addUserPreference(userPreference: UserPreference, userId: number | undefined): Observable<UserPreference> {
-      if (!userId) {
-        console.error('Erreur: userId est undefined, impossible d\'ajouter la préférence.');
-        return throwError(() => new Error('User ID is undefined'));
-      }
-  
-      return this.http.post<UserPreference>(`${this.apiUrl}/${userId}`, userPreference).pipe(
-        catchError((error) => {
-          console.error('Erreur lors de l\'ajout des préférences utilisateur:', error);
-          return throwError(() => error);
-        })
-      );
+  if (!userId) {
+    console.error('Erreur: userId est undefined, impossible d\'ajouter la préférence.');
+    return throwError(() => new Error('User ID is undefined'));
+  }
+
+  // Assurer que notificationEnabled a une valeur définie
+  if (userPreference.notificationEnabled === undefined || userPreference.notificationEnabled === null) {
+    userPreference.notificationEnabled = false; // Valeur par défaut
+  }
+
+  return this.http.post<UserPreference>(`${this.apiUrl}/${userId}`, userPreference).pipe(
+    catchError((error) => {
+      console.error('Erreur lors de l\'ajout des préférences utilisateur:', error);
+      return throwError(() => error);
+    })
+  );
+
+
     } getAllUserPreferences(): Observable<UserPreference[]> {
       return this.http.get<UserPreference[]>(this.apiUrl);
     }

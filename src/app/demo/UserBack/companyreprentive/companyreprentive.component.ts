@@ -18,6 +18,8 @@ export class CompanyReprentiveComponent implements OnInit {
   banForm: FormGroup; // Formulaire pour bannir un utilisateur
   selectedUser: any; // Utilisateur sélectionné pour modification
   selectedBanUser: any; // Utilisateur sélectionné pour bannissement
+  page: number = 1; // Page actuelle
+  itemsPerPage: number = 5; // Nombre d'utilisateurs par page
 
   constructor(
     private userService: UserService,
@@ -31,10 +33,17 @@ export class CompanyReprentiveComponent implements OnInit {
    // Initialisation du formulaire de bannissement avec validation
    this.banForm = this.fb.group({
     banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
-    banReason: ['', Validators.required],
+    banReason: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(200),
+        Validators.pattern(/^[a-zA-Z0-9.,!? ]+$/)
+      ]
+    ],
     status: [Status.ACTIVE]
-  });
-  }
+  });}
 
   ngOnInit(): void {
     this.getUsersByRole('COMPANYREPRESENTIVE'); // Charger les représentants d'entreprise au démarrage
@@ -61,8 +70,21 @@ export class CompanyReprentiveComponent implements OnInit {
     this.banForm.reset({ status: Status.ACTIVE }); 
     this.modalService.open(content, { ariaLabelledBy: 'banUserModalLabel' });
   }
+  // Obtenir les utilisateurs pour la page actuelle
+  get paginatedUsers() {
+    const startIndex = (this.page - 1) * this.itemsPerPage;
+    return this.users.slice(startIndex, startIndex + this.itemsPerPage);
+  }
 
- 
+  // Changer de page
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+    }
+  }
+  get totalPages(): number {
+    return Math.ceil(this.users.length / this.itemsPerPage);
+  }
 
   // Soumettre le formulaire de ban
   onBanSubmit(): void {

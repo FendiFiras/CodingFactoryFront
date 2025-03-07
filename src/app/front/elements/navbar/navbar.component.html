@@ -231,43 +231,102 @@
 </ng-template>
 
 <!-- Modale pour les préférences utilisateur -->
+<!-- Modale pour les préférences utilisateur -->
 <ng-template #preferenceModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title" id="preferenceModalLabel">User Preferences</h5>
-        <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="preferenceForm" (ngSubmit)="onPreferenceSubmit()">
-            <!-- Thème -->
-            <div class="mb-3">
-                <label for="theme" class="form-label">Theme</label>
-                <select class="form-control" id="theme" formControlName="theme">
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                </select>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Settings</h5>
+                <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
             </div>
+            <div class="modal-body d-flex">
+                
+                <!-- Sidebar -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li [class.active]="selectedTab === 'preferences'" (click)="selectedTab = 'preferences'">
+                            <i class="fa fa-cog"></i> Preferences
+                        </li>
+                        <li [class.active]="selectedTab === 'changePassword'" (click)="selectedTab = 'changePassword'">
+                            <i class="fa fa-lock"></i> Change Password
+                        </li>
+                    </ul>
+                </div>
 
-            <!-- Langue -->
-            <div class="mb-3">
-                <label for="language" class="form-label">Language</label>
-                <select class="form-control" id="language" formControlName="language">
-                    <option value="en">English</option>
-                    <option value="fr">French</option>
-                </select>
+                <!-- Contenu dynamique -->
+                <div class="content-section">
+                    <!-- Formulaire des préférences -->
+                    <div *ngIf="selectedTab === 'preferences'">
+                        <form [formGroup]="preferenceForm" (ngSubmit)="onPreferenceSubmit()">
+                            <div class="mb-3">
+                                <label for="theme" class="form-label">Theme</label>
+                                <select class="form-control" id="theme" formControlName="theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="language" class="form-label">Language</label>
+                                <select class="form-control" id="language" formControlName="language">
+                                    <option value="en">English</option>
+                                    <option value="fr">French</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Enable Notifications</label>
+                                <input type="checkbox" class="form-check-input" formControlName="notificationEnabled">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
+                    </div>
+
+                    <!-- Formulaire de changement de mot de passe -->
+                    <div *ngIf="selectedTab === 'changePassword'">
+                        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+                            <!-- Current Password -->
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" formControlName="currentPassword" required>
+                                <div *ngIf="passwordForm.get('currentPassword').invalid && passwordForm.get('currentPassword').touched" class="text-danger">
+                                    Current Password is required.
+                                </div>
+                            </div>
+                    
+                            <!-- New Password -->
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" formControlName="newPassword" required>
+                                <div *ngIf="passwordForm.get('newPassword').invalid && passwordForm.get('newPassword').touched" class="text-danger">
+                                    New Password is required.
+                                </div>
+                            </div>
+                    
+                            <!-- Confirm Password -->
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" formControlName="confirmPassword" required>
+                                <div *ngIf="passwordForm.get('confirmPassword').invalid && passwordForm.get('confirmPassword').touched" class="text-danger">
+                                    Confirm Password is required.
+                                </div>
+                                <div *ngIf="passwordForm.get('confirmPassword').value !== passwordForm.get('newPassword').value && passwordForm.get('confirmPassword').touched" class="text-danger">
+                                    Passwords do not match.
+                                </div>
+                            </div>
+                    
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-success" [disabled]="passwordForm.invalid">Change Password</button>
+                        </form>
+                    </div>
+                    
+                </div>
             </div>
-
-            <!-- Notifications -->
-            <div class="mb-3">
-                <label for="notificationEnabled" class="form-label">Enable Notifications</label>
-                <input type="checkbox" class="form-check-input" id="notificationEnabled"
-                    formControlName="notificationEnabled">
-            </div>
-
-            <!-- Bouton de soumission -->
-            <button type="submit" class="btn btn-primary">Save</button>
-        </form>
+        </div>
     </div>
 </ng-template>
+
 <!-- Si l'utilisateur n'est pas connecté, affiche Login/Register -->
 <ng-template #loginRegisterMenu>
     <li class="dropdown">

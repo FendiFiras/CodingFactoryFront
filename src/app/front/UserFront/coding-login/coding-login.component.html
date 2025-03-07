@@ -13,8 +13,7 @@
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
           </div>
-  
-          <!-- ✅ Affichage des informations utilisateur après connexion -->
+<!-- ✅ Affichage des informations utilisateur après connexion -->
           <div *ngIf="userInfo; else loginForm" class="user-info">
             <p>Bienvenue, <strong>{{ userInfo.name }}</strong> !</p>
             <p>Email : {{ userInfo.email }}</p>
@@ -22,6 +21,8 @@
             <!-- Bouton Logout -->
             <button class="btn btn-danger" (click)="logout()">Se déconnecter</button>
           </div>
+  
+          
   
           <!-- ✅ Formulaire de connexion (affiché si userInfo est null) -->
           <ng-template #loginForm>

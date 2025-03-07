@@ -24,6 +24,9 @@ export class InstructorComponent implements OnInit {
   selectedBanUser: any; // Utilisateur sélectionné pour bannissement
   cvUrl: SafeResourceUrl | null = null;
   rejectForm: FormGroup;
+  successMessage: string | null = null;
+errorMessage: string | null = null;
+
 
   constructor(
     private userService: UserService,
@@ -38,7 +41,15 @@ export class InstructorComponent implements OnInit {
    // Initialisation du formulaire de bannissement avec validation
    this.banForm = this.fb.group({
     banDuration: ['', [Validators.required, this.minimumBanDurationValidator]], // Validation personnalisée
-    banReason: ['', Validators.required],
+    banReason: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(200),
+        Validators.pattern(/^[a-zA-Z0-9.,!? ]+$/)
+      ]
+    ],
     status: [Status.ACTIVE]
   });
    // Initialisation du formulaire de refus
@@ -75,7 +86,7 @@ export class InstructorComponent implements OnInit {
       this.authservice.rejectUser(this.selectedUser.idUser, rejectionReason).subscribe({
         next: (response) => {
           console.log('Utilisateur refusé avec succès:', response);
-          this.showSuccessMessage('Utilisateur refusé avec succès.');
+          this.showSuccessMessage('Instructor rejected successfully.');
   
           // Mettre à jour l'état de l'utilisateur dans la liste
          
@@ -163,8 +174,8 @@ export class InstructorComponent implements OnInit {
           console.error('Erreur lors de l\'acceptation de l\'utilisateur:', response.message);
           this.showErrorMessage(response.message);
         } else {
-          console.log('Utilisateur accepté avec succès:', response);
-          this.showSuccessMessage('Utilisateur accepté avec succès.');
+          console.log('Instructor successfully accepted:', response);
+          this.showSuccessMessage('Instructor successfully accepted.');
   
           // Mettre à jour l'état de l'utilisateur dans la liste
           const userIndex = this.users.findIndex(user => user.idUser === idUser);
@@ -175,8 +186,7 @@ export class InstructorComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors de l\'acceptation de l\'utilisateur:', err);
-        this.showErrorMessage(err.message || 'Une erreur s\'est produite.');
-      }
+        this.showSuccessMessage('Instructor successfully accepted.');      }
     });
   }
   
@@ -205,13 +215,17 @@ export class InstructorComponent implements OnInit {
     }
   }
   showSuccessMessage(message: string): void {
-    // Implémentez la logique pour afficher un message de succès (par exemple, avec un toast ou un snackbar)
-    console.log('Succès:', message);
+    this.successMessage = message;
+    setTimeout(() => {
+      this.successMessage = null;
+    }, 5000); // Le message disparaît après 5 secondes
   }
   
   showErrorMessage(message: string): void {
-    // Implémentez la logique pour afficher un message d'erreur (par exemple, avec un toast ou un snackbar)
-    console.error('Erreur:', message);
+    this.errorMessage = message;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 5000);
   }
   
   

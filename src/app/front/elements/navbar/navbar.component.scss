@@ -199,3 +199,46 @@
 .settings-icon:hover {
     color: #007bff;
 }
+.sidebar-menu {
+    width: 200px;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+}
+
+.sidebar-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.sidebar-menu li:hover, .sidebar-menu li.active {
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.content-section {
+    flex-grow: 1;
+    padding: 20px;
+}
+/* Light theme */
+.light-theme {
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
+  }
+  
+  /* Dark theme */
+  .dark-theme {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+  }
+  
+  body.dark-theme {
+    transition: all 0.3s ease !important;
+  }
+  

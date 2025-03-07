@@ -24,6 +24,10 @@ export class NavbarComponent implements OnInit {
   userPreference: UserPreference | null = null; // Préférences de l'utilisateur
   preferenceForm: FormGroup;
   isDropdownOpen: boolean = false; // Contrôle l'état du dropdown
+  selectedTab: string = 'preferences'; // Onglet par défaut
+  passwordForm: FormGroup;
+
+
 
   constructor(
     private router: Router,
@@ -53,6 +57,11 @@ export class NavbarComponent implements OnInit {
       language: ['', Validators.required],
       notificationEnabled: []
     });
+    this.passwordForm = this.fb.group({
+      currentPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+  });
   }
 
   ngOnInit(): void {
@@ -61,7 +70,37 @@ export class NavbarComponent implements OnInit {
   isLoggedIn(): boolean {
     return !!this.userInfo; // Vérifie si userInfo est défini
   }
+  onChangePassword() {
+    if (this.passwordForm.value.newPassword !== this.passwordForm.value.confirmPassword) {
+      alert("Les mots de passe ne correspondent pas !");
+      return;
+    }
   
+    const formData = new FormData();
+    formData.append('currentPassword', this.passwordForm.value.currentPassword);
+    formData.append('newPassword', this.passwordForm.value.newPassword);
+  
+    console.log("Changement de mot de passe:", this.passwordForm.value);
+  
+    // Appeler la méthode changePassword du AuthService
+    this.authService.updateUser(this.userInfo.idUser, formData).subscribe({
+      next: (response) => {
+        console.log('Mot de passe mis à jour avec succès:', response);
+        alert('Mot de passe mis à jour !');
+        
+        // Fermer la modale après la mise à jour du mot de passe
+        this.modalService.dismissAll();  // Ferme la modale actuelle
+  
+        this.router.navigate(['/home']);  // Reconnecter l'utilisateur
+      },
+      error: (err) => {
+        console.error('Erreur lors de la modification du mot de passe:', err);
+        alert('Une erreur est survenue lors de la mise à jour du mot de passe.');
+      }
+    });
+  }
+  
+ 
 
   /** Récupérer les informations de l'utilisateur connecté */
   loadUserInfo(): void {
@@ -89,21 +128,37 @@ export class NavbarComponent implements OnInit {
       this.userPreferenceService.getUserPreference(this.userInfo.idUser).subscribe({
         next: (preference) => {
           this.userPreference = preference;
-          this.preferenceForm.patchValue(preference); // Remplir le formulaire avec les préférences existantes
+          this.preferenceForm.patchValue(preference); // Appliquer au formulaire
+          this.applyPreferences(preference); // Appliquer immédiatement
         },
         error: (err) => {
           if (err.status === 404) {
-            console.warn('Aucune préférence trouvée pour cet utilisateur.');
-            // Ne pas appliquer de préférences par défaut
-            this.userPreference = null; // ou undefined, selon ce que vous préférez
-            this.preferenceForm.reset(); // Réinitialiser le formulaire
+            console.warn('Aucune préférence trouvée.');
+            this.userPreference = null;
+            this.preferenceForm.reset();
+            // Appliquer un thème par défaut
+            this.applyPreferences({ theme: 'light' }); // ou 'dark' selon votre choix
           } else {
-            this.handleError(err, 'Erreur lors de la récupération des préférences utilisateur.');
+            this.handleError(err, 'Erreur lors du chargement des préférences.');
           }
         }
       });
     }
   }
+    /** Appliquer les préférences (thème, langue, etc.) */
+    applyPreferences(preferences) {
+      console.log('Préférences appliquées:', preferences);
+      if (preferences.theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+      } else {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('dark-theme');
+      }
+    }
+    
+    
+   
 
   /** Gérer les erreurs de manière centralisée */
   handleError(error: any, message: string): void {
@@ -119,45 +174,37 @@ export class NavbarComponent implements OnInit {
   /** Soumettre les préférences utilisateur */
   onPreferenceSubmit(): void {
     if (!this.userInfo || !this.userInfo.idUser) {
-      console.error('Erreur: userInfo ou userInfo.idUser est undefined.');
+      console.error('Erreur: userInfo.idUser est undefined.');
       return;
     }
   
     if (this.preferenceForm.valid) {
       const updatedPreference: UserPreference = {
         ...this.preferenceForm.value,
-        idPreference: this.userPreference?.idPreference || undefined // Assurez-vous que l'idPreference est correctement passé
+        idPreference: this.userPreference?.idPreference || undefined
       };
   
       console.log('Préférence envoyée:', updatedPreference);
   
-      if (updatedPreference.idPreference) {
-        // Mettre à jour les préférences existantes
-        this.userPreferenceService.modifyUserPreference(updatedPreference).subscribe({
-          next: (response) => {
-            console.log('Préférence modifiée avec succès:', response);
-            this.userPreference = response;
-            this.modalService.dismissAll();
-            alert('Preferences updated successfully!');
-          },
-          error: (err) => this.handleError(err, 'Erreur lors de la mise à jour des préférences.')
-        });
-      } else {
-        // Ajouter de nouvelles préférences si elles n'existent pas
-        this.userPreferenceService.addUserPreference(updatedPreference, this.userInfo.idUser).subscribe({
-          next: (response) => {
-            console.log('Nouvelle préférence ajoutée:', response);
-            this.userPreference = response;
-            this.modalService.dismissAll();
-            alert('Preferences added successfully!');
-          },
-          error: (err) => this.handleError(err, 'Erreur lors de l\'ajout des préférences utilisateur.')
-        });
-      }
+      const savePreference$ = updatedPreference.idPreference
+        ? this.userPreferenceService.modifyUserPreference(updatedPreference)
+        : this.userPreferenceService.addUserPreference(updatedPreference, this.userInfo.idUser);
+  
+      savePreference$.subscribe({
+        next: (response) => {
+          console.log('Préférences mises à jour:', response);
+          this.userPreference = response;
+          this.applyPreferences(response); // Appliquer immédiatement
+          this.modalService.dismissAll();
+          alert('Preferences updated successfully!');
+        },
+        error: (err) => this.handleError(err, 'Erreur lors de la mise à jour des préférences.')
+      });
     } else {
       console.error('Formulaire invalide.');
     }
   }
+  
   /** Ouvrir la modale d'édition utilisateur */
   openEditModal(user: any, modal: TemplateRef<any>): void {
     this.selectedUser = user;
@@ -205,10 +252,12 @@ export class NavbarComponent implements OnInit {
     } else {
       console.error('Formulaire invalide.');
     }
-  }toggleDropdown(): void {
+  }
+  toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
     this.cdr.markForCheck(); // Forcer la détection des changements
   }
+  
   /** Mettre à jour l'image de l'utilisateur */
   updateUserImage(): void {
     if (this.selectedImage && this.userInfo?.idUser) {

@@ -44,7 +44,6 @@
 
 
 <!-- Modale pour ajouter un BanLog -->
-<!-- Modale pour ajouter un BanLog -->
 <ng-template #banModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
@@ -52,25 +51,48 @@
   </div>
   <div class="modal-body">
     <form [formGroup]="banForm" (ngSubmit)="onBanSubmit()">
+      
+      <!-- Ban Duration -->
       <div class="mb-3">
         <label for="banDuration" class="form-label">Ban Duration</label>
         <input type="date" class="form-control" id="banDuration" formControlName="banDuration">
         <div *ngIf="banForm.controls['banDuration'].invalid && banForm.controls['banDuration'].touched" class="text-danger">
-          The ban duration must be at least one day from today.
+          <small class="error-message">The ban duration must be at least one day from today.</small>
         </div>
       </div>
+
+      <!-- Ban Reason -->
       <div class="mb-3">
         <label for="banReason" class="form-label">Ban Reason</label>
         <input type="text" class="form-control" id="banReason" formControlName="banReason">
+        <div *ngIf="banForm.get('banReason')?.invalid && (banForm.get('banReason')?.dirty || banForm.get('banReason')?.touched)" class="text-danger">
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('required')">Ban reason is required.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('minlength')">Ban reason must be at least 10 characters long.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('maxlength')">Ban reason must not exceed 200 characters.</small>
+          <small class="error-message" *ngIf="banForm.get('banReason')?.hasError('pattern')">Ban reason can only contain letters, numbers, spaces, and punctuation (. , ! ?).</small>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
-        <select class="form-control" id="status" formControlName="status">
-          <option value="ACTIVE">Active</option>
-          <option value="EXPIRED">Expired</option>
-        </select>
-      </div>
+
       <button type="submit" class="btn btn-warning">Ban User</button>
     </form>
   </div>
 </ng-template>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="javascript:" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">1</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">2</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">3</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="javascript:">Next</a>
+    </li>
+  </ul>
+</nav>

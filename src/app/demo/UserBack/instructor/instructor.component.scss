@@ -233,3 +233,22 @@ iframe {
   border-radius: 4px;
   background-color: #f8f9fa;
 }
+.error-message {
+  font-family: 'Arial', sans-serif; /* Police uniforme */
+  font-size: 14px; /* Taille identique */
+  font-weight: normal; /* Poids normal */
+  display: block; /* Affichage en bloc pour l'alignement */
+}
+.alert-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.alert {
+  text-align: center;
+  font-size: 1rem;
+  padding: 10px;
+}
+.btn {
+  border-radius: 20px;
+}
