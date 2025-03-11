@@ -2,3 +2,11 @@
 input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
     display: none; /* Cache AM/PM */
 }
+#map {
+    height: 400px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
