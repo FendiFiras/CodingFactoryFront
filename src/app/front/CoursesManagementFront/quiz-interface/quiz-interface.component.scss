@@ -223,3 +223,54 @@ input[type="radio"]:checked + .answer-text {
     height: 20px;
     border-radius: 10px;
 }
+/* ✅ Timer Cercle Style */
+.timer-circle {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+}
+
+.timer-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-circle circle {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+}
+
+.timer-circle circle:first-child {
+    stroke: #e0e0e0;
+}
+
+.timer-circle circle:last-child {
+    stroke: #4CAF50;
+    stroke-dasharray: 282.6;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.timer-circle .timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #4CAF50;
+}
+
+.timer-circle .warning {
+    stroke: #FFC107;
+    color: #FFC107;
+}
+
+.timer-circle .danger {
+    stroke: #F44336;
+    color: #F44336;
+}

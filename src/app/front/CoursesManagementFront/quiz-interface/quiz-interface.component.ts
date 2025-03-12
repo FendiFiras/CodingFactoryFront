@@ -18,13 +18,17 @@ export class QuizInterfaceComponent {
   quiz!: Quiz;
   questions: QuizQuestion[] = [];
   quizId!: number;
-  userId: number = 2;
+  userId: number = 3;
   submitted = false;
   score!: number;
   passed!: boolean;
   currentQuestionIndex = 0;
-  selectedAnswers: { [key: number]: number | null } = {}; 
-  
+  selectedAnswers: { [key: number]: number[] } = {};
+  circleDashoffset = 0;
+totalTime!: number;
+circleCircumference = 282.6; // Circumference for a circle with radius 45
+timerColor = 'green';
+
   // ⏳ Variables pour le Timer
 // ⏳ Variables pour le Timer
 timeLeft!: number; 
@@ -44,7 +48,22 @@ isTimeUp = false;
       }
     });
   }
-
+  toggleAnswer(answerId: number, questionId: number): void {
+    if (!this.selectedAnswers[questionId]) {
+      this.selectedAnswers[questionId] = [];
+    }
+  
+    const index = this.selectedAnswers[questionId].indexOf(answerId);
+  
+    if (index === -1) {
+      // Ajouter l'ID de la réponse si elle n'est pas encore sélectionnée
+      this.selectedAnswers[questionId].push(answerId);
+    } else {
+      // Retirer la réponse si elle est déjà sélectionnée
+      this.selectedAnswers[questionId].splice(index, 1);
+    }
+  }
+  
   loadQuizData(): void {
     this.quizservice.getQuizById(this.quizId).subscribe(
       (quizData) => {
@@ -80,11 +99,12 @@ isTimeUp = false;
 
   submitQuiz(): void {
     const selectedAnswers: number[] = Object.values(this.selectedAnswers)
+        .flat() // 🔥 Aplatir les réponses multiples
         .filter(v => v !== null && v !== undefined)
         .map(v => Number(v));
-
+  
     console.log("📤 Données envoyées :", selectedAnswers);
-
+  
     this.quizServiceQuestion.submitAndCalculateScore(this.userId, this.quizId, selectedAnswers).subscribe(
       (response) => {
         console.log("✅ Réponse serveur :", response);
@@ -96,8 +116,8 @@ isTimeUp = false;
         console.error("❌ Erreur soumission :", error);
       }
     );
-}
-
+  }
+  
 
 
 calculateScore(): void {
@@ -141,24 +161,39 @@ restartQuiz(): void {
     this.score = 0;
     this.passed = false;
 }
-// ✅ Démarrage du Timer
 startTimer(): void {
+  this.totalTime = this.quiz.timeLimit * 60;
+  this.circleDashoffset = this.circleCircumference;
+
   this.timerInterval = setInterval(() => {
     if (this.timeLeft > 0) {
-      this.timeLeft--; // Diminue le temps restant
+      this.timeLeft--;
+      this.updateCircleProgress();
     } else {
       this.isTimeUp = true;
-      this.autoSubmitQuiz(); // Soumission automatique quand le temps est écoulé
+      this.autoSubmitQuiz();
     }
-  }, 1000); // Diminue chaque seconde
+  }, 1000);
 }
 
-// ✅ Format d'affichage du Timer (mm:ss)
+updateCircleProgress(): void {
+  const progress = this.timeLeft / this.totalTime;
+  this.circleDashoffset = this.circleCircumference * progress;
+  if (progress <= 0.3) {
+    this.timerColor = 'red';
+  } else if (progress <= 0.6) {
+    this.timerColor = 'yellow';
+  } else {
+    this.timerColor = 'green';
+  }
+}
+
 getFormattedTime(): string {
   const minutes = Math.floor(this.timeLeft / 60);
   const seconds = this.timeLeft % 60;
   return `${this.padZero(minutes)}:${this.padZero(seconds)}`;
 }
+
 
 // ✅ Ajout du zéro devant les chiffres uniques (ex: 09:05)
 padZero(num: number): string {
@@ -171,5 +206,7 @@ autoSubmitQuiz(): void {
   this.passed = false;
   this.submitted = true;
 }
+
+
 
 }

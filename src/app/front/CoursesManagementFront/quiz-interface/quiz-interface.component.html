@@ -1,13 +1,5 @@
 <app-navbar></app-navbar>
-<!-- ⏳ Timer Display -->
-<div *ngIf="!submitted" class="timer-box text-center my-3">
-    <p>⏳ Time Remaining: <strong>{{ getFormattedTime() }}</strong></p>
-</div>
 
-<!-- ✅ Message Si Temps Écoulé -->
-<div *ngIf="isTimeUp" class="alert alert-danger text-center">
-    ❌ Time is up! Your quiz has been automatically submitted.
-</div>
 <!-- 🏆 HEADER du Quiz -->
 <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
     <div class="page-header__bg jarallax-img"></div>
@@ -25,9 +17,19 @@
     <div class="quiz-container">
         <h3 class="quiz-title">📝 Answer the Questions Below</h3>
 
-        <!-- ⏳ Timer Box -->
-        <div *ngIf="!submitted" class="timer-box text-center my-3">
-            <p>⏳ Time Remaining: <strong>{{ getFormattedTime() }}</strong></p>
+        <!-- ✅ Timer Cercle -->
+        <div *ngIf="!submitted && !isTimeUp" class="timer-circle">
+            <svg>
+                <circle cx="50" cy="50" r="45"></circle>
+                <circle 
+                    cx="50" cy="50" r="45" 
+                    [style.stroke-dashoffset]="circleDashoffset"
+                    [ngClass]="timerColor">
+                </circle>
+            </svg>
+            <div class="timer-text">
+                {{ getFormattedTime() }}
+            </div>
         </div>
 
         <!-- ✅ Message si le temps est écoulé -->
@@ -35,11 +37,8 @@
             ❌ Time is up! Your quiz has been automatically submitted.
         </div>
 
-        <div *ngIf="!questions?.length" class="text-center">
-            <p class="alert alert-info">📌 Loading questions...</p>
-        </div>
-
-        <div *ngIf="questions?.length" class="quiz-card">
+        <!-- ✅ Affichage des questions si le quiz est en cours -->
+        <div *ngIf="!submitted && !isTimeUp && questions?.length" class="quiz-card">
             <div class="progress-indicator">
                 <span>Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
             </div>
@@ -53,10 +52,9 @@
                 <div *ngFor="let answer of questions[currentQuestionIndex]?.quizAnswers" class="answer-option">
                     <label class="answer-label">
                         <input 
-                            type="radio" 
+                            type="checkbox" 
                             [value]="answer.idQuizA"
-                            [(ngModel)]="selectedAnswers[questions[currentQuestionIndex].idQuizQ]"
-                            [name]="'question-' + questions[currentQuestionIndex].idQuizQ"
+                            (change)="toggleAnswer(answer.idQuizA, questions[currentQuestionIndex].idQuizQ)"
                             class="form-check-input"
                         />
                         <span class="answer-text">✅ {{ answer.answerText }}</span>
@@ -64,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- 🚀 Navigation entre les questions -->
             <div class="quiz-navigation">
                 <button (click)="previousQuestion()" class="btn btn-secondary" [disabled]="currentQuestionIndex === 0">
                     ⬅️ Previous
@@ -77,40 +74,26 @@
                 </button>
             </div>
         </div>
-    </div>
-</section>
 
+        <!-- ✅ Résultat du quiz avec Progress Bar -->
+        <div *ngIf="submitted" class="quiz-result-container">
+            <div class="score-card shadow-lg p-4 rounded animate-fade-in">
+                <h3 [ngClass]="passed ? 'text-success fw-bold' : 'text-danger fw-bold animate-shake'">
+                    {{ passed ? '🎉 Congratulations! You Passed!' : '❌ Oops! Try Again!' }}
+                </h3>
 
+                <div class="progress-bar-container mt-3">
+                    <div class="progress-bar">
+                        <div class="progress" [style.width.%]="(score / quiz.maxGrade) * 100"></div>
+                    </div>
+                </div>
 
-<!-- ✅ Résultat du quiz directement sous la carte -->
-<div *ngIf="submitted" class="quiz-result-container">
-    <div class="score-card shadow-lg p-4 rounded animate-fade-in">
-        <!-- 🎊 Message Dynamique (Succès ou Échec) -->
-        <h3 [ngClass]="passed ? 'text-success fw-bold' : 'text-danger fw-bold animate-shake'">
-            {{ passed ? '🎉 Congratulations! You Passed!' : '❌ Oops! Try Again!' }}
-        </h3>
-
-        <!-- 🎯 Barre de progression sous le quiz -->
-        <div class="progress-bar-container mt-3">
-            <div class="progress-bar">
-                <div class="progress" [style.width.%]="(score / quiz.maxGrade) * 100"></div>
+                <p class="score mt-2">
+                    💯 <strong>Your Score:</strong> <span class="score-number">{{ score }}/{{ quiz.maxGrade }}</span>
+                </p>
             </div>
         </div>
-
-        <!-- 💯 Affichage du Score -->
-        <p class="score mt-2">
-            💯 <strong>Your Score:</strong> <span class="score-number">{{ score }}/{{ quiz.maxGrade }}</span>
-        </p>
-
-        <!-- 🔍 Actions supplémentaires -->
-        <div class="quiz-actions">
-            <button class="btn btn-outline-primary btn-lg" (click)="reviewQuiz()">🔍 Review Answers</button>
-            <button class="btn btn-primary btn-lg" (click)="restartQuiz()">🔄 Restart Quiz</button>
-        </div>
     </div>
-</div>
-
-
-
+</section>
 
 <app-footer></app-footer>
