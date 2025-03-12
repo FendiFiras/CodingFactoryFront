@@ -23,6 +23,11 @@ export class MessageComponent implements OnInit {
   currentUserId = 1; // Remplacez par l'ID de l'utilisateur actuel
   currentUserName: string = 'zitouni'; // Nom de l'utilisateur actuel
   currentUserImage: string = 'assets/images/zita.jpg';
+  isLocationEnabled = false;
+  currentLocation: { latitude: number, longitude: number } | null = null;
+
+
+
   // Liste des mots interdits
   badWords: string[] = [
     'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'damn', 'crap', 
@@ -54,6 +59,14 @@ export class MessageComponent implements OnInit {
       this.newMessage.discussionId = this.discussionId;
       this.loadMessages();
     });
+  
+    // Demander la permission de géolocalisation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => console.log('Permission de géolocalisation accordée'),
+        (error) => console.error('Permission de géolocalisation refusée:', error)
+      );
+    }
   }
 
   // Filtrer les mots interdits
@@ -233,49 +246,128 @@ getStoredDislikes(messageId: number): number {
     }
   }
 
-  addMessage(): void {
-    this.newMessage.description = this.filterBadWords(this.newMessage.description);
-
-    if (!this.newMessage.description.trim() && !this.newMessage.image) {
-      alert('Veuillez entrer un message ou sélectionner une image.');
-      return;
+  // Méthode pour envoyer le message
+  async addMessage(): Promise<void> {
+    try {
+      this.newMessage.description = this.filterBadWords(this.newMessage.description);
+  
+      if (!this.newMessage.description.trim() && !this.newMessage.image) {
+        alert('Veuillez entrer un message ou sélectionner une image.');
+        return;
+      }
+  
+      // Récupérer la localisation uniquement si elle est activée
+      const latitude = this.isLocationEnabled ? this.currentLocation?.latitude : null;
+      const longitude = this.isLocationEnabled ? this.currentLocation?.longitude : null;
+  
+      console.log('Envoi de la localisation :', { latitude, longitude }); // Log des valeurs envoyées
+  
+      if (this.newMessage.image) {
+        const formData = new FormData();
+        formData.append('userId', this.newMessage.userId.toString());
+        formData.append('discussionId', this.newMessage.discussionId.toString());
+        formData.append('description', this.newMessage.description);
+        formData.append('anonymous', this.newMessage.anonymous.toString());
+        if (latitude !== null && longitude !== null) {
+          formData.append('latitude', latitude.toString());
+          formData.append('longitude', longitude.toString());
+        }
+        formData.append('image', this.newMessage.image);
+  
+        this.messageService.addMessageWithImage(formData).subscribe({
+          next: () => {
+            this.resetMessageForm();
+            this.loadMessages();
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'ajout du message:', err);
+          }
+        });
+      } else {
+        this.messageService.addMessageWithLocation(
+          this.newMessage.userId,
+          this.newMessage.discussionId,
+          this.newMessage.description,
+          latitude,
+          longitude,
+          this.newMessage.anonymous
+        ).subscribe({
+          next: () => {
+            this.resetMessageForm();
+            this.loadMessages();
+          },
+          error: (err) => {
+            console.error('Erreur lors de l\'ajout du message:', err);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du message:', error);
     }
+  }
 
-    if (this.newMessage.image) {
-      const formData = new FormData();
-      formData.append('userId', this.newMessage.userId.toString());
-      formData.append('discussionId', this.newMessage.discussionId.toString());
-      formData.append('description', this.newMessage.description);
-      formData.append('anonymous', this.newMessage.anonymous.toString());
-      formData.append('image', this.newMessage.image);
+  // Réinitialiser le formulaire de message
+  resetMessageForm(): void {
+    this.newMessage.description = '';
+    this.newMessage.image = null;
+    this.newMessage.anonymous = false;
+    this.isLocationEnabled = false;
+    this.currentLocation = null;
+  }
 
-      this.messageService.addMessageWithImage(formData).subscribe({
-        next: () => {
-          this.newMessage.description = '';
-          this.newMessage.image = null;
-          this.newMessage.anonymous = false;
-          this.loadMessages();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'ajout du message:', err);
-        }
-      });
+
+
+  // Méthode pour récupérer la localisation
+  getCurrentLocation(): Promise<{ latitude: number, longitude: number }> {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            });
+          },
+          (error) => {
+            reject(error);
+          },
+          {
+            enableHighAccuracy: true, // Active la haute précision
+            timeout: 10000, // Temps d'attente maximum (10 secondes)
+            maximumAge: 0 // Ne pas utiliser de cache
+          }
+        );
+      } else {
+        reject(new Error('Geolocation is not supported by this browser.'));
+      }
+    });
+  }
+
+
+  async requestLocationPermission(): Promise<boolean> {
+    try {
+      const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+      return permissionStatus.state === 'granted';
+    } catch (error) {
+      console.error('Erreur lors de la vérification des permissions:', error);
+      return false;
+    }
+  }
+
+  // Méthode pour activer/désactiver la localisation
+  async toggleLocation() {
+    this.isLocationEnabled = !this.isLocationEnabled;
+    if (this.isLocationEnabled) {
+      try {
+        this.currentLocation = await this.getCurrentLocation();
+        console.log('Localisation activée :', this.currentLocation);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la localisation:', error);
+        alert('Impossible de récupérer votre localisation. Veuillez vérifier les permissions de géolocalisation.');
+        this.isLocationEnabled = false; // Désactiver la localisation en cas d'erreur
+      }
     } else {
-      this.messageService.addMessage(
-        this.newMessage.userId,
-        this.newMessage.discussionId,
-        this.newMessage.description,
-        this.newMessage.anonymous
-      ).subscribe({
-        next: () => {
-          this.newMessage.description = '';
-          this.newMessage.anonymous = false;
-          this.loadMessages();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'ajout du message:', err);
-        }
-      });
+      this.currentLocation = null; // Réinitialiser la localisation
     }
   }
 }

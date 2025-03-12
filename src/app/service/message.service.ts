@@ -65,4 +65,27 @@ addMessage(userId: number, discussionId: number, description: string, anonymous:
       return this.http.post<Message>(`${this.apiUrl}/add-with-image`, formData);
     }
       */
+
+    addMessageWithLocation(userId: number, discussionId: number, description: string, latitude: number | null, longitude: number | null, anonymous: boolean = false): Observable<Message> {
+      const url = `${this.apiUrl}/add-with-location`;
+      let params = new HttpParams()
+        .set('userId', userId.toString())
+        .set('discussionId', discussionId.toString())
+        .set('description', description)
+        .set('anonymous', anonymous.toString());
+    
+      // Ajouter latitude et longitude uniquement si elles ne sont pas null
+      if (latitude !== null) {
+        params = params.set('latitude', latitude.toString());
+      }
+      if (longitude !== null) {
+        params = params.set('longitude', longitude.toString());
+      }
+    
+      console.log('Paramètres envoyés au backend :', params.toString()); // Log des paramètres
+    
+      return this.http.post<Message>(url, null, { params });
+    }
+
+    
 }

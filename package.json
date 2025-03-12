@@ -32,6 +32,7 @@
     "@popperjs/core": "2.11.8",
     "apexcharts": "3.49.2",
     "bootstrap": "5.3.3",
+    "leaflet": "^1.9.4",
     "ng-apexcharts": "1.11.0",
     "ngx-scrollbar": "16.1.1",
     "rxjs": "~7.8.1",
@@ -40,6 +41,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^19.0.0",
     "@angular-devkit/build-angular": "^19.1.6",
     "@angular/cli": "19.0.6",
     "@angular/compiler-cli": "19.0.5",
@@ -49,6 +51,7 @@
     "@types/lodash": "4.17.13",
     "@types/node": "22.10.2",
     "angular-eslint": "19.0.2",
+    "css-loader": "^7.1.2",
     "eslint": "^9.16.0",
     "jasmine-core": "~5.5.0",
     "karma": "~6.4.4",
@@ -57,6 +60,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "3.4.2",
+    "style-loader": "^4.0.0",
     "typescript": "5.6.3",
     "typescript-eslint": "8.18.0"
   }

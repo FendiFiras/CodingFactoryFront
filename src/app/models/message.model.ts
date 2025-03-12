@@ -11,5 +11,7 @@ export class Message {
     isDislikedByCurrentUser: boolean; // Nouvelle propriété
     userName?: string; // Ajoutez cette ligne
     anonymous!: boolean; // Indique si le message est anonyme
+    latitude?: number;
+    longitude?: number;
 
 }
