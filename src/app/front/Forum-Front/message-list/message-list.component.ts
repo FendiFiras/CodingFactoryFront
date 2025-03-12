@@ -25,7 +25,11 @@ export class MessageComponent implements OnInit {
   currentUserImage: string = 'assets/images/zita.jpg';
   isLocationEnabled = false;
   currentLocation: { latitude: number, longitude: number } | null = null;
-
+  isRecording = false;
+  mediaRecorder: MediaRecorder | null = null;
+  audioChunks: Blob[] = [];
+  audioBlob: Blob | null = null;
+  audioUrl: string = '';
 
 
   // Liste des mots interdits
@@ -58,6 +62,12 @@ export class MessageComponent implements OnInit {
       this.discussionId = +params['discussionId'];
       this.newMessage.discussionId = this.discussionId;
       this.loadMessages();
+        // Initialisation de l'enregistrement vocal
+    if (navigator.mediaDevices) {
+      console.log('Le navigateur supporte MediaDevices.');
+    } else {
+      console.error('Le navigateur ne supporte pas MediaDevices pour l\'enregistrement vocal.');
+    }
     });
   
     // Demander la permission de géolocalisation
@@ -268,12 +278,17 @@ getStoredDislikes(messageId: number): number {
         formData.append('discussionId', this.newMessage.discussionId.toString());
         formData.append('description', this.newMessage.description);
         formData.append('anonymous', this.newMessage.anonymous.toString());
-        if (latitude !== null && longitude !== null) {
-          formData.append('latitude', latitude.toString());
-          formData.append('longitude', longitude.toString());
+        
+        if (this.isLocationEnabled && this.currentLocation) {
+          formData.append('latitude', this.currentLocation.latitude.toString());
+          formData.append('longitude', this.currentLocation.longitude.toString());
+          console.log('Localisation ajoutée au FormData:', this.currentLocation);
+        } else {
+          console.log('Localisation non ajoutée au FormData');
         }
+        
         formData.append('image', this.newMessage.image);
-  
+      
         this.messageService.addMessageWithImage(formData).subscribe({
           next: () => {
             this.resetMessageForm();
@@ -313,6 +328,8 @@ getStoredDislikes(messageId: number): number {
     this.newMessage.anonymous = false;
     this.isLocationEnabled = false;
     this.currentLocation = null;
+    this.audioBlob = null;
+    this.audioUrl = '';
   }
 
 
@@ -370,4 +387,76 @@ getStoredDislikes(messageId: number): number {
       this.currentLocation = null; // Réinitialiser la localisation
     }
   }
+
+  // Fonction pour démarrer/arrêter l'enregistrement
+  toggleRecording(): void {
+    if (this.isRecording) {
+      this.stopRecording();
+    } else {
+      this.startRecording();
+    }
+  }
+
+  // Démarrer l'enregistrement vocal
+  startRecording(): void {
+    this.isRecording = true;
+    this.audioChunks = [];
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        this.mediaRecorder = new MediaRecorder(stream);
+        
+        this.mediaRecorder.ondataavailable = event => {
+          this.audioChunks.push(event.data);
+        };
+        
+        this.mediaRecorder.onstop = () => {
+          this.audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+          this.audioUrl = URL.createObjectURL(this.audioBlob);
+          console.log('Enregistrement terminé');
+        };
+        
+        this.mediaRecorder.start();
+      })
+      .catch(err => {
+        console.error('Erreur lors de l\'accès au microphone', err);
+        this.isRecording = false;
+      });
+  }
+
+  // Arrêter l'enregistrement vocal
+  stopRecording(): void {
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop();
+      this.isRecording = false;
+    }
+  }
+
+  // Envoyer le message vocal
+  sendAudioMessage(): void {
+    if (this.audioBlob) {
+      const timestamp = new Date().getTime(); // Obtient l'horodatage actuel
+      const filename = `audio_message_${timestamp}.wav`; // Nom de fichier unique
+
+      const formData = new FormData();
+      formData.append('file', this.audioBlob, filename); // Utilise le nom de fichier unique
+      formData.append('userId', this.newMessage.userId.toString());
+      formData.append('discussionId', this.newMessage.discussionId.toString());
+      formData.append('audio', this.audioBlob, filename); // Utilise le nom de fichier unique
+
+      this.messageService.addAudioMessage(formData).subscribe({
+        next: (response) => {
+          console.log('Audio message sent successfully:', response);
+          this.resetMessageForm();
+          this.loadMessages(); // Rafraîchit les messages
+        },
+        error: (err) => {
+          console.error('Error sending audio message:', err);
+        }
+      });
+    } else {
+      alert('Veuillez enregistrer un message vocal avant d\'envoyer.');
+    }
+  }
+
+
 }

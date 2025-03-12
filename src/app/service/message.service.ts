@@ -87,5 +87,8 @@ addMessage(userId: number, discussionId: number, description: string, anonymous:
       return this.http.post<Message>(url, null, { params });
     }
 
-    
+     // Ajouter un message vocal
+     addAudioMessage(formData: FormData): Observable<any> {
+      return this.http.post(`${this.apiUrl}/audio`, formData, { responseType: 'text' });
+    }
 }

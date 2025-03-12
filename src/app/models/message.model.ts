@@ -13,5 +13,7 @@ export class Message {
     anonymous!: boolean; // Indique si le message est anonyme
     latitude?: number;
     longitude?: number;
+    audioUrl?: string; // Ajouter ce champ
+
 
 }

@@ -30,9 +30,7 @@
         <div class="message-content">
           <p>{{ message.description }}</p>
           <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image" class="message-img">
-          <small class="message-date">{{ message.messageDate | date:'short' }}</small>
-          
-           <!-- Afficher la localisation -->
+          <audio *ngIf="message.audioUrl" controls [src]="'http://localhost:8089/images/' + message.audioUrl"></audio>           <!-- Afficher la localisation -->
            <div *ngIf="message.latitude && message.longitude" class="location">
             <a href="https://www.google.com/maps?q={{message.latitude}},{{message.longitude}}" target="_blank">
               📍 View on the map 
@@ -73,6 +71,14 @@
           📎
           <span *ngIf="newMessage.image" class="file-name">Image sélectionnée</span>
         </label>
+
+        <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
+          🎙️ {{ isRecording ? 'Enregistrement...' : 'Enregistrer un message vocal' }}
+        </button>
+        <button *ngIf="audioBlob" (click)="sendAudioMessage()">Envoyer le message vocal</button>
+        <div class="user-controls">
+
+
         <div class="user-controls">
           <label class="anonymous-checkbox">
             <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
