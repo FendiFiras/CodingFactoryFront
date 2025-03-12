@@ -1,14 +1,9 @@
-/* 🌟 Effet d'apparition générale */
+/* 🌟 Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-    animation: fadeIn 1.5s ease-in-out forwards;
-}
-
-/* ❌ Effet de vibration si échec */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
@@ -16,11 +11,15 @@
     75% { transform: translateX(-5px); }
 }
 
+.animate-fade-in {
+    animation: fadeIn 1.5s ease-in-out forwards;
+}
+
 .animate-shake {
     animation: shake 0.5s ease-in-out;
 }
 
-/* 🏆 Conteneur Principal du Quiz */
+/* 🏆 Main Quiz Section */
 .quiz-section {
     display: flex;
     justify-content: center;
@@ -32,7 +31,7 @@
     padding: 50px 0;
 }
 
-/* 🎯 Carte du Quiz */
+/* 🎯 Quiz Card Container */
 .quiz-container {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
@@ -50,7 +49,7 @@
     transform: scale(1.02);
 }
 
-/* ✅ Options de Réponses */
+/* ✅ Answer Options */
 .answer-option {
     background: #f8f9fa;
     border-radius: 8px;
@@ -65,7 +64,7 @@
     color: #333;
 }
 
-input[type="radio"]:checked + .answer-text {
+input[type="checkbox"]:checked + .answer-text {
     color: #007bff;
     font-weight: bold;
 }
@@ -75,7 +74,7 @@ input[type="radio"]:checked + .answer-text {
     transform: scale(1.02);
 }
 
-/* 🚀 Boutons de Navigation */
+/* 🚀 Navigation Buttons */
 .quiz-navigation button {
     padding: 12px 20px;
     font-size: 1rem;
@@ -98,7 +97,7 @@ input[type="radio"]:checked + .answer-text {
     color: white;
 }
 
-/* 📌 Conteneur Résultat sous le Quiz */
+/* 📌 Result Container */
 .quiz-result-container {
     display: flex;
     flex-direction: column;
@@ -108,7 +107,7 @@ input[type="radio"]:checked + .answer-text {
     position: relative;
 }
 
-/* 🌟 Carte des Résultats */
+/* 🌟 Score Card */
 .score-card {
     background: white;
     padding: 25px;
@@ -118,7 +117,6 @@ input[type="radio"]:checked + .answer-text {
     max-width: 500px;
     width: 100%;
     position: relative;
-    z-index: 10;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -126,7 +124,7 @@ input[type="radio"]:checked + .answer-text {
     transform: scale(1.05);
 }
 
-/* 🎯 Barre de Progression Stylisée */
+/* 🎯 Progress Bar */
 .progress-bar-container {
     width: 100%;
     max-width: 400px;
@@ -146,7 +144,7 @@ input[type="radio"]:checked + .answer-text {
     transition: width 1.5s ease-in-out;
 }
 
-/* 💯 Style du Score */
+/* 💯 Score Styling */
 .score {
     font-size: 1.3rem;
     font-weight: bold;
@@ -164,7 +162,7 @@ input[type="radio"]:checked + .answer-text {
     transform: scale(1.1);
 }
 
-/* ✨ Meilleur affichage des boutons */
+/* ✨ Quiz Action Buttons */
 .quiz-actions {
     display: flex;
     justify-content: center;
@@ -184,46 +182,7 @@ input[type="radio"]:checked + .answer-text {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* 🎊 Confettis Animation si succès */
-.confetti {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 150px;
-    height: 150px;
-    background: url('https://media.giphy.com/media/3o6ZsXoKPH2v58sbHW/giphy.gif') no-repeat center;
-    background-size: contain;
-    transform: translateX(-50%);
-}
-.timer-box {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ff5722;
-    background-color: #fff3cd;
-    padding: 10px;
-    border: 1px solid #ffeeba;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.alert-danger {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.progress-bar-container {
-    background-color: #f1f1f1;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px 0;
-}
-
-.progress-bar .progress {
-    background-color: #4CAF50;
-    height: 20px;
-    border-radius: 10px;
-}
-/* ✅ Timer Cercle Style */
+/* ✅ Timer Circle */
 .timer-circle {
     position: absolute;
     top: -20px;
@@ -242,6 +201,7 @@ input[type="radio"]:checked + .answer-text {
     fill: none;
     stroke-width: 10;
     stroke-linecap: round;
+    transition: stroke 0.5s ease;
 }
 
 .timer-circle circle:first-child {
@@ -249,28 +209,55 @@ input[type="radio"]:checked + .answer-text {
 }
 
 .timer-circle circle:last-child {
-    stroke: #4CAF50;
     stroke-dasharray: 282.6;
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 1s linear;
 }
 
-.timer-circle .timer-text {
+/* ✅ Timer Colors */
+.green {
+    stroke: #4CAF50;
+}
+
+.yellow {
+    stroke: #FFC107;
+}
+
+.red {
+    stroke: #FF5722;
+}
+
+/* ✅ Timer Text */
+.timer-text {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bold;
     font-size: 1.2rem;
-    color: #4CAF50;
+    color: #000 !important;  /* ✅ Toujours en noir */
 }
 
-.timer-circle .warning {
-    stroke: #FFC107;
-    color: #FFC107;
+/* ✅ Alert Messages */
+.alert-danger {
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-.timer-circle .danger {
-    stroke: #F44336;
-    color: #F44336;
+/* ✅ Timer Box */
+.timer-box {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff5722;
+    background-color: #fff3cd;
+    padding: 10px;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+.badge-container h3 {
+    font-size: 2rem;
+    color: #ff9800;
+    animation: fadeIn 1s ease-in-out;
+    margin-bottom: 15px;
 }

@@ -16,21 +16,20 @@
 <section class="quiz-section">
     <div class="quiz-container">
         <h3 class="quiz-title">📝 Answer the Questions Below</h3>
-
-        <!-- ✅ Timer Cercle -->
-        <div *ngIf="!submitted && !isTimeUp" class="timer-circle">
-            <svg>
-                <circle cx="50" cy="50" r="45"></circle>
-                <circle 
-                    cx="50" cy="50" r="45" 
-                    [style.stroke-dashoffset]="circleDashoffset"
-                    [ngClass]="timerColor">
-                </circle>
-            </svg>
-            <div class="timer-text">
-                {{ getFormattedTime() }}
-            </div>
-        </div>
+<!-- ✅ Timer Cercle -->
+<div *ngIf="!submitted && !isTimeUp" class="timer-circle">
+    <svg>
+        <circle cx="50" cy="50" r="45" class="circle-bg"></circle>
+        <circle 
+            cx="50" cy="50" r="45" 
+            [style.stroke-dashoffset]="circleDashoffset"
+            [ngClass]="timerColor">
+        </circle>
+    </svg>
+    <div class="timer-text">
+        {{ getFormattedTime() }}
+    </div>
+</div>
 
         <!-- ✅ Message si le temps est écoulé -->
         <div *ngIf="isTimeUp" class="alert alert-danger text-center">
@@ -78,6 +77,11 @@
         <!-- ✅ Résultat du quiz avec Progress Bar -->
         <div *ngIf="submitted" class="quiz-result-container">
             <div class="score-card shadow-lg p-4 rounded animate-fade-in">
+
+                 <!-- ✅ Badge de Récompense -->
+        <div class="badge-container">
+            <h3>{{ getRewardBadge() }}</h3>
+        </div>
                 <h3 [ngClass]="passed ? 'text-success fw-bold' : 'text-danger fw-bold animate-shake'">
                     {{ passed ? '🎉 Congratulations! You Passed!' : '❌ Oops! Try Again!' }}
                 </h3>
