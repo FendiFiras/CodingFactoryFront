@@ -25,7 +25,11 @@ export class QuizInterfaceComponent {
   currentQuestionIndex = 0;
   selectedAnswers: { [key: number]: number | null } = {}; 
   
-
+  // ⏳ Variables pour le Timer
+// ⏳ Variables pour le Timer
+timeLeft!: number; 
+timerInterval: any;
+isTimeUp = false;
   constructor(
     private route: ActivatedRoute,
     private quizServiceQuestion: QuizQuestionService,
@@ -45,6 +49,9 @@ export class QuizInterfaceComponent {
     this.quizservice.getQuizById(this.quizId).subscribe(
       (quizData) => {
         this.quiz = quizData;
+        this.timeLeft = this.quiz.timeLimit * 60; // Convertir les minutes en secondes
+        this.startTimer(); // ✅ Démarrer le Timer
+
         this.quizServiceQuestion.getQuestionsByQuiz(this.quizId).subscribe(
           (questionsData) => {
             this.questions = questionsData || [];
@@ -57,7 +64,7 @@ export class QuizInterfaceComponent {
       },
       (error) => console.error("❌ Erreur chargement quiz", error)
     );
-  }
+}
 
   nextQuestion(): void {
     if (this.currentQuestionIndex < this.questions.length - 1) {
@@ -133,6 +140,36 @@ restartQuiz(): void {
     this.selectedAnswers = {}; // Efface les réponses précédentes
     this.score = 0;
     this.passed = false;
+}
+// ✅ Démarrage du Timer
+startTimer(): void {
+  this.timerInterval = setInterval(() => {
+    if (this.timeLeft > 0) {
+      this.timeLeft--; // Diminue le temps restant
+    } else {
+      this.isTimeUp = true;
+      this.autoSubmitQuiz(); // Soumission automatique quand le temps est écoulé
+    }
+  }, 1000); // Diminue chaque seconde
+}
+
+// ✅ Format d'affichage du Timer (mm:ss)
+getFormattedTime(): string {
+  const minutes = Math.floor(this.timeLeft / 60);
+  const seconds = this.timeLeft % 60;
+  return `${this.padZero(minutes)}:${this.padZero(seconds)}`;
+}
+
+// ✅ Ajout du zéro devant les chiffres uniques (ex: 09:05)
+padZero(num: number): string {
+  return num < 10 ? '0' + num : num.toString();
+}
+// ✅ Soumission automatique si le temps est écoulé
+autoSubmitQuiz(): void {
+  clearInterval(this.timerInterval); // Arrêter le timer
+  this.score = 0;
+  this.passed = false;
+  this.submitted = true;
 }
 
 }

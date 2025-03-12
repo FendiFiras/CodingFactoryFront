@@ -48,7 +48,8 @@ updateCourse(formData: FormData): Observable<Courses> {
   getPdfUrl(filename: string): Observable<Blob> {
     return this.http.get(`http://localhost:8089/Courses/${filename}`, { responseType: 'blob' });
   }
-  
+
+
 
 
 }

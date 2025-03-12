@@ -38,4 +38,19 @@ export class SessionService {
   getSessionById(id: number): Observable<Session> {
     return this.http.get<Session>(`${this.apiUrl}/getSession/${id}`);
   }
+
+
+  // session.service.ts
+getSessionsByTraining(trainingId: number): Observable<Session[]> {
+  return this.http.get<Session[]>(`${this.apiUrl}/getSessionsByTraining/${trainingId}`);
+}
+
+
+  // session.service.ts
+  getLocationName(lat: number, lon: number): Observable<any> {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+    return this.http.get<any>(url);
+  }
+
+
 }

@@ -119,5 +119,42 @@
         </div>
     </div>
 </section>
-
+<section class="available-sessions">
+    <h2 class="section-title">
+      <span class="icon">📅</span> Sessions for this Training
+    </h2>
+  
+    <!-- ✅ Champ de recherche -->
+    <input type="text"
+           [(ngModel)]="searchQuery"
+           (input)="filterSessions()"
+           placeholder="🔍 Search by location or program..."
+           class="search-input"/>
+  
+    <div class="sessions-grid">
+      <div *ngFor="let session of filteredSessions" class="session-card">
+        <h3 class="session-location" (click)="openMap(session.location)">
+          📍 {{ session.location }}
+        </h3>
+  
+        <p class="session-detail">
+          📆 Start: {{ session.startTime | date:'medium' }}
+        </p>
+        <p class="session-detail">
+          ⏰ End: {{ session.endTime | date:'medium' }}
+        </p>
+        <p class="session-detail">
+          📚 Program: {{ session.program }}
+        </p>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+  <!-- ✅ Message si aucune session -->
+  <div *ngIf="filteredSessions.length === 0" class="no-sessions">
+    <p>🚫 No sessions available for this training.</p>
+  </div>
+  
 <app-footer></app-footer>

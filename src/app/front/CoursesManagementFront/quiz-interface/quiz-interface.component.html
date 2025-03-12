@@ -1,5 +1,13 @@
 <app-navbar></app-navbar>
+<!-- ⏳ Timer Display -->
+<div *ngIf="!submitted" class="timer-box text-center my-3">
+    <p>⏳ Time Remaining: <strong>{{ getFormattedTime() }}</strong></p>
+</div>
 
+<!-- ✅ Message Si Temps Écoulé -->
+<div *ngIf="isTimeUp" class="alert alert-danger text-center">
+    ❌ Time is up! Your quiz has been automatically submitted.
+</div>
 <!-- 🏆 HEADER du Quiz -->
 <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
     <div class="page-header__bg jarallax-img"></div>
@@ -16,6 +24,16 @@
 <section class="quiz-section">
     <div class="quiz-container">
         <h3 class="quiz-title">📝 Answer the Questions Below</h3>
+
+        <!-- ⏳ Timer Box -->
+        <div *ngIf="!submitted" class="timer-box text-center my-3">
+            <p>⏳ Time Remaining: <strong>{{ getFormattedTime() }}</strong></p>
+        </div>
+
+        <!-- ✅ Message si le temps est écoulé -->
+        <div *ngIf="isTimeUp" class="alert alert-danger text-center">
+            ❌ Time is up! Your quiz has been automatically submitted.
+        </div>
 
         <div *ngIf="!questions?.length" class="text-center">
             <p class="alert alert-info">📌 Loading questions...</p>
@@ -61,6 +79,7 @@
         </div>
     </div>
 </section>
+
 
 
 <!-- ✅ Résultat du quiz directement sous la carte -->

@@ -36,3 +36,76 @@
     margin-top: 20px;
     text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
+
+
+
+/* Conteneur principal des sessions */
+.available-sessions {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  /* Centrage du titre */
+  .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #ff6600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Style de l'icône du titre */
+  .section-title .icon {
+    margin-right: 10px;
+    font-size: 2rem;
+  }
+  
+  /* Champ de recherche stylisé */
+  .search-input {
+    width: 50%; 
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 0 auto 2rem auto;
+    display: block;
+    font-size: 16px;
+  }
+  
+  /* Grille de présentation des sessions */
+  .sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Carte de chaque session */
+  .session-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style du titre de chaque session */
+  .session-location {
+    font-weight: bold;
+    color: #ff6600;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  
+  /* Détail des sessions */
+  .session-detail {
+    margin: 0.5rem 0;
+    color: #555;
+  }
+  

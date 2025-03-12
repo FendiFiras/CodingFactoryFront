@@ -12,6 +12,8 @@ import { PaymentService } from 'src/app/Services/payment.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js'; // ✅ Charger Stripe.js
 import { environment } from 'src/environments/environment'; // ✅ Importer les clés Stripe
 import { FormsModule } from '@angular/forms';  // ✅ Ajouter FormsModule
+import { SessionService } from 'src/app/Services/session.service';
+import { Session } from 'src/app/Models/session.model';
 
 @Component({
   selector: 'app-training-info',
@@ -38,13 +40,18 @@ export class TrainingInfoComponent implements OnInit {
   promoCode: string = "";
   isPromoApplied: boolean = false;
   discountedPrice!: number;
+
+  sessions: Session[] = [];
+  filteredSessions: Session[] = [];
+  searchQuery: string = '';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private trainingService: TrainingService,
     private cdr: ChangeDetectorRef,  // 🛠️ Ajout de ChangeDetectorRef
     private quizService: QuizService,
-    private paymentService: PaymentService // ✅ Injecte le PaymentService
+    private paymentService: PaymentService, // ✅ Injecte le PaymentService
+    private sessionService: SessionService
 
 
   ) {}
@@ -70,6 +77,8 @@ export class TrainingInfoComponent implements OnInit {
 
         // ✅ Vérifier si l'utilisateur est éligible au discount
         this.checkUserDiscount();
+        this.loadSessions(trainingId);
+
       } else {
         this.router.navigate(['/TrainingList']);
       }
@@ -275,4 +284,53 @@ applyPromoCode() {
 }
 
 
+
+
+
+
+
+
+
+ // ✅ Charger les sessions et obtenir le nom des localisations
+ loadSessions(trainingId: number) {
+  this.sessionService.getSessionsByTraining(trainingId).subscribe(
+    (data) => {
+      this.sessions = data;
+      this.sessions.forEach(session => {
+        const [lat, lon] = session.location.split(',').map(Number);
+        this.sessionService.getLocationName(lat, lon).subscribe(res => {
+          session.location = res.display_name;
+        });
+      });
+      this.filteredSessions = [...this.sessions];
+    },
+    (error) => {
+      console.error('❌ Erreur lors du chargement des sessions', error);
+    }
+  );
 }
+
+// ✅ Ouvrir la carte dans un nouvel onglet
+openMap(location: string) {
+  const [lat, lon] = location.split(',');
+  window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}`, '_blank');
+}
+
+// ✅ Filtrer les sessions par localisation ou programme
+filterSessions(): void {
+  const query = this.searchQuery.trim().toLowerCase();
+
+  if (!query) {
+    this.filteredSessions = this.sessions;  // Si la recherche est vide, afficher toutes les sessions
+    return;
+  }
+
+  this.filteredSessions = this.sessions.filter(session =>
+    (session.location && session.location.toLowerCase().includes(query)) ||
+    (session.program && session.program.toLowerCase().includes(query))
+  );
+}
+}
+
+
+
