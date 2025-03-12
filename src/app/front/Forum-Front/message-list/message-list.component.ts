@@ -391,72 +391,71 @@ getStoredDislikes(messageId: number): number {
   // Fonction pour démarrer/arrêter l'enregistrement
   toggleRecording(): void {
     if (this.isRecording) {
-      this.stopRecording();
+      this.stopRecording(); // Arrête l'enregistrement et envoie le message
     } else {
-      this.startRecording();
+      this.startRecording(); // Démarre l'enregistrement
     }
   }
-
-  // Démarrer l'enregistrement vocal
+  
   startRecording(): void {
     this.isRecording = true;
-    this.audioChunks = [];
+    this.audioChunks = []; // Réinitialise les morceaux audio
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.mediaRecorder = new MediaRecorder(stream);
         
         this.mediaRecorder.ondataavailable = event => {
-          this.audioChunks.push(event.data);
+          this.audioChunks.push(event.data); // Ajoute les données audio
         };
         
         this.mediaRecorder.onstop = () => {
-          this.audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-          this.audioUrl = URL.createObjectURL(this.audioBlob);
+          this.audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' }); // Crée un Blob audio
+          this.audioUrl = URL.createObjectURL(this.audioBlob); // Crée une URL pour la prévisualisation
           console.log('Enregistrement terminé');
+          
+          // Envoie automatiquement le message vocal après l'arrêt de l'enregistrement
+          this.sendAudioMessage();
         };
         
-        this.mediaRecorder.start();
+        this.mediaRecorder.start(); // Démarre l'enregistrement
       })
       .catch(err => {
         console.error('Erreur lors de l\'accès au microphone', err);
         this.isRecording = false;
       });
   }
-
-  // Arrêter l'enregistrement vocal
+  
   stopRecording(): void {
     if (this.mediaRecorder) {
-      this.mediaRecorder.stop();
+      this.mediaRecorder.stop(); // Arrête l'enregistrement
       this.isRecording = false;
     }
   }
-
-  // Envoyer le message vocal
+  
   sendAudioMessage(): void {
     if (this.audioBlob) {
-      const timestamp = new Date().getTime(); // Obtient l'horodatage actuel
-      const filename = `audio_message_${timestamp}.wav`; // Nom de fichier unique
-
       const formData = new FormData();
-      formData.append('file', this.audioBlob, filename); // Utilise le nom de fichier unique
+      const timestamp = new Date().getTime(); // Horodatage pour un nom de fichier unique
+      const filename = `audio_message_${timestamp}.wav`;
+  
+      // Ajoutez le fichier audio et les métadonnées au FormData
+      formData.append('file', this.audioBlob, filename);
       formData.append('userId', this.newMessage.userId.toString());
       formData.append('discussionId', this.newMessage.discussionId.toString());
-      formData.append('audio', this.audioBlob, filename); // Utilise le nom de fichier unique
-
+  
+      // Envoyez le message vocal au serveur
       this.messageService.addAudioMessage(formData).subscribe({
         next: (response) => {
-          console.log('Audio message sent successfully:', response);
-          this.resetMessageForm();
-          this.loadMessages(); // Rafraîchit les messages
+          console.log('Message vocal envoyé avec succès:', response);
+          this.resetMessageForm(); // Réinitialise le formulaire
+          this.loadMessages(); // Rafraîchit la liste des messages
         },
         error: (err) => {
-          console.error('Error sending audio message:', err);
+          console.error('Erreur lors de l\'envoi du message vocal:', err);
         }
       });
     } else {
-      alert('Veuillez enregistrer un message vocal avant d\'envoyer.');
+      console.error('Aucun enregistrement audio trouvé. Veuillez réessayer.');
     }
   }
-
-
 }

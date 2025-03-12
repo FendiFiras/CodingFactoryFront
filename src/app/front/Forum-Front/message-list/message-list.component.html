@@ -72,10 +72,13 @@
           <span *ngIf="newMessage.image" class="file-name">Image sélectionnée</span>
         </label>
 
+
         <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
-          🎙️ {{ isRecording ? 'Enregistrement...' : 'Enregistrer un message vocal' }}
+          🎙️ {{ isRecording ? 'Arrêter et envoyer' : 'Enregistrer un message vocal' }}
         </button>
-        <button *ngIf="audioBlob" (click)="sendAudioMessage()">Envoyer le message vocal</button>
+        <div *ngIf="isRecording" class="recording-indicator">
+          ● Enregistrement en cours...
+        </div>
         <div class="user-controls">
 
 
@@ -95,6 +98,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <app-footer></app-footer>
