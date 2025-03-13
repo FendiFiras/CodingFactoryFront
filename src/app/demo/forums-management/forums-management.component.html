@@ -114,6 +114,10 @@
       <div class="form-group mb-3">
         <label for="image">Image</label>
         <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" />
+        <!-- Afficher le message d'erreur uniquement pour le champ image -->
+        <div *ngIf="addForumForm.get('image')?.invalid && addForumForm.get('image')?.touched" class="text-danger">
+          {{ errorMessage }}
+        </div>
       </div>
       <div class="form-group">
         <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">

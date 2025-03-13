@@ -1,91 +1,95 @@
 <div class="sidebar sidebar--left">
-    <div class="sidebar__single sidebar__search">
-      <form action="#" class="sidebar__search-form">
-        <input type="search" placeholder="Rechercher un forum...">
-        <button type="submit"><span class="icon-Search"></span></button>
-      </form>
-    </div><!-- search-widget -->
+  <div class="sidebar__single sidebar__search">
+    <form action="#" class="sidebar__search-form">
+      <input type="search" placeholder="Rechercher un forum...">
+      <button type="submit"><span class="icon-Search"></span></button>
+    </form>
+  </div><!-- search-widget -->
 
-    <div class="sidebar__single sidebar__post">
-      <h3 class="sidebar__title">Derniers forums</h3>
-      <ul class="sidebar__post__list list-unstyled">
-        <li>
-          <div class="sidebar__post__content">
-            <span class="sidebar__post__content__meta"><i class="icon-clock"></i>12 Févr, 2024</span>
-            <h3 class="sidebar__post__content__title"><a href="forum-details.html">Les tendances de la technologie en 2024</a></h3>
+  <div class="sidebar__single sidebar__post">
+    <h3 class="sidebar__title">Derniers forums</h3>
+    <ul class="sidebar__post__list list-unstyled">
+      <li *ngFor="let forum of latestForums">
+        <div class="sidebar__post__content">
+          <!-- Afficher l'image du forum -->
+          <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
+            <img [src]="forum.image" alt="{{ forum.title }}" />
           </div>
-        </li>
-        <li>
-          <div class="sidebar__post__content">
-            <span class="sidebar__post__content__meta"><i class="icon-clock"></i>08 Févr, 2024</span>
-            <h3 class="sidebar__post__content__title"><a href="forum-details.html">Stratégies pour une communauté en ligne active</a></h3>
-          </div>
-        </li>
-        <li>
-          <div class="sidebar__post__content">
-            <span class="sidebar__post__content__meta"><i class="icon-clock"></i>05 Févr, 2024</span>
-            <h3 class="sidebar__post__content__title"><a href="forum-details.html">L'impact des forums sur l'apprentissage collaboratif</a></h3>
-          </div>
-        </li>
-      </ul>
-    </div><!-- latest-forum-widget -->
+          <ng-template #defaultImage>
+            <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
+              <img [src]="'http://localhost:8089/images/' + forum.image" alt="{{ forum.title }}" /> 
+            </div>
+            
+          </ng-template>
+  
+          <span class="sidebar__post__content__meta">
+            <i class="icon-clock"></i>{{ forum.creationDate | date:'dd MMM, yyyy' }}
+          </span>
+          <h3 class="sidebar__post__content__title">
+            <a [routerLink]="['/forum-details', forum.forum_id]">{{ forum.title }}</a>
+          </h3>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <!-- latest-forum-widget -->
 
-    <div class="sidebar__single sidebar__category">
-      <h3 class="sidebar__title">Catégories de forums</h3>
-      <ul class="sidebar__category-list list-unstyled">
-        <li><a href="forum-category.html">Développement Web</a></li>
-        <li><a href="forum-category.html">Marketing Digital</a></li>
-        <li><a href="forum-category.html">Entrepreneuriat</a></li>
-        <li><a href="forum-category.html">Technologies Emergentes</a></li>
-        <li><a href="forum-category.html">Espace Étudiant</a></li>
-      </ul>
-    </div><!-- category-widget -->
+  <div class="sidebar__single sidebar__category">
+    <h3 class="sidebar__title">Catégories de forums</h3>
+    <ul class="sidebar__category-list list-unstyled">
+      <li><a href="forum-category.html">Développement Web</a></li>
+      <li><a href="forum-category.html">Marketing Digital</a></li>
+      <li><a href="forum-category.html">Entrepreneuriat</a></li>
+      <li><a href="forum-category.html">Technologies Emergentes</a></li>
+      <li><a href="forum-category.html">Espace Étudiant</a></li>
+    </ul>
+  </div><!-- category-widget -->
 
-    <div class="sidebar__single sidebar__tags">
-      <h3 class="sidebar__title">Tags populaires</h3>
-      <div class="sidebar__tags-list">
-        <a href="forum-list.html">Innovation</a>
-        <a href="forum-list.html">Discussion</a>
-        <a href="forum-list.html">Technologie</a>
-        <a href="forum-list.html">Communauté</a>
-      </div>
-    </div><!-- tags-widget -->
+  <div class="sidebar__single sidebar__tags">
+    <h3 class="sidebar__title">Tags populaires</h3>
+    <div class="sidebar__tags-list">
+      <a href="forum-list.html">Innovation</a>
+      <a href="forum-list.html">Discussion</a>
+      <a href="forum-list.html">Technologie</a>
+      <a href="forum-list.html">Communauté</a>
+    </div>
+  </div><!-- tags-widget -->
 
-    <div class="sidebar__single sidebar__comments">
-      <h3 class="sidebar__title">Derniers commentaires</h3>
-      <ul class="sidebar__comments-list list-unstyled">
-        <li>
-          <div class="sidebar__comments-icon">
-            <span class="icon-chat"></span>
-          </div>
-          <div class="sidebar__comments-text-box">
-            <p>Super discussion sur les nouvelles tendances tech !</p>
-          </div>
-        </li>
-        <li>
-          <div class="sidebar__comments-icon">
-            <span class="icon-chat"></span>
-          </div>
-          <div class="sidebar__comments-text-box">
-            <p>Merci pour ces conseils sur l'engagement des communautés.</p>
-          </div>
-        </li>
-        <li>
-          <div class="sidebar__comments-icon">
-            <span class="icon-chat"></span>
-          </div>
-          <div class="sidebar__comments-text-box">
-            <p><a href="forum-list.html">Alex sur</a> Le futur du travail en ligne</p>
-          </div>
-        </li>
-        <li>
-          <div class="sidebar__comments-icon">
-            <span class="icon-chat"></span>
-          </div>
-          <div class="sidebar__comments-text-box">
-            <p>Un excellent forum sur les opportunités du digital !</p>
-          </div>
-        </li>
-      </ul>
-    </div><!-- comment-widget -->
+  <div class="sidebar__single sidebar__comments">
+    <h3 class="sidebar__title">Derniers commentaires</h3>
+    <ul class="sidebar__comments-list list-unstyled">
+      <li>
+        <div class="sidebar__comments-icon">
+          <span class="icon-chat"></span>
+        </div>
+        <div class="sidebar__comments-text-box">
+          <p>Super discussion sur les nouvelles tendances tech !</p>
+        </div>
+      </li>
+      <li>
+        <div class="sidebar__comments-icon">
+          <span class="icon-chat"></span>
+        </div>
+        <div class="sidebar__comments-text-box">
+          <p>Merci pour ces conseils sur l'engagement des communautés.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sidebar__comments-icon">
+          <span class="icon-chat"></span>
+        </div>
+        <div class="sidebar__comments-text-box">
+          <p><a href="forum-list.html">Alex sur</a> Le futur du travail en ligne</p>
+        </div>
+      </li>
+      <li>
+        <div class="sidebar__comments-icon">
+          <span class="icon-chat"></span>
+        </div>
+        <div class="sidebar__comments-text-box">
+          <p>Un excellent forum sur les opportunités du digital !</p>
+        </div>
+      </li>
+    </ul>
+  </div><!-- comment-widget -->
 </div>

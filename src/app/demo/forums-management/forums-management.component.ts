@@ -138,9 +138,22 @@ export class ForumsManagementComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];
+  
     if (file) {
-      this.addForumForm.patchValue({ image: file });
-      this.addForumForm.get('image')?.updateValueAndValidity(); // Mettre à jour la validation
+      // Vérifier l'extension du fichier
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif']; // Extensions autorisées
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  
+      if (fileExtension && allowedExtensions.includes(fileExtension)) {
+        this.addForumForm.patchValue({ image: file });
+        this.addForumForm.get('image')?.setErrors(null); // Réinitialiser les erreurs
+        this.errorMessage = ''; // Réinitialiser le message d'erreur
+      } else {
+        // Afficher un message d'erreur si le fichier n'est pas une image
+        this.errorMessage = 'Veuillez sélectionner un fichier image valide (jpg, jpeg, png, gif).';
+        this.addForumForm.patchValue({ image: null }); // Réinitialiser la valeur de l'image
+        this.addForumForm.get('image')?.setErrors({ invalidFileType: true }); // Définir une erreur personnalisée
+      }
     }
   }
 
@@ -248,16 +261,22 @@ export class ForumsManagementComponent implements OnInit {
       return;
     }
   
-    if (this.editMode && this.forumToEdit) {
-      // Mode édition : mettre à jour le forum existant sans vérifier la validité du formulaire
-      this.updateForum();
-    } else {
-      // Mode ajout : créer un nouveau forum avec validation du formulaire
-      if (this.addForumForm.invalid) {
-        alert('Veuillez corriger les erreurs du formulaire.');
-        console.log('Formulaire invalide', this.addForumForm.value);
+    const imageControl = this.addForumForm.get('image');
+    if (imageControl?.value) {
+      const file = imageControl.value;
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  
+      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+        this.errorMessage = 'Veuillez sélectionner un fichier image valide (jpg, jpeg, png, gif).';
+        imageControl.setErrors({ invalidFileType: true }); // Définir une erreur personnalisée
         return;
       }
+    }
+  
+    if (this.editMode && this.forumToEdit) {
+      this.updateForum();
+    } else {
       this.addForum();
     }
   }
