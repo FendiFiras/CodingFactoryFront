@@ -33,17 +33,28 @@
           <audio *ngIf="message.audioUrl" controls [src]="'http://localhost:8089/images/' + message.audioUrl"></audio>           <!-- Afficher la localisation -->
            <div *ngIf="message.latitude && message.longitude" class="location">
             <a href="https://www.google.com/maps?q={{message.latitude}},{{message.longitude}}" target="_blank">
-              📍 View on the map 
+              🌍 View on the map 
             </a>
           </div>
 
 
           <!-- Boutons de Like et Dislike -->
           <div class="like-dislike">
-            <button (click)="toggleLike(message)" [class.liked]="isLiked(message.message_id)">
+            <!-- Bouton Like -->
+            <button 
+              class="like-button" 
+              [ngClass]="{'liked': isLiked(message.message_id)}" 
+              (click)="toggleLike(message)"
+            >
               👍 {{ message.likes || 0 }}
             </button>
-            <button (click)="toggleDislike(message)" [class.disliked]="isDisliked(message.message_id)">
+          
+            <!-- Bouton Dislike -->
+            <button 
+              class="dislike-button" 
+              [ngClass]="{'disliked': isDisliked(message.message_id)}" 
+              (click)="toggleDislike(message)"
+            >
               👎 {{ message.dislikes || 0 }}
             </button>
           </div>
@@ -66,6 +77,13 @@
         </div>
       </div>
       <div class="actions">
+        <div class="actions">
+          <!-- Bouton pour ouvrir le sélecteur d'emojis -->
+          <button (click)="toggleEmojiPicker()">😀</button>
+      
+          <!-- Sélecteur d'emojis -->
+          <emoji-picker *ngIf="showEmojiPicker" (emoji-click)="addEmoji($event)"></emoji-picker>
+      
         <label class="file-upload">
           <input type="file" (change)="onFileSelected($event)" accept="image/*" />
           📎
@@ -98,6 +116,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 

@@ -1173,6 +1173,13 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@ctrl/ngx-emoji-mart@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.npmjs.org/@ctrl/ngx-emoji-mart/-/ngx-emoji-mart-9.2.0.tgz"
+  integrity sha512-q8B7DiXPfyTe+VOGO6Ix7eh5gKCuADxAsud2xXRTlECTfchoKGTmirSczyjaxIKE/xmB+/ZsnkpthZqUM7SAJQ==
+  dependencies:
+    tslib "^2.3.0"
+
 "@discoveryjs/json-ext@0.6.3":
   version "0.6.3"
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.6.3.tgz"
@@ -3315,6 +3322,11 @@ electron-to-chromium@^1.5.73:
   version "1.5.100"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.100.tgz"
   integrity sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==
+
+emoji-picker-element@^1.26.1:
+  version "1.26.1"
+  resolved "https://registry.npmjs.org/emoji-picker-element/-/emoji-picker-element-1.26.1.tgz"
+  integrity sha512-XgQ9s2JdmworiqLfJC7eGbzQHGv8yb8U9XofjeRAnOMYaeLh0MfwVAz9oG1YE2U2WnzU0Pys1axMjYtPKJ7YSg==
 
 emoji-regex@^10.3.0:
   version "10.4.0"

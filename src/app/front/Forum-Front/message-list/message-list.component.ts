@@ -6,12 +6,18 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import 'emoji-picker-element';
+
+
 
 @Component({
   selector: 'app-message-list',
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss'],
-  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent, RouterModule]
+  imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ajoutez ce schéma
+
 })
 export class MessageComponent implements OnInit {
   messages: Message[] = [];
@@ -20,7 +26,7 @@ export class MessageComponent implements OnInit {
   errorMessage = '';
   filteredMessages: Message[] = [];
   searchQuery = '';
-  currentUserId = 1; // Remplacez par l'ID de l'utilisateur actuel
+  currentUserId = 3; // Remplacez par l'ID de l'utilisateur actuel
   currentUserName: string = 'zitouni'; // Nom de l'utilisateur actuel
   currentUserImage: string = 'assets/images/zita.jpg';
   isLocationEnabled = false;
@@ -30,7 +36,7 @@ export class MessageComponent implements OnInit {
   audioChunks: Blob[] = [];
   audioBlob: Blob | null = null;
   audioUrl: string = '';
-
+  showEmojiPicker = false;
 
   // Liste des mots interdits
   badWords: string[] = [
@@ -41,7 +47,7 @@ export class MessageComponent implements OnInit {
   
   // Nouveau message
   newMessage = {
-    userId: 1, // Remplacez par l'ID de l'utilisateur actuel
+    userId: 3, // Remplacez par l'ID de l'utilisateur actuel
     discussionId: 0,
     description: '',
     image: null as File | null,
@@ -127,8 +133,9 @@ getStoredDislikes(messageId: number): number {
   cancelEdit(): void {
     this.editingMessage = null;
   }
-  toggleLike(message: any) {
+  toggleLike(message: any): void {
     let likedMessages = JSON.parse(localStorage.getItem('likedMessages') || '[]');
+    let dislikedMessages = JSON.parse(localStorage.getItem('dislikedMessages') || '[]');
   
     if (likedMessages.includes(message.message_id)) {
       // Déjà liké → On l'enlève
@@ -139,13 +146,18 @@ getStoredDislikes(messageId: number): number {
       likedMessages.push(message.message_id);
       message.likes++;
   
-      this.removeDislike(message.message_id); // Retirer le dislike si présent
+      if (dislikedMessages.includes(message.message_id)) {
+        dislikedMessages = dislikedMessages.filter(id => id !== message.message_id);
+        message.dislikes = Math.max(0, message.dislikes - 1);
+      }
     }
   
     localStorage.setItem('likedMessages', JSON.stringify(likedMessages));
+    localStorage.setItem('dislikedMessages', JSON.stringify(dislikedMessages));
   }
   
-  toggleDislike(message: any) {
+  toggleDislike(message: any): void {
+    let likedMessages = JSON.parse(localStorage.getItem('likedMessages') || '[]');
     let dislikedMessages = JSON.parse(localStorage.getItem('dislikedMessages') || '[]');
   
     if (dislikedMessages.includes(message.message_id)) {
@@ -157,9 +169,13 @@ getStoredDislikes(messageId: number): number {
       dislikedMessages.push(message.message_id);
       message.dislikes++;
   
-      this.removeLike(message.message_id); // Retirer le like si présent
+      if (likedMessages.includes(message.message_id)) {
+        likedMessages = likedMessages.filter(id => id !== message.message_id);
+        message.likes = Math.max(0, message.likes - 1);
+      }
     }
   
+    localStorage.setItem('likedMessages', JSON.stringify(likedMessages));
     localStorage.setItem('dislikedMessages', JSON.stringify(dislikedMessages));
   }
   
@@ -458,4 +474,16 @@ getStoredDislikes(messageId: number): number {
       console.error('Aucun enregistrement audio trouvé. Veuillez réessayer.');
     }
   }
+
+  // Méthode pour basculer l'affichage du sélecteur d'emojis
+  toggleEmojiPicker(): void {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  // Méthode pour ajouter un emoji au message
+  addEmoji(event: any): void {
+    this.newMessage.description += event.detail.unicode;
+    this.showEmojiPicker = false; // Masquer le sélecteur d'emojis après la sélection
+  }
+
 }
