@@ -36,6 +36,7 @@ export class NavbarComponent implements OnInit {
     private userPreferenceService: UserPreferenceService,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
+    
     private fb: FormBuilder
 
   ) {
@@ -66,7 +67,22 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserInfo();
-  }
+    const savedTheme = localStorage.getItem('theme');
+    console.log(`Thème récupéré depuis localStorage: ${savedTheme}`); // Vérifie la valeur
+
+    if (savedTheme) {
+        this.applyPreferences({ theme: savedTheme });
+    } else {
+        this.applyPreferences({ theme: 'light' }); // Par défaut
+    }
+}
+
+
+
+  
+  
+  
+  
   isLoggedIn(): boolean {
     return !!this.userInfo; // Vérifie si userInfo est défini
   }
@@ -145,22 +161,21 @@ export class NavbarComponent implements OnInit {
       });
     }
   }
-    /** Appliquer les préférences (thème, langue, etc.) */
-    applyPreferences(preferences) {
-      console.log('Préférences appliquées:', preferences);
-      if (preferences.theme === 'dark') {
+  applyPreferences(preferences: any) {
+    console.log('Appliquer les préférences:', preferences);
+    if (preferences.theme === 'dark') {
         document.body.classList.add('dark-theme');
         document.body.classList.remove('light-theme');
-      } else {
+        localStorage.setItem('theme', 'dark');
+    } else {
         document.body.classList.add('light-theme');
         document.body.classList.remove('dark-theme');
-      }
+        localStorage.setItem('theme', 'light');
     }
-    
-    
-   
+    this.cdr.detectChanges();
+}
 
-  /** Gérer les erreurs de manière centralisée */
+ /** Gérer les erreurs de manière centralisée */
   handleError(error: any, message: string): void {
     console.error(message, error);
     alert('Erreur : ' + message);  // Affichage d'un message utilisateur en français
@@ -177,19 +192,19 @@ export class NavbarComponent implements OnInit {
       console.error('Erreur: userInfo.idUser est undefined.');
       return;
     }
-  
+
     if (this.preferenceForm.valid) {
       const updatedPreference: UserPreference = {
         ...this.preferenceForm.value,
         idPreference: this.userPreference?.idPreference || undefined
       };
-  
+
       console.log('Préférence envoyée:', updatedPreference);
-  
+
       const savePreference$ = updatedPreference.idPreference
         ? this.userPreferenceService.modifyUserPreference(updatedPreference)
         : this.userPreferenceService.addUserPreference(updatedPreference, this.userInfo.idUser);
-  
+
       savePreference$.subscribe({
         next: (response) => {
           console.log('Préférences mises à jour:', response);
@@ -203,7 +218,8 @@ export class NavbarComponent implements OnInit {
     } else {
       console.error('Formulaire invalide.');
     }
-  }
+}
+
   
   /** Ouvrir la modale d'édition utilisateur */
   openEditModal(user: any, modal: TemplateRef<any>): void {

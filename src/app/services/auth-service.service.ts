@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Role, User } from '../models/user';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -40,15 +40,34 @@ export class AuthService {
   
 
   // Connexion d'un utilisateur
-  login(user: any): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.baseUrl}/login`, user).pipe(
+
+  
+  login(user: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/login`, user).pipe(
       catchError(error => {
-        console.error("Erreur de connexion :", error);
-        return throwError(() => new Error("Email ou mot de passe incorrect"));
+        console.error("Login error:", error);
+  
+        let errorMessage = 'An unknown error occurred. Please try again.';
+  
+        if (error.status === 403) {
+          // Si l'utilisateur est banni
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message; // Récupérer le message du backend
+          } else {
+            errorMessage = 'Your account is banned.';
+          }
+        } else if (error.status === 401) {
+          // Email ou mot de passe incorrect
+          errorMessage = 'Invalid email or password.';
+        }
+  
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
-
+  
+  
+  
   // Sauvegarde du token dans le localStorage
   saveToken(token: string): void {
     localStorage.setItem('token', token);
@@ -184,6 +203,50 @@ getUserCV(cvFileName: string): Observable<Blob> {
     })
   );
 }
+verifyOtp(email: string, otp: string): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/verify-otp`, { email, otp }).pipe(
+    catchError(error => {
+      console.error("Erreur lors de la vérification de l'OTP :", error);
+      return throwError(() => new Error("Erreur lors de la vérification de l'OTP"));
+    })
+  );
+}
+
+loginAndVerifyOTP(user: any, otp: string): Observable<{ token: string }> {
+  return this.login(user).pipe(
+    switchMap(() => {
+      // Une fois que l'utilisateur est connecté, demande à l'utilisateur de saisir l'OTP
+      return this.verifyOtp(user.email, otp);
+    }),
+    catchError(error => {
+      console.error('Erreur de connexion ou OTP', error);
+      return throwError(() => new Error('Échec de la connexion ou OTP invalide'));
+    })
+  );
+}
+
+googleLogin(token: string): Observable<{ token: string; email: string; firstName: string; lastName: string; image: string; role: string }> {
+  return this.http.post<{ token: string; email: string; firstName: string; lastName: string; image: string; role: string }>(
+    `${this.baseUrl}/google`,
+    { token }
+  ).pipe(
+    tap(response => {
+      // Sauvegarder le JWT dans le stockage local et les données utilisateur
+      this.saveToken(response.token);
+      localStorage.setItem('user', JSON.stringify(response));
+
+      // Rediriger vers la page d'accueil
+      window.location.href = '/home';  // Ou utiliser Angular Router
+    }),
+    catchError(error => {
+      console.error('Erreur de connexion Google', error);
+      return throwError(() => new Error('Échec de la connexion avec Google'));
+    })
+  );
+}
+
+
+
 
 }
 

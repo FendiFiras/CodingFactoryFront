@@ -226,19 +226,17 @@
     flex-grow: 1;
     padding: 20px;
 }
-/* Light theme */
-.light-theme {
-    background-color: #f0f0f0 !important;
-    color: #333 !important;
+/* Mode sombre */
+body.dark-theme {
+    background-color: #121212;
+    color: #ffffff;
   }
   
-  /* Dark theme */
-  .dark-theme {
-    background-color: #121212 !important;
-    color: #ffffff !important;
+  body.light-theme {
+    background-color: #ffffff;
+    color: #000000;
   }
   
-  body.dark-theme {
-    transition: all 0.3s ease !important;
-  }
+  
+  
   
