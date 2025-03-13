@@ -74,7 +74,7 @@
 
 
         <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
-          🎙️ {{ isRecording ? 'Arrêter et envoyer' : 'Enregistrer un message vocal' }}
+          🎙️ {{ isRecording ? 'Stop and Send' : 'Voice Message' }}
         </button>
         <div *ngIf="isRecording" class="recording-indicator">
           ● Enregistrement en cours...
@@ -85,11 +85,11 @@
         <div class="user-controls">
           <label class="anonymous-checkbox">
             <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
-            <span>Anonyme</span>
+            <span>Anonymous</span>
           </label>
           <!-- Bouton pour activer/désactiver la localisation -->
-          <button (click)="toggleLocation()" [class.active]="isLocationEnabled">
-            📍 {{ isLocationEnabled ? 'Localisation activée' : 'Activer la localisation' }}
+          <button (click)="toggleLocation()" [class.active]="isLocationEnabled" class="location-toggle">
+            {{ isLocationEnabled ? 'Location Activated' : 'Send Location' }}
           </button>
         </div>
         <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
