@@ -23,6 +23,8 @@ export class DetaileventComponent implements OnInit {
     event!: EventModel; // Stocke les détails de l'événement
   idEvent!: number; // Stocke l'ID de l'événement
   idUser!: number;
+  userEmail: string = "firasabidhiaf11@gmail.com";  // Remplace avec l'email réel de l'utilisateur
+
     feedbacks: FeedBackEvent[] = [];
   
       constructor(private route: ActivatedRoute,private eventService: EventService) {}
@@ -52,20 +54,22 @@ export class DetaileventComponent implements OnInit {
           }
         });
       }
-      register() {
-        this.eventService.registerUser({}, this.idEvent, this.idUser).subscribe({
-            next: () => {
-                this.successMessage = ' Inscription réussie !';
-                this.errorMessage = ''; // Réinitialiser le message d'erreur
-            },
-            error: (err) => {
-                this.errorMessage = ' ' + err.message;
-                this.successMessage = ''; // Réinitialiser le message de succès
-            }
-        });
-           
+     // Méthode d'inscription et d'envoi de l'email
+  register(): void {
+    this.eventService.registerUser({}, this.idEvent, this.idUser).subscribe({
+      next: () => {
+        this.successMessage = 'Inscription réussie !';
+        this.errorMessage = '';  // Réinitialiser le message d'erreur
+        // Appeler la méthode pour envoyer l'email
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors de l\'inscription: ' + (err.error?.message || err.message);
+        this.successMessage = '';  // Réinitialiser le message de succès
+      }
+    });
+  }
 
-}
+  
 // Charger les feedbacks de l'événement donné
 loadFeedbacks(): void {
   this.eventService.getComments(this.idEvent).subscribe((data) => {

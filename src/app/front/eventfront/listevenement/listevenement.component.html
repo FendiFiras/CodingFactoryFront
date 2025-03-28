@@ -67,11 +67,7 @@
                             </button>
                         </h3>
 
-                        <!-- ✅ Ajout du QR Code -->
-                        <div class="qr-code-container" *ngIf="qrCodes[event.idEvent]">
-                            <h4>🎟️ QR Code :</h4>
-                            <img [src]="qrCodes[event.idEvent]" alt="QR Code de l'événement" class="qr-code-image">
-                        </div>
+                       
 
                         <div class="course-two__bottom">
                             <div class="course-two__author">
@@ -83,6 +79,15 @@
                                 <h4 class="course-two__meta__price">{{ event.price | currency }}</h4>
                                 <p class="course-two__meta__class">Max Participants: {{ event.maxParticipants }}</p>
                             </div>
+                        </div>
+                         <!-- ✅ Ajout du QR Code -->
+                         <div class="qr-code-container" *ngIf="qrCodes[event.idEvent]">
+                            <h4>👥 Participants : {{ participantsCount[event.idEvent] || 0 }}</h4>
+
+                            <details>
+                           <summary>🎟️ QR Code :</summary>
+                            <img [src]="qrCodes[event.idEvent]" alt="QR Code de l'événement" class="qr-code-image">
+                        </details>
                         </div>
                     </div><!-- /.course-content -->
                 </div><!-- /.course-card-two -->

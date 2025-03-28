@@ -10,7 +10,9 @@ import { provideHttpClient } from '@angular/common/http';
 
 if (environment.production) {
   enableProdMode();
+  
 }
+(window as any).global = window; //*********** */
 
 bootstrapApplication(AppComponent, {
   providers: [importProvidersFrom(BrowserModule, AppRoutingModule), provideAnimations(),provideHttpClient()]

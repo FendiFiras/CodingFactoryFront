@@ -19,6 +19,7 @@ export class ListEventComponent implements OnInit {
   sfin:any="";
   // Liste des types d'événements disponibles (extrait de ton enum)
   eventTypes: string[] = ['CONFERENCE', 'WORKSHOP', 'MEETUP'];
+  searchTerm:string="";
 
   constructor(private eventService: EventService,private router:Router) {}
 
@@ -122,4 +123,22 @@ export class ListEventComponent implements OnInit {
     return dateObj.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
   }
   
+
+  // Appel de la recherche via le service
+  searchEvents(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+            this.loadEvents();
+            return;
+    }
+    console.log("rechercheeeeee"+this.searchTerm)
+    this.eventService.searchEvents(this.searchTerm)
+      .subscribe(
+        (data: EventModel[]) => {
+          this.events = data;
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
 }

@@ -7,6 +7,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EventService } from 'src/app/Service/event.service';
 import { Event as EventModel } from 'src/app/Model/event.model';
 import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
+import { Planning } from 'src/app/Model/planning.model';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class PlanningEventComponent implements OnInit {
   event!: EventModel; // Stocke les détails de l'événement
   idEvent!: number; // Stocke l'ID de l'événement
   idUser!: number;
-
+    plannings: Planning[]=[];
   feedbacks: FeedBackEvent[] = [];
   newFeedback: FeedBackEvent = { idFeedback: 0, rating: 0, comments: '' };
 
@@ -36,6 +37,8 @@ export class PlanningEventComponent implements OnInit {
           }
           this.idUser=1;
           this.loadFeedbacks();
+          this.loadPlanning();
+          
 
         });
       }
@@ -56,6 +59,7 @@ export class PlanningEventComponent implements OnInit {
 loadFeedbacks(): void {
   this.eventService.getComments(this.idEvent).subscribe((data) => {
     this.feedbacks = data;
+    
   });
 }
 
@@ -73,8 +77,64 @@ getRatingArray(rating:number): number[] {
   return new Array(rating);
 }
 
+deleteFeedback(id: number) {
+  if (confirm('Voulez-vous vraiment supprimer ce feedback ?')) {
+    this.eventService.deleteFeedBackEvent(id).subscribe(() => {
+      this.feedbacks = this.feedbacks.filter(f => f.idFeedback !== id);
+      this.loadFeedbacks(); // Recharge uniquement la liste des feedbacks
 
+    });
+  }
+}
+
+hasUserCommented(): boolean {
+  return this.feedbacks.some(feedback => feedback.user.idUser === this.idUser);
+}
+
+
+
+
+
+//PLANNINGGGG
+
+
+// Charger les plannings de l'événement donné
+loadPlanning(): void {
+  this.eventService.getPlanning(this.idEvent).subscribe((data) => {
+    this.plannings = data;
+  });
+}
   
+
+
+shareOnFacebook(): void {
+  if (this.event) {
+    // Construire le lien de l'événement avec son ID
+    const eventUrl = `http://localhost:4200/detailseventfront/${this.idEvent}`;
+
+    // Ajouter le titre de l'événement dans l'URL
+    const shareText = `Join our event: ${this.event.title} - ${eventUrl}`;
+    
+    // Encoder l'URL et le texte
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(eventUrl);
+
+    // Lien de partage Facebook
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+
+    // Ouvrir la fenêtre de partage
+    window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+  } else {
+    console.error("L'événement n'est pas encore chargé.");
+  }
+}
+
+
+
+
+
+
+
       }
 
 
