@@ -10,35 +10,28 @@
     <h3 class="sidebar__title">Derniers forums</h3>
     <ul class="sidebar__post__list list-unstyled">
       <li *ngFor="let forum of latestForums">
-        <div class="sidebar__post__content">
-          <!-- Conteneur Flex pour l'image + texte -->
-          <div class="forum-item-container">
-            <!-- Image à gauche -->
-            <div class="forum-image-wrapper">
-              <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
-                <img [src]="'http://localhost:8089/images/' + forum.image" alt="{{ forum.title }}" />
-              </div>
-              <ng-template #defaultImage>
+        <a [routerLink]="['/forum', forum.forum_id]" class="forum-link">
+          <div class="sidebar__post__content">
+            <div class="forum-item-container">
+              <div class="forum-image-wrapper">
                 <div class="sidebar__post__image">
-                  <img src="assets/images/default-forum.jpg" alt="Image par défaut" />
+                  <img [src]="forum.image ? 'http://localhost:8089/images/' + forum.image : 'assets/images/default-forum.jpg'" 
+                       alt="{{ forum.title }}" />
                 </div>
-              </ng-template>
-            </div>
-            
-            <!-- Contenu texte à droite -->
-            <div class="forum-text-content">
-              <h3 class="sidebar__post__content__title">
-                <a [routerLink]="['/forum-details', forum.forum_id]">{{ forum.title }}</a>
-              </h3>
-              <span class="sidebar__post__content__meta">
-                <i class="icon-clock"></i> {{ forum.creationDate | date:'dd MMM, yyyy' }}
-              </span>
+              </div>
+              <div class="forum-text-content">
+                <h3 class="sidebar__post__content__title">{{ forum.title }}</h3>
+                <span class="sidebar__post__content__meta">
+                  <i class="icon-clock"></i> {{ forum.creationDate | date:'dd MMM, yyyy' }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       </li>
     </ul>
   </div>
+ 
   <!-- latest-forum-widget -->
 
   <div class="sidebar__single sidebar__category">
