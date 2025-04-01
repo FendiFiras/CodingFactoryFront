@@ -11,23 +11,30 @@
     <ul class="sidebar__post__list list-unstyled">
       <li *ngFor="let forum of latestForums">
         <div class="sidebar__post__content">
-          <!-- Afficher l'image du forum -->
-          <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
-            <img [src]="forum.image" alt="{{ forum.title }}" />
-          </div>
-          <ng-template #defaultImage>
-            <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
-              <img [src]="'http://localhost:8089/images/' + forum.image" alt="{{ forum.title }}" /> 
+          <!-- Conteneur Flex pour l'image + texte -->
+          <div class="forum-item-container">
+            <!-- Image à gauche -->
+            <div class="forum-image-wrapper">
+              <div class="sidebar__post__image" *ngIf="forum.image; else defaultImage">
+                <img [src]="'http://localhost:8089/images/' + forum.image" alt="{{ forum.title }}" />
+              </div>
+              <ng-template #defaultImage>
+                <div class="sidebar__post__image">
+                  <img src="assets/images/default-forum.jpg" alt="Image par défaut" />
+                </div>
+              </ng-template>
             </div>
             
-          </ng-template>
-  
-          <span class="sidebar__post__content__meta">
-            <i class="icon-clock"></i>{{ forum.creationDate | date:'dd MMM, yyyy' }}
-          </span>
-          <h3 class="sidebar__post__content__title">
-            <a [routerLink]="['/forum-details', forum.forum_id]">{{ forum.title }}</a>
-          </h3>
+            <!-- Contenu texte à droite -->
+            <div class="forum-text-content">
+              <h3 class="sidebar__post__content__title">
+                <a [routerLink]="['/forum-details', forum.forum_id]">{{ forum.title }}</a>
+              </h3>
+              <span class="sidebar__post__content__meta">
+                <i class="icon-clock"></i> {{ forum.creationDate | date:'dd MMM, yyyy' }}
+              </span>
+            </div>
+          </div>
         </div>
       </li>
     </ul>
