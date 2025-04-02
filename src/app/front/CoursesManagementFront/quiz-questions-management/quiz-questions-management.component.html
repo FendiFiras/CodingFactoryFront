@@ -1,144 +1,167 @@
 <app-navbar></app-navbar>
 
 <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
-    <div class="page-header__bg jarallax-img"></div>
-    <div class="page-header__overlay"></div>
-    <div class="container text-center">
-        <h2 class="page-header__title">Quiz Questions Management</h2>
-        <ul class="page-header__breadcrumb list-unstyled">
-            <li><a routerLink="/">Home</a></li>
-            <li><span>Quiz Questions</span></li>
-        </ul>
-    </div>
+  <div class="page-header__bg jarallax-img"></div>
+  <div class="page-header__overlay"></div>
+  <div class="container text-center">
+    <h2 class="page-header__title">Quiz Questions Management</h2>
+    <ul class="page-header__breadcrumb list-unstyled">
+      <li><a routerLink="/">Home</a></li>
+      <li><span>Quiz Questions</span></li>
+    </ul>
+  </div>
 </section>
 
-<section class="become-team">
-    <div class="container">
-        <div class="row">
-            
-            <!-- 📌 Tableau d'affichage des questions (Gauche) -->
-            <div class="col-lg-7 wow fadeInUp animated">
-                <div class="become-team__content">
-                    <h3 class="become-team__title">Existing Questions</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Question</th>
-                                <th>Max Grade</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let question of questions; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ question.questionText }}</td>
-                                <td>{{ question.maxGrade }}</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm me-2" (click)="toggleAnswers(i)">
-                                        {{ showAnswersIndex === i ? 'Hide' : 'Show' }} Answers
-                                    </button>
-                                    <button class="btn btn-warning btn-sm me-2" (click)="editQuestion(question)">✏ Edit</button>
-                                    <button class="btn btn-danger btn-sm" (click)="deleteQuestion(question.idQuizQ)">🗑 Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- 📌 Affichage des réponses sous chaque question -->
-                    <div *ngIf="showAnswersIndex !== null" class="mt-3">
-                        <h5 class="text-primary">Answers for: {{ questions[showAnswersIndex]?.questionText }}</h5>
-                        <ul class="list-group">
-                            <li *ngFor="let answer of questions[showAnswersIndex]?.quizAnswers" class="list-group-item d-flex justify-content-between">
-                                {{ answer.answerText }} 
-                                <span class="badge bg-success" *ngIf="answer.correct === true">✔ Correct</span>
-                                <span class="badge bg-danger" *ngIf="answer.correct === false">✖ Incorrect</span>
-
-                                
-
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📌 Formulaire d'ajout de question (Droite) -->
-            <div class="col-lg-5 wow fadeInUp animated">
-                <div class="become-team__form-box">
-                    <h3 class="become-team__form-box__title">
-                        {{ isEditing ? 'Update Question with Answers' : 'Add Question with Answers' }}
-                    </h3>
-                                        <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
-                        
-                    <!-- ✅ Remplace le select par un input readonly -->
-<div class="become-team__input-box">
-    <label for="quizName">Quiz Selected</label>
-    <input type="text" id="quizName" class="form-control" [value]="selectedQuizName" readonly>
+<div class="alert alert-info mt-4 mb-4">
+  <h4>🤖 Generate Questions with AI</h4>
+  <div class="row">
+    <div class="col-md-5">
+      <input class="form-control" [(ngModel)]="generationTopic" placeholder="Enter topic (e.g. Java)" />
+    </div>
+    <div class="col-md-3">
+      <input type="number" class="form-control" [(ngModel)]="numberOfQuestions" min="1" placeholder="Number of Questions" />
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-success w-100" (click)="generateAIQuestions()" [disabled]="isGenerating || !generationTopic">
+        <span *ngIf="!isGenerating">⚡ Generate with AI</span>
+        <span *ngIf="isGenerating"><i class="spinner-border spinner-border-sm"></i> Generating...</span>
+      </button>
+    </div>
+  </div>
 </div>
 
+<section class="become-team">
+  <div class="container">
+    <div class="row">
 
-                        <!-- Champ pour la question -->
-                        <div class="become-team__input-box">
-                            <input type="text" formControlName="questionText" class="form-control" placeholder="Enter the question" required>
-                            <div *ngIf="questionForm.get('questionText')?.invalid && questionForm.get('questionText')?.touched" class="text-danger">
-                                <small *ngIf="questionForm.get('questionText')?.errors?.['required']">⚠ This field is required.</small>
-                                <small *ngIf="questionForm.get('questionText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
-                              </div>
-                              
-                        </div>
+      <!-- 📌 Tableau d'affichage des questions (Gauche) -->
+      <div class="col-lg-7 wow fadeInUp animated">
+        <div class="become-team__content">
+          <h3 class="become-team__title">Existing Questions</h3>
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Max Grade</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let question of questions; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ question.questionText }}</td>
+                <td>{{ question.maxGrade }}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm me-2" (click)="toggleAnswers(i)">
+                    {{ showAnswersIndex === i ? 'Hide' : 'Show' }} Answers
+                  </button>
+                  <button class="btn btn-warning btn-sm me-2" (click)="editQuestion(question)">✏ Edit</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteQuestion(question.idQuizQ)">🗑 Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-                        <!-- Champ pour la note max -->
-                        <div class="become-team__input-box">
-                            <input type="number" formControlName="maxGrade" class="form-control" placeholder="Max Grade" required>
-                            <div *ngIf="questionForm.get('maxGrade')?.invalid && questionForm.get('maxGrade')?.touched" class="text-danger">
-                                <small *ngIf="questionForm.get('maxGrade')?.errors?.['required']">⚠ This field is required.</small>
-                                <small *ngIf="questionForm.get('maxGrade')?.errors?.['min']">⚠ Value must be at least 1.</small>
-                              </div>
-                              
-                        </div>
-                        <div class="become-team__input-box">
-                            <h4>Answers</h4>
-                            <div formArrayName="answers">
-                                <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
-                                    <!-- Champ texte pour la réponse -->
-                                    <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
-                                    <div *ngIf="answer.get('answerText')?.invalid && answer.get('answerText')?.touched" class="text-danger">
-                                        <small *ngIf="answer.get('answerText')?.errors?.['required']">⚠ This field is required.</small>
-                                        <small *ngIf="answer.get('answerText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
-                                      </div>
-                                      
-                                    <!-- Checkbox avec mise à jour forcée -->
-                                    <div class="input-group-text">
-                                        <input type="checkbox" formControlName="correct" (change)="updateCorrectValue(i)">
-                                        <label class="ms-2">Correct</label>
-                                    </div>
-                                    
-                                    <!-- Bouton de suppression -->
-                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
-                                </div>
-                            </div>
-                        
-                            <!-- Bouton pour ajouter une réponse -->
-                            <button type="button" class="btn btn-secondary mt-2" (click)="addAnswer()">+ Add Answer</button>
-                        </div>
-                        
-                        
-                        <!-- Boutons -->
-                        <div class="become-team__btn-box d-flex justify-content-between">
-                            <button type="submit" class="eduact-btn eduact-btn-second" [disabled]="questionForm.invalid">
-                                <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
-                              </button>
-                              
-                            <button type="button" class="eduact-btn eduact-btn-second" (click)="manageQuizzes()">
-                                <span class="eduact-btn__curve"></span>Manage Quizzes<i class="icon-arrow"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+          <!-- 📌 Affichage des réponses sous chaque question -->
+          <div *ngIf="showAnswersIndex !== null" class="mt-3">
+            <h5 class="text-primary">Answers for: {{ questions[showAnswersIndex]?.questionText }}</h5>
+            <ul class="list-group">
+              <li *ngFor="let answer of questions[showAnswersIndex]?.quizAnswers" class="list-group-item d-flex justify-content-between">
+                {{ answer.answerText }}
+                <span class="badge bg-success" *ngIf="answer.correct === true">✔ Correct</span>
+                <span class="badge bg-danger" *ngIf="answer.correct === false">✖ Incorrect</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📌 Formulaire d'ajout de question (Droite) -->
+      <div class="col-lg-5 wow fadeInUp animated">
+
+        <!-- 🔘 Toggle Form Visibility -->
+        <div class="text-end mb-3">
+          <button class="btn btn-outline-primary btn-sm" (click)="toggleForm()">
+            {{ showForm ? 'Hide Form' : 'Show Form' }}
+          </button>
+        </div>
+
+        <div class="become-team__form-box form-sticky animate__animated"
+          [class.animate__fadeIn]="showForm"
+          [class.animate__fadeOut]="!showForm"
+          [ngStyle]="{ display: showForm ? 'block' : 'none' }">
+
+          <h3 class="become-team__form-box__title">
+            {{ isEditing ? 'Update Question with Answers' : 'Add Question with Answers' }}
+          </h3>
+
+          <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+            <!-- ✅ Remplace le select par un input readonly -->
+            <div class="become-team__input-box">
+              <label for="quizName">Quiz Selected</label>
+              <input type="text" id="quizName" class="form-control" [value]="selectedQuizName" readonly>
             </div>
 
+            <!-- Champ pour la question -->
+            <div class="become-team__input-box">
+              <input type="text" formControlName="questionText" class="form-control" placeholder="Enter the question" required>
+              <div *ngIf="questionForm.get('questionText')?.invalid && questionForm.get('questionText')?.touched" class="text-danger">
+                <small *ngIf="questionForm.get('questionText')?.errors?.['required']">⚠ This field is required.</small>
+                <small *ngIf="questionForm.get('questionText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
+              </div>
+            </div>
+
+            <!-- Champ pour la note max -->
+            <div class="become-team__input-box">
+              <input type="number" formControlName="maxGrade" class="form-control" placeholder="Max Grade" required>
+              <div *ngIf="questionForm.get('maxGrade')?.invalid && questionForm.get('maxGrade')?.touched" class="text-danger">
+                <small *ngIf="questionForm.get('maxGrade')?.errors?.['required']">⚠ This field is required.</small>
+                <small *ngIf="questionForm.get('maxGrade')?.errors?.['min']">⚠ Value must be at least 1.</small>
+              </div>
+            </div>
+
+            <div class="become-team__input-box">
+              <h4>Answers</h4>
+              <div formArrayName="answers">
+                <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="answer-group">
+                  <!-- Champ texte pour la réponse -->
+                  <input type="text" class="form-control" formControlName="answerText" placeholder="Answer {{ i + 1 }}" required>
+                  <div *ngIf="answer.get('answerText')?.invalid && answer.get('answerText')?.touched" class="text-danger">
+                    <small *ngIf="answer.get('answerText')?.errors?.['required']">⚠ This field is required.</small>
+                    <small *ngIf="answer.get('answerText')?.errors?.['minlength']">⚠ Minimum 2 characters required.</small>
+                  </div>
+
+                  <!-- Checkbox avec mise à jour forcée -->
+                  <div class="input-group-text">
+                    <input type="checkbox" formControlName="correct" (change)="updateCorrectValue(i)">
+                    <label class="ms-2">Correct</label>
+                  </div>
+
+                  <!-- Bouton de suppression -->
+                  <button type="button" class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Remove</button>
+                </div>
+              </div>
+
+              <!-- Bouton pour ajouter une réponse -->
+              <button type="button" class="btn btn-secondary mt-2" (click)="addAnswer()">+ Add Answer</button>
+            </div>
+
+            <!-- Boutons -->
+            <div class="become-team__btn-box d-flex justify-content-between">
+              <button type="submit" class="eduact-btn eduact-btn-second" [disabled]="questionForm.invalid">
+                <span class="eduact-btn__curve"></span>Save Question<i class="icon-arrow"></i>
+              </button>
+              <button type="button" class="eduact-btn eduact-btn-second" (click)="manageQuizzes()">
+                <span class="eduact-btn__curve"></span>Manage Quizzes<i class="icon-arrow"></i>
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+
     </div>
+  </div>
 </section>
 
 <app-footer></app-footer>

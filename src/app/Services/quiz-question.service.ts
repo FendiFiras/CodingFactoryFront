@@ -59,6 +59,10 @@ export class QuizQuestionService {
   submitAndCalculateScore(userId: number, quizId: number, selectedAnswers: number[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/submit-and-score/${userId}/${quizId}`, selectedAnswers);
 }
+generateQuestions(quizId: number, topic: string, numberOfQuestions: number): Observable<any> {
+  return this.http.post(`${this.apiUrl}/generate-questions/${quizId}?topic=${topic}&numberOfQuestions=${numberOfQuestions}`, {});
+}
+
 
 
 

@@ -28,6 +28,10 @@ export class QuizQuestionsManagementComponent implements OnInit {
   showAnswersIndex: number | null = null; // Garde l'index de la question affichée
   selectedQuizName: string = ''; // ✅ Stocke le nom du quiz sélectionné
   isEditing: boolean = false;
+  generationTopic: string = '';
+  numberOfQuestions: number = 2;
+  isGenerating: boolean = false;
+  showForm: boolean = true;
 
   constructor(
     private quizService: QuizService,
@@ -354,6 +358,35 @@ updateAnswers(quizId: number): void {
           alert("❌ Une erreur est survenue lors de la mise à jour des réponses !");
       }
   );
+}
+
+
+generateAIQuestions(): void {
+  const quizId = Number(this.questionForm.get('quizId')?.value);
+  if (!quizId || !this.generationTopic) {
+    alert("❌ Please provide a topic and ensure a quiz is selected.");
+    return;
+  }
+
+  this.isGenerating = true;
+
+  this.quizQuestionService.generateQuestions(quizId, this.generationTopic, this.numberOfQuestions)
+    .subscribe(
+      (response) => {
+        console.log("✅ Questions générées :", response);
+        this.loadQuestionsByQuiz(quizId);
+        this.isGenerating = false;
+        alert("✅ AI-generated questions added successfully!");
+      },
+      (error) => {
+        console.error("❌ Erreur génération IA :", error);
+        this.isGenerating = false;
+        alert("❌ Failed to generate questions.");
+      }
+    );
+}
+toggleForm(): void {
+  this.showForm = !this.showForm;
 }
 }
   
