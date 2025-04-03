@@ -31,7 +31,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
   generationTopic: string = '';
   numberOfQuestions: number = 2;
   isGenerating: boolean = false;
-  showForm: boolean = true;
+  showForm: boolean = false;
 
   constructor(
     private quizService: QuizService,
@@ -387,6 +387,15 @@ generateAIQuestions(): void {
 }
 toggleForm(): void {
   this.showForm = !this.showForm;
+}
+
+openOffcanvas(): void {
+  this.showForm = true;
+}
+
+closeOffcanvas(): void {
+  this.showForm = false;
+  this.cancelEdit(); // facultatif : reset le formulaire
 }
 }
   
