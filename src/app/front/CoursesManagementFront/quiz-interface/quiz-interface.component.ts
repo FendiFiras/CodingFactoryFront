@@ -8,9 +8,13 @@ import { CommonModule } from '@angular/common';
 import { QuizQuestion } from 'src/app/Models/quiz-question.model';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
+import { CheatDetectionServiceTsService } from 'src/app/Services/cheat-detection.service.ts.service';
+import { WebcamHeadtrackerComponent } from '../webcam-headtracker/webcam-headtracker.component';
+
 @Component({
   selector: 'app-quiz-interface',
-  imports: [CommonModule, ReactiveFormsModule,FormsModule,NavbarComponent,FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule,FormsModule,NavbarComponent,FooterComponent,WebcamHeadtrackerComponent // ✅ AJOUT ICI !
+  ],
   templateUrl: './quiz-interface.component.html',
   styleUrl: './quiz-interface.component.scss'
 })
@@ -35,10 +39,24 @@ showProgressBar = false; // ✅ Nouvelle variable pour gérer l'affichage diffé
 timeLeft!: number; 
 timerInterval: any;
 isTimeUp = false;
+
+clickCount = 0;
+tabSwitchCount = 0;
+idleSeconds = 0;
+wrongAnswersCount = 0;
+fastAnswerCount = 0;
+startTime!: number;
+
+detectedHeadTurnsCount = 0;
+
+
+
   constructor(
     private route: ActivatedRoute,
     private quizServiceQuestion: QuizQuestionService,
-    private quizservice: QuizService
+    private quizservice: QuizService,
+    private cheatService: CheatDetectionServiceTsService // ✅ Ajout ici
+
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +64,39 @@ isTimeUp = false;
       this.quizId = Number(params.get('quizId'));
       if (!isNaN(this.quizId)) {
         this.loadQuizData();
+
+        this.startTime = Date.now(); // Start quiz timer
+
+        // 🖱️ Suivre les clics
+        document.addEventListener('click', () => this.clickCount++);
+
+        // 🔄 Suivre les changements d'onglet
+        window.addEventListener('blur', () => {
+          this.tabSwitchCount++;
+          console.log('Tab switch detected!');
+        });
+
+        // 🎯 Suivre le retour sur l'onglet
+        window.addEventListener('focus', () => {
+          console.log('Tab focused again!');
+        });
+
+        // 💤 Détecter l’inactivité (idle)
+        let lastActivity = Date.now();
+        const activityEvents = ['mousemove', 'keydown', 'click'];
+
+        activityEvents.forEach(evt => {
+          document.addEventListener(evt, () => lastActivity = Date.now());
+        });
+
+        setInterval(() => {
+          const now = Date.now();
+          if (now - lastActivity > 5000) { // 5 sec sans activité
+            this.idleSeconds += 5;
+            lastActivity = now;
+            console.log('User is idle for ' + this.idleSeconds + ' seconds');
+          }
+        }, 5000);
       }
     });
   }
@@ -100,25 +151,61 @@ isTimeUp = false;
 
   submitQuiz(): void {
     const selectedAnswers: number[] = Object.values(this.selectedAnswers)
-        .flat() // 🔥 Aplatir les réponses multiples
-        .filter(v => v !== null && v !== undefined)
-        .map(v => Number(v));
-  
-    console.log("📤 Données envoyées :", selectedAnswers);
-  
+      .flat()
+      .filter(v => v !== null && v !== undefined)
+      .map(v => Number(v));
+
+    console.log("Réponses sélectionnées :", selectedAnswers);
+
+    // ⏱️ Calculer la durée du quiz
+    const now = Date.now();
+    const duration = Math.floor((now - this.startTime) / 1000); // durée en secondes
+    console.log("Durée totale du quiz :", duration, "secondes");
+
     this.quizServiceQuestion.submitAndCalculateScore(this.userId, this.quizId, selectedAnswers).subscribe(
       (response) => {
-        console.log("✅ Réponse serveur :", response);
+        console.log("Résultat serveur :", response);
         this.score = response.score;
         this.passed = response.passed;
         this.submitted = true;
+
+        // Préparer les données à envoyer à l'IA
+        const cheatingData = {
+          duration: duration,
+          clicks: this.clickCount,
+          fast_answers: this.fastAnswerCount || 0,
+          tab_switches: this.tabSwitchCount,
+          idle_time: this.idleSeconds,
+          wrong_answers: this.wrongAnswersCount,
+          head_turns: this.detectedHeadTurnsCount || 0
+        };
+
+        console.log("Données envoyées à l'IA :", cheatingData);
+
+        // Appel API Flask via Spring Boot
+        this.cheatService.detectCheating(cheatingData).subscribe(result => {
+          console.log("Réponse IA :", result);
+          if (result) {
+            console.warn("Triche détectée !");
+            alert("Comportement suspect détecté !");
+          } else {
+            console.log("Comportement normal détecté");
+          }
+        });
       },
       (error) => {
-        console.error("❌ Erreur soumission :", error);
+        console.error("Erreur soumission des réponses :", error);
       }
     );
   }
   
+  
+ 
+  onHeadTurnDetected() {
+    console.log('Tête tournée détectée !');
+    this.detectedHeadTurnsCount++;  // Incrémenter le compteur de détections
+    console.log(`Compteur de têtes tournées : ${this.detectedHeadTurnsCount}`);
+  }
 
 
 calculateScore(): void {

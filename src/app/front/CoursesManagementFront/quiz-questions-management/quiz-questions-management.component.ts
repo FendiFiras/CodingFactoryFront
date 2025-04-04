@@ -11,7 +11,6 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router'; // ✅ Importer ActivatedRoute
 import { forkJoin } from 'rxjs';
-
 @Component({
   selector: 'app-quiz-questions-management',
   standalone: true,
