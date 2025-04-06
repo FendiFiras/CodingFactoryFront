@@ -11,6 +11,9 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router'; // ✅ Importer ActivatedRoute
 import { forkJoin } from 'rxjs';
+import { CheatDetectionServiceTsService } from 'src/app/Services/cheat-detection.service.ts.service';
+import { PdfServiceservice } from 'src/app/Services/pdfservice.service';
+import { User } from 'src/app/Models/user.model';
 @Component({
   selector: 'app-quiz-questions-management',
   standalone: true,
@@ -31,12 +34,17 @@ export class QuizQuestionsManagementComponent implements OnInit {
   numberOfQuestions: number = 2;
   isGenerating: boolean = false;
   showForm: boolean = false;
+  users: any[] = [];  // Tableau des utilisateurs ayant passé le quiz
+  usersWhoPassedQuiz: User[] = []; // Liste des utilisateurs ayant passé un quiz
+  selectedQuizId: number | null = null;
 
   constructor(
     private quizService: QuizService,
     private quizQuestionService: QuizQuestionService,
     private fb: FormBuilder,
-    private route: ActivatedRoute // ✅ Injecter ActivatedRoute
+    private route: ActivatedRoute, // ✅ Injecter ActivatedRoute
+    private cheatDetectionService: CheatDetectionServiceTsService,
+    private pdfService: PdfServiceservice  // ✅ Injecter le service pour générer des PDF
 
   ) {
     this.questionForm = this.fb.group({
@@ -61,6 +69,7 @@ export class QuizQuestionsManagementComponent implements OnInit {
         this.loadQuizDetails(quizId); // ✅ Charger les détails du quiz sélectionné
 
         this.loadQuestionsByQuiz(quizId);
+        this.loadUsersWhoPassedQuiz(quizId);
       }
     });  }
 
@@ -94,6 +103,18 @@ export class QuizQuestionsManagementComponent implements OnInit {
         console.error('❌ Erreur lors du chargement des questions', error);
       }
     );
+}
+
+loadUsersWhoPassedQuiz(quizId: number): void {
+  this.quizService.getUsersByQuizId(quizId).subscribe(
+    (users) => {
+      console.log("Réponse de l'API pour les utilisateurs ayant passé le quiz:", users);
+      this.usersWhoPassedQuiz = users;
+    },
+    (error) => {
+      console.error('Erreur lors du chargement des utilisateurs', error);
+    }
+  );
 }
 
 private convertToBoolean(value: any): boolean {
@@ -396,6 +417,31 @@ closeOffcanvas(): void {
   this.showForm = false;
   this.cancelEdit(); // facultatif : reset le formulaire
 }
+
+
+
+
+exportUserBehavior(user: any): void {
+  const behaviorData = {
+    name: `${user.firstName} ${user.lastName}`,
+    clicks: this.clickCount,
+    duration: this.timeLeft,  // Utilisez la durée restante du quiz ou une autre méthode
+    fast_answers: this.fastAnswerCount,  // Assurez-vous que cette variable est correctement mise à jour
+    head_turns: this.detectedHeadTurnsCount, // Vérifiez que la détection des têtes tournées est correcte
+    idle_time: this.idleSeconds,  // Assurez-vous que cette variable est correctement calculée
+    tab_switches: this.tabSwitchCount,  // Vérifiez que le comptage des changements d'onglet est correct
+    wrong_answers: this.wrongAnswersCount  // Vérifiez que le comptage des mauvaises réponses est correct
+  };
+
+  this.pdfService.generatePdfReport(behaviorData);  // Appeler le service pour générer le PDF
+}
+
+onQuizSelected(quizId: number): void {
+  this.selectedQuizId = quizId;
+  this.loadUsersWhoPassedQuiz(quizId);  // Charger les utilisateurs pour ce quiz
+}
+
+
 }
   
   

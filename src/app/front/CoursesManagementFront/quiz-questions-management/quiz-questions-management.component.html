@@ -53,6 +53,36 @@
     </div>
   </form>
 </section>
+<!-- Section de gestion des utilisateurs ayant passé le quiz -->
+<section class="user-report-section">
+  <h3>Participants and Behavior Reports</h3>
+  
+  <!-- Table affichant les utilisateurs qui ont passé le quiz -->
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>User Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Liste des utilisateurs avec un bouton pour exporter leurs données -->
+      <tr *ngFor="let user of usersWhoPassedQuiz; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>
+          <!-- Bouton pour exporter les données de comportement de l'utilisateur -->
+          <button class="btn btn-primary btn-sm" (click)="exportUserBehavior(user)">
+            Export Behavior
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
 
 <section class="become-team">
   <div class="container">

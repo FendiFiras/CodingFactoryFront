@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Quiz } from '../Models/quiz.model';
+import { User } from '../Models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,8 @@ export class QuizService {
   // ✅ Récupérer les quiz d'une formation spécifique
   getQuizzesByTraining(trainingId: number): Observable<Quiz[]> {
     return this.http.get<Quiz[]>(`${this.apiUrl}/training/${trainingId}`);
+  }
+  getUsersByQuizId(idQuiz: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users/${idQuiz}`);
   }
 }
