@@ -114,3 +114,155 @@
   cursor: pointer;
   z-index: 9999; /* Assurez-vous qu'il est au-dessus des autres éléments */
 }
+
+/* Event Schedule Section */
+.sidebar__schedule {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.sidebar__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.planning-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.planning-item {
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.planning-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.planning-item__content {
+  background: #fff;
+}
+
+.planning-item__header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.planning-item__header:hover {
+  background: #f8f9fa;
+}
+
+.planning-item__image {
+  flex: 0 0 60px;
+  margin-right: 15px;
+}
+
+.planning-item__image img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.planning-item__info {
+  flex: 1;
+}
+
+.planning-item__title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 5px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.planning-item__duration {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.planning-item__toggle {
+  flex: 0 0 30px;
+  text-align: right;
+}
+
+.planning-item__toggle i {
+  font-size: 14px;
+  color: #007bff;
+  transition: transform 0.3s ease;
+}
+
+.planning-item__details {
+  display: none;
+  padding: 15px;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.planning-item__details.active {
+  display: block;
+}
+
+.planning-item__media {
+  margin-bottom: 15px;
+}
+
+.planning-item__media video {
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.planning-item__location {
+  text-align: center;
+}
+
+.location-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: #e7f0ff;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.location-link i {
+  margin-right: 5px;
+}
+
+.location-link:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+.no-schedule {
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+  padding: 10px 0;
+  font-style: italic;
+}

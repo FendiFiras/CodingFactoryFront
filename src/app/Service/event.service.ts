@@ -1,15 +1,17 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, catchError, filter, Observable, take, throwError } from 'rxjs';
 import { Event } from '../Model/event.model'; // Adjust the path as needed
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Planning } from '../Model/planning.model';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { LocationEvent } from '../Model/locationEvent.model';
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
   private apiUrl = 'http://localhost:8089/event'; // Adjust the URL if needed
+
   private stompClient: Client | null = null;
   private stompConnected = new BehaviorSubject<boolean>(false);
 
@@ -102,9 +104,13 @@ export class EventService {
   getPlanning(eventId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/planningevent/${eventId}`);
   }
+  getPlanningById(id: number): Observable<Planning> {
+    return this.http.get<Planning>(`${this.apiUrl}/getplanning/${id}`);
+}
 
   addPlanning(planning: any, eventId: number,locationId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/addplanning/${eventId}/${locationId}`, planning);
+    return this.http.post(`${this.apiUrl}/addplanning/${eventId}/${locationId}`, planning
+    );
   }
 
   deletePlanning(idPlanning: number): Observable<void> {
@@ -176,6 +182,43 @@ subscribeToParticipantUpdates(eventId: number): Observable<number> {
     });
   });
 }
+
+
+
+
+// ✅ Ajouter une location
+addLocation(location: LocationEvent): Observable<LocationEvent> {
+  return this.http.post<LocationEvent>(`${this.apiUrl}/addlocation`, location);
+}
+
+// ✅ Mettre à jour une location
+updateLocation(location: LocationEvent): Observable<LocationEvent> {
+  return this.http.put<LocationEvent>(`${this.apiUrl}/updatelocation`, location);
+}
+
+// ✅ Récupérer une location par ID
+getLocationById(id: number): Observable<LocationEvent> {
+  return this.http.get<LocationEvent>(`${this.apiUrl}/getlocation/${id}`);
+}
+
+// ✅ Supprimer une location
+deleteLocation(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/deletelocation/${id}`);
+}
+
+// ✅ Récupérer toutes les locations
+getAllLocations(): Observable<LocationEvent[]> {
+  return this.http.get<LocationEvent[]>(`${this.apiUrl}/alllocation`);
+}
+//**************AI */
+
+private baseUrl = 'http://localhost:8082/analyze'; // URL de l’API FastAPI
+
+analyzeVideo(filename: string) {
+  const requestBody = { filename };  // Crée l'objet contenant le champ `filename`
+  return this.http.post<any>(this.baseUrl, requestBody);  // Envoi l'objet dans la requête POST
+}
+
 }
 
 

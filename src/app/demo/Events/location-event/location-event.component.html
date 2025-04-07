@@ -1,0 +1,93 @@
+<div class="location-container">
+  <h3>Liste des Localisations</h3>
+
+  <!-- Bouton pour ouvrir le modal d'ajout -->
+  <button class="btn btn-primary" (click)="openModal()">Ajouter une Localisation</button>
+
+  <div *ngIf="locations.length > 0; else noLocation">
+    <div class="table-responsive">
+      <table class="table table-xl">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Adresse</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let location of locations" (dblclick)="openEditModal(location)">
+            <td>{{ location.locationName }}</td>
+            <td>{{ location.address }}</td>
+            <td>{{ location.latitude }}</td>
+            <td>{{ location.longitude }}</td>
+            <td>
+              <button class="btn btn-danger" (click)="deleteLocation(location.idLocal)">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #noLocation>
+    <p>Aucune localisation disponible.</p>
+  </ng-template>
+
+  <!-- Modal d'ajout -->
+  <div *ngIf="isAddModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">×</span>
+      <h3>Ajouter une Localisation</h3>
+      <form (submit)="addLocation()">
+        <label>Nom :</label>
+        <input type="text" [(ngModel)]="newLocation.locationName" name="locationName" required>
+
+        <label>Adresse :</label>
+        <input type="text" [(ngModel)]="newLocation.address" name="address" required>
+
+        <label>Latitude :</label>
+        <input type="number" [(ngModel)]="newLocation.latitude" name="latitude" required readonly>
+
+        <label>Longitude :</label>
+        <input type="number" [(ngModel)]="newLocation.longitude" name="longitude" required readonly>
+
+        <!-- OpenLayers Map -->
+        <div class="map-container">
+          <div #addMap style="height: 300px; width: 100%;"></div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Ajouter</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de modification -->
+  <div *ngIf="isEditModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditModal()">×</span>
+      <h3>Modifier la Localisation</h3>
+      <form (submit)="editLocation()">
+        <label for="editNom">Nom :</label>
+        <input type="text" id="editNom" [(ngModel)]="selectedLocation.locationName" name="editNom" required>
+
+        <label for="editAdresse">Adresse :</label>
+        <input type="text" id="editAdresse" [(ngModel)]="selectedLocation.address" name="editAdresse" required>
+
+        <label for="editLatitude">Latitude :</label>
+        <input type="number" id="editLatitude" [(ngModel)]="selectedLocation.latitude" name="editLatitude" required readonly>
+
+        <label for="editLongitude">Longitude :</label>
+        <input type="number" id="editLongitude" [(ngModel)]="selectedLocation.longitude" name="editLongitude" required readonly>
+
+        <!-- OpenLayers Map -->
+        <div class="map-container">
+          <div #editMap style="height: 300px; width: 100%;"></div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Modifier</button>
+      </form>
+    </div>
+  </div>
+</div>

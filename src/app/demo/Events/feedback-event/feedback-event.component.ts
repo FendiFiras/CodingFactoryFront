@@ -6,11 +6,12 @@ import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
 import { Registration } from 'src/app/Model/registration.model';
 import { Planning } from 'src/app/Model/planning.model';
 import { FormsModule } from '@angular/forms';
+import { LocationEvent } from 'src/app/Model/locationEvent.model'; // Import LocationEvent model
 
 @Component({
   selector: 'app-feedback-event',
   standalone: true,
-  imports: [FormsModule, CommonModule], // Importer CommonModule pour utiliser *ngFor
+  imports: [FormsModule, CommonModule],
   templateUrl: './feedback-event.component.html',
   styleUrl: './feedback-event.component.scss'
 })
@@ -19,19 +20,21 @@ export class FeedbackEventComponent implements OnInit {
   idLocation!: number;
   feedbacks: FeedBackEvent[] = [];
   registrations: Registration[] = [];
-  plannings: Planning[]=[];
+  plannings: Planning[] = [];
   newPlanning!: Planning;
-  isPlanningModalOpen = false; // Contrôle du modal
+  isPlanningModalOpen = false;
   selectedVideoFile: File | null = null;
-  locationType: string[] = ['IN_PERSON','ONLINE'];
+  locationType: string[] = ['IN_PERSON', 'ONLINE'];
   isEditPlanningModalOpen = false;
   selectedPlanning: Planning | null = null;
-
-
-
+  locations: LocationEvent[] = []; // To store the list of locations
+loc:string;
   constructor(private route: ActivatedRoute, private eventService: EventService) {}
 
   ngOnInit(): void {
+    // Fetch all locations when the component initializes
+    this.loadLocations();
+
     // Récupérer l'ID de l'événement depuis l'URL avant de charger les commentaires
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -39,10 +42,16 @@ export class FeedbackEventComponent implements OnInit {
         this.idEvent = +id;
         this.loadFeedbacks();
         this.loadRegistration();
-        this.idLocation=0;
+        this.idLocation = 0;
         this.loadPlanning();
-
       }
+    });
+  }
+
+  // Fetch all locations
+  loadLocations(): void {
+    this.eventService.getAllLocations().subscribe((data) => {
+      this.locations = data;
     });
   }
 
@@ -52,25 +61,25 @@ export class FeedbackEventComponent implements OnInit {
       this.feedbacks = data;
     });
   }
-// Charger les Registration de l'événement donné
-loadRegistration(): void {
-  this.eventService.getRegistrations(this.idEvent).subscribe((data) => {
-    this.registrations = data;
-  });
-}
 
- // Charger les plannings de l'événement donné
- loadPlanning(): void {
-  this.eventService.getPlanning(this.idEvent).subscribe((data) => {
-    this.plannings = data;
-  });
-}
+  // Charger les Registration de l'événement donné
+  loadRegistration(): void {
+    this.eventService.getRegistrations(this.idEvent).subscribe((data) => {
+      this.registrations = data;
+    });
+  }
+
+  // Charger les plannings de l'événement donné
+  loadPlanning(): void {
+    this.eventService.getPlanning(this.idEvent).subscribe((data) => {
+      this.plannings = data;
+    });
+  }
 
   deleteFeedBack(idFeedBackEvent: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce feedback ?')) {
       this.eventService.deleteFeedBackEvent(idFeedBackEvent).subscribe(
         () => {
-          // Supprimer l'événement de la liste
           this.loadFeedbacks();
           alert('FeedBack supprimé avec succès.');
         },
@@ -81,15 +90,10 @@ loadRegistration(): void {
     }
   }
 
-
-
-
-
   deleteRegistration(idRegistration: number): void {
     if (confirm("Êtes-vous sûr de vouloir supprimer ce participant de l'évenement ?")) {
       this.eventService.deleteRegistration(idRegistration).subscribe(
         () => {
-          // Supprimer l'événement de la liste
           this.loadRegistration();
           alert('Participant supprimé avec succès.');
         },
@@ -100,116 +104,112 @@ loadRegistration(): void {
     }
   }
 
-
-  //add Planning
-
-  
-  async addPlanning(): Promise<void> {
-  
-  this.eventService.addPlanning(this.newPlanning,this.idEvent,this.idLocation).subscribe(() => {
-    this.loadPlanning(); // Rafraîchir la liste après l'ajout
-  });
-}
-
-
-
-openPlanningModal(): void {
-  this.newPlanning = {
-    idPlanning: 0,                // ID initialisé à 0 pour un nouvel élément
-    startDatetime:'',    // Date actuelle pour le début
-    endDatetime: '',      // Date actuelle pour la fin (peut être modifiée ensuite)
-    description: '',              // Description vide au début
-    video: '',                    // Video vide
-    locationType: ''              // Type de localisation vide
-  };
-  this.isPlanningModalOpen = true;
-  console.log("Modal ouvert pour ajouter un planning");
-}
-
-// Fermer le modal
-closePlanningModal(): void {
-  this.isPlanningModalOpen = false;
-}
-
-
- // Soumettre le formulaire d'ajout de planning
- async submitPlanning(): Promise<void> {
-  if (!this.newPlanning.startDatetime || !this.newPlanning.endDatetime || !this.newPlanning.description) {
-    alert('Veuillez remplir tous les champs requis.');
-    return;
+  openPlanningModal(): void {
+    this.newPlanning = {
+      idPlanning: 0,
+      startDatetime: '',
+      endDatetime: '',
+      description: '',
+      video: '',
+      locationType: ''
+    };
+    this.idLocation = 0; // Reset idLocation
+    this.selectedVideoFile = null; // Reset video file
+    this.isPlanningModalOpen = true;
+    console.log("Modal ouvert pour ajouter un planning");
   }
-  try {
-    console.log("videooooooooooo"+this.selectedVideoFile)
-    if (this.selectedVideoFile) {
-      const videoUrl = await this.eventService.uploadFile(this.selectedVideoFile);
-      this.newPlanning.video = videoUrl;
+
+  closePlanningModal(): void {
+    this.isPlanningModalOpen = false;
+  }
+
+  async submitPlanning(): Promise<void> {
+    if (!this.newPlanning.startDatetime || !this.newPlanning.endDatetime || !this.newPlanning.description || !this.newPlanning.locationType) {
+      alert('Veuillez remplir tous les champs requis.');
+      return;
     }
-  } catch (error) {
-    console.error("Erreur lors de l'upload de la vidéo :", error);
-  }
+    try {
+      console.log("aaaaaaa"+this.newPlanning);
 
-  this.eventService.addPlanning(this.newPlanning, this.idEvent, this.idLocation).subscribe(() => {
-    this.loadPlanning(); // Recharger la liste après ajout
-    this.closePlanningModal(); // Fermer le modal
-    alert('Planning ajouté avec succès !');
-  });
-}
+      if (this.selectedVideoFile) {
+        const videoUrl = await this.eventService.uploadFile(this.selectedVideoFile);
+        this.newPlanning.video = videoUrl;
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'upload de la vidéo :", error);
+    }
 
-// Supprimer un planning
-deletePlanning(idPlanning: number): void {
-  if (confirm('Êtes-vous sûr de vouloir supprimer ce planning ?')) {
-    this.eventService.deletePlanning(idPlanning).subscribe(() => {
+    this.eventService.addPlanning(this.newPlanning, this.idEvent, this.idLocation).subscribe(() => {
       this.loadPlanning();
-      alert('Planning supprimé avec succès.');
+      this.closePlanningModal();
+      alert('Planning ajouté avec succès !');
     });
   }
-}
 
-
-
-onVideoSelected(event: any) {
-  this.selectedVideoFile = event.target.files[0];
-}
-
-
-
-
-
-// Ouvrir le modal de modification en double-cliquant sur une ligne du tableau
-openEditPlanningModal(planning: Planning): void {
-  this.selectedPlanning = { ...planning };
-  this.isEditPlanningModalOpen = true;
-}
-
-// Fermer le modal de modification
-closeEditPlanningModal(): void {
-  this.isEditPlanningModalOpen = false;
-  this.selectedPlanning = null;
-}
-
-// Modifier un planning
-async submitEditPlanning(): Promise<void> {
-  if (!this.selectedPlanning) return;
-
-  if (!this.selectedPlanning.startDatetime || !this.selectedPlanning.endDatetime || !this.selectedPlanning.description) {
-    alert('Veuillez remplir tous les champs requis.');
-    return;
-  }
-
-  try {
-    if (this.selectedVideoFile) {
-      const videoUrl = await this.eventService.uploadFile(this.selectedVideoFile);
-      this.selectedPlanning.video = videoUrl;
+  deletePlanning(idPlanning: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce planning ?')) {
+      this.eventService.deletePlanning(idPlanning).subscribe(() => {
+        this.loadPlanning();
+        alert('Planning supprimé avec succès.');
+      });
     }
-  } catch (error) {
-    console.error("Erreur lors de l'upload de la vidéo :", error);
   }
 
-  this.eventService.updatePlanning(this.selectedPlanning,this.idEvent,0).subscribe(() => {
-    this.loadPlanning();
-    this.closeEditPlanningModal();
-    alert('Planning modifié avec succès !');
-  });
+  onVideoSelected(event: any) {
+    this.selectedVideoFile = event.target.files[0];
+  }
+
+  openEditPlanningModal(planning: Planning): void {
+    this.eventService.getPlanningById(planning.idPlanning).subscribe((data: Planning) => {
+        this.selectedPlanning = data;
+
+        console.log("Planning reçu :", this.selectedPlanning);
+
+        // Assurer que idLocation est bien mis à jour
+        this.idLocation = this.selectedPlanning.locationEvent ? this.selectedPlanning.locationEvent.idLocal : null;
+        console.log("ID Location récupéré :", this.idLocation);
+
+        this.selectedVideoFile = null; // Reset du fichier vidéo
+        this.isEditPlanningModalOpen = true;
+    }, error => {
+        console.error("Erreur lors de la récupération du planning :", error);
+    });
 }
-  
+
+  closeEditPlanningModal(): void {
+    this.isEditPlanningModalOpen = false;
+    this.selectedPlanning = null;
+  }
+
+  async submitEditPlanning(): Promise<void> {
+    if (!this.selectedPlanning) return;
+
+    if (!this.selectedPlanning.startDatetime || !this.selectedPlanning.endDatetime || !this.selectedPlanning.description || !this.selectedPlanning.locationType) {
+      alert('Veuillez remplir tous les champs requis.');
+      return;
+    }
+
+    try {
+      if (this.selectedVideoFile) {
+        const videoUrl = await this.eventService.uploadFile(this.selectedVideoFile);
+        this.selectedPlanning.video = videoUrl;
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'upload de la vidéo :", error);
+    }
+
+
+
+
+    this.eventService.updatePlanning(this.selectedPlanning, this.idEvent, this.idLocation).subscribe(() => {
+      this.loadPlanning();
+      this.closeEditPlanningModal();
+      alert('Planning modifié avec succès !');
+    });
+  }
+
+  // Update idLocation when a location is selected
+  onLocationChange(locationId: string): void {
+    this.idLocation = +locationId; // Convert string to number
+  }
 }

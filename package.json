@@ -33,6 +33,7 @@
     "bootstrap": "5.3.3",
     "ng-apexcharts": "1.11.0",
     "ngx-scrollbar": "16.1.1",
+    "ol": "^10.4.0",
     "rxjs": "~7.8.1",
     "screenfull": "6.0.2",
     "sockjs-client": "^1.6.1",

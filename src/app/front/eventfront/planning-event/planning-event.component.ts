@@ -24,6 +24,8 @@ export class PlanningEventComponent implements OnInit {
     plannings: Planning[]=[];
   feedbacks: FeedBackEvent[] = [];
   newFeedback: FeedBackEvent = { idFeedback: 0, rating: 0, comments: '' };
+  selectedVideoUrl: string | null = null;
+
 
   
       constructor(private route: ActivatedRoute,private eventService: EventService) {}
@@ -101,9 +103,16 @@ hasUserCommented(): boolean {
 // Charger les plannings de l'événement donné
 loadPlanning(): void {
   this.eventService.getPlanning(this.idEvent).subscribe((data) => {
-    this.plannings = data;
+    this.plannings = data.map(planning => {
+      if (planning.locationType === 'IN_PERSON' && planning.locationEvent) {
+        // Générer un lien Google Maps basé sur latitude et longitude
+        planning['googleMapsUrl'] = `https://www.google.com/maps?q=${planning.locationEvent.latitude},${planning.locationEvent.longitude}`;
+      }
+      return planning;
+    });
   });
 }
+
   
 
 
@@ -132,6 +141,45 @@ shareOnFacebook(): void {
 
 
 
+
+playVideo(videoUrl: string): void {
+  // Réinitialiser temporairement l'URL pour forcer la mise à jour
+  this.selectedVideoUrl = null;
+
+  setTimeout(() => {
+    this.selectedVideoUrl = `http://localhost:8089/event/${videoUrl}`;
+  }, 100); // Petit délai pour que Angular détecte le changement
+}
+
+
+openGoogleMapsPopup(event: Event, mapUrl: string): void {
+  // Empêche la redirection du lien
+  event.preventDefault();
+
+  // Ouvre Google Maps dans une nouvelle fenêtre (pop-up)
+  window.open(mapUrl, '_blank', 'width=800,height=600');
+}
+toggleDetails(event: Event) {
+  const header = event.currentTarget as HTMLElement;
+  const details = header.nextElementSibling as HTMLElement;
+  const toggle = header.querySelector('.planning-item__toggle') as HTMLElement;
+
+  // Toggle the active class on the details section
+  details.classList.toggle('active');
+  
+  // Toggle the active class on the toggle div to rotate the chevron
+  toggle.classList.toggle('active');
+}
+
+result: any;
+
+
+analyze(fname: string) {
+  this.eventService.analyzeVideo(fname).subscribe({
+    next: res => this.result = res,  // Traitement des résultats de la réponse
+    error: err => console.error('Erreur analyse vidéo', err)  // Gestion des erreurs
+  });
+}
 
 
 

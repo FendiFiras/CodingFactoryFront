@@ -1,4 +1,5 @@
 import { Event as EventModel } from "./event.model";
+import { LocationEvent } from "./locationEvent.model";
 
 export interface Planning {
     idPlanning: number;
@@ -7,8 +8,8 @@ export interface Planning {
     description: string;
     video: string;
     locationType: string;
-        event?:EventModel;
-    
+    event?:EventModel;
+    locationEvent?:LocationEvent;
 
   }
   

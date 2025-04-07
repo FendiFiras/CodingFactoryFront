@@ -45,6 +45,9 @@ const routes: Routes = [
   {path: 'listevents',  // <-- Ajout de la route pour EventsComponent
   loadComponent: () => import('./demo/Events/list-event/list-event.component').then((c) => c.ListEventComponent) // Chargement du composant Events
 },
+{path: 'listlocation',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/location-event/location-event.component').then((c) => c.LocationEventComponent) // Chargement du composant Events
+},
 
 {path: 'feedback/:id',  // <-- Ajout de la route pour EventsComponent
   loadComponent: () => import('./demo/Events/feedback-event/feedback-event.component').then((c) => c.FeedbackEventComponent) // Chargement du composant Events

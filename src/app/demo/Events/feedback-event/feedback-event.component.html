@@ -131,7 +131,7 @@
   <!-- Modal pour ajouter un planning -->
   <div *ngIf="isPlanningModalOpen" class="modal">
     <div class="modal-content">
-      <span class="close" (click)="closePlanningModal()">&times;</span>
+      <span class="close" (click)="closePlanningModal()">×</span>
       <h3>Ajouter un Planning</h3>
       <form (submit)="submitPlanning()" #eventForm="ngForm">
         <label for="startDatetime">Date de début :</label>
@@ -142,55 +142,78 @@
 
         <label for="description">Description :</label>
         <input type="text" id="description" [(ngModel)]="newPlanning.description" name="description" required>
- <!-- Champ pour la vidéo -->
- <div class="form-group">
-  <label for="videoFile">Vidéo:</label>
-  <input
-    type="file"
-    id="videoFile"
-    name="video"
-    (change)="onVideoSelected($event)"
-    accept="video/*"
-    class="form-control"
-  />
-</div>
+
+        <!-- Champ pour la vidéo -->
+        <div class="form-group">
+          <label for="videoFile">Vidéo:</label>
+          <input
+            type="file"
+            id="videoFile"
+            name="video"
+            (change)="onVideoSelected($event)"
+            accept="video/*"
+            class="form-control"
+          />
+        </div>
 
         <label for="locationType">Type de localisation :</label>
-
         <select [(ngModel)]="newPlanning.locationType" name="locationType" required>
           <option *ngFor="let type of locationType" [value]="type">{{ type }}</option>
         </select>
+
+        <!-- Afficher le select des locations uniquement si locationType est IN_PERSON -->
+        <div *ngIf="newPlanning.locationType === 'IN_PERSON'">
+          <label for="location">Localisation :</label>
+          <select id="location"  name="location" required [(ngModel)]="idLocation" >
+            <option value="0" disabled selected>Choisir une localisation</option>
+            <option *ngFor="let location of locations" [value]="location.idLocal">{{ location.locationName }}</option>
+          </select>
+        </div>
+
         <button type="submit" class="btn btn-success">Ajouter</button>
       </form>
     </div>
   </div>
 
-</div>
+  <!-- Modal pour modifier un planning -->
+  <div *ngIf="isEditPlanningModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditPlanningModal()">×</span>
+      <h3>Modifier le Planning</h3>
+      <form (submit)="submitEditPlanning()" #editEventForm="ngForm">
+        <label for="editStartDatetime">Date de début :</label>
+        <input type="datetime-local" id="editStartDatetime" [(ngModel)]="selectedPlanning.startDatetime" name="editStartDatetime" required>
 
+        <label for="editEndDatetime">Date de fin :</label>
+        <input type="datetime-local" id="editEndDatetime" [(ngModel)]="selectedPlanning.endDatetime" name="editEndDatetime" required>
 
-<!-- Modal pour modifier un planning -->
-<div *ngIf="isEditPlanningModalOpen" class="modal">
-  <div class="modal-content">
-    <span class="close" (click)="closeEditPlanningModal()">&times;</span>
-    <h3>Modifier le Planning</h3>
-    <form (submit)="submitEditPlanning()" #editEventForm="ngForm">
-      <label for="editStartDatetime">Date de début :</label>
-      <input type="datetime-local" id="editStartDatetime" [(ngModel)]="selectedPlanning.startDatetime" name="editStartDatetime" required>
+        <label for="editDescription">Description :</label>
+        <input type="text" id="editDescription" [(ngModel)]="selectedPlanning.description" name="editDescription" required>
 
-      <label for="editEndDatetime">Date de fin :</label>
-      <input type="datetime-local" id="editEndDatetime" [(ngModel)]="selectedPlanning.endDatetime" name="editEndDatetime" required>
+        <!-- Video Upload -->
+        <label for="video">Event Video:</label>
+        <input type="file" (change)="onVideoSelected($event)" />
+        <video *ngIf="selectedPlanning.video" [src]="'http://localhost:8089/event/' + selectedPlanning.video" width="200" controls></video>
 
-      <label for="editDescription">Description :</label>
-      <input type="text" id="editDescription" [(ngModel)]="selectedPlanning.description" name="editDescription" required>
-<!-- Video Upload -->
-<label for="video">Event Video:</label>
-<input type="file" (change)="onVideoSelected($event)" />
-<video *ngIf="selectedPlanning.video" [src]="'http://localhost:8089/event/' + selectedPlanning.video" width="200" controls></video>
-      <label for="editLocationType">Type de localisation :</label>
-      <select [(ngModel)]="selectedPlanning.locationType" name="editLocationType" required>
-        <option *ngFor="let type of locationType" [value]="type">{{ type }}</option>
-      </select>
-      <button type="submit" class="btn btn-success">Modifier</button>
-    </form>
+        <label for="editLocationType">Type de localisation :</label>
+        <select [(ngModel)]="selectedPlanning.locationType" name="editLocationType" required>
+          <option *ngFor="let type of locationType" [value]="type">{{ type }}</option>
+        </select>
+
+        <!-- Afficher le select des locations uniquement si locationType est IN_PERSON -->
+        <div *ngIf="selectedPlanning.locationType === 'IN_PERSON'">
+          <label for="editLocation">Localisation :</label>
+          <select id="editLocation" name="editLocation" required [(ngModel)]="idLocation">
+            <option value="0" disabled>Choisir une localisation</option>
+            <option *ngFor="let location of locations" [value]="location.idLocal" [selected]="location.idLocal === idLocation">
+                {{ location.locationName }}
+            </option>
+        </select>
+        
+        </div>
+
+        <button type="submit" class="btn btn-success">Modifier</button>
+      </form>
+    </div>
   </div>
 </div>

@@ -24,18 +24,28 @@
         <div class="blog-details__content">
           <!-- Display Image or Video -->
           <div class="blog-details__img">
-            <ng-container *ngIf="event.imageUrl; else videoTemplate">
-                <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
-
-            </ng-container>
-
-            <ng-template #videoTemplate>
-              <video width="100%" height="auto" controls>
-                <source [src]="event.videoUrl" type="video/mp4">
+            <ng-container *ngIf="selectedVideoUrl; else defaultMedia">
+              <video width="100%" height="auto" controls autoplay>
+                <source [src]="selectedVideoUrl" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
+            </ng-container>
+          
+            <ng-template #defaultMedia>
+              <ng-container *ngIf="event.imageUrl; else eventVideo">
+                <img [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
+              </ng-container>
+          
+              <ng-template #eventVideo>
+                <video width="100%" height="auto" controls>
+                  <source [src]="event.videoUrl" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </ng-template>
             </ng-template>
           </div>
+          
+          
 
           <div class="blog-details__meta">
             <div class="blog-details__meta__cats">
@@ -132,27 +142,54 @@
             </div>
           </div>
           
-
-          <div class="sidebar__single sidebar__video">
+          <div class="sidebar__single sidebar__schedule">
             <h3 class="sidebar__title">Event Schedule</h3>
             
             <!-- Liste des plannings associés à l'événement -->
             <div class="sidebar__plannings" *ngIf="plannings?.length > 0">
               <ul class="planning-list">
                 <li *ngFor="let planning of plannings" class="planning-item">
-                
-                  <h4> {{ planning.description }}</h4>
-                  <!-- Ajout d'un lien pour la vidéo si elle existe dans le planning -->
-                  <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="150" width="100%" controls></video>
+                  <div class="planning-item__content">
+                    <div class="planning-item__header" (click)="toggleDetails($event)">
+                      <div class="planning-item__image">
+                        <!-- Placeholder image; you can replace with a dynamic image if available -->
+                        <img [src]="'http://localhost:8089/event/' + event.imageUrl" width="60" height="60" alt="Event Image" class="event-image"/>
+                      </div>
+                      <div class="planning-item__info">
+                        <h4 class="planning-item__title">{{ planning.description }}</h4>
+                        <p class="planning-item__duration">
+                          EVENT - {{ planning.locationType === 'ONLINE' ? 'Online' : 'In-Person' }}
+                        </p>
+                      </div>
+                      <div class="planning-item__toggle">
+                        <i class="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
+                    
+                    <!-- Collapsible content for additional details -->
+                    <div class="planning-item__details">
+                      <!-- Display video for online events -->
+                      <div *ngIf="planning.locationType === 'ONLINE'" class="planning-item__media">
+                        <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="150" width="100%" controls (play)="playVideo(planning.video)">
+                        
+                        </video>
+                        <button (click)="analyze(planning.video)">Analyser cette vidéo</button>
+                          <p [(ngModel)]="result"></p>
+                      </div>
+                      
+                      <!-- Display Google Maps link for in-person events -->
+                      <div *ngIf="planning.locationType === 'IN_PERSON' && planning.locationEvent" class="planning-item__location">
+                        <a href="#" (click)="openGoogleMapsPopup($event, 'https://www.google.com/maps?q=' + planning.locationEvent.latitude + ',' + planning.locationEvent.longitude)" class="location-link">
+                          <i class="fas fa-map-marker-alt"></i> Voir l'emplacement sur Google Maps
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>
-            <p *ngIf="!plannings?.length">No schedules available for this event.</p>
+            <p *ngIf="!plannings?.length" class="no-schedule">No schedules available for this event.</p>
           </div>
-                 
-
-
-
 
         </div>
       </div>
