@@ -261,3 +261,32 @@ input[type="checkbox"]:checked + .answer-text {
     animation: fadeIn 1s ease-in-out;
     margin-bottom: 15px;
 }
+.cheating-full-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    width: 100%;
+    padding: 2rem;
+  }
+  
+  .cheating-box {
+    background: #fff5f5;
+    border: 2px solid #f8c1c1;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  .emoji-big {
+    font-size: 2.5rem;
+  }
+  

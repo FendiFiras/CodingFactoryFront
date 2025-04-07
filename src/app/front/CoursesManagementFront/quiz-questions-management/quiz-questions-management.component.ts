@@ -421,20 +421,6 @@ closeOffcanvas(): void {
 
 
 
-exportUserBehavior(user: any): void {
-  const behaviorData = {
-    name: `${user.firstName} ${user.lastName}`,
-    clicks: this.clickCount,
-    duration: this.timeLeft,  // Utilisez la durée restante du quiz ou une autre méthode
-    fast_answers: this.fastAnswerCount,  // Assurez-vous que cette variable est correctement mise à jour
-    head_turns: this.detectedHeadTurnsCount, // Vérifiez que la détection des têtes tournées est correcte
-    idle_time: this.idleSeconds,  // Assurez-vous que cette variable est correctement calculée
-    tab_switches: this.tabSwitchCount,  // Vérifiez que le comptage des changements d'onglet est correct
-    wrong_answers: this.wrongAnswersCount  // Vérifiez que le comptage des mauvaises réponses est correct
-  };
-
-  this.pdfService.generatePdfReport(behaviorData);  // Appeler le service pour générer le PDF
-}
 
 onQuizSelected(quizId: number): void {
   this.selectedQuizId = quizId;

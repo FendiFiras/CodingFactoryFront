@@ -1,104 +1,120 @@
 <app-navbar></app-navbar>
 <app-webcam-headtracker (headTurnDetected)="onHeadTurnDetected()"></app-webcam-headtracker>
 
-<!-- 🏆 HEADER du Quiz -->
+<!-- 🏆 HEADER -->
 <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
-    <div class="page-header__bg jarallax-img"></div>
-    <div class="page-header__overlay"></div>
-    <div class="container text-center">
-        <h2 class="page-header__title">🎯 {{ quiz?.quizName }}</h2>
-        <ul class="page-header__breadcrumb list-unstyled">
-            <li><a routerLink="/">Training</a></li>
-            <li><span>Quiz</span></li>
-        </ul>
-    </div>
+  <div class="page-header__bg jarallax-img"></div>
+  <div class="page-header__overlay"></div>
+  <div class="container text-center">
+    <h2 class="page-header__title">🎯 {{ quiz?.quizName }}</h2>
+    <ul class="page-header__breadcrumb list-unstyled">
+      <li><a routerLink="/">Training</a></li>
+      <li><span>Quiz</span></li>
+    </ul>
+  </div>
 </section>
 
 <section class="quiz-section">
-    <div class="quiz-container">
-        <h3 class="quiz-title">📝 Answer the Questions Below</h3>
-<!-- ✅ Timer Cercle -->
-<div *ngIf="!submitted && !isTimeUp" class="timer-circle">
-    <svg>
+
+  <!-- ✅ Affichage normal (pas de triche détectée) -->
+  <div *ngIf="!showCheatingModal" class="quiz-container">
+    <h3 *ngIf="!submitted && !isTimeUp" class="quiz-title">📝 Answer the Questions Below</h3>
+
+    <!-- ✅ Timer -->
+    <div *ngIf="!submitted && !isTimeUp" class="timer-circle">
+      <svg>
         <circle cx="50" cy="50" r="45" class="circle-bg"></circle>
-        <circle 
-            cx="50" cy="50" r="45" 
-            [style.stroke-dashoffset]="circleDashoffset"
-            [ngClass]="timerColor">
+        <circle cx="50" cy="50" r="45"
+                [style.stroke-dashoffset]="circleDashoffset"
+                [ngClass]="timerColor">
         </circle>
-    </svg>
-    <div class="timer-text">
-        {{ getFormattedTime() }}
+      </svg>
+      <div class="timer-text">{{ getFormattedTime() }}</div>
     </div>
-</div>
 
-        <!-- ✅ Message si le temps est écoulé -->
-        <div *ngIf="isTimeUp" class="alert alert-danger text-center">
-            ❌ Time is up! Your quiz has been automatically submitted.
+    <!-- ⏱ Temps écoulé -->
+    <div *ngIf="isTimeUp" class="alert alert-danger text-center">
+      ❌ Time is up! Your quiz has been automatically submitted.
+    </div>
+
+    <!-- ✅ Questions -->
+    <div *ngIf="!submitted && !isTimeUp && questions?.length" class="quiz-card">
+      <div class="progress-indicator">
+        <span>Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+      </div>
+
+      <h4 class="question-title">
+        <span class="question-number">❓ Question {{ currentQuestionIndex + 1 }}:</span>
+        {{ questions[currentQuestionIndex]?.questionText }}
+      </h4>
+
+      <div class="answers-container">
+        <div *ngFor="let answer of questions[currentQuestionIndex]?.quizAnswers" class="answer-option">
+          <label class="answer-label">
+            <input type="checkbox"
+                   [value]="answer.idQuizA"
+                   (change)="toggleAnswer(answer.idQuizA, questions[currentQuestionIndex].idQuizQ)"
+                   class="form-check-input"/>
+            <span class="answer-text">✅ {{ answer.answerText }}</span>
+          </label>
         </div>
+      </div>
 
-        <!-- ✅ Affichage des questions si le quiz est en cours -->
-        <div *ngIf="!submitted && !isTimeUp && questions?.length" class="quiz-card">
-            <div class="progress-indicator">
-                <span>Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
-            </div>
+      <div class="quiz-navigation">
+        <button (click)="previousQuestion()" class="btn btn-secondary" [disabled]="currentQuestionIndex === 0">
+          ⬅️ Previous
+        </button>
+        <button (click)="nextQuestion()" class="btn btn-primary" *ngIf="currentQuestionIndex < questions.length - 1">
+          Next ➡️
+        </button>
+        <button (click)="submitQuiz()" class="btn btn-success" *ngIf="currentQuestionIndex === questions.length - 1">
+          ✅ Submit
+        </button>
+      </div>
+    </div>
 
-            <h4 class="question-title">
-                <span class="question-number">❓ Question {{ currentQuestionIndex + 1 }}:</span>
-                {{ questions[currentQuestionIndex]?.questionText }}
-            </h4>
-
-            <div class="answers-container">
-                <div *ngFor="let answer of questions[currentQuestionIndex]?.quizAnswers" class="answer-option">
-                    <label class="answer-label">
-                        <input 
-                            type="checkbox" 
-                            [value]="answer.idQuizA"
-                            (change)="toggleAnswer(answer.idQuizA, questions[currentQuestionIndex].idQuizQ)"
-                            class="form-check-input"
-                        />
-                        <span class="answer-text">✅ {{ answer.answerText }}</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="quiz-navigation">
-                <button (click)="previousQuestion()" class="btn btn-secondary" [disabled]="currentQuestionIndex === 0">
-                    ⬅️ Previous
-                </button>
-                <button (click)="nextQuestion()" class="btn btn-primary" *ngIf="currentQuestionIndex < questions.length - 1">
-                    Next ➡️
-                </button>
-                <button (click)="submitQuiz()" class="btn btn-success" *ngIf="currentQuestionIndex === questions.length - 1">
-                    ✅ Submit
-                </button>
-            </div>
-        </div>
-
-        <!-- ✅ Résultat du quiz avec Progress Bar -->
-        <div *ngIf="submitted" class="quiz-result-container">
-            <div class="score-card shadow-lg p-4 rounded animate-fade-in">
-
-                 <!-- ✅ Badge de Récompense -->
+    <!-- ✅ Résultat normal -->
+    <div *ngIf="submitted" class="quiz-result-container">
+      <div class="score-card shadow-lg p-4 rounded animate-fade-in">
         <div class="badge-container">
-            <h3>{{ getRewardBadge() }}</h3>
+          <h3>{{ getRewardBadge() }}</h3>
         </div>
-                <h3 [ngClass]="passed ? 'text-success fw-bold' : 'text-danger fw-bold animate-shake'">
-                    {{ passed ? '🎉 Congratulations! You Passed!' : '❌ Oops! Try Again!' }}
-                </h3>
-
-                <div class="progress-bar-container mt-3">
-                    <div class="progress-bar">
-                        <div class="progress" [style.width.%]="(score / quiz.maxGrade) * 100"></div>
-                    </div>
-                </div>
-
-                <p class="score mt-2">
-                    💯 <strong>Your Score:</strong> <span class="score-number">{{ score }}/{{ quiz.maxGrade }}</span>
-                </p>
-            </div>
+        <h3 [ngClass]="passed ? 'text-success fw-bold' : 'text-danger fw-bold animate-shake'">
+          {{ passed ? '🎉 Congratulations! You Passed!' : '❌ Oops! Try Again!' }}
+        </h3>
+        <div class="progress-bar-container mt-3">
+          <div class="progress-bar">
+            <div class="progress" [style.width.%]="(score / quiz.maxGrade) * 100"></div>
+          </div>
         </div>
+        <p class="score mt-2">
+          💯 <strong>Your Score:</strong> <span class="score-number">{{ score }}/{{ quiz.maxGrade }}</span>
+        </p>
+      </div>
     </div>
+  </div>
+
+  <!-- 🚨 Bloc triche détectée -->
+  <div *ngIf="submitted && showCheatingModal" class="cheating-full-container">
+    <div class="cheating-box text-center">
+      <div class="emoji-big mb-3">🚨</div>
+      <h2 class="text-danger fw-bold mb-2">Cas de triche détecté</h2>
+      <p class="text-muted">Votre score a été annulé.<br>Un comportement suspect a été détecté durant le test.</p>
+      <p class="mt-3 fs-5"><strong>Score attribué :</strong> 0 / {{ quiz?.maxGrade }}</p>
+
+      <button class="btn btn-outline-danger mt-4 px-4" (click)="downloadCheatingReport()">
+        📄 Exporter le rapport PDF
+      </button>
+
+      <p class="text-muted mt-3 small">
+        Vous pensez que c’est une erreur ? <br>
+        <a routerLink="/contact" class="text-decoration-underline text-danger fw-semibold">
+          Faire une réclamation
+        </a>
+      </p>
+    </div>
+  </div>
+
 </section>
 
 <app-footer></app-footer>
