@@ -33,14 +33,9 @@ export class ReclamationService {
     });
   }
 
-  treatReclamation(id: number, quantityToAdd: number): Observable<Reclamation> {
-    return this.http.put<Reclamation>(`${this.API_URL}/treat/${id}`, { quantityToAdd }, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    });
-  }
+  treatReclamation(id: number, quantity: number): Observable<Reclamation> {
+    return this.http.put<Reclamation>(`${this.API_URL}/treat/${id}/${quantity}`, {});
+  }  
 
   updateReclamation(reclamation: Reclamation): Observable<Reclamation> {
     return this.http.put<Reclamation>(this.API_URL, reclamation);

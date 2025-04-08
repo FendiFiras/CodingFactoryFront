@@ -41,8 +41,8 @@ public class ReclamationController {
         return reclamationService.getAllReclamations();
     }
 
-    @PutMapping("/treat/{id}")
-    public Reclamation treatReclamation(@PathVariable Long id) {
-        return reclamationService.treatReclamation(id);
+    @PutMapping("/treat/{id}/{quantity}")
+    public Reclamation treatReclamation(@PathVariable Long id, @PathVariable int quantity) {
+        return reclamationService.treatReclamation(id, quantity);
     }
 }

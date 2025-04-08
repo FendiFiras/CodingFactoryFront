@@ -62,21 +62,21 @@ public class ReclamationService {
         return savedReclamation;
     }
 
-    public Reclamation treatReclamation(Long id) {
+    public Reclamation treatReclamation(Long id, int addedQuantity) {
         Reclamation reclamation = reclamationRepository.findById(id).orElse(null);
 
         if (reclamation != null && reclamation.getStatus() == TypeStatut.IN_WAIT) {
-            // Increase material quantity when treating the reclamation
             if (reclamation.getMaterials() != null && !reclamation.getMaterials().isEmpty()) {
                 Material material = reclamation.getMaterials().get(0);
                 Material existingMaterial = materialRepository.findById(material.getIdMaterial()).orElse(null);
 
                 if (existingMaterial != null) {
-                    int newQuantity = existingMaterial.getQuantity() + reclamation.getQuantity();
+                    int newQuantity = existingMaterial.getQuantity() + addedQuantity;
                     existingMaterial.setQuantity(newQuantity);
                     materialRepository.save(existingMaterial);
                 }
             }
+
             reclamation.setStatus(TypeStatut.TREATED);
             return reclamationRepository.save(reclamation);
         }
