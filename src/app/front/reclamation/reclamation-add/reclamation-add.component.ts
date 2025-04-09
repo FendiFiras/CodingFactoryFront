@@ -29,6 +29,7 @@ export class ReclamationAddComponent implements OnInit {
   types = Object.values(Type);
   isSubmitting = false;
   formError = '';
+  selectedFile: File | null = null;
 
   urgencyLevels = [
     { value: 1, label: 'Low' },
@@ -72,39 +73,40 @@ export class ReclamationAddComponent implements OnInit {
 
   onSubmit(): void {
     if (this.reclamationForm.invalid) {
-        this.reclamationForm.markAllAsTouched();
-        return;
+      this.reclamationForm.markAllAsTouched();
+      return;
     }
-
+  
     this.isSubmitting = true;
     this.formError = '';
-
-    const selectedMaterials: Material[] = this.reclamationForm.get('materials')?.value || [];
-    const quantity: number = this.reclamationForm.get('quantity')?.value || 1;
-
+  
     const reclamation: Reclamation = {
-        ...this.reclamationForm.value,
-        materials: selectedMaterials,
-        quantity,
-        creationDate: new Date(),
-        idUser: 1
+      ...this.reclamationForm.value,
+      creationDate: new Date(),
+      idUser: 1
     };
-
-    console.log('Submitting Reclamation:', reclamation);
-
-    this.reclamationService.addReclamation(reclamation).subscribe(
-        () => {
-            this.isSubmitting = false;
-            this.resetForm(); // Reset the form after successful submission
-            this.router.navigate(['/home']);
-        },
-        (error) => {
-            this.isSubmitting = false;
-            console.error('Error submitting reclamation:', error);
-            this.formError = 'Failed to submit reclamation. Please try again.';
-        }
+  
+    const formData = new FormData();
+    formData.append('reclamation', new Blob([JSON.stringify(reclamation)], { type: 'application/json' }));
+  
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile);
+    }
+  
+    this.reclamationService.addReclamation(formData).subscribe(
+      () => {
+        this.isSubmitting = false;
+        this.resetForm();
+        this.router.navigate(['/home']);
+      },
+      (error) => {
+        this.isSubmitting = false;
+        console.error('Error submitting reclamation:', error);
+        this.formError = 'Failed to submit reclamation. Please try again.';
+      }
     );
   }
+  
 
   resetForm(): void {
     this.reclamationForm.reset({
@@ -115,5 +117,12 @@ export class ReclamationAddComponent implements OnInit {
       materials: [],
       quantity: 1 // Ensure quantity is reset properly
     });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input?.files?.length) {
+      this.selectedFile = input.files[0];
+    }
   }
 }

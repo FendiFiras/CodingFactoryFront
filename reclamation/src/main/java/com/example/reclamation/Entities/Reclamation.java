@@ -1,6 +1,7 @@
 package com.example.reclamation.Entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,4 +44,12 @@ public class Reclamation {
     private Integer quantity;
 
     private int idUser;
+
+    @Lob
+    @Column(name = "file", columnDefinition = "LONGBLOB")
+    @JsonProperty("file")
+    private byte[] file;
+
+    private String fileName;
+
 }

@@ -83,6 +83,13 @@
                   placeholder="Enter quantity"
               />
             </div>        
+
+            <!-- File Upload -->
+            <div class="form-group">
+              <label for="file">Attach File (Optional)</label>
+              <input type="file" id="file" (change)="onFileSelected($event)" class="form-control-file" />
+            </div>
+
   
           <!-- Form Actions -->
           <div class="form-actions">

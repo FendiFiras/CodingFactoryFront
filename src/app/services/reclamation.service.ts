@@ -24,14 +24,18 @@ export class ReclamationService {
     return this.http.get<Reclamation[]>(`${this.API_URL}?userId=${userId}`);
   }
 
-  addReclamation(reclamation: Reclamation): Observable<Reclamation> {
-    return this.http.post<Reclamation>(this.API_URL, reclamation, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    });
-  }
+  // addReclamation(reclamation: Reclamation): Observable<Reclamation> {
+  //   return this.http.post<Reclamation>(this.API_URL, reclamation, {
+  //       headers: {
+  //           'Content-Type': 'application/json',
+  //           'Accept': 'application/json'
+  //       }
+  //   });
+  // }
+
+  addReclamation(formData: FormData): Observable<any> {
+    return this.http.post(`${this.API_URL}`, formData);
+  }  
 
   treatReclamation(id: number, quantity: number): Observable<Reclamation> {
     return this.http.put<Reclamation>(`${this.API_URL}/treat/${id}/${quantity}`, {});
@@ -44,4 +48,10 @@ export class ReclamationService {
   deleteReclamation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
+
+  downloadFile(id: number): Observable<Blob> {
+    return this.http.get(`${this.API_URL}/file/${id}`, {
+      responseType: 'blob'
+    });
+  }  
 }

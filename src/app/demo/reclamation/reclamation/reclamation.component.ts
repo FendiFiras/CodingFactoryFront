@@ -35,6 +35,7 @@ export class ReclamationComponent implements OnInit {
     'status',
     'urgency',
     'creationDate',
+    'file',
     'actions',
   ];
 
@@ -119,6 +120,23 @@ export class ReclamationComponent implements OnInit {
       );
     }
   }
+
+  downloadFile(id: number, fileName: string): void {
+    this.reclamationService.downloadFile(id).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error downloading file:', error);
+        alert('Failed to download file.');
+      }
+    );
+  }  
 
   getUrgencyLabel(urgency: number): string {
     switch (urgency) {
