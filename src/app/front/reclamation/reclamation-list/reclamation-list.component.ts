@@ -9,11 +9,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
+import { ChatModalComponent } from 'src/app/chat-modal/chat-modal.component';
 
 @Component({
   selector: 'app-reclamation-list',
   imports: [RouterLink, CommonModule, NavbarComponent, BrowserModule, MatTableModule, MatPaginatorModule, BrowserAnimationsModule,
-    MatButtonModule],
+    MatButtonModule, ChatModalComponent],
   templateUrl: './reclamation-list.component.html',
   styleUrl: './reclamation-list.component.scss'
 })
@@ -30,6 +31,7 @@ export class ReclamationListComponent implements OnInit {
     'actions',
   ];
   dataSource = new MatTableDataSource<Reclamation>(this.reclamations);
+  activeChatReclamationId: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,6 +46,14 @@ export class ReclamationListComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  openChat(id: number) {
+    this.activeChatReclamationId = id;
+  }
+  
+  closeChat() {
+    this.activeChatReclamationId = null;
   }
 
   loadUserReclamations(): void {

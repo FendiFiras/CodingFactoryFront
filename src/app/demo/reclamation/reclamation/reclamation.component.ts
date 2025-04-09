@@ -9,6 +9,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
+import { Message } from 'src/app/Models/message';
+import { ChatModalComponent } from 'src/app/chat-modal/chat-modal.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-reclamation',
@@ -23,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
+    ChatModalComponent
   ],
 })
 export class ReclamationComponent implements OnInit {
@@ -41,21 +45,45 @@ export class ReclamationComponent implements OnInit {
 
   isLoading = true;
   errorMessage = '';
+  selectedReclamationIdForChat: number | null = null;
+  chatOpenMap = new Map<number, boolean>();
+  activeChats: Set<number> = new Set(); // idReclamation qui ont un message user
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private reclamationService: ReclamationService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.loadReclamations();
+
+    setInterval(() => {
+      this.reclamations
+        .filter(r => r.status === 'IN_WAIT')
+        .forEach(r => this.checkForNewMessages(r.idReclamation));
+    }, 3000);
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+
+  checkForNewMessages(reclamationId: number): void {
+    this.http.get<Message[]>(`http://localhost:8082/api/messages/reclamation/${reclamationId}`).subscribe(messages => {
+      const hasUserMessage = messages.some(msg => msg.sender === 'user');
+  
+      if (hasUserMessage) {
+        this.activeChats.add(reclamationId);
+        if (!this.chatOpenMap.get(reclamationId)) {
+          this.selectedReclamationIdForChat = reclamationId;
+          this.chatOpenMap.set(reclamationId, true);
+        }
+      }
+    });
+  }  
 
   loadReclamations(): void {
     this.reclamationService.getAllReclamations().subscribe(

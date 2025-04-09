@@ -83,24 +83,24 @@
         </td>
       </ng-container>      
   
+      <!-- Actions Column (admin) -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let reclamation">
-          <button class="btn btn-edit" (click)="editReclamation(reclamation.idReclamation)">
-            Edit
-          </button>
-          <button class="btn btn-delete" (click)="deleteReclamation(reclamation.idReclamation)">
-            Delete
-          </button>
+          <button class="btn btn-edit" (click)="editReclamation(reclamation.idReclamation)">Edit</button>
+          <button class="btn btn-delete" (click)="deleteReclamation(reclamation.idReclamation)">Delete</button>
           <button
             *ngIf="reclamation.status === 'IN_WAIT'"
             class="btn btn-treat"
-            (click)="treatReclamation(reclamation)"
-          >
+            (click)="treatReclamation(reclamation)">
             Treat
           </button>
+
+          <!-- 🔴 Badge si user a parlé -->
+          <span *ngIf="activeChats.has(reclamation.idReclamation)" class="chat-badge">💬</span>
         </td>
       </ng-container>
+
   
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
@@ -119,4 +119,12 @@
       No reclamations found.
     </div>
   </div>
+
+  <app-chat-modal
+  *ngIf="selectedReclamationIdForChat"
+  [reclamationId]="selectedReclamationIdForChat"
+  userType="admin"
+  (close)="selectedReclamationIdForChat = null">
+</app-chat-modal>
+
   

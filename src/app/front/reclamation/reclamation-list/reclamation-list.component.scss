@@ -96,3 +96,19 @@
     }
   }
 }
+
+.btn-chat {
+  background-color: #1976d2;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  text-align: center;
+
+  &:hover {
+    background-color: #0d47a1;
+  }
+}
+

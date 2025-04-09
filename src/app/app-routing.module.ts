@@ -81,6 +81,10 @@ const routes: Routes = [
       {
           path: 'admin/reclamation-edit/:id',
           loadComponent: () => import('./demo/reclamation/reclamation-edit/reclamation-edit.component').then(c => c.ReclamationEditComponent)
+      },
+      {
+          path: 'admin/chat',
+          loadComponent: () => import('./demo/reclamation/chat/chat.component').then(c => c.ChatComponent)
       }
     ]
   },
@@ -103,6 +107,10 @@ const routes: Routes = [
       {
         path: 'user/reclamations/add',
         loadComponent: () => import('./front/reclamation/reclamation-add/reclamation-add.component').then(c => c.ReclamationAddComponent)
+      },
+      {
+        path: 'user/chat',
+        loadComponent: () => import('./front/reclamation/chat/chat.component').then(c => c.ChatComponent)
       },
     ]
   },
