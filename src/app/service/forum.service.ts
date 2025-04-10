@@ -54,4 +54,6 @@ deleteForum(forumId: number): Observable<void> {
     map(() => null) // Ignorer la réponse et retourner void
   );
 }
+
+
 }

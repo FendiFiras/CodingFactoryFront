@@ -1,13 +1,13 @@
 <div class="sidebar sidebar--left">
   <div class="sidebar__single sidebar__search">
     <form action="#" class="sidebar__search-form">
-      <input type="search" placeholder="Rechercher un forum...">
+      <input type="search" placeholder="Research ...">
       <button type="submit"><span class="icon-Search"></span></button>
     </form>
   </div><!-- search-widget -->
 
   <div class="sidebar__single sidebar__post">
-    <h3 class="sidebar__title">Derniers forums</h3>
+    <h3 class="sidebar__title">Latest Forums</h3>
     <ul class="sidebar__post__list list-unstyled">
       <li *ngFor="let forum of latestForums">
         <a [routerLink]="['/forum', forum.forum_id]" class="forum-link">

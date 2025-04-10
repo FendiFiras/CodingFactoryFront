@@ -366,7 +366,7 @@ getStoredDislikes(messageId: number): number {
           },
           {
             enableHighAccuracy: true, // Active la haute précision
-            timeout: 10000, // Temps d'attente maximum (10 secondes)
+            timeout: 30000, // Temps d'attente maximum (10 secondes)
             maximumAge: 0 // Ne pas utiliser de cache
           }
         );

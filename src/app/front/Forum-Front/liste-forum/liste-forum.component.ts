@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component';
+import { AIGeneratorService } from 'src/app/service/ai-generator.service';
 
 interface Forum {
   forum_id?: number;
@@ -15,6 +16,7 @@ interface Forum {
   description: string;
   image?: string;
   creationDate?: Date;
+
 }
 
 @Component({
@@ -23,6 +25,7 @@ interface Forum {
   styleUrls: ['./liste-forum.component.scss'],
   imports: [CommonModule, SharedModule, NavbarComponent, FooterComponent, RouterModule, LeftSideBarComponent],
   standalone: true,
+
 })
 export class ListeForumComponent implements OnInit {
   forums: Forum[] = [];
@@ -33,11 +36,15 @@ export class ListeForumComponent implements OnInit {
   staticUserId: number = 3; // ID utilisateur statique
   editMode = false;
   forumToEdit: Forum | null = null;
+  suggestedTopics: string[] = [];
+  isGenerating = false;
+
 
   constructor(
     private forumService: ForumService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
+    private aiGenerator: AIGeneratorService,
     private router: Router
   ) {
     this.addForumForm = this.fb.group({
@@ -57,8 +64,9 @@ export class ListeForumComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.loadForums();
+    await this.generateNewTopics();
   }
 
   loadForums(): void {
@@ -205,6 +213,31 @@ debugForum(forum: Forum): void {
   console.log("Forum sélectionné :", forum);
 }
 
+async generateNewTopics() {
+  this.isGenerating = true;
+  try {
+    this.suggestedTopics = await this.aiGenerator.generateTechTopics();
+  } catch (error) {
+    console.error("Erreur de génération IA:", error);
+    this.suggestedTopics = [
+      "Discussion : Comment optimiser les perfs web en 2024? - Partagez vos tricks",
+      "Discussion : IA générative et dev - opportunités ou dangers?",
+      "Discussion : Les erreurs de sécurité à éviter absolument"
+    ];
+  } finally {
+    this.isGenerating = false;
+  }
+}
 
+
+// Ajoutez cette méthode à votre classe ListeForumComponent
+createForumFromTopic(topic: string) {
+  this.addForumForm.patchValue({
+    title: topic,
+    description: 'Discussion générée automatiquement sur ce sujet'
+  });
+  this.showAddForm = true;
+  this.editMode = false;
+}
 
 }

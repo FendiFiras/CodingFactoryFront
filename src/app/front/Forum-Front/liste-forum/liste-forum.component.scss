@@ -224,3 +224,33 @@ textarea.form-control {
     height: auto;
   }
 }
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ai-topic {
+  background: rgba(63, 81, 181, 0.1);
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fa-robot {
+  color: #3f51b5;
+  margin-right: 8px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
