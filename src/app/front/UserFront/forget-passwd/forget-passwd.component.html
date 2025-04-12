@@ -1,47 +1,159 @@
-
-
-<body class="newbody">
-    <div class="form-body">
-        <div class="website-logo">
-            <a href="index.html">
-                <div class="logo">
-                    <img class="logo-size" src="images/logo-light.svg" alt="">
-                </div>
-            </a>
-        </div>
-        <div class="iofrm-layout">
-            <div class="img-holder">
-                <div class="bg"></div>
-                <div class="info-holder">
-
-                </div>
-            </div>
-            <div class="form-holder">
-                <div class="form-content">
-                    <div class="form-items">
-                        <h3>Password Reset</h3>
-                        <p>To reset your password, enter the email address you use to sign in to iofrm</p>
-                        <form>
-                            <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
-                            <div class="form-button full-width">
-                                <button id="submit" type="submit" class="ibtn btn-forget">Send Reset Link</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="form-sent">
-                        <div class="tick-holder">
-                            <div class="tick-icon"></div>
-                        </div>
-                        <h3>Password link sent</h3>
-                        <p>Please check your inbox <a href="https://brandio.io/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="177e7871657a577e7871657a63727a677b766372397e78">[email&#160;protected]</a></p>
-                        <div class="info-holder">
-                            <span>Unsure if that email address was correct?</span> <a href="#">We can help</a>.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="password-reset-container">
+    <!-- Loading overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner"></div>
     </div>
-
-</body>
-
+  
+    <!-- Background animation -->
+    <div class="background-animation">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
+    
+    <!-- Main card -->
+    <div class="reset-card" [class.flipped]="step > 1">
+      <div class="card-face front">
+        <!-- Step 1: Email -->
+        <div class="step-content" *ngIf="step === 1">
+          <div class="header">
+            <div class="icon-container">
+              <i class="fas fa-key"></i>
+            </div>
+            <h2>Forgot Password ?</h2>
+            <p>Enter your email to receive a verification code</p>
+          </div>
+          
+          <form [formGroup]="emailForm" (ngSubmit)="sendOtp()">
+            <div class="input-group floating">
+                <label for="email">Email Address <i class="fas fa-envelope"> </i></label>
+              <input type="email" formControlName="email" id="email" required>
+              
+              <div *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched" class="error-message">
+                Please enter a valid email address
+              </div>
+            </div>
+            
+            <button type="submit" class="btn-primary" [disabled]="emailForm.invalid || loading">
+              <span *ngIf="!loading">Continue</span>
+              <span *ngIf="loading">Sending...</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+          
+          <div class="footer-links">
+            <a href="login"><i class="fas fa-chevron-left"></i> Back to login</a>
+          </div>
+        </div>
+        
+        <!-- Step 2: OTP -->
+        <div class="step-content" *ngIf="step === 2">
+          <div class="header">
+            <div class="icon-container">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h2>Verification</h2>
+            <p>Code sent to <strong>{{obscuredPhone}}</strong></p>
+            <a href="javascript:void(0)" (click)="resendOtp()" class="resend-link" [class.disabled]="resendTimer > 0">
+              Didn't receive a code ? <span>Resend</span>
+            </a>
+          </div>
+          
+          <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+            <div class="otp-inputs">
+              <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index" 
+                     type="text" maxlength="1" 
+                     (keyup)="moveToNext($event, idx)"
+                     (keydown)="onKeyDown($event, idx)"
+                     [(ngModel)]="otpDigits[idx]"
+                     [ngModelOptions]="{standalone: true}"
+                     [disabled]="loading">
+            </div>
+            
+            <div *ngIf="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched" class="error-message">
+              Please enter the 6-digit code
+            </div>
+            
+            <button type="submit" class="btn-primary" [disabled]="otpForm.invalid || loading">
+              <span *ngIf="!loading">Verify</span>
+              <span *ngIf="loading">Verifying...</span>
+              <i class="fas fa-check"></i>
+            </button>
+          </form>
+          
+          <div class="timer" *ngIf="resendTimer > 0">
+            New code in {{resendTimer}}s
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-face back">
+        <!-- Step 3: New Password -->
+        <div class="step-content" *ngIf="step === 3">
+          <div class="header">
+            <div class="icon-container success">
+              <i class="fas fa-check"></i>
+            </div>
+            <h2>New Password</h2>
+            <p>Your password must be different from previous ones</p>
+          </div>
+          
+          <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+            <div class="input-group floating">
+              <input [type]="showPassword ? 'text' : 'password'" 
+                     formControlName="newPassword" id="newPassword" required>
+              <label for="newPassword"> New Password  <i class="fas fa-lock"> </i> </label>
+              
+              <span class="toggle-password" (click)="showPassword = !showPassword">
+                <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+              </span>
+              <div *ngIf="resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched" class="error-message">
+                Minimum 8 characters with uppercase letter and number
+              </div>
+            </div>
+            
+            <div class="password-strength">
+              <div class="strength-bar" [class]="getPasswordStrengthClass()"></div>
+              <div class="strength-label">{{getPasswordStrengthText()}}</div>
+            </div>
+            
+            <div class="password-hints">
+              <p class="hint" [class.valid]="hasMinLength">
+                <i class="fas" [class.fa-check]="hasMinLength" [class.fa-times]="!hasMinLength"></i>
+                Minimum 8 characters
+              </p>
+              <p class="hint" [class.valid]="hasUpperCase">
+                <i class="fas" [class.fa-check]="hasUpperCase" [class.fa-times]="!hasUpperCase"></i>
+                At least 1 uppercase letter
+              </p>
+              <p class="hint" [class.valid]="hasNumber">
+                <i class="fas" [class.fa-check]="hasNumber" [class.fa-times]="!hasNumber"></i>
+                At least 1 number
+              </p>
+            </div>
+            
+            <button type="submit" class="btn-primary" [disabled]="resetPasswordForm.invalid || loading">
+              <span *ngIf="!loading">Reset</span>
+              <span *ngIf="loading">Processing...</span>
+              <i class="fas fa-key"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Success message -->
+    <div class="success-message" *ngIf="resetSuccess">
+      <div class="success-content">
+        <div class="checkmark-circle">
+          <i class="fas fa-check"></i>
+        </div>
+        <h2>Password Changed!</h2>
+        <p>Your password has been successfully updated</p>
+        <a href="login" class="btn-primary">
+            <span>Login</span>
+          <i class="fas fa-sign-in-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>

@@ -130,7 +130,7 @@
 /* Style pour l'image en haut à droite */
 .top-right-image {
     position: absolute;
-    top: 100px;
+    top: 65px;
     right: 185px;
     width: 100px;
     height: auto;
@@ -142,3 +142,16 @@
     font-size: 14px;
     margin-top: 5px;
   }
+  .auth-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Ajoute un espace entre les éléments */
+  }
+  
+  .recaptcha-container {
+    margin-top: 20px; /* Ajuste la marge pour l'espace */
+    display: flex;
+    justify-content: center;
+  }
+  

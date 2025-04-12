@@ -2,17 +2,18 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { UserPreferenceService } from 'src/app/services/user-preference.service';
 import { UserPreference } from 'src/app/models/user-preference';
-import { Component, OnInit, ChangeDetectorRef, TemplateRef, NgModule } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { ThemeServiceService } from 'src/app/services/theme-service.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule ,SharedModule,NgbDropdownModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule ,SharedModule,NgbDropdownModule,NgbModalModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
@@ -36,7 +37,7 @@ export class NavbarComponent implements OnInit {
     private userPreferenceService: UserPreferenceService,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
-    
+    private themeService: ThemeServiceService,
     private fb: FormBuilder
 
   ) {
@@ -77,44 +78,45 @@ export class NavbarComponent implements OnInit {
     }
 }
 
-
-
-  
-  
-  
-  
   isLoggedIn(): boolean {
     return !!this.userInfo; // Vérifie si userInfo est défini
   }
   onChangePassword() {
-    if (this.passwordForm.value.newPassword !== this.passwordForm.value.confirmPassword) {
+    if (this.passwordForm.invalid) {
+      alert("Veuillez remplir tous les champs.");
+      return;
+    }
+  
+    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+  
+    if (newPassword !== confirmPassword) {
       alert("Les mots de passe ne correspondent pas !");
       return;
     }
   
-    const formData = new FormData();
-    formData.append('currentPassword', this.passwordForm.value.currentPassword);
-    formData.append('newPassword', this.passwordForm.value.newPassword);
+    // Objet correctement formaté pour le backend
+    const passwordData = {
+      oldPassword: currentPassword, // Adapter au backend
+      newPassword: newPassword
+    };
   
-    console.log("Changement de mot de passe:", this.passwordForm.value);
+    console.log("Tentative de changement de mot de passe :", passwordData);
   
-    // Appeler la méthode changePassword du AuthService
-    this.authService.updateUser(this.userInfo.idUser, formData).subscribe({
+    this.authService.changePassword(passwordData).subscribe({
       next: (response) => {
-        console.log('Mot de passe mis à jour avec succès:', response);
-        alert('Mot de passe mis à jour !');
-        
-        // Fermer la modale après la mise à jour du mot de passe
+        console.log("Mot de passe mis à jour avec succès :", response);
+        alert("Mot de passe mis à jour !");
         this.modalService.dismissAll();  // Ferme la modale actuelle
-  
-        this.router.navigate(['/home']);  // Reconnecter l'utilisateur
+        this.passwordForm.reset();  // Réinitialiser le formulaire
       },
       error: (err) => {
-        console.error('Erreur lors de la modification du mot de passe:', err);
-        alert('Une erreur est survenue lors de la mise à jour du mot de passe.');
+        console.error("Erreur lors du changement de mot de passe :", err);
+        alert(err.error?.error || "Une erreur est survenue lors de la mise à jour du mot de passe.");
       }
     });
   }
+  
+  
   
  
 
@@ -163,17 +165,32 @@ export class NavbarComponent implements OnInit {
   }
   applyPreferences(preferences: any) {
     console.log('Appliquer les préférences:', preferences);
+
+    const themeLinkId = 'theme-stylesheet';
+    let themeLink = document.getElementById(themeLinkId) as HTMLLinkElement;
+
+    if (!themeLink) {
+        themeLink = document.createElement('link');
+        themeLink.rel = 'stylesheet';
+        themeLink.id = themeLinkId;
+        document.head.appendChild(themeLink);
+    }
+
     if (preferences.theme === 'dark') {
+        themeLink.href = 'assets1/css/eduact-dark.css';
         document.body.classList.add('dark-theme');
         document.body.classList.remove('light-theme');
         localStorage.setItem('theme', 'dark');
     } else {
+        themeLink.href = ''; // You can set this to your light-theme CSS if needed
         document.body.classList.add('light-theme');
         document.body.classList.remove('dark-theme');
         localStorage.setItem('theme', 'light');
     }
+
     this.cdr.detectChanges();
 }
+
 
  /** Gérer les erreurs de manière centralisée */
   handleError(error: any, message: string): void {

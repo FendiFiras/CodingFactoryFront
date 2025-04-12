@@ -29,6 +29,13 @@ export class CodingRegisterComponent {
   errors: any = {};
   currentStep: number = 1; // Étape actuelle du formulaire
   confirmPassword: string = '';
+  regions: string[] = [
+    'Ariana', 'Béja', 'Ben Arous', 'Bizerte', 'Gabès', 'Gafsa',
+    'Jendouba', 'Kairouan', 'Kasserine', 'Kébili', 'Le Kef', 'Mahdia',
+    'La Manouba', 'Médenine', 'Monastir', 'Nabeul', 'Sfax', 'Sidi Bouzid',
+    'Siliana', 'Sousse', 'Tataouine', 'Tozeur', 'Tunis', 'Zaghouan'
+  ];
+  
 
 
   constructor(private authService: AuthService) {}
@@ -168,6 +175,7 @@ export class CodingRegisterComponent {
       if (this.newUser.role === Role.STUDENT) {
         formData.append('level', this.newUser.level);
         formData.append('phoneNumber', this.newUser.phoneNumber);
+        formData.append('region', this.newUser.region); 
         formData.append('address', this.newUser.address);
         if (this.selectedFile) {
           formData.append('image', this.selectedFile, this.selectedFile.name);
@@ -176,6 +184,7 @@ export class CodingRegisterComponent {
         formData.append('companyName', this.newUser.companyName);
         formData.append('grade', this.newUser.grade);
         formData.append('phoneNumber', this.newUser.phoneNumber);
+        formData.append('region', this.newUser.region); 
         formData.append('address', this.newUser.address);
         if (this.selectedFile) {
           formData.append('image', this.selectedFile, this.selectedFile.name);
@@ -291,7 +300,13 @@ export class CodingRegisterComponent {
       this.errors.gender = ''; // Effacer l'erreur si le genre est valide
     }
   }
-
+  validateRegion(): void {
+    if (!this.newUser.gender) {
+      this.errors.gender = 'Governate is required.';
+    } else {
+      this.errors.gender = ''; 
+    }
+  }
   // Validation du rôle en temps réel
   validateRole(): void {
     if (!this.newUser.role) {
@@ -387,7 +402,10 @@ export class CodingRegisterComponent {
       this.errors.image = ' Picture  is required.';
       valid = false;
     }
-
+    if (!this.newUser.region) {
+      this.errors.region = ' Governorate is required.';
+      valid = false;
+    }
     return valid;
   }
 }

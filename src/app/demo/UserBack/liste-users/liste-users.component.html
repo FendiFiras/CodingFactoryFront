@@ -1,3 +1,5 @@
+
+
 <div class="col-xl-12">
   <app-card cardTitle="User List" [options]="false" blockClass="table-border-style">
     <div class="table-responsive">
@@ -9,6 +11,7 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone Number</th>
+            <th>Region</th>
             <th>Address</th>
             <th>Role</th>
             <th>Date of Birth</th>
@@ -17,20 +20,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users; let i = index">
+          <tr *ngFor="let user of paginatedUsers; let i = index">
             <ng-container *ngIf="user.role !== 'ADMIN'">
-              <th scope="row">{{ i + 1 }}</th>
+              <th scope="row">{{ (page - 1) * itemsPerPage + i + 1 }}</th>
               <td>{{ user.firstName }}</td>
               <td>{{ user.lastName }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.phoneNumber }}</td>
+              <td>{{ user.region }}</td>
               <td>{{ user.address }}</td>
               <td>{{ user.role }}</td>
               <td>{{ user.dateOfBirth | date:'yyyy-MM-dd' }}</td>
               <td>{{ user.gender || 'N/A' }}</td>
-
               <td>
-
                 <button class="btn btn-warning btn-sm" (click)="openBanModal(user, banModal)">Add Ban</button>
               </td>
             </ng-container>
@@ -39,9 +41,22 @@
       </table>
     </div>
   </app-card>
+
+  <!-- Pagination -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="page === 1">
+        <a class="page-link" href="javascript:" (click)="changePage(page - 1)">Previous</a>
+      </li>
+      <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" [class.active]="page === i + 1">
+        <a class="page-link" href="javascript:" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="page >= totalPages">
+        <a class="page-link" href="javascript:" (click)="changePage(page + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
-
-
 
 <!-- Modale pour ajouter un BanLog -->
 <ng-template #banModal let-modal>
@@ -77,22 +92,3 @@
     </form>
   </div>
 </ng-template>
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link" href="javascript:" tabindex="-1">Previous</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="javascript:">1</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="javascript:">2</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="javascript:">3</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="javascript:">Next</a>
-    </li>
-  </ul>
-</nav>

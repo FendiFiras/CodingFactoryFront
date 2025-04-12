@@ -11,7 +11,8 @@ export class User {
   speciality?: string;       
   companyName?: string;      
   level?: string;            
-  grade?: string;            
+  grade?: string;  
+  region?: string;          
   address: string = '';      
   image?: string;            
   role: Role = Role.STUDENT; 

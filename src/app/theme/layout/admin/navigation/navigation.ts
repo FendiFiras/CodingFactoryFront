@@ -94,6 +94,15 @@ export const NavigationItems: NavigationItem[] = [
             icon: 'feather icon-server',
             breadcrumbs: false
           },
+          
+          {
+            id: 'user stats',
+            title: 'Users stats',
+            type: 'item',
+            url: '/users-stats',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+          },
           {
             id: 'CompanyRepresentativeManagement',
             title: 'Company Representative Management',
@@ -102,7 +111,7 @@ export const NavigationItems: NavigationItem[] = [
             icon: 'feather icon-server',
             breadcrumbs: false
           }
-
+          
 
          
         ]

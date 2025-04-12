@@ -29,11 +29,10 @@
                             placeholder="Password" required (blur)="validatePassword()">
                         <p *ngIf="errors.password" class="error-message">{{ errors.password }}</p>
 
-                        <input class="form-control" type="password" [(ngModel)]="confirmPassword"
-                        name="confirmPassword" placeholder="Confirm Password" required
-                        (blur)="validateConfirmPassword()">
-                    <p *ngIf="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</p>
-                    
+                        <input class="form-control" type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+                            placeholder="Confirm Password" required (blur)="validateConfirmPassword()">
+                        <p *ngIf="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</p>
+
                         <!-- Champ Date de naissance -->
                         <input class="form-control" type="date" [(ngModel)]="newUser.dateOfBirth" name="dateOfBirth"
                             required (blur)="validateDateOfBirth()">
@@ -105,6 +104,15 @@
                         <input class="form-control" type="text" [(ngModel)]="newUser.phoneNumber" name="phoneNumber"
                             required placeholder="phone Number" (blur)="validatePhoneNumber()">
                         <p *ngIf="errors.phoneNumber" class="error-message">{{ errors.phoneNumber }}</p>
+                        <!-- Champs Région -->
+                        <!-- Champ Région (Governorate) -->
+                        <select class="form-control" [(ngModel)]="newUser.region" name="region" required
+                            (blur)="validateRegion()">
+                            <option value="" disabled selected>Select Region</option>
+                            <option *ngFor="let g of regions" [value]="g">{{ g }}</option>
+                        </select>
+                        <p *ngIf="errors.region" class="error-message">{{ errors.region }}</p>
+
 
                         <input class="form-control" type="text" [(ngModel)]="newUser.address" name="address" required
                             placeholder="address" (blur)="validateAddress()">

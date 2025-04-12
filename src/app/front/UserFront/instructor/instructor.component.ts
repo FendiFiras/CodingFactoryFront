@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User, Gender, Role } from 'src/app/models/user';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,8 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { AuthService } from 'src/app/services/auth-service.service';
 import { CommonModule } from '@angular/common';
+import { UserPreference } from 'src/app/models/user-preference';
+import { UserPreferenceService } from 'src/app/services/user-preference.service';
 
 @Component({
   selector: 'app-instructor',
@@ -17,14 +19,13 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     HttpClientModule,
     NavbarComponent,
-    FooterComponent,
     CommonModule
     
   ],
   templateUrl: './instructor.component.html',
   styleUrls: ['./instructor.component.scss']
 })
-export class InstructorComponent {
+export class InstructorComponent implements OnInit {
   newUser: User = new User();
   successMessage: string = '';
   errorMessage: string = '';
@@ -36,7 +37,34 @@ export class InstructorComponent {
 
 
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,  
+        private userPreferenceService: UserPreferenceService
+  
+  ) {}
+  ngOnInit(): void {
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        const userId = user.idUser;
+        this.userPreferenceService.getUserPreference(userId).subscribe({
+          next: (pref) => {
+            const body = document.body;
+            body.classList.remove('light-mode', 'dark-mode');
+            
+            const theme = pref?.theme === 'dark' ? 'dark-mode' : 'light-mode';
+            body.classList.add(theme);
+          },
+          error: (err) => {
+            console.error("Erreur lors de la récupération des préférences :", err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error("Erreur lors de la récupération de l'utilisateur :", err);
+      }
+    });
+  }
+  
+  
 
   // Validation du formulaire
   validateForm(): boolean {

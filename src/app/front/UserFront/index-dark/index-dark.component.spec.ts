@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BannedUsersComponent } from './banned-user.component';
+import { IndexDarkComponent } from './index-dark.component';
 
-describe('BannedUserComponent', () => {
-  let component: BannedUsersComponent;
-  let fixture: ComponentFixture<BannedUsersComponent>;
+describe('IndexDarkComponent', () => {
+  let component: IndexDarkComponent;
+  let fixture: ComponentFixture<IndexDarkComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BannedUsersComponent]
+      imports: [IndexDarkComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BannedUsersComponent);
+    fixture = TestBed.createComponent(IndexDarkComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -83,4 +83,10 @@
       console.error('Erreur API:', error);
       return throwError(() => error);
     }
+    getThemeStats(): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/stats/theme`).pipe(
+        catchError(this.handleError)
+      );
+    }
+
   }

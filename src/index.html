@@ -60,10 +60,6 @@
     <!-- template styles -->
     <link rel="stylesheet" href="assets1/vendors/css/eduact.css" />
 
-
-
-
-
     <link rel="stylesheet" type="text/css" href="assets2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets2/css/fontawesome-all.min.css">
     <link rel="stylesheet" type="text/css" href="assets2/css/iofrm-style.css">
@@ -76,6 +72,16 @@
 
   </head>
   <body>
+    <body class="custom-cursor">
+
+      <div class="custom-cursor__cursor"></div>
+      <div class="custom-cursor__cursor-two"></div>
+  
+      <div class="preloader">
+          <div class="preloader__image" style="background-image: url(assets/images/loader.png);"></div>
+      </div>
+      <!-- /.preloader -->
+      <div class="page-wrapper">
     <app-root></app-root>
     
 
@@ -113,11 +119,14 @@
     <!-- template js -->
     <script src="assets1/js/eduact.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
     <script src="assets2/js/jquery.min.js"></script>
     <script src="assets2/js/popper.min.js"></script>
     <script src="assets2/js/bootstrap.bundle.min.js"></script>
     <script src="assets2/js/main.js"></script>
+    
   </body>
+  
 </html>

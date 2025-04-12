@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { RecaptchaModule } from "ng-recaptcha";
 
 @Component({
   selector: 'app-coding-login',
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
     SharedModule,
     CommonModule,
     FormsModule,
+    RecaptchaModule,
     FooterComponent
   ],
   templateUrl: './coding-login.component.html',
@@ -31,12 +33,19 @@ userFirstName: string = ''; // Prénom de l'utilisateur
 userLastName: string = ''; // Nom de l'utilisateur
 selectedRole: string = ''; // Rôle choisi par l'utilisateur
 userImage: string = ''; // Photo de profil Google
+recaptchaVerified: boolean = false;
+
+
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUserInfo(); // Charge les infos utilisateur si connecté
-
+    if (typeof google !== 'undefined' && google.accounts) {
+      this.initGoogleLogin();
+    } else {
+      console.error("Google API non chargée. Assurez-vous d'avoir inclus le script Google dans index.html.");
+    }
     // Configuration du callback pour Google Login
     (window as any).handleCredentialResponse = (response: any) => {
       this.handleGoogleResponse(response);
@@ -85,7 +94,12 @@ userImage: string = ''; // Photo de profil Google
         this.userLastName = res.lastName;
         this.userImage = res.image;
   
-        this.router.navigate(['/home']);
+        // Vérification du rôle et redirection
+        if (res.role === 'ADMIN') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (err) => {
         console.error('Erreur Google Login:', err);
@@ -94,26 +108,36 @@ userImage: string = ''; // Photo de profil Google
     });
   }
   
-  
+  onRecaptchaSuccess(token: string): void {
+    console.log("reCAPTCHA validé :", token);
+    this.recaptchaVerified = true;
+  }
   
 // Fonction de connexion
 login(): void {
-  this.errorMessage = '';  // Réinitialiser le message d'erreur avant chaque tentative
+  this.errorMessage = ''; // Réinitialiser les erreurs
+
+  if (!this.recaptchaVerified) {
+    this.errorMessage = "Veuillez valider le reCAPTCHA.";
+    return;
+  }
+
   if (this.isOtpRequired) {
-    this.verifyOtp();  // Vérifier l'OTP
+    this.verifyOtp();
   } else {
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         this.authService.saveToken(response.token);
         this.loadUserInfo();
-        this.isOtpRequired = true;  // OTP requis après la connexion
+        this.isOtpRequired = true; // OTP requis après connexion
       },
       error: (err) => {
-        this.errorMessage = err.message; 
+        this.errorMessage = err.message;
       }
     });
   }
 }
+
 
 
 
@@ -154,4 +178,5 @@ loadUserInfo(): void {
     this.userInfo = null;  // Réinitialisation des données utilisateur
     this.router.navigate(['/login']); // Redirection après logout
   }
+  
 }

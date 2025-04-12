@@ -1,4 +1,4 @@
-<div class="form-container">
+ <div class="form-container">
   <img class="left-image" src="assets2/images/graphic13-1.svg" alt="Graphic">
 
   <div class="form-box">
@@ -13,7 +13,7 @@
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
-        
+
 
         <!-- Affichage des informations utilisateur après connexion -->
         <div *ngIf="userInfo; else loginForm" class="user-info">
@@ -32,20 +32,19 @@
             <input class="form-control" type="password" [(ngModel)]="password" name="password" placeholder="Password"
               required>
 
-             <!-- Affichage du champ OTP si nécessaire -->
-             <div *ngIf="isOtpRequired">
+            <!-- Affichage du champ OTP si nécessaire -->
+            <div *ngIf="isOtpRequired">
               <input class="form-control" type="text" [(ngModel)]="otp" name="otp" placeholder="Enter OTP" required>
             </div>
 
             <div class="form-button">
               <button type="submit" class="ibtn">{{ isOtpRequired ? 'Verify OTP' : 'Login' }}</button>
-              <a routerLink="/forget">Forget password?</a>
-            </div>
+              <a href="forget">Forget password</a>            </div>
           </form>
         </ng-template>
 
         <div class="other-links">
-          
+
           <!-- Google Sign-In Button -->
           <div id="g_id_onload"
             data-client_id="297153804677-lou7tiqpeipefqo60c2cltqn400ki2st.apps.googleusercontent.com"
@@ -53,9 +52,14 @@
 
           <!-- Zone où le bouton Google sera inséré -->
           <div id="googleSignInBtn"></div>
-         
-          
+
+
+          <div class="recaptcha-container">
+            <re-captcha (resolved)="onRecaptchaSuccess($event)" siteKey="6LcMffwqAAAAAB6EjFJMWhWxBshf1aAmToZe9t4k">
+            </re-captcha>
+          </div>
         </div>
+
       </div>
     </div>
   </div>

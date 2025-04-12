@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Role, User } from '../models/user';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
   private baseUrl = 'http://localhost:8089/codingFactory/auth'; // URL correcte du backend
   apiUrl: string = `${this.baseUrl}`; // Correction: Enlevez la déclaration "any" pour "string" 
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer,private router: Router) {}
 
   // Inscription d'un utilisateur
   register(formData: FormData): Observable<any> {
@@ -235,8 +236,12 @@ googleLogin(token: string): Observable<{ token: string; email: string; firstName
       this.saveToken(response.token);
       localStorage.setItem('user', JSON.stringify(response));
 
-      // Rediriger vers la page d'accueil
-      window.location.href = '/home';  // Ou utiliser Angular Router
+      // Vérifier le rôle et rediriger
+      if (response.role === 'ADMIN') {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.router.navigate(['/home']);
+      }
     }),
     catchError(error => {
       console.error('Erreur de connexion Google', error);
@@ -245,8 +250,80 @@ googleLogin(token: string): Observable<{ token: string; email: string; firstName
   );
 }
 
+changePassword(passwordData: { oldPassword: string; newPassword: string }): Observable<any> {
+  const token = localStorage.getItem("token"); // Récupération du token
+  if (!token) return throwError(() => new Error("No token found"));
+
+  const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+  return this.http.put(`${this.baseUrl}/change-password`, passwordData, { headers }).pipe(
+    catchError(error => {
+      console.error("Error changing password:", error);
+      return throwError(() => new Error(error.error?.error || "Failed to change password"));
+    })
+  );
+}
+
+forgotPassword(email: string): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/forgot-password`, { email }).pipe(
+    catchError(error => {
+      console.error("Erreur lors de l'envoi de l'OTP :", error);
+      return throwError(() => new Error("Erreur lors de l'envoi de l'OTP"));
+    })
+  );
+}
+verifySms(email: string, otp: string): Observable<{ token: string }> {
+  return this.http.post<{ token: string }>(`${this.baseUrl}/verify-sms`, { email, otp }).pipe(
+    tap(response => console.log("✅ OTP validé, token reçu :", response.token)),
+    catchError(error => {
+      let errorMessage = "Une erreur est survenue. Veuillez réessayer.";
+
+      if (error.status === 400) {
+        errorMessage = "Email et OTP sont requis.";
+      } else if (error.status === 401) {
+        errorMessage = "OTP invalide ou expiré.";
+      } else if (error.status === 404) {
+        errorMessage = "Utilisateur non trouvé.";
+      } else if (error.status === 500) {
+        errorMessage = "Erreur serveur. Réessayez plus tard.";
+      }
+
+      console.error("❌ Erreur lors de la vérification de l'OTP :", error);
+      return throwError(() => new Error(errorMessage));
+    })
+  );
+}
 
 
+resetPassword(newPassword: string, token: string): Observable<any> {
+  if (!token) {
+    console.error("❌ Aucun token fourni !");
+    return throwError(() => new Error("Token manquant"));
+  }
+
+  const authToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`; // ✅ Ajout du préfixe si absent
+
+  console.log("📤 Envoi du token :", authToken); // <-- Vérifie si le token est bien passé
+
+  const headers = new HttpHeaders().set('Authorization', authToken);
+
+  return this.http.put<any>(`${this.baseUrl}/reset-password`, { newPassword }, { headers }).pipe(
+    catchError(error => {
+      console.error("❌ Erreur lors de la réinitialisation du mot de passe :", error);
+      return throwError(() => new Error("Échec de la réinitialisation du mot de passe"));
+    })
+  );
+}
+
+
+
+getGenderStats(): Observable<{ Male: number; Female: number }> {
+  return this.http.get<{ Male: number; Female: number }>('http://localhost:8089/codingFactory/auth/gender-stats');
+}
+
+getUsersByRegion(): Observable<Map<string, number>> {
+  return this.http.get<Map<string, number>>('http://localhost:8089/codingFactory/auth/users-by-region');
+}
 
 }
 

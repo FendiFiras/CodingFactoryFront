@@ -8,6 +8,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-banned-users',
+    standalone: true,  // Ajouté pour standalone mode
+
   imports: [SharedModule],
   templateUrl: './banned-user.component.html',
   styleUrls: ['./banned-user.component.scss'] 
@@ -16,7 +18,14 @@ export class BannedUsersComponent implements OnInit {
   bannedUsers: BanLog[] = [];
   editForm: FormGroup;
   selectedBanLog: BanLog | null = null;
-  
+  paginatedUsers: any[] = [];
+  // Variables pour la pagination
+  page: number = 1;
+  itemsPerPage: number = 7;
+  totalPages: number = 0;
+  users: any[] = [];
+  bannedUsersPaginated: any[] = [];
+
   @ViewChild('editModal') editModal: any;
 
   constructor(private banlogservice: BanLogService, private fb: FormBuilder, private modalService: NgbModal) {}
@@ -35,13 +44,28 @@ export class BannedUsersComponent implements OnInit {
     this.banlogservice.getAllBanLogs().subscribe(
       (data: BanLog[]) => {
         this.bannedUsers = data;
+        this.totalPages = Math.ceil(this.bannedUsers.length / this.itemsPerPage);
+        this.updatePaginatedUsers();
       },
       (error) => {
         console.error('Erreur lors de la récupération des BanLogs :', error);
       }
     );
   }
+ // Mettre à jour la liste des utilisateurs affichés pour la pagination
+ updatePaginatedUsers(): void {
+  const start = (this.page - 1) * this.itemsPerPage;
+  const end = start + this.itemsPerPage;
+  this.bannedUsersPaginated  = this.bannedUsers.slice(start, end);
+}
 
+// Changer de page
+changePage(newPage: number): void {
+  if (newPage > 0 && newPage <= this.totalPages) {
+    this.page = newPage;
+    this.updatePaginatedUsers();
+  }
+}
   openEditModal(banLog: BanLog): void {
     this.selectedBanLog = banLog;
     this.editForm.patchValue({

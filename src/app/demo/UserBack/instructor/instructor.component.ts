@@ -26,7 +26,11 @@ export class InstructorComponent implements OnInit {
   rejectForm: FormGroup;
   successMessage: string | null = null;
 errorMessage: string | null = null;
-
+paginatedUsers: any[] = [];
+  // Variables pour la pagination
+  page: number = 1;
+  itemsPerPage: number = 3;
+  totalPages: number = 0;
 
   constructor(
     private userService: UserService,
@@ -68,11 +72,27 @@ errorMessage: string | null = null;
       (data) => {
         this.users = data;
         console.log('Users:', this.users);
+        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+        this.updatePaginatedUsers();
       },
       (error) => {
         console.error('Erreur lors de la récupération des utilisateurs', error);
       }
     );
+  }
+  // Mettre à jour la liste des utilisateurs affichés pour la pagination
+  updatePaginatedUsers(): void {
+    const start = (this.page - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(start, end);
+  }
+
+  // Changer de page
+  changePage(newPage: number): void {
+    if (newPage > 0 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.updatePaginatedUsers();
+    }
   }
   openRejectModal(user: any, content: any): void {
     this.selectedUser = user; // Stocker l'utilisateur sélectionné

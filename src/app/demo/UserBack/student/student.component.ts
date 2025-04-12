@@ -20,12 +20,14 @@ export class StudentComponent implements OnInit {
   selectedBanUser: any; // Étudiant sélectionné pour bannissement
   errorMessage: string | null = null;
   currentPage: number = 1;
-  itemsPerPage: number = 5; // Nombre d'éléments par page
+  itemsPerPage: number = 3; // Nombre d'éléments par page
   totalItems: number = 0;
   paginatedUsers: any[] = [];
   Math = Math; // Ajoute cette ligne dans ta classe StudentComponent
 
 
+  page: number = 1;
+  totalPages: number = 0;
 
   constructor(
     private userService: UserService,
@@ -64,7 +66,7 @@ export class StudentComponent implements OnInit {
     this.userService.getUsersByRole(role).subscribe(
       (data) => {
         this.users = data;
-        this.totalItems = this.users.length;
+        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
         this.updatePaginatedUsers();
       },
       (error) => {
@@ -73,13 +75,15 @@ export class StudentComponent implements OnInit {
     );
   }
   updatePaginatedUsers(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedUsers = this.users.slice(startIndex, endIndex);
+    const start = (this.page - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(start, end);
   }
-  changePage(page: number): void {
-    if (page >= 1 && page <= Math.ceil(this.totalItems / this.itemsPerPage)) {
-      this.currentPage = page;
+
+  // Changer de page
+  changePage(newPage: number): void {
+    if (newPage > 0 && newPage <= this.totalPages) {
+      this.page = newPage;
       this.updatePaginatedUsers();
     }
   }

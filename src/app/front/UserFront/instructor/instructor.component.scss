@@ -1,78 +1,152 @@
-.become-team__input-box {
+/* ===============================
+   Variables globales (thèmes)
+   =============================== */
+   body {
+    --eduact-text: #121534;
+    --eduact-black: #000;
+    --eduact-white: #fff;
+  
+    background-color: var(--eduact-white);
+    color: var(--eduact-text);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body.light-mode {
+    --eduact-text: #121534;
+    --eduact-black: #000;
+    --eduact-white: #fff;
+    background-color: var(--eduact-white);
+    color: var(--eduact-text);
+  }
+  
+  body.dark-mode {
+    --eduact-text: #fdf3f1;
+    --eduact-black: #fff;
+    --eduact-white: #121534;
+    background-color: var(--eduact-white);
+    color: var(--eduact-text);
+  }
+  
+  /* ===============================
+     Formulaire - Devenir membre
+     =============================== */
+  .become-team {
+    background-color: var(--eduact-white);
+    color: var(--eduact-text);
+    padding: 60px 0;
+  }
+  
+  .become-team__title,
+  .become-team__text {
+    color: var(--eduact-text);
+    font-weight: 600;
+  }
+  
+  .become-team__form-box {
+    background-color: var(--eduact-white);
+    border: 1px solid var(--eduact-black);
+    padding: 2rem;
+    border-radius: 12px;
+  }
+  
+  .become-team__form-box__title {
+    color: var(--eduact-text);
+  }
+  
+  .become-team__input-box {
     margin-bottom: 20px;
-}
-
-.become-team__input-box input,
-.become-team__input-box select,
-.become-team__input-box label,
-.become-team__input-box input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-}
-
-.become-team__input-box label {
+  }
+  
+  .become-team__input-box label {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
-}
-
-.become-team__btn-box button {
+  }
+  
+  .become-team__input-box input,
+  .become-team__input-box select,
+  .become-team__input-box input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--eduact-black);
+    border-radius: 5px;
+    background-color: var(--eduact-white);
+    font-size: 14px;
+    color: var(--eduact-text);
+    box-sizing: border-box;
+  }
+  
+  /* ===============================
+     Bouton principal (orange)
+     =============================== */
+  .become-team__btn-box button,
+  .eduact-btn {
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 8px;
-    background-color: #ff6600;
+    background-color: #ff6600; /* Orange vif */
     color: #fff;
     border: none;
     cursor: pointer;
     width: 100%;
-}
-
-.become-team__btn-box button:hover {
-    background-color: #e55c00;
-}
-
-.alert {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 4px;
-}
-
-.alert-success {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-.alert-danger {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-}
-.error-message {
-  color: red;
-  font-size: 2,4em;
-}
-.image-holder {
-  flex: 1;
-  text-align: center;
-}
-
-.image-holder img {
-  max-width: 60%;
-  height: auto;
-}    .image-preview {
-  margin-top: 10px;
-  text-align: center;
-}.image-preview img {
-  max-width: 150px;
-  max-height: 150px;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  padding: 5px;
-}
+    transition: background-color 0.3s ease;
+  }
+  
+  .become-team__btn-box button:hover,
+  .eduact-btn:hover {
+    background-color: #e55c00; /* Orange plus foncé au hover */
+    color: #fff;
+  }
+  
+  /* ===============================
+     Messages d'alerte et erreurs
+     =============================== */
+  .alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+  
+  .alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 1rem;
+  }
+  
+  /* ===============================
+     Image preview et holder
+     =============================== */
+  .image-holder {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .image-holder img {
+    max-width: 60%;
+    height: auto;
+  }
+  
+  .image-preview {
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    padding: 5px;
+  }
+  

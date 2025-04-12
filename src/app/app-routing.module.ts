@@ -65,6 +65,10 @@ const routes: Routes = [
         loadComponent: () => import('./demo/UserBack/banned-user/banned-user.component').then((c) => c.BannedUsersComponent)
       },
       {
+        path: 'users-stats',
+        loadComponent: () => import('./demo/UserBack/users-stats/users-stats.component').then((c) => c.UsersStatsComponent)
+      },
+      {
         path: 'basic',
         loadChildren: () => import('./demo/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
       },

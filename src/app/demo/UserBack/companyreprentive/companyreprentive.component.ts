@@ -19,7 +19,10 @@ export class CompanyReprentiveComponent implements OnInit {
   selectedUser: any; // Utilisateur sélectionné pour modification
   selectedBanUser: any; // Utilisateur sélectionné pour bannissement
   page: number = 1; // Page actuelle
-  itemsPerPage: number = 5; // Nombre d'utilisateurs par page
+  itemsPerPage: number = 3; // Nombre d'utilisateurs par page
+  paginatedUsers: any[] = [];
+  // Variables pour la pagination
+  totalPages: number = 0;
 
   constructor(
     private userService: UserService,
@@ -49,19 +52,35 @@ export class CompanyReprentiveComponent implements OnInit {
     this.getUsersByRole('COMPANYREPRESENTIVE'); // Charger les représentants d'entreprise au démarrage
   }
 
-  // Récupérer la liste des représentants d'entreprise
-  getUsersByRole(role: string): void {
-    this.userService.getUsersByRole(role).subscribe(
-      (data) => {
-        this.users = data;
-        console.log('Users:', this.users);
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des utilisateurs', error);
-      }
-    );
-  }
+ // Récupérer la liste des représentants d'entreprise
+getUsersByRole(role: string): void {
+  this.userService.getUsersByRole(role).subscribe(
+    (data) => {
+      this.users = data;
+      this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+      this.updatePaginatedUsers(); // Mise à jour de la pagination après récupération
+      console.log('Users:', this.users);
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des utilisateurs', error);
+    }
+  );
+}
 
+ // Mettre à jour la liste des utilisateurs affichés pour la pagination
+ updatePaginatedUsers(): void {
+  const start = (this.page - 1) * this.itemsPerPage;
+  const end = start + this.itemsPerPage;
+  this.paginatedUsers = this.users.slice(start, end);
+}
+
+// Changer de page
+changePage(newPage: number): void {
+  if (newPage > 0 && newPage <= this.totalPages) {
+    this.page = newPage;
+    this.updatePaginatedUsers();
+  }
+}
 
 
   // Ouvrir la modale pour ajouter un BanLog
@@ -70,21 +89,9 @@ export class CompanyReprentiveComponent implements OnInit {
     this.banForm.reset({ status: Status.ACTIVE }); 
     this.modalService.open(content, { ariaLabelledBy: 'banUserModalLabel' });
   }
-  // Obtenir les utilisateurs pour la page actuelle
-  get paginatedUsers() {
-    const startIndex = (this.page - 1) * this.itemsPerPage;
-    return this.users.slice(startIndex, startIndex + this.itemsPerPage);
-  }
 
-  // Changer de page
-  changePage(newPage: number) {
-    if (newPage >= 1 && newPage <= this.totalPages) {
-      this.page = newPage;
-    }
-  }
-  get totalPages(): number {
-    return Math.ceil(this.users.length / this.itemsPerPage);
-  }
+
+
 
   // Soumettre le formulaire de ban
   onBanSubmit(): void {

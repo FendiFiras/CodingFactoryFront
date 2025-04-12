@@ -1,0 +1,200 @@
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <h2>User Analytics Dashboard</h2>
+    <div class="header-actions">
+      <button class="refresh-btn" (click)="refreshData()" [disabled]="loading">
+        <i class="ti ti-refresh" [class.ti-rotate]="loading"></i> 
+        {{ loading ? 'Loading...' : 'Refresh Data' }}
+      </button>
+      <div class="time-filter">
+        <span>Period:</span>
+        <select class="form-select" [(ngModel)]="filters.period" (change)="setFilter('period', filters.period)">
+          <option value="7days" > Last 7 days </option>
+          <option value="30days" > Last 30 days </option>
+          <option value="90days" > Last 90 days </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card card-male">
+      <div class="card-icon">
+        <i class="ti ti-gender-male"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ stats.malePercentage }}%</h3>
+        <p>Male Users</p>
+        <div class="card-trend positive">
+          <i class="ti ti-arrow-up"></i> 5.2%
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card card-female">
+      <div class="card-icon">
+        <i class="ti ti-gender-female"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ stats.femalePercentage }}%</h3>
+        <p>Female Users</p>
+        <div class="card-trend positive">
+          <i class="ti ti-arrow-up"></i> 3.8%
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card card-dark">
+      <div class="card-icon">
+        <i class="ti ti-moon"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ stats.darkModeUsers | number }}</h3>
+        <p>Dark Mode Users</p>
+        <div class="card-trend positive">
+          <i class="ti ti-arrow-up"></i> 12.4%
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card card-light">
+      <div class="card-icon">
+        <i class="ti ti-sun"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ stats.lightModeUsers | number }}</h3>
+        <p>Light Mode Users</p>
+        <div class="card-trend negative">
+          <i class="ti ti-arrow-down"></i> 2.1%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <!-- Gender Stats -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3>Gender Distribution</h3>
+        <div class="card-actions">
+          <button class="btn-icon" 
+                  (click)="setFilter('gender', 'all')" 
+                  [class.active]="filters.gender === 'all'">
+            All
+          </button>
+          <button class="btn-icon" 
+                  (click)="setFilter('gender', 'male')" 
+                  [class.active]="filters.gender === 'male'">
+            Male
+          </button>
+          <button class="btn-icon" 
+                  (click)="setFilter('gender', 'female')" 
+                  [class.active]="filters.gender === 'female'">
+            Female
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <div class="main-chart">
+            <apx-chart
+              #genderChart
+              [series]="donutChart.series"
+              [chart]="donutChart.chart"
+              [labels]="donutChart.labels"
+              [colors]="donutChart.colors"
+              [legend]="donutChart.legend"
+              [dataLabels]="donutChart.dataLabels"
+              [plotOptions]="donutChart.plotOptions"
+              [tooltip]="donutChart.tooltip"
+            ></apx-chart>
+          </div>
+          <div class="secondary-chart">
+            <apx-chart
+              [series]="radialChart.series"
+              [chart]="radialChart.chart"
+              [plotOptions]="radialChart.plotOptions"
+              [labels]="radialChart.labels"
+              [colors]="radialChart.colors"
+              [fill]="radialChart.fill"
+            ></apx-chart>
+            <div class="chart-label">Male Percentage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Preference -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3>Theme Preference</h3>
+        <div class="card-actions">
+          <button class="btn-icon" 
+                  (click)="setFilter('period', '7days')" 
+                  [class.active]="filters.period === '7days'">
+            Weekly
+          </button>
+          <button class="btn-icon" 
+                  (click)="setFilter('period', '30days')" 
+                  [class.active]="filters.period === '30days'">
+            Monthly
+          </button>
+          <button class="btn-icon" 
+                  (click)="setFilter('period', '90days')" 
+                  [class.active]="filters.period === '90days'">
+            Quarterly
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <apx-chart
+          #modeChart
+          [series]="barSimpleChart.series"
+          [chart]="barSimpleChart.chart"
+          [xaxis]="barSimpleChart.xaxis"
+          [yaxis]="barSimpleChart.yaxis"
+          [dataLabels]="barSimpleChart.dataLabels"
+          [legend]="barSimpleChart.legend"
+          [colors]="barSimpleChart.colors"
+          [plotOptions]="barSimpleChart.plotOptions"
+          [tooltip]="barSimpleChart.tooltip"
+        ></apx-chart>
+      </div>
+    </div>
+
+    <!-- Region Distribution -->
+    <div class="dashboard-card full-width">
+      <div class="card-header">
+        <h3>User Distribution by Region</h3>
+        <div class="card-actions">
+          <button class="btn-icon" 
+                  (click)="setFilter('regions', 'all')" 
+                  [class.active]="filters.regions === 'all'">
+            All Regions
+          </button>
+          <button class="btn-icon" 
+                  (click)="setFilter('regions', 'top5')" 
+                  [class.active]="filters.regions === 'top5'">
+            Top 5
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <apx-chart
+          #regionChart
+          [series]="regionChartOptions.series"
+          [chart]="regionChartOptions.chart"
+          [xaxis]="regionChartOptions.xaxis"
+          [yaxis]="regionChartOptions.yaxis"
+          [dataLabels]="regionChartOptions.dataLabels"
+          [colors]="regionChartOptions.colors"
+          [plotOptions]="regionChartOptions.plotOptions"
+          [tooltip]="regionChartOptions.tooltip"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
+</div>
