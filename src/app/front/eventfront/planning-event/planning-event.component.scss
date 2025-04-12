@@ -1,33 +1,4 @@
-.star-rating {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-  }
-  
-  .star-rating input {
-    display: none;
-  }
-  
-  .star-rating label {
-    font-size: 30px;
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .star-rating label:before {
-    content: '\f005'; /* Unicode for FontAwesome star */
-    font-family: FontAwesome;
-  }
-  
-  .star-rating input:checked ~ label {
-    color: gold;
-  }
-  
-  .star-rating label:hover,
-  .star-rating label:hover ~ label {
-    color: gold;
-  }
+
   .blog-details__comment-form {
     background: #fff; /* White background */
     padding: 20px;
@@ -265,4 +236,45 @@
   text-align: center;
   padding: 10px 0;
   font-style: italic;
+}
+
+
+
+
+
+.result-container {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.result-item {
+  margin-bottom: 10px;
+}
+
+.result-item strong {
+  display: block;
+  color: #333;
+  font-size: 16px;
+}
+
+.result-item p {
+  margin: 5px 0 0 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.no-result {
+  color: #888;
+  font-style: italic;
+}
+
+h3 {
+  color: #2c3e50;
+  font-size: 20px;
+  margin-bottom: 15px;
 }

@@ -149,6 +149,8 @@ playVideo(videoUrl: string): void {
   setTimeout(() => {
     this.selectedVideoUrl = `http://localhost:8089/event/${videoUrl}`;
   }, 100); // Petit délai pour que Angular détecte le changement
+  this.analyze(videoUrl);
+
 }
 
 

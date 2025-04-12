@@ -24,6 +24,7 @@
         <div class="blog-details__content">
           <!-- Display Image or Video -->
           <div class="blog-details__img">
+        
             <ng-container *ngIf="selectedVideoUrl; else defaultMedia">
               <video width="100%" height="auto" controls autoplay>
                 <source [src]="selectedVideoUrl" type="video/mp4">
@@ -44,7 +45,23 @@
               </ng-template>
             </ng-template>
           </div>
+          <div *ngIf="result">
+            <h3>Résultat de l'Analyse</h3>
+            <div class="result-container">
+              <div class="result-item">
+                <strong>Transcription :</strong>
+                <p>{{ result.transcription }}</p>
+              </div>
+              <div class="result-item">
+                <strong>Résumé :</strong>
+                <p>{{ result.summary }}</p>
+              </div>
+            </div>
+          </div>
           
+          <div *ngIf="!result">
+            <p class="no-result">Aucun résultat disponible pour l'analyse.</p>
+          </div>
           
 
           <div class="blog-details__meta">
@@ -85,7 +102,7 @@
               <div class="col-xl-6">
                 <div class="blog-details__comment-form__input-box">
                   <div class="star-rating">
-                    <input type="radio" id="star5" name="rating" value="5" [(ngModel)]="newFeedback.rating" />
+                    <input type="radio" id="star5"  name="rating" value="5" [(ngModel)]="newFeedback.rating" />
                     <label for="star5">★</label>
                     
                     <input type="radio" id="star4" name="rating" value="4" [(ngModel)]="newFeedback.rating" />
@@ -173,8 +190,6 @@
                         <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="150" width="100%" controls (play)="playVideo(planning.video)">
                         
                         </video>
-                        <button (click)="analyze(planning.video)">Analyser cette vidéo</button>
-                          <p [(ngModel)]="result"></p>
                       </div>
                       
                       <!-- Display Google Maps link for in-person events -->
