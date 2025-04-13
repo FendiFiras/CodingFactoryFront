@@ -51,6 +51,9 @@ startTime!: number;
 
 detectedHeadTurnsCount = 0;
 showModal = false;  // Flag to show modal when cheating is detected
+isWebcamActive = false; // Par défaut = false
+
+showCameraModal = false;
 
 
 
@@ -79,10 +82,39 @@ showModal = false;  // Flag to show modal when cheating is detected
           console.log('Tab switch detected!');
         });
 
-        // 🎯 Suivre le retour sur l'onglet
-        window.addEventListener('focus', () => {
-          console.log('Tab focused again!');
-        });
+      // 🎯 Suivre le retour sur l'onglet
+      window.addEventListener('focus', () => {
+        console.log('Tab focused again!');
+      
+        if (this.tabSwitchCount >= 3 && !this.submitted) {
+          console.warn('🚫 Triche détectée par 3 changements d\'onglet');
+      
+          // 🔄 Forcer la soumission du quiz
+          this.submitted = true;
+          this.showProgressBar = true;
+          this.score = 0;
+          this.passed = false;
+          this.showCheatingModal = true;
+      
+          const selectedAnswers: number[] = Object.values(this.selectedAnswers)
+            .flat()
+            .filter(v => v !== null && v !== undefined)
+            .map(v => Number(v));
+      
+          this.quizServiceQuestion.submitAndCalculateScore(this.userId, this.quizId, selectedAnswers).subscribe(
+            (response) => {
+              // Enregistrer les données côté backend quand même
+              console.log("Quiz submitted malgré triche. Score non pris en compte.");
+      
+              // 🧾 Générer le PDF automatiquement
+              this.downloadCheatingReport();
+            },
+            (error) => console.error("Erreur soumission des réponses après triche :", error)
+          );
+        }
+      });
+      
+
 
         // 💤 Détecter l’inactivité (idle)
         let lastActivity = Date.now();
@@ -102,6 +134,23 @@ showModal = false;  // Flag to show modal when cheating is detected
         }, 5000);
       }
     });
+
+// ⛔ Bloquer clic droit (menu contextuel)
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+  console.warn('🚫 Clic droit désactivé');
+});
+
+
+    // ⛔ Interdire Ctrl+C / Ctrl+V
+document.addEventListener('keydown', (event) => {
+  if ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'v')) {
+    event.preventDefault();
+    console.warn('🚫 Copie/Coller interdit pendant le quiz');
+    alert("Les raccourcis Ctrl+C / Ctrl+V sont désactivés pendant le quiz.");
+  }
+});
+
   }
   toggleAnswer(answerId: number, questionId: number): void {
     if (!this.selectedAnswers[questionId]) {
@@ -194,6 +243,8 @@ showModal = false;  // Flag to show modal when cheating is detected
             this.score = 0; // ⚠️ Remettre le score à 0
             this.passed = false;
             this.showCheatingModal = true; // ✅ Affiche la fenêtre modale
+            this.sendCheatingReportToBackend(); // ✅ Envoi vers le backend
+
           } else {
             console.log("Comportement normal détecté");
           }
@@ -355,10 +406,6 @@ downloadCheatingReport(): void {
   doc.setFillColor(255, 136, 0);
   doc.rect(10, 10, 5, 270, 'F');
 
-  // 🏢 Logo (optionnel)
-  // const img = new Image();
-  // img.src = 'assets/logo.png';
-  // doc.addImage(img, 'PNG', 18, 10, 20, 20);
 
   // 🧾 Titre principal
   doc.setTextColor(33);
@@ -388,7 +435,6 @@ downloadCheatingReport(): void {
   doc.setFont('helvetica', 'normal');
   y += 12;
   doc.text(`- Title       : ${this.quiz.quizName}`, 25, y); y += 6;
-  doc.text(`- User ID     : ${this.userId}`, 25, y); y += 6;
   doc.text(`- Score Given : 0 / ${this.quiz.maxGrade}`, 25, y); y += 6;
 
   y += 10;
@@ -405,7 +451,6 @@ downloadCheatingReport(): void {
   doc.text(`- Tab Switches   : ${this.tabSwitchCount}`, 25, y); y += 6;
   doc.text(`- Idle Time      : ${this.idleSeconds} seconds`, 25, y); y += 6;
   doc.text(`- Very Fast Ans. : ${this.fastAnswerCount}`, 25, y); y += 6;
-  doc.text(`- Wrong Answers  : ${this.wrongAnswersCount}`, 25, y); y += 6;
   doc.text(`- Head Turns     : ${this.detectedHeadTurnsCount}`, 25, y); y += 12;
 
   // 🚨 Verdict Box
@@ -435,6 +480,98 @@ downloadCheatingReport(): void {
   doc.text('CodingFactory - Training and Evaluation Technical Team', 105, 282, { align: 'center' });
 
   doc.save('cheating_behavior_report.pdf');
+}
+
+onWebcamStatusChanged(status: boolean): void {
+  this.isWebcamActive = status;
+  this.showCameraModal = !status; // Si la caméra n’est pas active, on affiche le modal
+
+}
+
+reloadPage(): void {
+  window.location.reload();
+}
+generateCheatingPdf(): jsPDF {
+  const doc = new jsPDF();
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const refId = `QZ-${this.userId}-${today.getFullYear()}${(today.getMonth()+1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}`;
+
+  doc.setFillColor(255, 136, 0);
+  doc.rect(10, 10, 5, 270, 'F');
+  doc.setTextColor(33);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text('Cheating Behavior Report', 105, 25, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'italic');
+  doc.text('Generated by Training & Evaluation Dept.', 105, 31, { align: 'center' });
+
+  let y = 42;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.text(`Reference: ${refId}`, 160, y); y += 6;
+  doc.text(`Date: ${dateStr}`, 160, y); y += 8;
+
+  doc.setDrawColor(180);
+  doc.setFillColor(245, 245, 245);
+  doc.rect(20, y, 170, 30, 'FD');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Quiz Information:', 25, y + 6);
+
+  doc.setFont('helvetica', 'normal');
+  y += 12;
+  doc.text(`- Title       : ${this.quiz.quizName}`, 25, y); y += 6;
+  doc.text(`- Score Given : 0 / ${this.quiz.maxGrade}`, 25, y); y += 6;
+
+  y += 10;
+  doc.setFillColor(245, 245, 245);
+  doc.rect(20, y, 170, 42, 'FD');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Behavior Summary:', 25, y + 6);
+
+  doc.setFont('helvetica', 'normal');
+  y += 12;
+  doc.text(`- Clicks         : ${this.clickCount}`, 25, y); y += 6;
+  doc.text(`- Tab Switches   : ${this.tabSwitchCount}`, 25, y); y += 6;
+  doc.text(`- Idle Time      : ${this.idleSeconds} seconds`, 25, y); y += 6;
+  doc.text(`- Very Fast Ans. : ${this.fastAnswerCount}`, 25, y); y += 6;
+  doc.text(`- Head Turns     : ${this.detectedHeadTurnsCount}`, 25, y); y += 12;
+
+  doc.setFillColor(255, 230, 230);
+  doc.setDrawColor(255, 0, 0);
+  doc.rect(20, y, 170, 12, 'FD');
+  doc.setTextColor(200, 0, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('Verdict: Suspicious behavior detected.', 105, y + 8, { align: 'center' });
+
+  y += 25;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(0);
+  doc.text('This report was automatically generated due to anomalies detected during the quiz.', 25, y, { maxWidth: 160 }); y += 6;
+  doc.text('If you believe this decision is incorrect, you may file a complaint within 48 hours.', 25, y, { maxWidth: 160 }); y += 6;
+  doc.text('For assistance, contact: support_CodingFactory@codingfactory.tn', 25, y, { maxWidth: 160 });
+
+  return doc;
+}
+sendCheatingReportToBackend(): void {
+  const doc = this.generateCheatingPdf();
+  const pdfBlob = doc.output('blob');
+
+  const formData = new FormData();
+  formData.append('file', pdfBlob, 'cheating_report.pdf');
+  formData.append('quizId', this.quizId.toString());
+
+  this.quizServiceQuestion.sendCheatingReport(this.quizId, pdfBlob).subscribe({
+    next: () => {
+      console.log('📤 Rapport envoyé au formateur');
+    },
+    error: (err) => {
+      console.error('❌ Erreur lors de l’envoi du rapport au backend', err);
+    }
+  });
 }
 
 }

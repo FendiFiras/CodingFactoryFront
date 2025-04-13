@@ -1,5 +1,15 @@
 <app-navbar></app-navbar>
-<app-webcam-headtracker (headTurnDetected)="onHeadTurnDetected()"></app-webcam-headtracker>
+<app-webcam-headtracker
+  (headTurnDetected)="onHeadTurnDetected()"
+  (webcamStatus)="onWebcamStatusChanged($event)">
+</app-webcam-headtracker>
+<!-- 📸 MODAL - Caméra obligatoire -->
+<div class="modal-backdrop" *ngIf="showCameraModal">
+  <div class="custom-modal text-center">
+    <h2 class="text-danger mb-3">📷 Caméra requise</h2>
+    <p>Il faut activer la caméra pour passer le quiz seulement.</p>
+  </div>
+</div>
 
 <!-- 🏆 HEADER -->
 <section class="page-header page-header--bg-two" data-jarallax data-speed="0.3">
@@ -15,6 +25,7 @@
 </section>
 
 <section class="quiz-section">
+  <ng-container *ngIf="isWebcamActive; else cameraRefused">
 
   <!-- ✅ Affichage normal (pas de triche détectée) -->
   <div *ngIf="!showCheatingModal" class="quiz-container">
@@ -114,6 +125,19 @@
       </p>
     </div>
   </div>
+  </ng-container> <!-- Fermeture de *ngIf="isWebcamActive" -->
+<!-- 🚫 Affiché si la webcam est refusée -->
+<ng-template #cameraRefused>
+  <div class="alert alert-danger text-center p-5 mt-5">
+    <h2 class="mb-3">🚫 Caméra non détectée</h2>
+    <p>Vous devez activer votre webcam pour accéder au quiz.</p>
+    <p class="text-muted small">Merci d’autoriser l’accès à votre caméra dans votre navigateur, puis rechargez la page.</p>
+
+    <button class="btn btn-outline-primary mt-3" (click)="reloadPage()">
+      🔄 Réessayer
+    </button>
+  </div>
+</ng-template>
 
 </section>
 

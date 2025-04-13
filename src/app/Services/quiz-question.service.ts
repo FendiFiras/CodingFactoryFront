@@ -63,6 +63,13 @@ generateQuestions(quizId: number, topic: string, numberOfQuestions: number): Obs
   return this.http.post(`${this.apiUrl}/generate-questions/${quizId}?topic=${topic}&numberOfQuestions=${numberOfQuestions}`, {});
 }
 
+sendCheatingReport(quizId: number, file: Blob): Observable<any> {
+  const formData = new FormData();
+  formData.append('quizId', quizId.toString());
+  formData.append('file', file, 'cheating_report.pdf');
+
+  return this.http.post('http://localhost:8089/pidev/Quizs/api/cheating/report', formData);
+}
 
 
 
