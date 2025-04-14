@@ -33,7 +33,7 @@ export class ListeForumComponent implements OnInit {
   errorMessage = '';
   showAddForm: boolean = false;
   addForumForm: FormGroup;
-  staticUserId: number = 3; // ID utilisateur statique
+  staticUserId: number = 1; // ID utilisateur statique
   editMode = false;
   forumToEdit: Forum | null = null;
   suggestedTopics: string[] = [];

@@ -26,7 +26,7 @@ export class MessageComponent implements OnInit {
   errorMessage = '';
   filteredMessages: Message[] = [];
   searchQuery = '';
-  currentUserId = 3; // Remplacez par l'ID de l'utilisateur actuel
+  currentUserId = 1; // Remplacez par l'ID de l'utilisateur actuel
   currentUserName: string = 'zitouni'; // Nom de l'utilisateur actuel
   currentUserImage: string = 'assets/images/zita.jpg';
   isLocationEnabled = false;
@@ -47,7 +47,7 @@ export class MessageComponent implements OnInit {
   
   // Nouveau message
   newMessage = {
-    userId: 3, // Remplacez par l'ID de l'utilisateur actuel
+    userId: 1, // Remplacez par l'ID de l'utilisateur actuel
     discussionId: 0,
     description: '',
     image: null as File | null,
