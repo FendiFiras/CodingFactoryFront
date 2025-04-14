@@ -39,6 +39,8 @@ export class ListeForumComponent implements OnInit {
   suggestedTopics: string[] = [];
   isGenerating = false;
 
+  
+
 
   constructor(
     private forumService: ForumService,
@@ -239,5 +241,8 @@ createForumFromTopic(topic: string) {
   this.showAddForm = true;
   this.editMode = false;
 }
+
+
+
 
 }

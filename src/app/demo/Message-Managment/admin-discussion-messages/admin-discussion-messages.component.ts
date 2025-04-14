@@ -5,12 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DiscussionService } from 'src/app/service/Discussion.service';
 import { MessageService } from 'src/app/service/message.service';
 import { ConfigurationComponent } from "../../../theme/layout/admin/configuration/configuration.component";
+import { NavigationComponent } from "../../../theme/layout/admin/navigation/navigation.component";
 
 @Component({
   selector: 'app-admin-discussion-messages',
   templateUrl: './admin-discussion-messages.component.html',
   styleUrls: ['./admin-discussion-messages.component.scss'],
-  imports: [CommonModule, FormsModule, ConfigurationComponent], // ✅ Importez CommonModule ici
+  imports: [CommonModule, FormsModule, ConfigurationComponent, NavigationComponent], // ✅ Importez CommonModule ici
 })
 export class AdminDiscussionMessagesComponent implements OnInit {
   navMobClick() {

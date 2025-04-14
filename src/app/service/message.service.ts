@@ -91,4 +91,4 @@ addMessage(userId: number, discussionId: number, description: string, anonymous:
      addAudioMessage(formData: FormData): Observable<any> {
       return this.http.post(`${this.apiUrl}/audio`, formData, { responseType: 'text' });
     }
-}
+} 

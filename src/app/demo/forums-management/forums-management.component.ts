@@ -15,6 +15,8 @@ interface Forum {
   
 }
 
+
+
 // Fonction de validation personnalisée pour le titre
 function titleValidator(control: AbstractControl): { [key: string]: any } | null {
   const value = control.value;
@@ -53,12 +55,16 @@ export class ForumsManagementComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 6;
 
+
+
   constructor(
     private forumService: ForumService,
     private router: Router,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef, // Injecter ChangeDetectorRef
   ) 
+  
+  
   
   
   {
@@ -73,6 +79,7 @@ export class ForumsManagementComponent implements OnInit {
     this.loadForums();
   }
 
+  
 
 
   // Méthode pour basculer l'affichage de la sidebar
@@ -336,4 +343,7 @@ export class ForumsManagementComponent implements OnInit {
     this.cdr.detectChanges(); // Forcer la détection des changements
 
   }
+
+  
+  
 }

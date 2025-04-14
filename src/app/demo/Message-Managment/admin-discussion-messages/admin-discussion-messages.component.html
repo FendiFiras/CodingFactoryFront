@@ -1,4 +1,8 @@
 
+<div class="main-container"> 
+
+  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }"
+    (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
 
 <div class="pcoded-main-container">
   <div class="pcoded-wrapper">
@@ -97,7 +101,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <!-- Sidebar pour le formulaire d'ajout/modification de message -->
 <div class="sidebar" [class.active]="showForm">
   <div class="sidebar-header">
@@ -152,3 +156,4 @@
 <div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
 
 <app-configuration></app-configuration>
+
