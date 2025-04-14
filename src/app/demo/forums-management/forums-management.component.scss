@@ -1,256 +1,271 @@
-/* Reset default margins and paddings */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Styles pour la sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
 }
 
-/* General container styling */
+.sidebar.active {
+  right: 0;
+}
+
+
+.sidebar-body {
+  padding: 20px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+.sidebar-header h5 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+
+
+/* Styles spécifiques pour le bouton "Ajouter" */
+.header-container .btn-primary {
+  background-color: #17a2b8; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+  border: none; /* Supprimer la bordure par défaut */
+  border-radius: 8px; /* Coins arrondis */
+  padding: 6px 12px; /* Espacement interne réduit */
+  font-size: 0.875rem; /* Taille de police réduite */
+  font-weight: 500; /* Texte en gras */
+  transition: all 0.3s ease; /* Animation fluide */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Espace entre l'icône et le texte */
+  cursor: pointer;
+  white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée légère */
+  width: auto; /* Largeur proportionnelle au contenu */
+  min-width: 100px; /* Largeur minimale pour éviter un bouton trop étroit */
+}
+
+/* Effet au survol */
+.header-container .btn-primary:hover {
+  background-color: #138496; /* Couleur de fond au survol */
+  transform: translateY(-2px); /* Légère élévation */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée plus prononcée */
+}
+
+/* Effet au clic */
+.header-container .btn-primary:active {
+  transform: translateY(0); /* Retour à la position initiale */
+}
+
+/* Styles pour le titre "FORUM LIST" */
+h2 {
+  font-size: 2.5rem; /* Taille de police plus grande */
+  font-weight: 700; /* Texte en gras */
+  color: #2c3e50; /* Couleur foncée et moderne */
+  margin: 0; /* Supprimer la marge par défaut */
+  padding: 20px 0; /* Espacement interne */
+  text-align: center; /* Centrer le texte horizontalement */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée légère */
+  background: linear-gradient(90deg, #17a2b8, #138496); /* Dégradé de couleur */
+  -webkit-background-clip: text; /* Appliquer le dégradé au texte */
+  -webkit-text-fill-color: transparent; /* Rendre le texte transparent pour le dégradé */
+  border-bottom: 3px solid #17a2b8; /* Bordure en bas */
+  display: block; /* Prendre toute la largeur disponible */
+  width: 100%; /* Largeur totale */
+}
+
+/* Conteneur pour le titre et le bouton "Ajouter" */
+.header-container {
+  display: flex;
+  flex-direction: column; /* Disposition en colonne */
+  align-items: center; /* Centrer horizontalement */
+  margin-bottom: 24px; /* Espacement en bas */
+  padding: 20px 0; /* Espacement interne */
+  background-color: #f8f9fa; /* Fond légèrement gris */
+  border-radius: 12px; /* Coins arrondis */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombre portée */
+}
+/* Styles pour les boutons */
+.btn {
+  border-radius: 8px; /* Coins légèrement arrondis */
+  padding: 8px 16px; /* Espacement interne */
+  font-size: 0.875rem; /* Taille de police */
+  font-weight: 500; /* Texte en gras */
+  transition: all 0.3s ease; /* Animation fluide */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrer le texte et l'icône */
+  gap: 8px; /* Espace entre l'icône et le texte */
+  border: none; /* Supprimer la bordure par défaut */
+  cursor: pointer;
+  white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  width: 100%; /* Prendre toute la largeur disponible */
+}
+
+/* Styles pour le conteneur des boutons */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Disposition en colonne */
+  gap: 8px; /* Espace entre les boutons */
+}
+
+/* Conteneur pour les boutons "Modifier" et "Supprimer" */
+.button-row {
+  display: flex;
+  gap: 8px; /* Espace entre les boutons */
+}
+
+/* Styles spécifiques pour les boutons */
+.btn-info {
+  background-color: #17a2b8; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Couleur de fond */
+  color: black; /* Couleur du texte */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+}
+
+.btn:hover {
+  transform: translateY(-2px); /* Légère élévation */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Ombre portée plus prononcée */
+}
+
+.btn:active {
+  transform: translateY(0); /* Retour à la position initiale */
+}
+/* Styles pour les cartes */
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Pour que l'image ne dépasse pas */
+  width: 100%; /* Assurer que la carte prend toute la largeur disponible */
+}
+
+.card-body {
+  padding: 16px; /* Espacement interne réduit */
+}
+
+.card-title {
+  font-size: 1.1rem; /* Taille de police réduite */
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px; /* Espacement réduit */
+}
+
+.card-text {
+  font-size: 0.8rem; /* Taille de police réduite */
+  color: #666;
+  margin-bottom: 12px; /* Espacement réduit */
+}
+
+.card img {
+  width: 100%;
+  height: 150px; /* Hauteur réduite pour l'image */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Styles pour le conteneur principal */
 .container {
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: #f5f7fa; /* Light background for contrast */
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
 
-/* Flexbox row styling */
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Space between columns */
-}
-
-/* Sidebar styling */
-.sidebar-container {
-  flex: 0 0 30%; /* Slightly reduced width for balance */
-  max-width: 30%;
-  position: sticky;
-  top: 20px;
-  height: calc(100vh - 40px);
-  overflow-y: auto;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-/* Main content styling */
-.col-xl-8, .col-lg-8 {
-  flex: 0 0 70%; /* Adjusted width */
-  max-width: 70%;
-}
-
-/* Forum list header */
 h2 {
-  font-family: 'Poppins', sans-serif;
   font-size: 2rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  position: relative;
-}
-h2::after {
-  content: '';
-  width: 50px;
-  height: 4px;
-  background: linear-gradient(90deg, #3498db, #8e44ad);
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  border-radius: 2px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24px;
 }
 
-/* Buttons */
-.btn {
-  padding: 10px 20px;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  border-radius: 25px;
-  transition: all 0.3s ease;
-}
-.btn-primary {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  border: none;
-  color: white;
-}
-.btn-primary:hover {
-  background: linear-gradient(135deg, #2980b9, #1f6391);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
-}
-.btn-success {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  border: none;
-}
-.btn-success:hover {
-  background: linear-gradient(135deg, #27ae60, #219653);
-  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
-}
-.btn-warning {
-  background: linear-gradient(135deg, #f1c40f, #e67e22);
-  border: none;
-}
-.btn-warning:hover {
-  background: linear-gradient(135deg, #e67e22, #d35400);
-}
-.btn-danger {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-  border: none;
-}
-.btn-danger:hover {
-  background: linear-gradient(135deg, #c0392b, #a93226);
-}
-
-/* Form styling */
-form {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-}
-.form-label {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
-  color: #34495e;
-}
-.form-control {
+.alert {
   border-radius: 8px;
-  border: 1px solid #dcdcdc;
-  padding: 12px;
-  transition: border-color 0.3s ease;
-}
-.form-control:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-  outline: none;
-}
-textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-}
-
-/* Forum item styling */
-.blog-two__item {
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
+  padding: 12px 16px;
+  font-size: 0.875rem;
   margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.blog-two__item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-.blog-two__image img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-bottom: 4px solid #3498db;
-}
-.blog-two__content {
-  padding: 20px;
-}
-.blog-two__title a {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.5rem;
-  color: #2c3e50;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-.blog-two__title a:hover {
-  color: #3498db;
-}
-.blog-two__text {
-  color: #7f8c8d;
-  font-family: 'Roboto', sans-serif;
-  line-height: 1.6;
-}
-.blog-two__top-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #95a5a6;
-  margin-bottom: 10px;
-}
-.blog-two__cats a {
-  color: #3498db;
-  text-decoration: none;
-}
-.blog-two__date {
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
-/* Pagination */
-.blog-page__pagination {
-  display: flex;
-  gap: 10px;
-  list-style: none;
-  justify-content: center;
-  margin-top: 30px;
-}
-.blog-page__pagination li a {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 50%;
-  background: #ecf0f1;
-  color: #2c3e50;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.blog-page__pagination li a:hover,
-.blog-page__pagination li a.active {
-  background: #3498db;
-  color: white;
-  box-shadow: 0 2px 10px rgba(52, 152, 219, 0.4);
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
 }
 
-/* Responsive adjustments */
-@media (max-width: 991px) {
-  .sidebar-container,
-  .col-xl-8, .col-lg-8 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-  .sidebar-container {
-    position: relative;
-    height: auto;
-  }
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
 }
 
-.ai-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+/* Styles pour les labels "Title" et "Description" */
+.label-title,
+.label-description {
+font-weight: 600; /* Texte en gras */
+color: #17a2b8; /* Couleur bleue moderne */
+margin-right: 8px; /* Espacement à droite */
 }
 
-.ai-topic {
-  background: rgba(63, 81, 181, 0.1);
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
+.label-title {
+font-size: 1.1rem; /* Taille de police légèrement plus grande */
 }
 
-.fa-robot {
-  color: #3f51b5;
-  margin-right: 8px;
+.label-description {
+font-size: 1rem; /* Taille de police normale */
 }
 
-.spin {
-  animation: spin 1s linear infinite;
+.pagination {
+margin-top: 20px;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.page-item.active .page-link {
+background-color: #007bff;
+border-color: #007bff;
+}
+
+.page-link {
+color: #007bff;
+cursor: pointer;
+}
+
+.page-link:hover {
+color: #0056b3;
 }
