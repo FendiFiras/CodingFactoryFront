@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SessionService } from '../../../Services/session.service'; // Assurez-vous d'avoir un service pour gérer les sessions
+import { SessionService } from '../../../services/session.service'; // Assurez-vous d'avoir un service pour gérer les sessions
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -10,10 +10,10 @@ import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumb
 import { NavLogoComponent } from 'src/app/theme/layout/admin/navigation/nav-logo/nav-logo.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { Session } from '../../../Models/session.model'; // Assurez-vous d'importer le modèle Session
+import { Session } from '../../../models/session.model'; // Assurez-vous d'importer le modèle Session
 import { ReactiveFormsModule } from '@angular/forms';
-import { Courses } from 'src/app/Models/courses.model';
-import { CourseService } from 'src/app/Services/courses.service';
+import { Courses } from 'src/app/models/courses.model';
+import { CourseService } from 'src/app/services/courses.service';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';

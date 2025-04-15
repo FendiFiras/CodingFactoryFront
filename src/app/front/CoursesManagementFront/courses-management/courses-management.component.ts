@@ -3,11 +3,11 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Courses } from '../../../Models/courses.model';
-import { CourseService } from '../../../Services/courses.service';
+import { Courses } from '../../../models/courses.model';
+import { CourseService } from '../../../services/courses.service';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
-import { Training } from '../../../Models/training.model';
-import { TrainingService } from '../../../Services/training.service';
+import { Training } from '../../../models/training.model';
+import { TrainingService } from '../../../services/training.service';
 @Component({
   selector: 'app-courses-management',
   imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule,    FormsModule   // <-- Ajoutez FormsModule ici

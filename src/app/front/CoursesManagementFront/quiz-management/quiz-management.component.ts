@@ -1,14 +1,14 @@
 import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
-import { QuizService } from '../../../Services/quiz.service';
-import { Quiz } from '../../../Models/quiz.model';
+import { QuizService } from '../../../services/quiz.service';
+import { Quiz } from '../../../models/quiz.model';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { Router } from '@angular/router'; // ✅ Importer Router
-import { Training } from 'src/app/Models/training.model';
-import { TrainingService } from 'src/app/Services/training.service';
+import { Training } from 'src/app/models/training.model';
+import { TrainingService } from 'src/app/services/training.service';
 
 @Component({
   selector: 'app-quiz-management',

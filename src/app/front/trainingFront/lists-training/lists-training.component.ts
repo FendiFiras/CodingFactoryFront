@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TrainingService } from '../../../Services/training.service';
-import { Training } from '../../../Models/training.model';
+import { TrainingService } from '../../../services/training.service';
+import { Training } from '../../../models/training.model';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';

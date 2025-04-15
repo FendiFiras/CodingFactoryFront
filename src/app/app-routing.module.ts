@@ -114,6 +114,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [AdminGuard],  // Application du guard ici
     children: [
       {
         path: 'dashboard',

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TrainingService } from '../../../Services/training.service';
-import { TrainingType } from '../../../Models/training.model';
+import { TrainingService } from '../../../services/training.service';
+import { TrainingType } from '../../../models/training.model';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumb
 import { NavLogoComponent } from 'src/app/theme/layout/admin/navigation/nav-logo/nav-logo.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { Training } from '../../../Models/training.model';
+import { Training } from '../../../models/training.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';

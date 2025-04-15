@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { QuizService } from '../../../Services/quiz.service';
-import { QuizQuestionService } from '../../../Services/quiz-question.service';
-import { Quiz } from '../../../Models/quiz.model';
-import { QuizQuestion } from '../../../Models/quiz-question.model';
-import { QuizAnswer } from '../../../Models/quiz-answer.model';
+import { QuizService } from '../../../services/quiz.service';
+import { QuizQuestionService } from '../../../models/quiz-question.service';
+import { Quiz } from '../../../models/quiz.model';
+import { QuizQuestion } from '../../../models/quiz-question.model';
+import { QuizAnswer } from '../../../models/quiz-answer.model';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
@@ -11,9 +11,9 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router'; // ✅ Importer ActivatedRoute
 import { forkJoin } from 'rxjs';
-import { CheatDetectionServiceTsService } from 'src/app/Services/cheat-detection.service.ts.service';
-import { PdfServiceservice } from 'src/app/Services/pdfservice.service';
-import { User } from 'src/app/Models/user.model';
+import { CheatDetectionServiceTsService } from 'src/app/services/cheat-detection.service.ts.service';
+import { PdfServiceservice } from 'src/app/services/pdfservice.service';
+import { User } from 'src/app/models/user.model';
 @Component({
   selector: 'app-quiz-questions-management',
   standalone: true,

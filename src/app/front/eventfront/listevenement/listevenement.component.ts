@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
-import { Event as EventModel } from 'src/app/Model/event.model';
-import { EventService } from 'src/app/Service/event.service';
+import { Event as EventModel } from 'src/app/models/event.model';
+import { EventService } from 'src/app/services/event.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';

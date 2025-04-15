@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LocationEvent } from 'src/app/Model/locationEvent.model';
-import { EventService } from 'src/app/Service/event.service';
+import { LocationEvent } from 'src/app/models/locationEvent.model';
+import { EventService } from 'src/app/services/event.service';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';

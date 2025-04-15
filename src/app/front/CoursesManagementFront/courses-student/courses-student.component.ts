@@ -5,8 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Courses } from '../../../Models/courses.model';
-import { CourseService } from '../../../Services/courses.service';
+import { Courses } from '../../../models/courses.model';
+import { CourseService } from '../../../services/courses.service';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
 
 @Component({

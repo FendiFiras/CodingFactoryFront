@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Quiz } from 'src/app/Models/quiz.model';
-import { QuizQuestionService } from '../../../Services/quiz-question.service';
-import { QuizService } from 'src/app/Services/quiz.service';
+import { Quiz } from 'src/app/models/quiz.model';
+import { QuizQuestionService } from '../../../models/quiz-question.service';
+import { QuizService } from 'src/app/services/quiz.service';
 import { CommonModule } from '@angular/common';
-import { QuizQuestion } from 'src/app/Models/quiz-question.model';
+import { QuizQuestion } from 'src/app/models/quiz-question.model';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
-import { CheatDetectionServiceTsService } from 'src/app/Services/cheat-detection.service.ts.service';
+import { CheatDetectionServiceTsService } from 'src/app/services/cheat-detection.service.ts.service';
 import { WebcamHeadtrackerComponent } from '../webcam-headtracker/webcam-headtracker.component';
 import jsPDF from 'jspdf';
 

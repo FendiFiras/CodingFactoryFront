@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PaymentService } from 'src/app/Services/payment.service';
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-payment-success',

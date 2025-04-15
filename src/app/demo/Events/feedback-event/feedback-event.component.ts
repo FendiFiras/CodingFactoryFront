@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { EventService } from 'src/app/Service/event.service';
-import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
-import { Registration } from 'src/app/Model/registration.model';
-import { Planning } from 'src/app/Model/planning.model';
+import { EventService } from 'src/app/services/event.service';
+import { FeedBackEvent } from 'src/app/models/feedBackEvent.model';
+import { Registration } from 'src/app/models/registration.model';
+import { Planning } from 'src/app/models/planning.model';
 import { FormsModule } from '@angular/forms';
-import { LocationEvent } from 'src/app/Model/locationEvent.model'; // Import LocationEvent model
+import { LocationEvent } from 'src/app/models/locationEvent.model'; // Import LocationEvent model
 
 @Component({
   selector: 'app-feedback-event',

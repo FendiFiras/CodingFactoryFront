@@ -1,11 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, catchError, filter, Observable, take, throwError } from 'rxjs';
-import { Event } from '../Model/event.model'; // Adjust the path as needed
+import { Event } from '../models/event.model'; // Adjust the path as needed
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Planning } from '../Model/planning.model';
+import { Planning } from '../models/planning.model';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { LocationEvent } from '../Model/locationEvent.model';
+import { LocationEvent } from '../models/locationEvent.model';
 @Injectable({
   providedIn: 'root'
 })

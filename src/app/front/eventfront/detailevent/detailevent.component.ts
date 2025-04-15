@@ -3,10 +3,10 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Event as EventModel } from 'src/app/Model/event.model';
-import { EventService } from 'src/app/Service/event.service';
+import { Event as EventModel } from 'src/app/models/event.model';
+import { EventService } from 'src/app/services/event.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
+import { FeedBackEvent } from 'src/app/models/feedBackEvent.model';
 
 
 @Component({

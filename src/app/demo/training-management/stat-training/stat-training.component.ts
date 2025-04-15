@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { TrainingService } from 'src/app/Services/training.service';
+import { TrainingService } from 'src/app/services/training.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavigationComponent } from 'src/app/theme/layout/admin/navigation/navigation.component';
 import { ConfigurationComponent } from 'src/app/theme/layout/admin/configuration/configuration.component';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TrainingService } from 'src/app/Services/training.service';
-import { Training,TrainingType  } from '../../../Models/training.model';
+import { TrainingService } from 'src/app/services/training.service';
+import { Training,TrainingType  } from '../../../models/training.model';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -10,10 +10,10 @@ import { BreadcrumbsComponent } from 'src/app/theme/shared/components/breadcrumb
 import { NavLogoComponent } from 'src/app/theme/layout/admin/navigation/nav-logo/nav-logo.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import {AddTrainingComponent} from '../add-training/add-training.component'
-import { Courses,CourseDifficulty } from 'src/app/Models/courses.model';
-import { CourseService } from 'src/app/Services/courses.service';
-import { Session } from '../../../Models/session.model';
-import {SessionService} from '../../../Services/session.service';
+import { Courses,CourseDifficulty } from 'src/app/models/courses.model';
+import { CourseService } from 'src/app/services/courses.service';
+import { Session } from '../../../models/session.model';
+import {SessionService} from '../../../services/session.service';
 import { AddSessionComponent } from '../add-session/add-session.component';
 import { Router, RouterModule, Routes } from '@angular/router';
 

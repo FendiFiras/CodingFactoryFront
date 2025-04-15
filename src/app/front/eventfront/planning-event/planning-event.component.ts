@@ -4,10 +4,10 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { EventService } from 'src/app/Service/event.service';
-import { Event as EventModel } from 'src/app/Model/event.model';
-import { FeedBackEvent } from 'src/app/Model/feedBackEvent.model';
-import { Planning } from 'src/app/Model/planning.model';
+import { EventService } from 'src/app/services/event.service';
+import { Event as EventModel } from 'src/app/models/event.model';
+import { FeedBackEvent } from 'src/app/models/feedBackEvent.model';
+import { Planning } from 'src/app/models/planning.model';
 
 
 @Component({

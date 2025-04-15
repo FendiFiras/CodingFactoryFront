@@ -3,7 +3,7 @@ import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms'; // Importez FormsModule
 import { Router } from '@angular/router';
-import { EventService } from 'src/app/Service/event.service';
+import { EventService } from 'src/app/services/event.service';
 
 
 @Component({

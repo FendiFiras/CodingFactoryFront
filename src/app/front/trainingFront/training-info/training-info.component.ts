@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrainingService } from '../../../Services/training.service';
-import { Training } from '../../../Models/training.model';
+import { TrainingService } from '../../../services/training.service';
+import { Training } from '../../../models/training.model';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { ChangeDetectorRef } from '@angular/core';
-import { QuizService } from 'src/app/Services/quiz.service';
-import { Quiz } from 'src/app/Models/quiz.model';
-import { PaymentService } from 'src/app/Services/payment.service';
+import { QuizService } from 'src/app/services/quiz.service';
+import { Quiz } from 'src/app/models/quiz.model';
+import { PaymentService } from 'src/app/services/payment.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js'; // ✅ Charger Stripe.js
 import { environment } from 'src/environments/environment'; // ✅ Importer les clés Stripe
 import { FormsModule } from '@angular/forms';  // ✅ Ajouter FormsModule
-import { SessionService } from 'src/app/Services/session.service';
-import { Session } from 'src/app/Models/session.model';
+import { SessionService } from 'src/app/services/session.service';
+import { Session } from 'src/app/models/session.model';
 
 @Component({
   selector: 'app-training-info',
