@@ -95,6 +95,8 @@ showCameraModal = false;
           this.score = 0;
           this.passed = false;
           this.showCheatingModal = true;
+          this.sendCheatingReportToBackend(); // ✅ Ajout ici
+
       
           const selectedAnswers: number[] = Object.values(this.selectedAnswers)
             .flat()
