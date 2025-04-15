@@ -1,0 +1,211 @@
+<div class="form-container">
+  <h2>Ajouter un événement</h2>
+  <form (ngSubmit)="onSubmit(eventForm)" #eventForm="ngForm">
+    <!-- Champ pour le titre -->
+    <div class="form-group">
+      <label for="title">Titre de l'événement:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        [(ngModel)]="event.title"
+        #title="ngModel"
+        required
+        class="form-control"
+        placeholder="Entrez le titre de l'événement"
+      />
+      <div *ngIf="title.invalid && (title.touched || title.dirty)" class="text-danger">
+        Titre requis
+      </div>
+    </div>
+
+    <!-- Champ pour la description -->
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="event.description"
+        #description="ngModel"
+        required
+        class="form-control"
+        placeholder="Entrez la description de l'événement"
+      ></textarea>
+      <div *ngIf="description.invalid && (description.touched || description.dirty)" class="text-danger">
+        Description requise
+      </div>
+    </div>
+
+    <!-- Champ pour la date de début -->
+    <div class="form-group">
+      <label for="startDate">Date de début:</label>
+      <input
+        type="datetime-local"
+        id="startDate"
+        name="startDate"
+        [(ngModel)]="event.startDate"
+        #startDate="ngModel"
+        class="form-control"
+        required
+      />
+      <div *ngIf="startDate.invalid && (startDate.touched || startDate.dirty)" class="text-danger">
+        Date de début requise
+      </div>
+      <div *ngIf="isStartDateInvalid()" class="text-danger">
+        La date de début doit être avant la date de fin ou superieur ou egale a la date d'aujourd'hui.
+      </div>
+    </div>
+
+    <!-- Champ pour la date de fin -->
+    <div class="form-group">
+      <label for="endDate">Date de fin:</label>
+      <input
+        type="datetime-local"
+        id="endDate"
+        name="endDate"
+        [(ngModel)]="event.endDate"
+        #endDate="ngModel"
+        class="form-control"
+        required
+      />
+      <div *ngIf="endDate.invalid && (endDate.touched || endDate.dirty)" class="text-danger">
+        Date de fin requise
+      </div>
+    </div>
+
+    <!-- Champ pour le lieu -->
+    <div class="form-group">
+      <label for="location">Lieu:</label>
+      <input
+        type="text"
+        id="location"
+        name="location"
+        [(ngModel)]="event.location"
+        #location="ngModel"
+        required
+        class="form-control"
+        placeholder="Entrez le lieu de l'événement"
+      />
+      <div *ngIf="location.invalid && (location.touched || location.dirty)" class="text-danger">
+        Lieu requis
+      </div>
+    </div>
+
+    <!-- Champ pour le nombre maximum de participants -->
+    <div class="form-group">
+      <label for="maxParticipants">Nombre maximum de participants:</label>
+      <input
+        type="number"
+        id="maxParticipants"
+        name="maxParticipants"
+        [(ngModel)]="event.maxParticipants"
+        #maxParticipants="ngModel"
+        required
+        class="form-control"
+        placeholder="Entrez le nombre maximum de participants"
+        min="1"
+      />
+      <div *ngIf="maxParticipants.invalid && (maxParticipants.touched || maxParticipants.dirty)" class="text-danger">
+        Nombre de participants requis (>= 1)
+      </div>
+      <div *ngIf="event.maxParticipants && event.maxParticipants < 1" class="text-danger">
+        Le nombre maximum de participants doit être supérieur ou égal à 1.
+      </div>
+    </div>
+
+    <!-- Champ pour la date limite d'inscription -->
+    <div class="form-group">
+      <label for="registrationDeadline">Date limite d'inscription:</label>
+      <input
+        type="datetime-local"
+        id="registrationDeadline"
+        name="registrationDeadline"
+        [(ngModel)]="event.registrationDeadline"
+        class="form-control"
+      />
+      <div *ngIf="isRegistrationDeadlineInvalid()" class="text-danger">
+        La date limite d'inscription doit être avant la date de fin.
+      </div>
+    </div>
+
+    <!-- Champ pour le prix -->
+    <div class="form-group">
+      <label for="price">Prix:</label>
+      <input
+        type="number"
+        id="price"
+        name="price"
+        [(ngModel)]="event.price"
+        #price="ngModel"
+        required
+        class="form-control"
+        placeholder="Entrez le prix de l'événement"
+        min="0"
+      />
+      <div *ngIf="price.invalid && (price.touched || price.dirty)" class="text-danger">
+        Prix requis (>= 0)
+      </div>
+      <div *ngIf="event.price && event.price < 0" class="text-danger">
+        Le prix ne peut pas être négatif.
+      </div>
+    </div>
+
+    <!-- Champ pour le type d'événement -->
+    <div class="form-group">
+      <label for="eventType">Type d'événement:</label>
+      <select
+        id="eventType"
+        name="eventType"
+        [(ngModel)]="event.eventType"
+        #eventType="ngModel"
+        required
+        class="form-control"
+      >
+        <option value="">Sélectionnez un type</option>
+        <option value="WEBINAR">Webinar</option>
+        <option value="WORKSHOP">Workshop</option>
+        <option value="HACKATHON">Hackathon</option>
+        <option value="MEETUP">Meetup</option>
+      </select>
+      <div *ngIf="eventType.invalid && (eventType.touched || eventType.dirty)" class="text-danger">
+        Type d'événement requis
+      </div>
+    </div>
+
+    <!-- Champ pour l'image -->
+    <div class="form-group">
+      <label for="imageFile">Image:</label>
+      <input
+        type="file"
+        id="imageFile"
+        name="imageFile"
+        (change)="onImageSelected($event)"
+        accept="image/*"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Champ pour la vidéo -->
+    <div class="form-group">
+      <label for="videoFile">Vidéo:</label>
+      <input
+        type="file"
+        id="videoFile"
+        name="videoFile"
+        (change)="onVideoSelected($event)"
+        accept="video/*"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!eventForm.form.valid"
+      >
+        Ajouter l'événement
+      </button>
+    </div>
+  </form>
+</div>

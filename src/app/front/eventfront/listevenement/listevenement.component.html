@@ -1,0 +1,103 @@
+<app-navbar></app-navbar> 
+
+<!-- Liste des événements -->
+<section class="course-two">
+    <div class="course-two__shape-top wow fadeInRight" data-wow-delay="300ms">
+        <img src="assets1/images/shapes/course-shape-1.png" alt="eduact">
+    </div>
+    <div class="container wow fadeInUp" data-wow-delay="200ms">
+        <div class="section-title">
+            <h5 class="section-title__tagline">
+                Meilleurs événements
+                <svg class="arrow-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 13">
+                    <g clip-path="url(#clip0_324_36194)">
+                        <path d="M10.5406 6.49995L0.700562 12.1799V8.56995L4.29056 6.49995L0.700562 4.42995V0.819946L10.5406 6.49995Z" />
+                        <path d="M25.1706 6.49995L15.3306 12.1799V8.56995L18.9206 6.49995L15.3306 4.42995V0.819946L25.1706 6.49995Z" />
+                        <path d="M39.7906 6.49995L29.9506 12.1799V8.56995L33.5406 6.49995L29.9506 4.42995V0.819946L39.7906 6.49995Z" />
+                        <path d="M54.4206 6.49995L44.5806 12.1799V8.56995L48.1706 6.49995L44.5806 4.42995V0.819946L54.4206 6.49995Z" />
+                    </g>
+                </svg>
+            </h5>
+            <h2 class="section-title__title">Événements à la une ce mois-ci</h2>
+        </div><!-- section-title -->
+
+        <div class="course-two__slider eduact-owl__carousel owl-with-shadow owl-theme owl-carousel" data-owl-options='{
+            "items": 3,
+            "margin": 30,
+            "smartSpeed": 700,
+            "loop":true,
+            "autoplay": true,
+            "dots":false,
+            "nav":true,
+            "navText": ["<span class=\"icon-arrow-left\"></span>","<span class=\"icon-arrow\"></span>"],
+            "responsive":{
+                "0":{
+                    "items":1
+                },
+                "768":{
+                    "items": 2
+                },
+                "1200":{
+                    "items": 3
+                },
+                "1400":{
+                    "margin": 36,
+                    "items": 3
+                }
+            }
+        }'>
+            <div class="item" *ngFor="let event of events">
+                <div class="course-two__item">
+                    <div class="course-two__thumb">
+                        <img [src]="'http://localhost:8089/event/' + event.imageUrl" width="416" height="276" alt="event">
+                        <a class="course-two__like" href="javascript:void(0);"><span class="icon-like"></span></a>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 353 177">
+                            <path d="M37 0C16.5655 0 0 16.5655 0 37V93.4816C0 103.547 4.00259 113.295 11.7361 119.737C54.2735 155.171 112.403 177 176.496 177C240.589 177 298.718 155.171 341.261 119.737C348.996 113.295 353 103.546 353 93.4795V37C353 16.5655 336.435 0 316 0H37Z" />
+                        </svg>
+                    </div><!-- /.course-thumb -->
+
+                    <div class="course-two__content">
+                        <div class="course-two__time">
+                            📅 Date début: {{ event.startDate | date: 'short' }} - 📅 Date fin: {{ event.endDate | date: 'short' }}
+                        </div>
+                        
+                        <h3 class="course-two__title">
+                            <button (click)="checkParticipation(event.idEvent)">
+                                {{ event.title }}
+                            </button>
+                        </h3>
+
+                       
+
+                        <div class="course-two__bottom">
+                            <div class="course-two__author">
+                                <img src="assets1/images/course/author-1.png" alt="eduact">
+                                <h5 class="course-two__author__name">{{ event.location }}</h5>
+                                <p class="course-two__author__designation">Lieu de l'événement</p>
+                            </div>
+                            <div class="course-two__meta">
+                                <h4 class="course-two__meta__price">{{ event.price | currency }}</h4>
+                                <p class="course-two__meta__class">Max Participants: {{ event.maxParticipants }}</p>
+                            </div>
+                        </div>
+                         <!-- ✅ Ajout du QR Code -->
+                         <div class="qr-code-container" *ngIf="qrCodes[event.idEvent]">
+                            <h4>👥 Participants : {{ participantsCount[event.idEvent] || 0 }}</h4>
+
+                            <details>
+                           <summary>🎟️ QR Code :</summary>
+                            <img [src]="qrCodes[event.idEvent]" alt="QR Code de l'événement" class="qr-code-image">
+                        </details>
+                        </div>
+                    </div><!-- /.course-content -->
+                </div><!-- /.course-card-two -->
+            </div>
+        </div>
+    </div>
+    <div class="course-two__shape-bottom wow fadeInLeft" data-wow-delay="400ms">
+        <img src="assets1/images/shapes/course-shape-2.png" alt="eduact">
+    </div>
+</section>
+<!-- Liste des événements End -->
+
+<app-footer></app-footer>

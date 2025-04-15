@@ -35,6 +35,16 @@ const routes: Routes = [
     component: TrainingManagementComponent,
     children:[]
   },
+  {path: 'listeventsfront',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/listevenement/listevenement.component').then((c) => c.ListevenementComponent) // Chargement du composant Events
+  }
+  ,
+  {path: 'detailseventfront/:id',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/detailevent/detailevent.component').then((c) => c.DetaileventComponent) // Chargement du composant Events
+  },
+  {path: 'planningeventfront/:id',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./front/eventfront/planning-event/planning-event.component').then((c) => c.PlanningEventComponent) // Chargement du composant Events
+  },
   {
     path: 'add-training',
     component: AddTrainingComponent,
@@ -113,6 +123,23 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
+      
+  {
+    path: 'events',  // <-- Ajout de la route pour EventsComponent
+    loadComponent: () => import('./demo/Events/add-event/add-event.component').then((c) => c.AddEventComponent) // Chargement du composant Events
+  },
+  {path: 'listevents',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/list-event/list-event.component').then((c) => c.ListEventComponent) // Chargement du composant Events
+},
+{path: 'listlocation',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/location-event/location-event.component').then((c) => c.LocationEventComponent) // Chargement du composant Events
+},
+
+{path: 'feedback/:id',  // <-- Ajout de la route pour EventsComponent
+  loadComponent: () => import('./demo/Events/feedback-event/feedback-event.component').then((c) => c.FeedbackEventComponent) // Chargement du composant Events
+},
+
+
       {
         path: 'listeUsers',
         loadComponent: () => import('./demo/UserBack/liste-users/liste-users.component').then((c) => c.ListeUsersComponent)

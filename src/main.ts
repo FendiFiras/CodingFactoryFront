@@ -11,7 +11,9 @@ import { HttpClientModule } from '@angular/common/http';  // Import de HttpClien
 import { provideToastr } from 'ngx-toastr';
 if (environment.production) {
   enableProdMode();
+  
 }
+(window as any).global = window; //*********** */
 
 bootstrapApplication(AppComponent, {
   providers: [importProvidersFrom(BrowserModule, AppRoutingModule,HttpClientModule), provideAnimations(),provideToastr()]
