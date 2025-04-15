@@ -241,10 +241,10 @@ textarea:focus {
 /* Actions et contrôles */
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end; /* Aligner à droite */
+  margin-top: 15px;
 }
 
 .file-upload {
@@ -252,6 +252,13 @@ textarea:focus {
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 15px;
+  transition: background 0.2s;
+}
+
+.file-upload:hover {
+  background: #e9ecef;
 }
 
 .file-upload input {
@@ -265,26 +272,61 @@ textarea:focus {
 
 .record-button {
   padding: 8px 14px;
-  background: #fa5252;
+  background: #00c4cc; /* Nouvelle couleur rouge plus vive */
   color: white;
   border: none;
   border-radius: 25px;
   cursor: pointer;
   font-size: 0.9em;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .record-button.recording {
-  background: #37b24d;
+  background: #51cf66; /* Vert pendant l'enregistrement */
+  box-shadow: 0 0 10px rgba(81, 207, 102, 0.5); /* Effet de halo */
 }
 
 .record-button:hover {
+  background: #ff8787; /* Rouge plus clair au survol */
   transform: translateY(-2px);
 }
 
 .recording-indicator {
-  color: #fa5252;
+  color: #51cf66; /* Vert pour correspondre à l'état actif */
   font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.recording-indicator::before {
+  content: "●";
+  color: #ff6b6b;
+  animation: pulse 1s infinite;
+}
+
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+
+
+
+/* Style spécifique pour les messages envoyés */
+.sent audio {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Style spécifique pour les messages reçus */
+.received audio {
+  background: #e9ecef;
 }
 
 /* Localisation */
@@ -305,7 +347,7 @@ textarea:focus {
 }
 
 .location-toggle::before {
-  content: "📍";
+  content: "🌍";
   font-size: 1.1em;
 }
 
@@ -316,22 +358,33 @@ textarea:focus {
 
 .location-toggle:hover {
   transform: translateY(-3px);
+
 }
 
+/* Anonyme */
 /* Anonyme */
 .anonymous-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9em;
-  background: #dee2e6;
-  padding: 10px 16px;
-  border-radius: 25px;
-  transition: background 0.3s ease;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.anonymous-checkbox::before {
+  content: "🕵️"; /* Ajout de l'emoji détective */
+  font-size: 1.1em;
 }
 
 .anonymous-checkbox:hover {
-  background: #ced4da;
+  background: #e9ecef;
+}
+
+.anonymous-checkbox.active {
+  background: #4c6ef5;
+  color: white;
 }
 
 /* Send */
@@ -347,6 +400,14 @@ textarea:focus {
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(59, 91, 219, 0.4);
   order: 1;
+}
+
+.record-button,
+.location-toggle {
+  height: 40px; /* Hauteur fixe */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .send-button:hover {
@@ -394,4 +455,34 @@ button {
   border: none;
   cursor: pointer;
   font-size: 1.2em;
+}
+
+
+/* Ajustement des boutons emoji/file */
+.inline-actions button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.inline-actions button:hover {
+  background: #e9ecef;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f1f3f5;
+  border-radius: 20px 20px 0 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Style pour le textarea avec actions intégrées */
+.input-container textarea {
+  border-radius: 0 0 15px 15px;
+  margin-top: 0;
 }

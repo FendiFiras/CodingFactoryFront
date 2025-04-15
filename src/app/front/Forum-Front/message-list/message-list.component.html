@@ -29,7 +29,7 @@
           <!-- Afficher "Anonyme" si le message est anonyme -->
           <div class="user-info" *ngIf="message.anonymous">
             <div class="anonymous-user">
-               <span class="user-name">Anonyme</span>
+               <span class="user-name">Anonymos</span>
             </div>
            </div>
         
@@ -77,51 +77,45 @@
     
     <!-- Zone de saisie -->
     <div class="message-input">
-      <div class="input-container">
-        <textarea [(ngModel)]="newMessage.description" placeholder="💬 Your Message..." maxlength="500"></textarea>
-        <div class="char-counter" [ngClass]="{'warning': newMessage.description.length > 400}">
-          {{ newMessage.description.length }}/500
-        </div>
-      </div>
-      <div class="actions">
-        <div class="actions">
-          <!-- Bouton pour ouvrir le sélecteur d'emojis -->
-          <button (click)="toggleEmojiPicker()">😀</button>
-      
-          <!-- Sélecteur d'emojis -->
-          <emoji-picker *ngIf="showEmojiPicker" (emoji-click)="addEmoji($event)"></emoji-picker>
-      
-        <label class="file-upload">
-          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-          📎
-          <span *ngIf="newMessage.image" class="file-name">Image sélectionnée</span>
-        </label>
-
-
-        <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
-          🎙️ {{ isRecording ? 'Stop and Send' : 'Voice Message' }}
-        </button>
-        <div *ngIf="isRecording" class="recording-indicator">
-          ● Enregistrement en cours...
-        </div>
-        <div class="user-controls">
-
-
-        <div class="user-controls">
-          <label class="anonymous-checkbox">
-            <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
-            <span>Anonymous</span>
-          </label>
-          <!-- Bouton pour activer/désactiver la localisation -->
-          <button (click)="toggleLocation()" [class.active]="isLocationEnabled" class="location-toggle">
-            {{ isLocationEnabled ? 'Location Activated' : 'Send Location' }}
-          </button>
-        </div>
-        <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
-          🚀 Send
-        </button>
-      </div>
+  <div class="input-container">
+    <!-- Nouvelle ligne d'actions intégrée -->
+    <div class="inline-actions">
+      <button (click)="toggleEmojiPicker()">😀</button>
+      <label class="file-upload">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        📎
+      </label>
+      <label class="anonymous-checkbox">
+        <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
+        <span>Anonymos</span>
+      </label>
     </div>
+
+    <!-- Zone de texte -->
+    <textarea [(ngModel)]="newMessage.description" 
+              placeholder="Write your message here..." 
+              maxlength="500"></textarea>
+    
+    <!-- Compteur de caractères -->
+    <div class="char-counter" [ngClass]="{'warning': newMessage.description.length > 400}">
+      {{ newMessage.description.length }}/500
+    </div>
+  </div>
+
+  <!-- Actions secondaires -->
+  <div class="actions">
+    <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
+      🎙️ {{ isRecording ? 'Stop' : 'Record' }}
+    </button>
+    
+    <button (click)="toggleLocation()" [class.active]="isLocationEnabled" class="location-toggle">
+      {{ isLocationEnabled ? ' Location Activated' : ' Location' }}
+    </button>
+    
+    <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
+      Envoyer
+    </button>
+  
       </div>
     </div>
     </div>
