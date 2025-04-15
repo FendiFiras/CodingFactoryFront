@@ -75,7 +75,11 @@ export class ListeForumComponent implements OnInit {
     this.isLoading = true;
     this.forumService.getAllForums().subscribe({
       next: (data) => {
-        this.forums = data;
+        this.forums = data.sort((a, b) => {
+          const dateA = a.creationDate ? new Date(a.creationDate).getTime() : 0;
+          const dateB = b.creationDate ? new Date(b.creationDate).getTime() : 0;
+          return dateB - dateA;
+        });
         this.isLoading = false;
       },
       error: (err) => {
@@ -108,7 +112,7 @@ export class ListeForumComponent implements OnInit {
 
     this.forumService.addForum(formData).subscribe({
       next: (newForum) => {
-        this.forums.push(newForum);
+        this.forums.unshift(newForum); // Changez push() par unshift() ici
         this.addForumForm.reset();
         this.showAddForm = false;
       },
