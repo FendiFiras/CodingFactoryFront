@@ -56,4 +56,11 @@ deleteForum(forumId: number): Observable<void> {
 }
 
 
+searchForums(term: string): Observable<Forum[]> {
+  // Implémentez la logique de recherche ici
+  // Cela dépend de votre API backend
+  // Exemple avec une API REST :
+  return this.http.get<Forum[]>(`${this.apiUrl}/search?q=${term}`);
+}
+
 }

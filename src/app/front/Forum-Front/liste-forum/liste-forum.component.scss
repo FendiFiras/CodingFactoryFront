@@ -225,32 +225,120 @@ textarea.form-control {
   }
 }
 
+/* Suggestions IA Section */
 .ai-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin: 2rem 0 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  border-radius: 12px;
+  border-left: 4px solid #3f51b5;
+}
+
+.ai-header h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+}
+
+.ai-header small {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-left: 8px;
+}
+
+/* Bouton Générer */
+.ai-header button {
+  background: linear-gradient(135deg, #3f51b5 0%, #283593 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(63, 81, 181, 0.2);
+}
+
+.ai-header button:hover {
+  background: linear-gradient(135deg, #283593 0%, #1a237e 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}
+
+.ai-header button:disabled {
+  background: #b0bec5;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Liste des suggestions */
+.ai-topics {
+  margin-bottom: 2rem;
 }
 
 .ai-topic {
-  background: rgba(63, 81, 181, 0.1);
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 8px;
+  background: white;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #8e44ad;
+  transition: all 0.3s ease;
 }
 
+.ai-topic:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton Créer */
+.ai-topic button {
+  background: linear-gradient(135deg, #8e44ad 0%, #732d91 100%);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-topic button:hover {
+  background: linear-gradient(135deg, #732d91 0%, #5b2c6f 100%);
+  box-shadow: 0 2px 8px rgba(142, 68, 173, 0.4);
+}
+
+/* Icônes */
 .fa-robot {
   color: #3f51b5;
-  margin-right: 8px;
+  font-size: 1.4rem;
+}
+
+.fa-sync-alt, .fa-plus {
+  font-size: 0.9rem;
+}
+
+/* Animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .spin {
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }

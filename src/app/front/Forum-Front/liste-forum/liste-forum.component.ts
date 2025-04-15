@@ -54,13 +54,13 @@ export class ListeForumComponent implements OnInit {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[A-Za-z\s]+$/)
+        Validators.pattern(/^[A-Za-zÀ-ÿ0-9?!\s:'-]+$/)
       ]],
       description: ['', [
         Validators.required,
         Validators.minLength(20),
         Validators.maxLength(150),
-        Validators.pattern(/^[A-Za-z\s]+$/)
+        Validators.pattern(/^[A-Za-zÀ-ÿ0-9?!\s:'-]+$/)
       ]],
       image: [null],
     });

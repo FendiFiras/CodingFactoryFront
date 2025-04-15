@@ -23,6 +23,14 @@ export class LeftSideBarComponent implements OnInit {
     this.loadLatestForums();
   }
 
+   // Méthode pour gérer la recherche
+   onSearch(searchTerm: string): void {
+    if (searchTerm && searchTerm.trim()) {
+      // Redirige vers la page de résultats de recherche avec le terme de recherche
+      this.router.navigate(['/forum/search'], { queryParams: { q: searchTerm.trim() } });
+    }
+  }
+
   loadLatestForums(): void {
     this.forumService.getAllForums().subscribe({
       next: (data) => {
