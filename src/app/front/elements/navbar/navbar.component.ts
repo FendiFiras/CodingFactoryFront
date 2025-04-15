@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
@@ -14,7 +14,7 @@ import { TranslateDynamicService } from 'src/app/services/translate-dynamic-serv
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, NgbDropdownModule, NgbModalModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, NgbDropdownModule, NgbModalModule,RouterModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
@@ -344,7 +344,6 @@ export class NavbarComponent implements OnInit {
   navigateToLogin(): void {
     this.router.navigate(['/login']);
   }
-}
   navigateToTrainingList() {
     this.router.navigate(['/TrainingList']);
   }
@@ -357,5 +356,7 @@ export class NavbarComponent implements OnInit {
   navigateToQuizManagement() {
     this.router.navigate(['/QuizManagement']); 
   }
- }
+}
+
+
  

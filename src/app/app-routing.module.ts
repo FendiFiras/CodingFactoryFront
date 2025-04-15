@@ -8,7 +8,6 @@ import { CodingRegisterComponent } from './front/UserFront/coding-register/codin
 import { ForgetPasswdComponent } from './front/UserFront/forget-passwd/forget-passwd.component';
 import { InstructorComponent } from './front/UserFront/instructor/instructor.component';
 import { AdminGuard } from './auth/admin.guard';  // Import du guard
-
 import { LoginPageComponent } from './front/login-page/login-page.component';
 import { TrainingManagementComponent } from './demo/training-management/training-management/training-management.component';
 import {AddTrainingComponent} from './demo/training-management/add-training/add-training.component'
@@ -26,7 +25,6 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full' // Redirection vers 'home' si le path est vide
   },
   {
     path: 'home',
