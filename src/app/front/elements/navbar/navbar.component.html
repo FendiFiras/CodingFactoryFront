@@ -248,6 +248,92 @@
                         </li>
                         <li [class.active]="selectedTab === 'changePassword'" (click)="selectedTab = 'changePassword'">
                             <i class="fa fa-lock"></i> Change Password
+                       
+                        <li class="dropdown">
+                            <a href="#">Training</a>
+                            <ul>
+                                <li><a (click)="navigateToTrainingList()">Our Training</a></li>
+                                <li><a href="javascript:void(0);" (click)="navigateToCourses()">Manage Courses</a></li>
+                                <li><a (click)="navigateToQuizQuestion()">Question </a></li>
+                                <li><a (click)="navigateToQuizManagement()">Quiz Management</a></li>
+                                <li><a href="frontend-development.html">Frontend Development</a></li>
+                                <li><a href="uiux-design.html">UI/UX Design</a></li>
+                                <li><a href="digital-photography.html">Digital Photography</a></li>
+                                <li><a href="online-business.html">Online Business</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Events </a>
+                            <ul>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="team.html">Our Teacher</a></li>
+                                <li><a href="team-carousel.html">Teacher Carousel</a></li>
+                                <li><a href="team-become.html">Become Teacher</a></li>
+                                <li><a href="team-details.html">Teacher Details</a></li>
+                                <li><a href="gallery.html">Gallery</a></li>
+                                <li><a href="gallery-carousel.html">Gallery Carousel</a></li>
+                                <li><a href="pricing.html">Pricing</a></li>
+                                <li><a href="faq.html">FAQs</a></li>
+                                <li><a href="login.html">Login</a></li>
+                                <li><a href="404.html">404 Error</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Interships</a>
+                            <ul class="sub-menu">
+                                <li class="dropdown">
+                                    <a href="#">Products</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="products.html">No Sidebar</a></li>
+                                        <li><a href="products-left.html">Left Sidebar</a></li>
+                                        <li><a href="products-right.html">Right Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="products-carousel.html">Products Carousel</a></li>
+                                <li><a href="product-details.html">Product Details</a></li>
+                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="checkout.html">Checkout</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Forum</a>
+                            <ul class="sub-menu">
+                                <li class="dropdown">
+                                    <a href="#">Blog Grid</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="blog-grid.html">No Sidebar</a></li>
+                                        <li><a href="blog-grid-left.html">Left Sidebar</a></li>
+                                        <li><a href="blog-grid-right.html">Right Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#">Blog List</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="blog-list.html">No Sidebar</a></li>
+                                        <li><a href="blog-list-left.html">Left Sidebar</a></li>
+                                        <li><a href="blog-list-right.html">Right Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="blog-carousel.html">Blog Carousel</a></li>
+                                <li class="dropdown">
+                                    <a href="#">Blog Details</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="blog-details.html">No Sidebar</a></li>
+                                        <li><a href="blog-details-left.html">Left Sidebar</a></li>
+                                        <li><a href="blog-details-right.html">Right Sidebar</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Reclamation</a></li>
+                        <li class="dropdown">
+                            <a class="main-menu__login" (click)="navigateToLogin()">
+                                <i class="icon-account-1"></i>
+                            </a>                            <ul>
+                                <li><a href="about.html">login</a></li>
+                                <li><a href="team.html">Signin</a></li>
+                             
+                            </ul>
                         </li>
                     </ul>
                 </div>

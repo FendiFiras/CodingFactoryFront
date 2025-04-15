@@ -345,3 +345,17 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+  navigateToTrainingList() {
+    this.router.navigate(['/TrainingList']);
+  }
+  navigateToCourses() {
+    this.router.navigate(['/CoursesManagement']);
+  }
+  navigateToQuizQuestion() {
+    this.router.navigate(['/QuizQuestionsManagemet']); 
+  }
+  navigateToQuizManagement() {
+    this.router.navigate(['/QuizManagement']); 
+  }
+ }
+ 

@@ -1,0 +1,151 @@
+<app-navbar></app-navbar> <!-- Utilisation du composant Navbar Angular -->
+
+<section class="become-team">
+    <div class="container">
+        <div class="row">
+            <!-- Liste des Cours -->
+            <div class="col-lg-7 wow fadeInUp animated" data-wow-delay="300ms">
+                <div class="become-team__content">
+                    <h3 class="become-team__title">Available Courses</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Description</th>
+                                <th>Difficulty</th>
+                                <th>Files</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Affichage des fichiers importés pour chaque cours -->
+                            <tr *ngFor="let course of courses">
+                                <td>{{ course.courseName }}</td>
+                                <td>{{ course.courseDescription }}</td>
+                                <td>{{ course.difficulty }}</td>
+                               <!-- 📌 Colonne des fichiers dans le tableau -->
+                               <td>
+                                <div *ngIf="course.fileUrls?.length > 0" class="dropdown">
+                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        📂 View Files
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li *ngFor="let fileUrl of course.fileUrls">
+                                            <button class="dropdown-item" (click)="openFile(fileUrl)">
+                                                📂 {{ extractFileName(fileUrl) }}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span *ngIf="!course.fileUrls || course.fileUrls.length === 0" class="text-muted">
+                                    No File
+                                </span>
+                            </td>
+                            
+
+
+                                
+                                
+                                <td>
+                                    <button (click)="editCourse(course)" class="btn btn-primary btn-sm">Update</button>
+                                    <button (click)="onDelete(course.courseId)" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Formulaire d'ajout de Cours -->
+            <div class="col-lg-5 wow fadeInUp animated" data-wow-delay="400ms">
+                <div class="become-team__form-box">
+                    <h3 class="become-team__form-box__title">Add New Course</h3>
+                    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+                        <div class="become-team__input-box">
+                            <label for="trainingId">Select Training:</label>
+                            <select class="form-select" formControlName="trainingId" 
+                                    [(ngModel)]="selectedTrainingId" 
+                                    (change)="onTrainingChange($event)">
+                                <option value="">Select Training</option>
+                                <option *ngFor="let training of trainings" [value]="training.trainingId">
+                                    {{ training.trainingName }}
+                                </option>
+                            </select>
+                            <div *ngIf="courseForm.get('trainingId')?.invalid && courseForm.get('trainingId')?.touched" class="text-danger">
+                                <small>⚠️ Please select a training.</small>
+                            </div>
+                        </div>
+
+                        <div class="become-team__input-box">
+                            <label for="courseName">Course Name:</label>
+                            <input type="text" class="form-control" formControlName="courseName" required>
+                            <div *ngIf="courseForm.get('courseName')?.invalid && courseForm.get('courseName')?.touched" class="text-danger">
+                                <small *ngIf="courseForm.get('courseName')?.hasError('required')">⚠️ Course name is required.</small>
+                                <small *ngIf="courseForm.get('courseName')?.hasError('minlength')">⚠️ Must be at least 3 characters.</small>
+                            </div>
+                        </div>
+
+                        <div class="become-team__input-box">
+                            <label for="courseDescription">Description:</label>
+                            <input type="text" class="form-control" formControlName="courseDescription" required>
+                            <div *ngIf="courseForm.get('courseDescription')?.invalid && courseForm.get('courseDescription')?.touched" class="text-danger">
+                                <small *ngIf="courseForm.get('courseDescription')?.hasError('required')">⚠️ Description is required.</small>
+                                <small *ngIf="courseForm.get('courseDescription')?.hasError('minlength')">⚠️ Must be at least 12 characters.</small>
+                            </div>
+                        </div>
+
+                        <div class="become-team__input-box">
+                            <label for="difficulty">Select Difficulty:</label>
+                            <select class="form-select" formControlName="difficulty" required>
+                                <option value="EASY">Easy</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="DIFFICULT">Difficult</option>
+                                <option value="ADVANCED">Advanced</option>
+                            </select>
+                            <div *ngIf="courseForm.get('difficulty')?.invalid && courseForm.get('difficulty')?.touched" class="text-danger">
+                                <small>⚠️ Please select a difficulty level.</small>
+                            </div>
+                        </div>
+<!-- Upload fichiers -->
+<div class="become-team__input-box">
+    <label for="file">Upload More Files:</label>
+    <input type="file" multiple (change)="onFileSelected($event)" class="form-control">
+
+    <!-- ✅ Liste des fichiers existants -->
+    <ul class="file-list">
+        <li *ngFor="let fileUrl of selectedCourseFiles" class="file-item">
+            <span>📂 <a href="{{ fileUrl }}" target="_blank">{{ extractFileName(fileUrl) }}</a></span>
+            <button (click)="removeExistingFile(fileUrl)" class="btn btn-danger btn-sm delete-btn">❌</button>
+        </li>
+    </ul>
+
+    <!-- ✅ Liste des nouveaux fichiers sélectionnés -->
+    <ul class="file-list">
+        <li *ngFor="let file of selectedFiles" class="file-item">
+            <span>📂 {{ file.name }}</span>
+            <button (click)="removeFile(file)" class="btn btn-danger btn-sm delete-btn">❌</button>
+        </li>
+    </ul>
+</div>
+
+                        
+
+                        <div class="become-team__btn-box">
+<!-- ✅ Modifier le bouton Save pour gérer l'update -->
+<!-- ✅ Changer dynamiquement le bouton selon le mode -->
+<button 
+    type="submit" 
+    class="eduact-btn eduact-btn-second"
+    (click)="isEditing ? onUpdate() : onSubmit()">
+    {{ isEditing ? 'Update Course' : 'Add Course' }}
+</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer></app-footer> <!-- Utilisation du composant Footer Angular -->

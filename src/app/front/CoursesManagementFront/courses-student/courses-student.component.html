@@ -1,0 +1,113 @@
+<app-navbar></app-navbar> <!-- Utilisation du composant Navbar Angular -->
+
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Courses Available</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a routerLink="/">Training</a></li>
+            <li><span>Courses</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="become-team">
+    <div class="container">
+        <h3 class="text-center mb-4 fw-bold animated-title">
+            📘 Available Courses
+        </h3>
+
+        <div class="row">
+            <div *ngFor="let course of courses; let i = index" class="col-lg-4 col-md-6 col-sm-12">
+                <div class="course-card">
+                    
+                    <!-- 🌟 Image du cours -->
+                    <div class="course-card-img">
+                        <img [src]="getCourseImage(course.courseId)" alt="Course Image">
+                    </div>
+
+                    <div class="course-card-body">
+                        <h5 class="course-title">{{ course.courseName }}</h5>
+                        <p class="course-description">{{ course.courseDescription }}</p>
+
+                        <!-- 🔥 Niveau de difficulté -->
+                        <span [ngClass]="{
+                            'difficulty-easy': course.difficulty === 'EASY',
+                            'difficulty-medium': course.difficulty === 'MEDIUM',
+                            'difficulty-difficult': course.difficulty === 'DIFFICULT',
+                            'difficulty-advanced': course.difficulty === 'ADVANCED'
+                        }" class="badge difficulty-badge">
+                            {{ course.difficulty }}
+                        </span>
+
+                        <!-- 📂 Bouton pour voir la liste des fichiers -->
+                        <div class="course-action">
+                            <button *ngIf="course.fileUrls?.length > 0"
+                                    (click)="toggleFilesDropdown(course)"
+                                    class="btn btn-view-file">
+                                <i class="fas fa-folder-open"></i> View Files
+                            </button>
+                            <span *ngIf="!course.fileUrls || course.fileUrls.length === 0" class="text-muted d-block">
+                                No File Available
+                            </span>
+
+                    <!-- ✅ Affichage des fichiers -->
+<ul *ngIf="selectedCourse === course" class="file-dropdown">
+    <li *ngFor="let fileUrl of course.fileUrls">
+        <a (click)="previewFile(course, fileUrl)" class="btn btn-link">
+            📂 {{ extractFileName(fileUrl) }}
+        </a>
+    </li>
+</ul>
+
+<!-- ✅ Aperçu des fichiers (PDF, images, vidéos) -->
+<div *ngIf="getPreviewUrl(course)" class="file-preview">
+
+    <!-- ✅ Affichage de l'image -->
+    <img *ngIf="isImage(getPreviewUrl(course))" 
+         [src]="getPreviewUrl(course)" 
+         alt="Image Preview" 
+         class="preview-image">
+
+    <!-- ✅ Affichage de la vidéo -->
+    <video *ngIf="isVideo(getPreviewUrl(course))" 
+           [src]="getPreviewUrl(course)" 
+           controls 
+           class="preview-video">
+    </video>
+<!-- ✅ Affichage du PDF avec bouton pour agrandir -->
+<div class="pdf-container">
+    <object *ngIf="isPDF(getPreviewUrl(course))" 
+            [data]="getPreviewUrl(course) | safeUrl" 
+            type="application/pdf"
+            class="preview-pdf">
+        <p>Votre navigateur ne supporte pas les PDFs.</p>
+    </object>
+
+    <!-- ✅ Bouton pour ouvrir en plein écran -->
+    <button class="btn btn-primary mt-2" (click)="openPdfInNewTab(course)">
+        🔎 Agrandir PDF
+    </button>
+</div>
+
+
+
+    <button class="btn btn-danger btn-sm mt-2" 
+            (click)="clearPreview(course)">
+        ❌ Close Preview
+    </button>
+</div>
+
+
+
+
+                        </div> <!-- Fin de course-action -->
+                    </div> <!-- Fin de course-card-body -->
+                </div> <!-- Fin de course-card -->
+            </div> <!-- Fin de col -->
+        </div> <!-- Fin de row -->
+    </div> <!-- Fin de container -->
+</section>
+
+<app-footer></app-footer> <!-- Utilisation du composant Footer Angular -->

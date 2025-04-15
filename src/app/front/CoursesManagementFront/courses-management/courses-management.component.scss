@@ -1,0 +1,80 @@
+/* Espacement et organisation des fichiers sélectionnés */
+.file-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Bouton de suppression stylisé */
+.delete-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* Effet de hover pour améliorer l'expérience utilisateur */
+.delete-btn:hover {
+    background: #cc0000;
+}
+
+/* Correction de l'affichage du bouton "Add Course" */
+.become-team__btn-box {
+    text-align: center;
+    margin-top: 15px;
+}
+/* Style du backdrop pour couvrir toute la page */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+/* Style de la fenêtre modale */
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    z-index: 1051;
+}
+
+/* Style du bouton de fermeture */
+.close-btn {
+    background: red;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 5px;
+}

@@ -1,0 +1,67 @@
+<app-navigation class="pcoded-navbar"></app-navigation>
+<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light"></app-nav-bar>
+
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <app-breadcrumb></app-breadcrumb>
+        <div class="main-body">
+          <div class="page-wrapper">
+            <div class="row">
+              <div class="col-xl-12">
+                
+                <!-- 💰 Résumé des revenus -->
+                <div class="revenue-summary">
+                  <h2 class="stat-title">💵 Total Revenue: 
+                    <span class="revenue-amount">${{ totalRevenue | number:'1.2-2' }}</span>
+                  </h2>
+                  <h3 class="stat-title">🔮 Predicted Hourly Revenue: 
+                    <span class="revenue-amount">${{ predictedRevenue | number:'1.2-2' }}</span>
+                  </h3>
+                  
+                  <button class="btn btn-success" (click)="refreshData()">🔄 Refresh Data</button>
+                  <button class="btn btn-outline-secondary" (click)="exportChart()">📤 Export Graph</button>
+                  <button class="btn btn-warning" (click)="toggleLiveUpdate()">
+                    {{ liveUpdate ? '⏸ Stop Live Update' : '▶ Start Live Update' }}
+                  </button>
+                </div>
+
+                <!-- 🎨 Sélecteur de couleur du graphique -->
+                <label>🎨 Select Chart Color:</label>
+                <select class="form-select mb-3" [(ngModel)]="chartColor" (change)="changeChartColor(chartColor)">
+                  <option value="rgba(54, 162, 235, 1)">🔵 Blue</option>
+                  <option value="rgba(255, 99, 132, 1)">🔴 Red</option>
+                  <option value="rgba(75, 192, 192, 1)">🟢 Green</option>
+                  <option value="rgba(255, 206, 86, 1)">🟡 Yellow</option>
+                </select>
+
+                <!-- 📊 Graphique des revenus par formation -->
+                <app-card cardTitle="Revenue by Training" [options]="false" blockClass="chart-card">
+                  <div class="chart-container">
+                    <canvas id="trainingRevenueChart"></canvas>
+                  </div>
+                  <div class="chart-controls">
+                    <button class="btn btn-primary mt-3" (click)="toggleChartType()">🔁 Toggle Chart Type</button>
+                  </div>
+                </app-card>
+
+                <!-- ⏳ Graphique des revenus par heure -->
+                <app-card cardTitle="Real-Time Hourly Revenue Tracking" [options]="false" blockClass="chart-card">
+                  <div class="chart-container">
+                    <canvas id="revenueByHourChart"></canvas>
+                  </div>
+                </app-card>
+              
+
+                <!-- 🌙 Mode sombre -->
+                <button class="btn btn-dark mt-3" (click)="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

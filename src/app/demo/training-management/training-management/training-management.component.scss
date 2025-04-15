@@ -1,0 +1,270 @@
+// add-training.component.scss
+
+/* Conteneur principal du dialogue */
+.mat-dialog-container {
+    padding: 24px;
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+  
+  /* Titre du dialogue */
+  .mat-dialog-title {
+    color: #3f51b5;
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+  }
+  
+  /* Contenu du dialogue */
+  .mat-dialog-content {
+    padding: 16px 0;
+    max-height: 70vh !important;
+  
+    /* Champs de formulaire */
+    .mat-form-field {
+      margin-bottom: 20px;
+  
+      /* Étiquette */
+      .mat-form-field-label {
+        color: #757575;
+      }
+  
+      /* Input */
+      .mat-input-element {
+        font-size: 14px;
+        color: #212121;
+      }
+  
+      /* Bordure active */
+      .mat-form-field-underline::before {
+        background-color: #3f51b5;
+      }
+    }
+  
+    /* Sélecteurs */
+    .mat-select {
+      width: 100%;
+      
+      .mat-select-value {
+        color: #212121;
+      }
+    }
+  
+    /* Datepicker */
+    .mat-datepicker-toggle {
+      color: #3f51b5;
+    }
+  }
+  
+  /* Actions du dialogue */
+  .mat-dialog-actions {
+    padding: 16px 0 0 0;
+    justify-content: flex-end;
+    gap: 8px;
+  
+    /* Boutons */
+    .mat-button {
+      min-width: 100px;
+      
+      /* Bouton principal */
+      &.mat-primary {
+        background-color: #3f51b5;
+        color: white;
+        transition: all 0.3s ease;
+  
+        &:hover {
+          background-color: darken(#3f51b5, 10%);
+        }
+  
+        &[disabled] {
+          background-color: #b0bec5;
+          cursor: not-allowed;
+        }
+      }
+  
+      /* Bouton secondaire */
+      &:not(.mat-primary) {
+        border: 1px solid #e0e0e0;
+      }
+    }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .mat-dialog-container {
+      width: 90vw !important;
+      max-width: 90vw !important;
+    }
+    
+    .mat-dialog-content {
+      padding: 10px 0;
+    }
+  }// add-training.component.scss
+
+/* Conteneur principal du dialogue */
+.mat-dialog-container {
+    padding: 24px;
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+  
+  /* Titre du dialogue */
+  .mat-dialog-title {
+    color: #3f51b5;
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+  }
+  
+  /* Contenu du dialogue */
+  .mat-dialog-content {
+    padding: 16px 0;
+    max-height: 70vh !important;
+  
+    /* Champs de formulaire */
+    .mat-form-field {
+      margin-bottom: 20px;
+  
+      /* Étiquette */
+      .mat-form-field-label {
+        color: #757575;
+      }
+  
+      /* Input */
+      .mat-input-element {
+        font-size: 14px;
+        color: #212121;
+      }
+  
+      /* Bordure active */
+      .mat-form-field-underline::before {
+        background-color: #3f51b5;
+      }
+    }
+  
+    /* Sélecteurs */
+    .mat-select {
+      width: 100%;
+      
+      .mat-select-value {
+        color: #212121;
+      }
+    }
+  
+    /* Datepicker */
+    .mat-datepicker-toggle {
+      color: #3f51b5;
+    }
+  }
+  
+  /* Actions du dialogue */
+  .mat-dialog-actions {
+    padding: 16px 0 0 0;
+    justify-content: flex-end;
+    gap: 8px;
+  
+    /* Boutons */
+    .mat-button {
+      min-width: 100px;
+      
+      /* Bouton principal */
+      &.mat-primary {
+        background-color: #3f51b5;
+        color: white;
+        transition: all 0.3s ease;
+  
+        &:hover {
+          background-color: darken(#3f51b5, 10%);
+        }
+  
+        &[disabled] {
+          background-color: #b0bec5;
+          cursor: not-allowed;
+        }
+      }
+  
+      /* Bouton secondaire */
+      &:not(.mat-primary) {
+        border: 1px solid #e0e0e0;
+      }
+    }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .mat-dialog-container {
+      width: 90vw !important;
+      max-width: 90vw !important;
+    }
+    
+    .mat-dialog-content {
+      padding: 10px 0;
+    }
+  }
+
+
+  .btn-primary {
+    background-color: #007bff; /* Bleu */
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 8px; /* Coins arrondis */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Bleu foncé au survol */
+    transform: scale(1.05); /* Effet zoom léger */
+  }
+  
+  .btn-primary i {
+    font-size: 16px; /* Taille de l'icône */
+  }
+  .filter-container {
+    display: flex;
+    gap: 15px; /* Espacement entre les filtres */
+  }
+  
+  .search-input {
+    flex: 1; /* Prend toute la largeur disponible */
+    max-width: 300px;
+  }
+  
+  .filter-dropdown {
+    width: 200px;
+    border-radius: 8px;
+  }
+  
+  .sort-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sort-btn:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .sort-btn i {
+    font-size: 16px;
+  }
+  .view-stats-btn {
+    background-color: #17a2b8; // Bleu clair
+    border-color: #17a2b8;
+    color: white;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .view-stats-btn:hover {
+    background-color: #138496; // 🏆 Effet hover plus foncé
+    border-color: #117a8b;
+  }

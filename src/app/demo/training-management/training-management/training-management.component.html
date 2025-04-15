@@ -1,0 +1,226 @@
+<app-navigation class="pcoded-navbar"></app-navigation>
+<app-nav-bar class="navbar pcoded-header navbar-expand-lg navbar-light"></app-nav-bar>
+
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <app-breadcrumb></app-breadcrumb>
+        <div class="main-body">
+          <div class="page-wrapper">
+            <div class="row">
+              <div class="col-xl-12">
+                
+                <!-- Liste des formations -->
+                <app-card cardTitle="Training List" [options]="false" blockClass="table-border-style">
+                  <div class="mb-3">
+                    <button *ngIf="!showAddTraining" class="btn btn-primary" (click)="toggleAddTraining()">
+                      <i class="fas fa-plus"></i> Add Training
+                    </button>
+
+
+                      <!-- ✅ Afficher "Back" si le formulaire est affiché -->
+  <button *ngIf="showAddTraining" class="btn btn-secondary" (click)="toggleAddTraining()">
+    🔙 Back
+  </button>
+                  </div>
+                  
+                  <app-add-training *ngIf="showAddTraining"></app-add-training>
+
+                  <div *ngIf="!showAddTraining" class="table-responsive">
+                    <div class="filter-container">
+                      <!-- Champ de recherche -->
+                      <input type="text" class="form-control search-input" placeholder="🔍 Search Training..." [(ngModel)]="searchTraining" (input)="filterTrainings()" />
+                    
+                      <!-- Filtre par type -->
+                      <select class="form-select filter-dropdown" [(ngModel)]="selectedTrainingType" (change)="filterTrainings()">
+                        <option value="">All Types</option>
+                        <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
+                      </select>
+                    
+                      <!-- Bouton de tri -->
+                      <button class="btn btn-outline-primary sort-btn" (click)="toggleSortOrder()">
+                        <i class="fas" [ngClass]="sortAscending ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
+                        Sort by Price: {{ sortAscending ? 'Ascending' : 'Descending' }}
+                      </button>
+                        <!-- ✅ Bouton "View Stats" qui redirige vers la page StatTraining -->
+                    <button class="btn btn-info ms-2" (click)="navigateToStats()">
+                      📊 View Stats
+                                                          </button>
+
+                    </div>
+                  
+                    
+                    
+                    
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Training Name</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Price</th>
+                          <th>Training Type</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let training of filteredTrainings; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td (dblclick)="enableEditing('trainingName', training)">
+                            <input *ngIf="isEditing(training, 'trainingName')" [(ngModel)]="training.trainingName" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'trainingName')">{{ training.trainingName }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('startDate', training)">
+                            <input *ngIf="isEditing(training, 'startDate')" [(ngModel)]="training.startDate" type="date" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'startDate')">{{ training.startDate | date: 'dd/MM/yyyy' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('endDate', training)">
+                            <input *ngIf="isEditing(training, 'endDate')" [(ngModel)]="training.endDate" type="date" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'endDate')">{{ training.endDate | date: 'dd/MM/yyyy' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('price', training)">
+                            <input *ngIf="isEditing(training, 'price')" [(ngModel)]="training.price" type="number" (blur)="updateTraining(training)" />
+                            <span *ngIf="!isEditing(training, 'price')">{{ training.price | currency: 'USD' }}</span>
+                          </td>
+                          <td (dblclick)="enableEditing('type', training)">
+                            <select *ngIf="isEditing(training, 'type')" [(ngModel)]="training.type" (blur)="updateTraining(training)">
+                              <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
+                            </select>
+                            <span *ngIf="!isEditing(training, 'type')">{{ training.type }}</span>
+                          </td>
+                          <td>
+              <button class="btn btn-danger rounded" (click)="deleteTraining(training.trainingId)">Delete</button>
+                            
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </app-card>
+
+                <!-- Liste des sessions -->
+            <!-- Liste des sessions -->
+<app-card cardTitle="Session List" [options]="false" blockClass="table-border-style">
+  <div class="mb-3">
+    <!-- Titre ajouté -->
+    <h4>Session for In-Person Trainings</h4>
+    
+    <!-- Boutons pour afficher ou masquer le formulaire -->
+    <button *ngIf="!showAddSession" class="btn btn-primary" (click)="toggleAddSession()">
+      <i class="fas fa-plus"></i> Add Session
+    </button>
+
+    <!-- ✅ Bouton "Back" pour revenir à la liste -->
+    <button *ngIf="showAddSession" class="btn btn-secondary" (click)="toggleAddSession()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <!-- Affichage du formulaire -->
+    <app-add-session *ngIf="showAddSession"></app-add-session>
+  </div>
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="🔍 Search Session..." [(ngModel)]="searchSession" (input)="filterSessions()" />
+  </div>
+  
+  <!-- Table des sessions -->
+  <div *ngIf="!showAddSession" class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Location</th>
+          <th>Program</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let session of filteredSessions; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          
+          <!-- ✅ Location -->
+          <td (dblclick)="enableEditingS('location', session)">
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'location'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.location }}</span>
+          </td>
+      
+          <!-- ✅ Program -->
+          <td (dblclick)="enableEditingS('program', session)">
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'program'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.program }}</span>
+          </td>
+      
+          <!-- ✅ Start Time -->
+          <td (dblclick)="enableEditingS('startTime', session)">
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'startTime'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   type="datetime-local" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.startTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+      
+          <!-- ✅ End Time -->
+          <td (dblclick)="enableEditingS('endTime', session)">
+            <input *ngIf="editingSessions[session.sessionId]?.field === 'endTime'" 
+                   [(ngModel)]="editingSessions[session.sessionId].value" 
+                   type="datetime-local" 
+                   (blur)="updateSession(session)"/>
+            <span *ngIf="!editingSessions[session.sessionId]">{{ session.endTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+      
+          <!-- ✅ Delete Button -->
+          <td>
+            <button class="btn btn-danger rounded" (click)="deleteSession(session.sessionId)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+  </div>
+</app-card>
+
+<div class="mb-3">
+  <input type="text" class="form-control" placeholder="🔍 Search Course..." [(ngModel)]="searchCourse" (input)="filterCourses()" />
+</div>
+
+
+                <!-- Liste des cours -->
+                <app-card cardTitle="Course List" [options]="false" blockClass="table-border-style">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Course Name</th>
+                          <th>Description</th>
+                          <th>Difficulty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let course of filteredCourses; let i = index">
+                          <th scope="row">{{ i + 1 }}</th>
+                          <td>{{ course.courseName }}</td>
+                          <td>{{ course.courseDescription }}</td>
+                          <td>{{ course.difficulty }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </app-card>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-menu-overlay" tabindex="0"></div>
+</div>

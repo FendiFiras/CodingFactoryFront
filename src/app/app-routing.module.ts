@@ -9,6 +9,19 @@ import { ForgetPasswdComponent } from './front/UserFront/forget-passwd/forget-pa
 import { InstructorComponent } from './front/UserFront/instructor/instructor.component';
 import { AdminGuard } from './auth/admin.guard';  // Import du guard
 
+import { LoginPageComponent } from './front/login-page/login-page.component';
+import { TrainingManagementComponent } from './demo/training-management/training-management/training-management.component';
+import {AddTrainingComponent} from './demo/training-management/add-training/add-training.component'
+import {AddSessionComponent}from './demo/training-management/add-session/add-session.component'
+import { ListsTrainingComponent} from'./front/trainingFront/lists-training/lists-training.component';
+ import {TrainingInfoComponent} from './front/trainingFront/training-info/training-info.component'
+ import {CoursesManagementComponent} from './front/CoursesManagementFront/courses-management/courses-management.component'
+ import {QuizManagementComponent} from './front/CoursesManagementFront/quiz-management/quiz-management.component'
+ import{QuizInterfaceComponent} from './front/CoursesManagementFront/quiz-interface/quiz-interface.component'
+import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/quiz-questions-management/quiz-questions-management.component'
+import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-student/courses-student.component'
+import {PaymentSuccessComponent} from './front/trainingFront/payment-success-component/payment-success-component.component'
+import { StatTrainingComponent } from './demo/training-management/stat-training/stat-training.component';
 const routes: Routes = [
   {
     path: '',
@@ -18,6 +31,16 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent
+  },
+  {
+    path: 'TrainingManagement',
+    component: TrainingManagementComponent,
+    children:[]
+  },
+  {
+    path: 'add-training',
+    component: AddTrainingComponent,
+    children:[]
   },
   {
     path: 'login',
@@ -35,6 +58,54 @@ const routes: Routes = [
     path: 'forget',
     component: ForgetPasswdComponent
   },
+  {
+    path: 'add-session',
+    component: AddSessionComponent,
+    children:[]
+  },
+  {
+    path: 'TrainingList',
+    component: ListsTrainingComponent,
+    children:[]
+  },
+  
+  {
+    path: 'TrainingInfo/:id',  // 🔹 ID dynamique de la formation
+    component: TrainingInfoComponent,
+    children:[]
+  },
+
+  {
+    path: 'CoursesManagement',  
+    component: CoursesManagementComponent,
+    children:[]
+  },
+
+
+  {
+    path: 'QuizManagement',
+  
+    component: QuizManagementComponent,
+    children:[]
+  },
+  {
+    path: 'QuizQuestionsManagement/:id', // ✅ Ajouter l'ID du quiz dans l'URL
+    component: QuizQuestionsManagementComponent,
+  },
+
+  { path: 'courses/training/:trainingId', 
+    component: CoursesStudentComponent },
+    { path: 'PassQuiz/:quizId',
+       component: QuizInterfaceComponent },// ✅ Passage du quiz avec ID
+
+
+       { path: 'StatTraining',
+        component: StatTrainingComponent },
+
+
+       { path: 'payment-success', component: PaymentSuccessComponent },
+
+
   {
     path: '',
     component: AdminComponent,

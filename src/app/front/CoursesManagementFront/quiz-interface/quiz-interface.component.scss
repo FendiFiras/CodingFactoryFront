@@ -1,0 +1,314 @@
+/* 🌟 Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* 🏆 Main Quiz Section */
+.quiz-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('https://source.unsplash.com/1600x900/?abstract,blue') no-repeat center;
+    background-size: cover;
+    backdrop-filter: blur(8px);
+    padding: 50px 0;
+}
+
+/* 🎯 Quiz Card Container */
+.quiz-container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 50%;
+    min-width: 400px;
+    color: white;
+    transition: transform 0.3s ease-in-out;
+}
+
+.quiz-container:hover {
+    transform: scale(1.02);
+}
+
+/* ✅ Answer Options */
+.answer-option {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.answer-label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="checkbox"]:checked + .answer-text {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.answer-option:hover {
+    background: #e2e6ea;
+    transform: scale(1.02);
+}
+
+/* 🚀 Navigation Buttons */
+.quiz-navigation button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+.quiz-navigation button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* 📌 Result Container */
+.quiz-result-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: -40px;
+    position: relative;
+}
+
+/* 🌟 Score Card */
+.score-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+}
+
+.score-card:hover {
+    transform: scale(1.05);
+}
+
+/* 🎯 Progress Bar */
+.progress-bar-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    background: #e0e0e0;
+    border-radius: 25px;
+    overflow: hidden;
+    height: 12px;
+    border: 2px solid #007bff;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    width: 0%;
+    border-radius: 25px;
+    transition: width 1.5s ease-in-out;
+}
+
+/* 💯 Score Styling */
+.score {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.score-number {
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: bold;
+    transition: transform 0.3s ease-in-out;
+}
+
+.score-number:hover {
+    transform: scale(1.1);
+}
+
+/* ✨ Quiz Action Buttons */
+.quiz-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-lg {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-lg:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ Timer Circle */
+.timer-circle {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+}
+
+.timer-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-circle circle {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke 0.5s ease;
+}
+
+.timer-circle circle:first-child {
+    stroke: #e0e0e0;
+}
+
+.timer-circle circle:last-child {
+    stroke-dasharray: 282.6;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+}
+
+/* ✅ Timer Colors */
+.green {
+    stroke: #4CAF50;
+}
+
+.yellow {
+    stroke: #FFC107;
+}
+
+.red {
+    stroke: #FF5722;
+}
+
+/* ✅ Timer Text */
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #000 !important;  /* ✅ Toujours en noir */
+}
+
+/* ✅ Alert Messages */
+.alert-danger {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* ✅ Timer Box */
+.timer-box {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff5722;
+    background-color: #fff3cd;
+    padding: 10px;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+.badge-container h3 {
+    font-size: 2rem;
+    color: #ff9800;
+    animation: fadeIn 1s ease-in-out;
+    margin-bottom: 15px;
+}
+.cheating-full-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    width: 100%;
+    padding: 2rem;
+  }
+  
+  .cheating-box {
+    background: #fff5f5;
+    border: 2px solid #f8c1c1;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  .emoji-big {
+    font-size: 2.5rem;
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-modal {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  

@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <h2>Add Training</h2>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
+    <!-- ✅ Nom de formation -->
+    <div class="form-group">
+      <label for="trainingName">Training Name</label>
+      <input id="trainingName" class="form-control" formControlName="trainingName" placeholder="Enter training name"/>
+      <div *ngIf="trainingForm.get('trainingName').invalid && trainingForm.get('trainingName').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('trainingName').errors?.['required']">Training name is required.</span>
+        <span *ngIf="trainingForm.get('trainingName').errors?.['minlength']">Minimum 5 characters required.</span>
+      </div>
+    </div>
+
+    <!-- ✅ Date de début -->
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input id="startDate" class="form-control" type="date" formControlName="startDate" [min]="minStartDate"/>
+      <div *ngIf="trainingForm.get('startDate').invalid && trainingForm.get('startDate').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('startDate').errors?.['required']">Start date is required.</span>
+        <span *ngIf="trainingForm.get('startDate').errors?.['invalidStartDate']">The start date must be at least 5 days after today. Please select a valid date..</span>
+      </div>
+    </div>
+
+    <!-- ✅ Date de fin -->
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input id="endDate" class="form-control" type="date" formControlName="endDate"/>
+      <div *ngIf="trainingForm.get('endDate').invalid && trainingForm.get('endDate').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('endDate').errors?.['required']">End date is required.</span>
+        <span *ngIf="trainingForm.get('endDate').errors?.['invalidEndDate']">End date must be after start date.</span>
+      </div>
+    </div>
+
+    <!-- ✅ Type de formation -->
+    <div class="form-group">
+      <label for="type">Training Type</label>
+      <select id="type" class="form-control" formControlName="type">
+        <option *ngFor="let type of trainingTypes" [value]="type">{{ type }}</option>
+      </select>
+      <div *ngIf="trainingForm.get('type').invalid && trainingForm.get('type').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('type').errors?.['required']">Training type is required.</span>
+      </div>
+    </div>
+
+    <!-- ✅ Instructeur -->
+    <div class="form-group">
+      <label for="instructorId">Instructor</label>
+      <select id="instructorId" class="form-control" formControlName="instructorId">
+        <option *ngFor="let instructor of instructors" [value]="instructor.id">{{ instructor.name }}</option>
+      </select>
+      <div *ngIf="trainingForm.get('instructorId').invalid && trainingForm.get('instructorId').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('instructorId').errors?.['required']">Instructor is required.</span>
+      </div>
+    </div>
+
+    <!-- ✅ Prix -->
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input id="price" class="form-control" type="number" formControlName="price" placeholder="Enter price"/>
+      <div *ngIf="trainingForm.get('price').invalid && trainingForm.get('price').touched" class="text-danger">
+        <span *ngIf="trainingForm.get('price').errors?.['required']">Price is required.</span>
+        <span *ngIf="trainingForm.get('price').errors?.['min']">Price cannot be negative.</span>
+      </div>
+    </div>
+
+    <!-- ✅ Boutons -->
+    <div class="d-flex justify-content-between mt-3">
+      <button type="submit" class="btn btn-primary" [disabled]="trainingForm.invalid">Add Training</button>
+    </div>
+  </form>
+</div>

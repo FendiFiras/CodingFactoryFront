@@ -1,0 +1,89 @@
+<div class="container mt-4">
+  <h2>Add Session</h2>
+<!-- ✅ Success Message -->
+<div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+</div>
+  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+    
+    <!-- ✅ Nom de la session -->
+    <div class="form-group">
+      <label for="sessionName">Session Name</label>
+      <input id="sessionName" class="form-control" formControlName="sessionName" placeholder="Enter session name"/>
+      <div *ngIf="sessionForm.get('sessionName')?.invalid && sessionForm.get('sessionName')?.touched" class="text-danger">
+        Session name is required.
+      </div>
+    </div>
+
+    <!-- ✅ Start Time -->
+<div class="form-group">
+  <label for="startTime">Start Date & Time</label>
+  <input id="startTime" class="form-control" type="datetime-local" formControlName="startTime" />
+  <div *ngIf="sessionForm.get('startTime')?.errors?.['invalidStartTime'] && sessionForm.get('startTime')?.touched" class="text-danger">
+    Start time must be between 08:00 and 20:00.
+  </div>
+</div>
+
+<!-- ✅ End Time -->
+<div class="form-group">
+  <label for="endTime">End Date & Time</label>
+  <input id="endTime" class="form-control" type="datetime-local" formControlName="endTime" />
+  <div *ngIf="sessionForm.get('endTime')?.errors?.['endTimeBeforeStart'] && sessionForm.get('endTime')?.touched" class="text-danger">
+    End time must be after the start time.
+  </div>
+  <div *ngIf="sessionForm.get('endTime')?.errors?.['maxSessionDuration'] && sessionForm.get('endTime')?.touched" class="text-danger">
+    Session cannot exceed 3 hours.
+  </div>
+</div>
+
+
+
+<!-- ✅ Champ de recherche -->
+<div class="form-group mt-2">
+  <input
+    type="text"
+    class="form-control"
+    formControlName="searchQuery"
+    placeholder="Search location..."
+    (keyup.enter)="searchLocation()"
+  />
+</div>
+
+<!-- ✅ Carte affichée par défaut -->
+<div id="map" style="height: 400px; width: 100%; margin-top: 10px;"></div>
+
+<!-- ✅ Champ de localisation en lecture seule -->
+<div class="form-group mt-2">
+  <label>Location</label>
+  <input type="text" class="form-control" formControlName="location" readonly placeholder="Selected location" />
+</div>
+
+
+    <!-- ✅ Sélection du cours -->
+    <div class="form-group">
+      <label for="courseId">Course</label>
+      <select id="courseId" class="form-control" formControlName="courseId">
+        <option *ngFor="let course of courses" [value]="course.courseId">
+          {{ course.courseName }}
+        </option>
+      </select>
+      <div *ngIf="sessionForm.get('courseId')?.invalid && sessionForm.get('courseId')?.touched" class="text-danger">
+        Please select a course.
+      </div>
+    </div>
+
+    <!-- ✅ Programme -->
+    <div class="form-group">
+      <label for="program">Program</label>
+      <input id="program" class="form-control" formControlName="program" placeholder="Enter program name"/>
+      <div *ngIf="sessionForm.get('program')?.errors?.['minlength'] && sessionForm.get('program')?.touched" class="text-danger">
+        Program must be at least 10 characters long.
+      </div>
+    </div>
+
+    <!-- ✅ Bouton de soumission -->
+    <button type="submit" class="btn btn-primary" [disabled]="sessionForm.invalid">
+      Add Session
+    </button>
+  </form>
+</div>
