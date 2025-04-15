@@ -53,7 +53,7 @@
                     </div>
                     <p class="card-text">{{ discussion.description }}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <small class="text-muted">Likes: {{ discussion.numberOfLikes }}</small>
+                        <small class="text-muted"> {{ discussion.numberOfLikes }}</small>
                         <div>
                             <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.discussion_id); $event.stopPropagation()">
                                 Delete

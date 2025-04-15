@@ -21,10 +21,17 @@
     <div class="message-list">
       <div *ngFor="let message of filteredMessages" class="message" [ngClass]="{'sent': message.userId === currentUserId, 'received': message.userId !== currentUserId}">
         <!-- Affichage des informations de l'utilisateur -->
-        <div class="user-info">
+        <div class="user-info" *ngIf="!message.anonymous">
           <img [src]="currentUserImage" alt="User Image" class="user-image" />
-          <span class="user-name">{{ message.anonymous ? 'Membre anonyme' : 'zitouni' }}</span>
+          <span class="user-name">{{ currentUserName }}</span>
         </div>
+
+          <!-- Afficher "Anonyme" si le message est anonyme -->
+          <div class="user-info" *ngIf="message.anonymous">
+            <div class="anonymous-user">
+               <span class="user-name">Anonyme</span>
+            </div>
+           </div>
         
         <!-- Contenu du message -->
         <div class="message-content">
@@ -115,9 +122,9 @@
         </button>
       </div>
     </div>
-  </div>
-</div>
-</div>
-</div>
+      </div>
+    </div>
+    </div>
+    </div>
 
 <app-footer></app-footer>
