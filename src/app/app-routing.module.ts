@@ -22,10 +22,7 @@ import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-st
 import {PaymentSuccessComponent} from './front/trainingFront/payment-success-component/payment-success-component.component'
 import { StatTrainingComponent } from './demo/training-management/stat-training/stat-training.component';
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home',
-  },
+ 
   {
     path: 'home',
     component: HomeComponent
@@ -117,7 +114,6 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivate: [AdminGuard],  // Application du guard ici
     children: [
       {
         path: 'dashboard',
