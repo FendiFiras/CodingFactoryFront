@@ -21,6 +21,8 @@ import {QuizQuestionsManagementComponent} from './front/CoursesManagementFront/q
 import {CoursesStudentComponent} from './front/CoursesManagementFront/courses-student/courses-student.component'
 import {PaymentSuccessComponent} from './front/trainingFront/payment-success-component/payment-success-component.component'
 import { StatTrainingComponent } from './demo/training-management/stat-training/stat-training.component';
+import { InstructorGuard } from './auth/instructor.guard';
+import { StudentGuard } from './auth/student.guard';
 const routes: Routes = [
  
   {
@@ -45,7 +47,8 @@ const routes: Routes = [
   {
     path: 'add-training',
     component: AddTrainingComponent,
-    children:[]
+    children:[],
+
   },
   {
     path: 'login',
@@ -66,12 +69,14 @@ const routes: Routes = [
   {
     path: 'add-session',
     component: AddSessionComponent,
-    children:[]
+    children:[],
+
   },
   {
     path: 'TrainingList',
     component: ListsTrainingComponent,
-    children:[]
+    canActivate: [StudentGuard]
+
   },
   
   {
@@ -83,7 +88,9 @@ const routes: Routes = [
   {
     path: 'CoursesManagement',  
     component: CoursesManagementComponent,
-    children:[]
+    children:[],
+    canActivate: [InstructorGuard]
+
   },
 
 
@@ -91,17 +98,28 @@ const routes: Routes = [
     path: 'QuizManagement',
   
     component: QuizManagementComponent,
-    children:[]
+    children:[],
+    canActivate: [InstructorGuard]
+
   },
   {
     path: 'QuizQuestionsManagement/:id', // ✅ Ajouter l'ID du quiz dans l'URL
     component: QuizQuestionsManagementComponent,
+    canActivate: [InstructorGuard]
+
+
   },
 
   { path: 'courses/training/:trainingId', 
-    component: CoursesStudentComponent },
+    component: CoursesStudentComponent,
+    canActivate: [StudentGuard]
+ },
+
     { path: 'PassQuiz/:quizId',
-       component: QuizInterfaceComponent },// ✅ Passage du quiz avec ID
+       component: QuizInterfaceComponent,
+       canActivate: [StudentGuard]
+
+       },// ✅ Passage du quiz avec ID
 
 
        { path: 'StatTraining',
@@ -115,6 +133,7 @@ const routes: Routes = [
     path: '',
     component: AdminComponent,
     canActivate: [AdminGuard],  // Application du guard ici
+
     children: [
       {
         path: 'dashboard',

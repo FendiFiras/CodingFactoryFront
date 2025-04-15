@@ -21,7 +21,7 @@ export class CoursesManagementComponent implements OnInit {
   trainings: Training[] = [];  
   courseForm: FormGroup;
   selectedTrainingId: number | null = null;
-  userId: number = 1; // 🔥 Utilisateur test
+  userId: number = 2; // 🔥 Utilisateur test
   selectedFiles: File[] = []; // Liste des fichiers sélectionnés
 // ✅ Variables pour gérer l'affichage du modal et les fichiers sélectionnés
 showFileModal: boolean = false;
