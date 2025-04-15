@@ -29,7 +29,7 @@
           <!-- Afficher "Anonyme" si le message est anonyme -->
           <div class="user-info" *ngIf="message.anonymous">
             <div class="anonymous-user">
-               <span class="user-name">Anonymos</span>
+               <span class="user-name">anonymous</span>
             </div>
            </div>
         
@@ -81,6 +81,8 @@
     <!-- Nouvelle ligne d'actions intégrée -->
     <div class="inline-actions">
       <button (click)="toggleEmojiPicker()">😀</button>
+      <!-- Sélecteur d'emojis -->
+      <emoji-picker *ngIf="showEmojiPicker" (emoji-click)="addEmoji($event)"></emoji-picker>
       <label class="file-upload">
         <input type="file" (change)="onFileSelected($event)" accept="image/*" />
         📎
