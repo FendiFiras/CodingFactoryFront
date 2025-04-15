@@ -30,7 +30,7 @@ export class UsersStatsComponent implements OnInit {
     femalePercentage: 0,
     darkModeUsers: 0,
     lightModeUsers: 0,
-    regions: [] as {region: string, count: number}[]
+    regions: [] as { region: string, count: number }[]
   };
 
   // Filtres
@@ -44,7 +44,7 @@ export class UsersStatsComponent implements OnInit {
   originalData = {
     gender: { Male: 0, Female: 0 },
     theme: { darkMode: 0, lightMode: 0 },
-    regions: [] as {region: string, count: number}[]
+    regions: [] as { region: string, count: number }[]
   };
 
   loading = true;
@@ -84,36 +84,31 @@ export class UsersStatsComponent implements OnInit {
   }
 
   applyFilters() {
-    // Appliquer le filtre de période
     let maleCount = this.originalData.gender.Male;
     let femaleCount = this.originalData.gender.Female;
     let darkMode = this.originalData.theme.darkMode;
     let lightMode = this.originalData.theme.lightMode;
     let regions = [...this.originalData.regions];
 
-    // Simulation de l'effet de la période
-    const periodFactor = this.filters.period === '7days' ? 0.3 : 
+    const periodFactor = this.filters.period === '7days' ? 0.3 :
                         this.filters.period === '30days' ? 1 : 1.5;
     
     maleCount = Math.round(maleCount * periodFactor);
     femaleCount = Math.round(femaleCount * periodFactor);
     darkMode = Math.round(darkMode * periodFactor);
     lightMode = Math.round(lightMode * periodFactor);
-    regions = regions.map(r => ({...r, count: Math.round(r.count * periodFactor)}));
+    regions = regions.map(r => ({ ...r, count: Math.round(r.count * periodFactor) }));
 
-    // Appliquer le filtre de genre
     if (this.filters.gender === 'male') {
       femaleCount = 0;
     } else if (this.filters.gender === 'female') {
       maleCount = 0;
     }
 
-    // Appliquer le filtre de région
     if (this.filters.regions === 'top5') {
       regions = regions.sort((a, b) => b.count - a.count).slice(0, 5);
     }
 
-    // Mettre à jour les stats
     const totalGender = maleCount + femaleCount;
     this.stats = {
       ...this.stats,
@@ -124,7 +119,6 @@ export class UsersStatsComponent implements OnInit {
       regions: regions
     };
 
-    // Mettre à jour les graphiques
     this.updateGenderChart(maleCount, femaleCount);
     this.updateThemeChart(darkMode, lightMode);
     this.updateRegionChart(regions);
@@ -132,16 +126,10 @@ export class UsersStatsComponent implements OnInit {
 
   updateGenderChart(male: number, female: number) {
     const total = male + female;
-    
     this.donutChart = {
       chart: {
         type: 'donut',
-        height: 350,
-        animations: {
-          enabled: true,
-          easing: 'easeinout',
-          speed: 800
-        }
+        height: 350
       },
       dataLabels: {
         enabled: true,
@@ -180,9 +168,7 @@ export class UsersStatsComponent implements OnInit {
       legend: {
         position: 'right',
         markers: {
-          width: 12,
-          height: 12,
-          radius: 6
+          strokeWidth: 12,
         }
       },
       tooltip: {
@@ -191,6 +177,7 @@ export class UsersStatsComponent implements OnInit {
         }
       }
     };
+    
 
     this.radialChart = {
       chart: {
@@ -245,12 +232,7 @@ export class UsersStatsComponent implements OnInit {
         type: 'bar',
         height: 350,
         stacked: true,
-        toolbar: { show: false },
-        animations: {
-          enabled: true,
-          easing: 'easeinout',
-          speed: 800
-        }
+        toolbar: { show: false }
       },
       plotOptions: {
         bar: {
@@ -311,22 +293,16 @@ export class UsersStatsComponent implements OnInit {
     };
   }
 
-  updateRegionChart(regions: {region: string, count: number}[]) {
+  updateRegionChart(regions: { region: string, count: number }[]) {
     this.regionChartOptions = {
       chart: {
         type: 'bar',
-        height: 350,
-        animations: {
-          enabled: true,
-          easing: 'easeinout',
-          speed: 800
-        }
+        height: 350
       },
       plotOptions: {
         bar: {
           borderRadius: 6,
           columnWidth: '60%',
-          distributed: false,
           dataLabels: {
             position: 'top'
           }

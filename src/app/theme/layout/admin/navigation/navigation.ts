@@ -94,7 +94,14 @@ export const NavigationItems: NavigationItem[] = [
             icon: 'feather icon-server',
             breadcrumbs: false
           },
-          
+          {
+            id: 'archive Ban',
+            title: 'Archived Banned Users',
+            type: 'item',
+            url: '/archive-ban',
+            icon: 'feather icon-server',
+            breadcrumbs: false
+          },
           {
             id: 'user stats',
             title: 'Users stats',

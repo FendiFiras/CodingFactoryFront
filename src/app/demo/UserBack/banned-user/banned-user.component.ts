@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { BanLogService } from 'src/app/services/banlog.service';
 import { BanLog } from 'src/app/models/ban-log';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { User } from 'src/app/models/user';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -43,7 +42,8 @@ export class BannedUsersComponent implements OnInit {
   getBannedUsers(): void {
     this.banlogservice.getAllBanLogs().subscribe(
       (data: BanLog[]) => {
-        this.bannedUsers = data;
+        const now = new Date();
+        this.bannedUsers = data.filter(ban => new Date(ban.banDuration) > now);
         this.totalPages = Math.ceil(this.bannedUsers.length / this.itemsPerPage);
         this.updatePaginatedUsers();
       },
@@ -52,6 +52,7 @@ export class BannedUsersComponent implements OnInit {
       }
     );
   }
+  
  // Mettre à jour la liste des utilisateurs affichés pour la pagination
  updatePaginatedUsers(): void {
   const start = (this.page - 1) * this.itemsPerPage;

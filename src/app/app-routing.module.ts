@@ -65,6 +65,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/UserBack/banned-user/banned-user.component').then((c) => c.BannedUsersComponent)
       },
       {
+        path: 'archive-ban',
+        loadComponent: () => import('./demo/UserBack/archive-ban/archive-ban.component').then(m => m.ArchiveBanComponent)
+      },
+      
+      {
         path: 'users-stats',
         loadComponent: () => import('./demo/UserBack/users-stats/users-stats.component').then((c) => c.UsersStatsComponent)
       },
