@@ -17,6 +17,8 @@ export class MessageService {
     return this.http.get<Message[]>(`${this.apiUrl}/discussion/${discussionId}`);
   }
 
+
+
   getMessagesByDiscussion(discussionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/discussion/${discussionId}`).pipe(
       tap(data => console.log('Données reçues de l\'API :', data)) // Utilisez tap pour inspecter les données
