@@ -111,7 +111,7 @@ export class ManageOffersComponent {
   }
 
   loadOffers(): void {
-    this.offerService.getOffersByCompanyRepresentative(1).subscribe( // //////////////////////////////////////////////////
+    this.offerService.getOffersByCompanyRepresentative(3).subscribe( // //////////////////////////////////////////////////
       (data: Offer[]) => {
         this.offers = data;
       },

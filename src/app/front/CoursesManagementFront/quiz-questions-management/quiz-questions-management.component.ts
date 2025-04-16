@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router'; // ✅ Importer ActivatedRoute
 import { forkJoin } from 'rxjs';
 import { CheatDetectionServiceTsService } from 'src/app/services/cheat-detection.service.ts.service';
 import { PdfServiceservice } from 'src/app/services/pdfservice.service';
-import { User } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user';
 @Component({
   selector: 'app-quiz-questions-management',
   standalone: true,

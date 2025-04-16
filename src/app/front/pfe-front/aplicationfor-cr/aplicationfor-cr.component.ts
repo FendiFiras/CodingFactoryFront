@@ -23,7 +23,7 @@ import { NotifPfeComponent } from "../notif-pfe/notif-pfe.component";
 
 @Component({
   selector: 'app-aplicationfor-cr',
-  imports: [RouterModule, FilterPipe, CommonModule, NavbarComponent, FooterComponent, BrowserModule, ReactiveFormsModule,
+  imports: [RouterModule, FilterPipe, CommonModule, NavbarComponent, FooterComponent, ReactiveFormsModule,
     MatDialogModule, // Include MatDialogModule
     MatButtonModule,
     MatInputModule,

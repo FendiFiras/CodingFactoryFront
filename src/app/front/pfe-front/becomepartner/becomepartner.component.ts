@@ -19,7 +19,7 @@ import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
 export class BecomepartnerComponent {
   partnershipForm: FormGroup;
   fileSelected: boolean = false;
-  userId: number = 1; // ////////////////////////////////////////////////////////////
+  userId: number = 3; // ////////////////////////////////////////////////////////////
   userRole: string = 'COMPANYREPRESENTATIVE'; // Replace with actual role check
   hasPartnership: boolean = false; // Flag to track if the user already has a partnership
   industries: string[] = ['Artificial Intelligence', 'IT', 'Marketing', 'Finance', 'Healthcare', 'Other'];

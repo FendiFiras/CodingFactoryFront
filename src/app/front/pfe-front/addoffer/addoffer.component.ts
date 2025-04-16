@@ -23,7 +23,7 @@ import { TagInputModule } from 'ngx-chips';
 export class AddofferComponent {
 
   addOfferForm: FormGroup;
-  userId: number =1; ////////////////////////////////////////////////////////////
+  userId: number =3; ////////////////////////////////////////////////////////////
   userRole: string = 'COMPANYREPRESENTATIVE'; // Manually set, change as required
   hasOffer: boolean = false; // Set this dynamically if needed
   tunisianGovernorates = [

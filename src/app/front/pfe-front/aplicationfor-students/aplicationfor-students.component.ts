@@ -16,12 +16,12 @@ import { CalendarComponent } from '../calendar/calendar.component';
 @Component({
   selector: 'app-aplicationfor-students',
   imports: [CommonModule,RouterModule,CalendarComponent
-  , NavbarComponent, FooterComponent,BrowserModule,ReactiveFormsModule,RouterModule],
+  , NavbarComponent, FooterComponent,ReactiveFormsModule,RouterModule],
   templateUrl: './aplicationfor-students.component.html',
   styleUrl: './aplicationfor-students.component.scss'
 })
 export class AplicationforStudentsComponent {
-  userId: number=3; // ///////////////////////////////////////////////////////////////
+  userId: number=2; // ///////////////////////////////////////////////////////////////
   applications: Application[] = [];
     offerName?: string; // Optional property if you don't always have it
 
