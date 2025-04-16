@@ -31,8 +31,9 @@
               "src/assets",
               "src/fake-data",
               "src/assets1",
-              "src/assets2"
+              "src/assets2",
 
+              "src/uploads" 
             ],
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",

@@ -142,10 +142,42 @@ export const NavigationItems: NavigationItem[] = [
       {
         id: 'Pfe Managment',
         title: 'Pfe Managment',
-        type: 'item',
-        url: '/Pfe/bootstrap',
+        type: 'collapse',
+        url: '/pfemanagment',
         classes: 'nav-item',
-        icon: 'feather icon-server'
+        icon: 'feather icon-server',
+        children: [
+          {
+            id: 'partnershipslist',
+            title: 'Partnerships',
+            type: 'item',
+            url: '/partnerships'
+          },
+          {
+            id: 'offerslist',
+            title: 'Offers',
+            type: 'item',
+            url: '/offerslist'
+          },
+          {
+            id: 'Applications',
+            title: 'Applications',
+            type: 'item',
+            url: '/applications'
+          },
+          {
+            id: 'PfeAffectations',
+            title: 'Pfe Affectations',
+            type: 'item',
+            url: '/pfeaffectations'
+          },
+          {
+            id: 'evaluations',
+            title: 'Evaluations',
+            type: 'item',
+            url: '/evaluations'
+          }
+        ]
       },
       {
         id: 'Forums Managment',

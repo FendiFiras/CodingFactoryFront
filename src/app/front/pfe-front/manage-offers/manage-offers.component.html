@@ -1,0 +1,197 @@
+<app-navbar></app-navbar>
+<div class="stricky-header stricked-menu main-menu main-header-two">
+  <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+</div><!-- /.stricky-header -->
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+  <div class="page-header__bg jarallax-img"></div><!-- /.page-header-bg -->
+  <div class="page-header__overlay"></div><!-- /.page-header-overlay -->
+  <div class="container text-center">
+      <h2 class="page-header__title">Manage Your Offers</h2><!-- /.page-title -->
+      <ul class="page-header__breadcrumb list-unstyled">
+          <li><a href="index.html">Home</a></li>
+          <li><span>Manage Offers</span></li>
+      </ul><!-- /.page-breadcrumb list-unstyled -->
+  </div><!-- /.container -->
+</section><!-- /.page-header -->
+<!-- Cart Start -->
+<section class="offer-management">
+    <div class="container">
+      <!-- Table Section -->
+      <div class="table-responsive">
+        <table class="offer-table">
+          <thead>
+            <tr>
+              <th>Offer Title</th>
+              <th>Duration</th>
+              <th>Applications</th>
+              <th>Affectations</th>
+              <th>Update</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop through offers using Angular *ngFor -->
+            <tr *ngFor="let offer of offers">
+              <td>
+                <div class="offer-title">
+                  <h3>{{ offer.title }}</h3>
+                </div>
+              </td>
+              <td>{{ offer.duration }}</td>
+              <td>
+                <a [routerLink]="['/applicationsforCR', offer.idOffer]" class="btn btn-primary">
+                  <span class="btn-curve"></span>Applications List
+                </a>
+              </td>
+              <td>
+                <a [routerLink]="['/assignments', offer.idOffer]" class="btn btn-primary">
+                  <span class="btn-curve"></span>Affectation List
+                </a>
+              </td>
+              <td>
+                <a (click)="toggleUpdateForm(offer)" class="btn btn-warning">
+                  <span class="btn-curve"></span>{{ isUpdating && selectedOffer?.idOffer === offer.idOffer ? 'Cancel' : 'Update' }}
+                </a>
+              </td>
+              <td>
+                <a (click)="deleteOffer(offer.idOffer)" class="btn btn-danger">
+                  <span class="icon-close"></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Update Form -->
+<div *ngIf="isUpdating" class="update-form">
+  <h3 class="update-form-title">Update Offer</h3>
+  <form [formGroup]="updateOfferForm" (ngSubmit)="onUpdate()" class="update-form-content">
+    
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" formControlName="title" placeholder="Enter title">
+      <div *ngIf="updateOfferForm.get('title')?.invalid && updateOfferForm.get('title')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['required']">Title is required.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['minlength']">Title must be at least 10 characters.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['maxlength']">Title must be at most 100 characters.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['pattern']">Title can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+    <div>
+      <label for="appnmbr">Number of Applicants:</label>
+      <input id="appnmbr" formControlName="appnmbr" type="number">
+      <div *ngIf="updateOfferForm.get('appnmbr')?.invalid && updateOfferForm.get('appnmbr')?.touched">
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('required')">This field is required.</small>
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('min')">The number must be greater than 0.</small>
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('pattern')">Only numbers are allowed.</small>
+      </div>
+    </div>
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" placeholder="Enter description"></textarea>
+      <div *ngIf="updateOfferForm.get('description')?.invalid && updateOfferForm.get('description')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['required']">Description is required.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- Required Skills -->
+    <div class="form-group">
+      <label for="requiredSkill">Required Skills</label>
+      <tag-input
+        id="requiredSkill"
+        formControlName="requiredSkill"
+        placeholder="Add Skills"
+        [modelAsStrings]="true"
+        [separatorKeyCodes]="[13, 188]"
+        (onAdd)="onTagAdd($event)"
+        (onRemove)="onTagRemove($event)">
+      </tag-input>
+      <div *ngIf="updateOfferForm.get('requiredSkill')?.invalid && updateOfferForm.get('requiredSkill')?.touched" class="error-message">
+        Required skills are mandatory.
+      </div>
+    </div>
+    
+
+    <!-- Location -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <select id="location" formControlName="location">
+        <option value="" disabled>Select Location</option>
+        <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('location')?.invalid && updateOfferForm.get('location')?.touched" class="error-message">
+        Location is required.
+      </div>
+    </div>
+
+    <!-- Duration -->
+    <div class="form-group">
+      <label for="duration">Duration</label>
+      <select id="duration" formControlName="duration">
+        <option value="" disabled>Select Duration</option>
+        <option value="3 months">3 Months</option>
+        <option value="6 months">6 Months</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('duration')?.invalid && updateOfferForm.get('duration')?.touched" class="error-message">
+        Duration is required.
+      </div>
+    </div>
+
+    <!-- Employment Type -->
+    <div class="form-group">
+      <label for="employmentType">Employment Type</label>
+      <select id="employmentType" formControlName="employmentType">
+        <option value="" disabled>Select Employment Type</option>
+        <option value="Remote">Remote</option>
+        <option value="On-site">On-site</option>
+        <option value="Hybrid">Hybrid</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('employmentType')?.invalid && updateOfferForm.get('employmentType')?.touched" class="error-message">
+        Employment type is required.
+      </div>
+    </div>
+
+    <!-- Job Responsibilities -->
+    <div class="form-group">
+      <label for="jobResponsibilities">Job Responsibilities</label>
+      <textarea id="jobResponsibilities" formControlName="jobResponsibilities" placeholder="Enter job responsibilities"></textarea>
+      <div *ngIf="updateOfferForm.get('jobResponsibilities')?.invalid && updateOfferForm.get('jobResponsibilities')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['required']">Job Responsibilities are required.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- What We Offer -->
+    <div class="form-group">
+      <label for="whatWeOffer">What We Offer</label>
+      <textarea id="whatWeOffer" formControlName="whatWeOffer" placeholder="Enter what you offer"></textarea>
+      <div *ngIf="updateOfferForm.get('whatWeOffer')?.invalid && updateOfferForm.get('whatWeOffer')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['required']">This field is required.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="updateOfferForm.invalid">
+        <span class="btn-curve"></span>Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+
+    </div>
+  </section>
+<app-footer></app-footer>
+<!-- Cart End -->
+ <router-outlet></router-outlet>

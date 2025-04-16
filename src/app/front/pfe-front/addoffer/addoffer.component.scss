@@ -1,0 +1,92 @@
+.checkout-page {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+    width: 100%; /* Ensure it takes full width */
+    margin: 0; /* Remove default margin */
+  
+    .container-fluid { /* Use container-fluid for full width */
+      padding: 0; /* Remove default padding */
+    }
+  
+    &__billing-address {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Ensure it takes full width */
+  
+      &__title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+    }
+  
+    &__form {
+      .row {
+        margin-bottom: 20px;
+      }
+    }
+  
+    &__input-box {
+      margin-bottom: 20px;
+  
+      input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #333;
+        transition: border-color 0.3s ease;
+  
+        &:focus {
+          border-color: #ff9800;
+          outline: none;
+        }
+      }
+  
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+  
+      select {
+        appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        background-size: 12px;
+      }
+  
+      .error-message {
+        color: #d32f2f;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+    }
+  
+    &__submit-button {
+      text-align: center;
+  
+      .eduact-btn {
+        background-color: #ff9800;
+        color: #fff;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #e68900;
+        }
+  
+        &[disabled] {
+          background-color: #e68900;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }

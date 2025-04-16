@@ -1,0 +1,145 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Step Navigation with Progress Bar */
+.step-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step::before {
+  content: "";
+  width: 20px; /* Smaller size */
+  height: 20px; /* Smaller size */
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  transition: background-color 0.3s;
+  margin-bottom: 0; /* Remove margin to align the polygon with the line */
+  position: absolute;
+  top: 50%; /* Align vertically with the line */
+  transform: translateY(-50%); /* Adjust positioning to the center */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.step[data-step="1"]::before {
+  content: "1";
+}
+
+.step[data-step="2"]::before {
+  content: "2";
+}
+
+.step span {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.step.active {
+  color: #007bff;
+}
+
+.step.active::before {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Progress Bar */
+.step-navigation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 5px;
+  background-color: #ddd;
+  z-index: -1;
+  transform: translateY(-50%);
+}
+
+/* Form Fields */
+.form-group {
+  margin-bottom: 25px; /* Increased margin between form groups */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px; /* Increased space between label and input */
+  font-weight: bold;
+  color: #333;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px; /* Increased padding inside input/textarea */
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  color: #333;
+  font-size: 16px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus, textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+textarea {
+  height: 120px;
+}
+
+button {
+  margin-top: 15px; /* Increased margin to space out buttons */
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}

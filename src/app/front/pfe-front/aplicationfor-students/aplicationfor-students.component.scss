@@ -1,0 +1,119 @@
+.main-content {
+  padding: 40px 0;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  align-items: start;
+
+  @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+  }
+}
+
+.applications-container {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.applications-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.application-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+      transform: translateY(-3px);
+  }
+
+  .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+  }
+
+  .app-id {
+      font-size: 0.9rem;
+      color: #6c757d;
+  }
+
+  .status-pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      &.status-accepted {
+          background: #d4edda;
+          color: #155724;
+      }
+
+      &.status-pending {
+          background: #fff3cd;
+          color: #856404;
+      }
+
+      &.status-rejected {
+          background: #f8d7da;
+          color: #721c24;
+      }
+  }
+
+  .offer-title {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #2c3e50;
+  }
+}
+
+.calendar-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+
+  .calendar-title {
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+      gap: 20px;
+  }
+  
+  .application-card {
+      padding: 15px;
+  }
+  
+  .calendar-section {
+      padding: 15
+  }}
+  .page-header__bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-image: url('/assets1/images/backgrounds/page-header-bg-1-1.jpg');
+  }
+  
+  .page-header--bg-two .page-header__bg {
+    background-image: url('/assets1/images/backgrounds/page-header-bg-1-2.jpg');
+  }
+  

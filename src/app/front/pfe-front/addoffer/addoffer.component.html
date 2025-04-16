@@ -1,0 +1,148 @@
+<app-navbar></app-navbar>
+<app-notif-pfe></app-notif-pfe>
+
+<section class="checkout-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <div class="checkout-page__billing-address">
+          <h2 class="checkout-page__billing-address__title">Add New Offer</h2>
+          <form [formGroup]="addOfferForm" (ngSubmit)="onSubmit()" class="checkout-page__form">
+            <div class="row bs-gutter-x-20">
+             <!-- Title -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <input type="text" formControlName="title" placeholder="Title" required>
+      <div *ngIf="addOfferForm.get('title')?.invalid && addOfferForm.get('title')?.touched" class="error-message">
+        <span *ngIf="addOfferForm.get('title')?.errors?.['required']">Title is required.</span>
+        <span *ngIf="addOfferForm.get('title')?.errors?.['minlength']">Title must be at least 10 characters.</span>
+        <span *ngIf="addOfferForm.get('title')?.errors?.['maxlength']">Title must be at most 100 characters.</span>
+        <span *ngIf="addOfferForm.get('title')?.errors?.['pattern']">Title can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Required Skills -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <tag-input formControlName="requiredSkill" placeholder="Add Skills" [modelAsStrings]="true" [separatorKeyCodes]="[13, 188]" (onAdd)="onTagAdd($event)" (onRemove)="onTagRemove($event)">
+      </tag-input>
+      <div *ngIf="addOfferForm.get('requiredSkill')?.invalid && addOfferForm.get('requiredSkill')?.touched" class="error-message">
+        Required skills are mandatory.
+      </div>
+    </div>
+  </div>
+
+  <!-- Number of Candidates -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <input type="number" formControlName="appnmbr" placeholder="Number Of Candidates" required>
+      <div *ngIf="addOfferForm.get('appnmbr')?.invalid && addOfferForm.get('appnmbr')?.touched" class="error-message">
+        <span *ngIf="addOfferForm.get('appnmbr')?.errors?.['required']">Number of candidates is required.</span>
+        <span *ngIf="addOfferForm.get('appnmbr')?.errors?.['min']">At least one candidate is required.</span>
+        <span *ngIf="addOfferForm.get('appnmbr')?.errors?.['pattern']">Only positive numbers are allowed (no leading zeros).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div class="col-xl-6">
+    <div class="checkout-page__input-box">
+      <select formControlName="location" required>
+        <option value="" disabled selected>Select Location</option>
+        <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
+      </select>
+      <div *ngIf="addOfferForm.get('location')?.invalid && addOfferForm.get('location')?.touched" class="error-message">
+        Location is required.
+      </div>
+    </div>
+  </div>
+
+  <!-- Duration -->
+  <div class="col-xl-6">
+    <div class="checkout-page__input-box">
+      <select formControlName="duration" required>
+        <option value="" disabled selected>Select Duration</option>
+        <option value="3 months">3 Months</option>
+        <option value="6 months">6 Months</option>
+      </select>
+      <div *ngIf="addOfferForm.get('duration')?.invalid && addOfferForm.get('duration')?.touched" class="error-message">
+        Duration is required.
+      </div>
+    </div>
+  </div>
+
+  <!-- Employment Type -->
+  <div class="col-xl-6">
+    <div class="checkout-page__input-box">
+      <select formControlName="employmentType" required>
+        <option value="" disabled selected>Select Employment Type</option>
+        <option value="Remote">Remote</option>
+        <option value="On-site">On-site</option>
+        <option value="Hybrid">Hybrid</option>
+      </select>
+      <div *ngIf="addOfferForm.get('employmentType')?.invalid && addOfferForm.get('employmentType')?.touched" class="error-message">
+        Employment type is required.
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Responsibilities -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <textarea formControlName="jobResponsibilities" placeholder="Job Responsibilities" required></textarea>
+      <div *ngIf="addOfferForm.get('jobResponsibilities')?.invalid && addOfferForm.get('jobResponsibilities')?.touched" class="error-message">
+        <span *ngIf="addOfferForm.get('jobResponsibilities')?.errors?.['required']">Job Responsibilities are required.</span>
+        <span *ngIf="addOfferForm.get('jobResponsibilities')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="addOfferForm.get('jobResponsibilities')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="addOfferForm.get('jobResponsibilities')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+  </div>
+  <!-- Description -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <textarea
+      formControlName="description"
+      placeholder="Job description"
+    ></textarea>   
+      <div *ngIf="addOfferForm.get('description')?.invalid && addOfferForm.get('description')?.touched" class="error-message">
+        <span *ngIf="addOfferForm.get('description')?.errors?.['required']">Description is required.</span>
+        <span *ngIf="addOfferForm.get('description')?.errors?.['minlength']">Description must be at least 20 characters.</span>
+        <span *ngIf="addOfferForm.get('description')?.errors?.['maxlength']">Description must be at most 500 characters.</span>
+        <span *ngIf="addOfferForm.get('description')?.errors?.['pattern']">Description can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- What We Offer -->
+  <div class="col-xl-12">
+    <div class="checkout-page__input-box">
+      <textarea formControlName="whatWeOffer" placeholder="What We Offer" required></textarea>
+      <div *ngIf="addOfferForm.get('whatWeOffer')?.invalid && addOfferForm.get('whatWeOffer')?.touched" class="error-message">
+        <span *ngIf="addOfferForm.get('whatWeOffer')?.errors?.['required']">This field is required.</span>
+        <span *ngIf="addOfferForm.get('whatWeOffer')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="addOfferForm.get('whatWeOffer')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="addOfferForm.get('whatWeOffer')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+  </div>
+
+ 
+              
+
+            <!-- Submit Button -->
+            <div class="checkout-page__submit-button">
+              <button type="submit" [disabled]="addOfferForm.invalid" class="eduact-btn eduact-btn-second">
+                <span class="eduact-btn__curve"></span>Submit Offer<i class="icon-arrow"></i>
+              </button>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

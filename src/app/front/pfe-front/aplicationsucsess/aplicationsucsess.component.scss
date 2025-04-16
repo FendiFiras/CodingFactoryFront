@@ -1,0 +1,42 @@
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .error-page .container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .error-page__content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .error-page__thumb {
+    margin-bottom: 20px;
+  }
+  
+  .error-page__thumb img {
+    max-width: 80%; /* Resize the image to be smaller */
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+  }
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  

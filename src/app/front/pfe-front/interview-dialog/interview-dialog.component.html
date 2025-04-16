@@ -1,0 +1,23 @@
+<mat-dialog-content>
+  <form (ngSubmit)="submit(dateInput.value, timeInput.value)">
+    <div class="form-group">
+      <label for="interviewDate">Interview Date</label>
+      <input
+        type="date"
+        #dateInput
+        id="interviewDate"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="interviewTime">Interview Time</label>
+      <input
+        type="time"
+        #timeInput
+        id="interviewTime"
+        required
+      />
+    </div>
+    <button mat-button type="submit">Schedule Interview</button>
+  </form>
+</mat-dialog-content>

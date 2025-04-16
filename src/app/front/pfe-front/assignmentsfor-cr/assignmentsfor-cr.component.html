@@ -1,0 +1,70 @@
+<app-navbar></app-navbar>
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">Applications for the Offer</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a href="/">Home</a></li>
+            <li><span>Applications</span></li>
+        </ul>
+    </div>
+</section>
+
+<section class="applications-page">
+  <div class="container">
+      <div class="assignments-table">
+        <table class="table">
+            <thead>
+              <tr>
+                <th>Affectation</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>Evaluation</th>
+                <th>Evaluation PDF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let assignment of assignments; let i = index">
+                <td>{{ i+1 }}</td>
+                <td>
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'status-pending': assignment.status === 'Pending',
+                      'status-reviewed': assignment.status === 'Reviewed',
+                      'status-accepted': assignment.status === 'Accepted',
+                      'status-rejected': assignment.status === 'Rejected'
+                    }"
+                  >{{ assignment.status }}</span>
+                </td>
+                <td>{{ assignment.startDate | date }}</td>
+                <td>
+                  <button (click)="openEvaluationForm(assignment.idAffectation)" class="btn btn-view">
+                    Evaluate Student
+                  </button>
+                </td>
+                <td>
+                
+                <button *ngIf="assignment.evaluation?.idEvaluation"
+                (click)="downloadPdf(assignment.evaluation.evaluationPdf, 'evaluation_' + assignment.idAffectation + '.pdf')"
+                class="btn btn-dark">
+          <i class="fas fa-download"></i> Download PDF
+        </button>
+        
+        <!-- Debug message -->
+        <span *ngIf="!assignment.evaluation?.idEvaluation" class="text-muted">
+          No evaluation available
+        </span>
+                </td>
+              </tr>
+            </tbody>
+            
+          </table>
+          
+          
+      </div>
+  </div>
+</section>
+<app-footer></app-footer>
+<router-outlet></router-outlet>

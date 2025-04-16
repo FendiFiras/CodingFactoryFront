@@ -13376,12 +13376,13 @@ body.megamenu-popup-active .mobile-nav__content {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  background-image: url(../images/backgrounds/page-header-bg-1-1.jpg);
+  background-image: url('/assets1/images/backgrounds/page-header-bg-1-1.jpg');
 }
 
 .page-header--bg-two .page-header__bg {
-  background-image: url(../images/backgrounds/page-header-bg-1-2.jpg);
+  background-image: url('/assets1/images/backgrounds/page-header-bg-1-2.jpg');
 }
+
 
 .page-header__overlay {
   width: 100%;
