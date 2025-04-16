@@ -267,7 +267,7 @@ async generateNewTopics() {
 createForumFromTopic(topic: string) {
   this.addForumForm.patchValue({
     title: topic,
-    description: 'Discussion générée automatiquement sur ce sujet'
+    description: 'Forum automatically generated on this topic'
   });
   this.showAddForm = true;
   this.editMode = false;
