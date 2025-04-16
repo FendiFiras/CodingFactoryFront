@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ForumService } from 'src/app/service/forum.service';
+import { ForumService } from 'src/app/services/forum.service';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component';
-import { AIGeneratorService } from 'src/app/service/ai-generator.service';
+import { AIGeneratorService } from 'src/app/services/ai-generator.service';
 
 interface Forum {
   forum_id?: number;

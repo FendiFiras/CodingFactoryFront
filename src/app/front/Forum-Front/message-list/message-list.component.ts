@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { MessageService } from 'src/app/service/message.service';
+import { MessageService } from 'src/app/services/message.service';
 import { Message } from 'src/app/models/message.model';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';

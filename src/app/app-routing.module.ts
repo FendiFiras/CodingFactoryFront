@@ -7,7 +7,7 @@ import { HomeComponent } from './front/home/home.component';
 import { LoginPageComponent } from './front/login-page/login-page.component';
 import { ListeForumComponent } from './front/Forum-Front/liste-forum/liste-forum.component';
 
-import { ForumService } from 'src/app/service/forum.service';
+import { ForumService } from 'src/app/services/forum.service';
 import { CommonModule } from '@angular/common';
 import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
 import { ForumsManagementComponent } from './demo/forums-management/forums-management.component';

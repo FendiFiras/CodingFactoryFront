@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DiscussionService } from 'src/app/service/Discussion.service';
-import { MessageService } from 'src/app/service/message.service';
+import { DiscussionService } from 'src/app/services/Discussion.service';
+import { MessageService } from 'src/app/services/message.service';
 import { ConfigurationComponent } from "../../../theme/layout/admin/configuration/configuration.component";
 import { NavigationComponent } from "../../../theme/layout/admin/navigation/navigation.component";
 

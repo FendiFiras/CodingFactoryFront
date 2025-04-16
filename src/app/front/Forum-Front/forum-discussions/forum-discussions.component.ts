@@ -1,5 +1,5 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { DiscussionService } from 'src/app/service/Discussion.service';
+import { DiscussionService } from 'src/app/services/Discussion.service';
 import { Discussion } from 'src/app/models/discussion1';
 import { CommonModule } from '@angular/common'; // Importez CommonModule
 import { ActivatedRoute, Router } from '@angular/router';

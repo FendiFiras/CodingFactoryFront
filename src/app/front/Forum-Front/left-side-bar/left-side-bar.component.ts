@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { ForumService } from 'src/app/service/forum.service';
+import { ForumService } from 'src/app/services/forum.service';
 import { Forum } from 'src/app/models/forum';
 
 @Component({
