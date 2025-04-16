@@ -1,0 +1,45 @@
+<app-navbar></app-navbar>
+<section class="page-header page-header--bg-two" data-jarallax data-speed="0.3" data-imgPosition="50% -100%">
+    <div class="page-header__bg jarallax-img"></div>
+    <div class="page-header__overlay"></div>
+    <div class="container text-center">
+        <h2 class="page-header__title">My Applications</h2>
+        <ul class="page-header__breadcrumb list-unstyled">
+            <li><a href="/">Home</a></li>
+            <li><span>Applications</span></li>
+        </ul>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="main-content">
+    <div class="container">
+        <div class="content-grid">
+            <!-- Applications List (Left Side) -->
+            <div class="applications-container">
+                <div class="applications-grid">
+                    <div *ngFor="let application of applications" class="application-card">
+                        <div class="card-top">
+                            <span class="app-id">APPLICATION </span>
+                            <div class="status-pill" [ngClass]="getStatusClass(application.status)">
+                                {{ application.status }}
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="offer-title">{{ application.offer.title }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar (Right Side) -->
+            <div class="calendar-section">
+                <h2 class="calendar-title">Interview Schedule</h2>
+                <app-calendar [studentId]="userId"></app-calendar>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer></app-footer>
+<router-outlet></router-outlet>

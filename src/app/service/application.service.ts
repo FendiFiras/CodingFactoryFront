@@ -16,7 +16,7 @@ export class ApplicationService {
   applyForOffer(application: Application): Observable<Application> {
     return this.http.post<Application>(`${this.apiUrl}/apply`, application);
   }*/
-
+  
     applyForOffer(formData: FormData, userId: number): Observable<any> {
       return this.http
         .post(`${this.apiUrl}/apply/${userId}`, formData)
@@ -38,18 +38,25 @@ export class ApplicationService {
         );
     }
   
-  getApplicationsByOfferId(offerId: number): Observable<Application[]> {
-    return this.http.get<Application[]>(`${this.apiUrl}/applicationsforCR/${offerId}`);
-  }
+
   // Upload CV file
-  uploadCv(file: FormData): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/upload-cv`, file);
+  uploadCv(formData: FormData): Observable<any> {
+    return this.http.post<string>(`${this.apiUrl}/upload-cv`, formData);
   }
    // Fetch all applications
    getApplications(): Observable<Application[]> {
     return this.http.get<Application[]>(this.apiUrl);
   }
-
+  getRequiredSkillsForOffer(offerId: number): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/${offerId}/required-skills`);
+  }
+  getApplicationsWithScores(offerId: number, requiredSkills: string): Observable<Application[]> {
+    return this.http.get<Application[]>(`${this.apiUrl}/applicationswithscore?offerId=${offerId}&requiredSkills=${requiredSkills}`);
+  }
+  getApplicationsByOfferId(offerId: number): Observable<Application[]> {
+    return this.http.get<Application[]>(`${this.apiUrl}/applicationsforCR/${offerId}`);
+  }
+  
   // Fetch a single application by ID
   getApplicationById(id: number): Observable<Application> {
     return this.http.get<Application>(`${this.apiUrl}/${id}`);
@@ -59,7 +66,9 @@ export class ApplicationService {
   updateApplication(id: number, application: Application): Observable<Application> {
     return this.http.put<Application>(`${this.apiUrl}/updateapp/${id}`, application);
   }
-
+  getApplicationsByUserId(userId: number): Observable<Application[]> {
+    return this.http.get<Application[]>(`${this.apiUrl}/by-user/${userId}`);
+  }
   // Delete an application
   deleteApplication(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/deleteapp/${id}`);
@@ -68,5 +77,7 @@ export class ApplicationService {
     return this.http.get<number>(`${this.apiUrl}/user/${applicationId}`);
   }
 
-
+  getApplicantNameByApplicationId(applicationId: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/application/${applicationId}/applicant-name`, { responseType: 'text' });
+  }
 }

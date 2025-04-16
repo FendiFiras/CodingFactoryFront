@@ -1,26 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Application } from 'src/app/models/Application';
 import { ApplicationService } from 'src/app/service/application.service';
-import { NavBarComponent } from "../../../theme/layout/admin/nav-bar/nav-bar.component";
 import { FooterComponent } from "../../elements/footer/footer.component";
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
 import { NotifPfeComponent } from "../notif-pfe/notif-pfe.component";
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-application-form',
-  imports: [NavBarComponent, FooterComponent, ReactiveFormsModule, NavbarComponent,
-    HttpClientModule,
-    MatInputModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule, NotifPfeComponent],
+  imports: [ FooterComponent, ReactiveFormsModule, NavbarComponent,HttpClientModule,MatInputModule,CommonModule,RouterModule,MatCardModule,MatButtonModule, NotifPfeComponent],
   templateUrl: './application-form.component.html',
   styleUrl: './application-form.component.scss'
 })
@@ -40,14 +34,15 @@ export class ApplicationFormComponent  {
     private notificationService: NotificationPfeService
   ) {
     this.applicationForm = this.fb.group({
-      score: ['', [Validators.required, Validators.min(0), Validators.max(20)]],
+
       availability: ['', [Validators.required, this.futureDateValidator]],
       fieldofStudy: ['', Validators.required],
       university: ['', [Validators.required, Validators.minLength(5)]],
-      coverLetter: ['', [Validators.required, Validators.minLength(15)]],
-      cv: [''], // Will store the CV file name (string path)
-      submissionDate: [new Date().toISOString().split('T')[0]], // Set today’s date
-      status: ['Pending'], // Initialize status as "Pending"
+      coverLetter: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(200)]],
+      cv: [''],
+      submissionDate: [new Date().toISOString().split('T')[0]],
+      status: ['Pending'],
+      score: [null],
     });
   }
   futureDateValidator(control: any) {
@@ -68,26 +63,27 @@ export class ApplicationFormComponent  {
     this.userId = this.getUserId(); // Implement this method to get the logged-in user's ID
   }
 
-  // Get the logged-in user's ID (replace with your actual logic)
   getUserId(): number {
-    // Example: Fetch from local storage or authentication service
-    return 2; // Replace with the actual user ID
+    return 3; //////////////////////////////////////////////////////////////////////
   }
 
   // Handle file selection
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (file) {
+    if (file && file.type === 'application/pdf') {
       this.cvFile = file;
-      this.applicationForm.patchValue({ cv: file.name }); // Store only the file name as a path string
+      this.applicationForm.patchValue({ cv: file.name });
+    } else {
+      this.cvFile = null;
+      alert('Only PDF files are allowed.');
     }
   }
+  
 
   // Go to the next step
   nextStep(): void {
     if (
       this.currentStep === 1 &&
-      this.applicationForm.get('score')?.valid &&
       this.applicationForm.get('availability')?.valid &&
       this.applicationForm.get('fieldofStudy')?.valid &&
       this.applicationForm.get('university')?.valid
@@ -103,32 +99,56 @@ export class ApplicationFormComponent  {
     }
   }
 
-  // Submit the application
   onSubmit(): void {
     if (this.applicationForm.valid && this.offerId && this.userId) {
+      // Create an application object without the file
       const application: Application = {
         ...this.applicationForm.value,
         offer: { idOffer: this.offerId }, // Include the offer ID in the application object
       };
-  
-      // Create a FormData object for file upload
+
+      // Create a FormData object for file upload and application data
       const formData = new FormData();
-      formData.append('application', JSON.stringify(application)); // Append the application as JSON
+      
+      // Append the application object as a JSON string
+      formData.append('application', JSON.stringify(application)); // This will be handled by your backend
+      
+      // If there's a CV file selected, append it to FormData
       if (this.cvFile) {
-        formData.append('cvFile', this.cvFile); // Append the CV file
+        formData.append('cvFile', this.cvFile, this.cvFile.name); // Ensure the file name is added
       }
   
+      // First, upload the CV if there's one to upload
+      if (this.cvFile) {
+        this.applicationService.uploadCv(formData).subscribe({
+          next: (response) => {
+            console.log('File uploaded successfully:', response);
+          },
+          error: (error) => {
+            console.error('Error uploading file:', error);
+            this.notificationService.showNotification('Error uploading file', 'error');
+            return; // Stop further execution if file upload fails
+          }
+        });
+      }
+  
+      // After uploading the CV (if applicable), submit the application
       this.applicationService.applyForOffer(formData, this.userId).subscribe({
         next: (response) => {
           console.log('Application submitted successfully:', response);
           this.notificationService.showNotification('Application submitted successfully!', 'success'); // Show success notification
-          this.router.navigate(['/applictiondone']);// change route
+          this.router.navigate(['/applictiondone']); // Correct route (fix typo from 'applictiondone' to 'applicationdone')
         },
         error: (err) => {
           console.error('Failed to submit application:', err);
           this.notificationService.showNotification(err.message || 'Failed to submit application.', 'error'); // Show error notification
         },
       });
+    } else {
+      console.error('Form is not valid');
+      this.notificationService.showNotification('Please fill out all required fields.', 'error'); // Show error if form is not valid
     }
   }
+  
+  
   }

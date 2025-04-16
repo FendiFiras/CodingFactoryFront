@@ -8,6 +8,9 @@ export interface Application {
     university: string;
     coverLetter: string;
     cv: string;
-    offer: { idOffer: number }; // Relationship to the Offer entity
+    offer: { idOffer: number 
+      title :string
+    }; // Relationship to the Offer entity
     userId?: number;
+    applicantName?: string; // <-- new field for full name
   }

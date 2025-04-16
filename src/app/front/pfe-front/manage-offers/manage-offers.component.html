@@ -64,60 +64,132 @@
       </div>
   
       <!-- Update Form -->
-      <div *ngIf="isUpdating" class="update-form">
-        <h3 class="update-form-title">Update Offer</h3>
-        <form (ngSubmit)="onUpdate()" class="update-form-content">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" [(ngModel)]="selectedOffer.title" name="title" required minlength="10">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" [(ngModel)]="selectedOffer.description" name="description" required minlength="20"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="requiredSkill">Required Skill</label>
-            <input type="text" id="requiredSkill" [(ngModel)]="selectedOffer.requiredSkill" name="requiredSkill" required minlength="20">
-          </div>
-          <div class="form-group">
-            <label for="location">Location</label>
-            <select id="location" [(ngModel)]="selectedOffer.location" name="location" required>
-              <option value="" disabled>Select Location</option>
-              <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="duration">Duration</label>
-            <select id="duration" [(ngModel)]="selectedOffer.duration" name="duration" required>
-              <option value="" disabled>Select Duration</option>
-              <option value="3 months">3 Months</option>
-              <option value="6 months">6 Months</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="employmentType">Employment Type</label>
-            <select id="employmentType" [(ngModel)]="selectedOffer.employmentType" name="employmentType" required>
-              <option value="" disabled>Select Employment Type</option>
-              <option value="Remote">Remote</option>
-              <option value="On-site">On-site</option>
-              <option value="Hybrid">Hybrid</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="jobResponsibilities">Job Responsibilities</label>
-            <textarea id="jobResponsibilities" [(ngModel)]="selectedOffer.jobResponsibilities" name="jobResponsibilities" required minlength="20"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="whatWeOffer">What We Offer</label>
-            <textarea id="whatWeOffer" [(ngModel)]="selectedOffer.whatWeOffer" name="whatWeOffer" required minlength="20"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-              <span class="btn-curve"></span>Save Changes
-            </button>
-          </div>
-        </form>
+<div *ngIf="isUpdating" class="update-form">
+  <h3 class="update-form-title">Update Offer</h3>
+  <form [formGroup]="updateOfferForm" (ngSubmit)="onUpdate()" class="update-form-content">
+    
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" formControlName="title" placeholder="Enter title">
+      <div *ngIf="updateOfferForm.get('title')?.invalid && updateOfferForm.get('title')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['required']">Title is required.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['minlength']">Title must be at least 10 characters.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['maxlength']">Title must be at most 100 characters.</span>
+        <span *ngIf="updateOfferForm.get('title')?.errors?.['pattern']">Title can have max 4 special characters and must include at least 10 letters.</span>
       </div>
+    </div>
+    <div>
+      <label for="appnmbr">Number of Applicants:</label>
+      <input id="appnmbr" formControlName="appnmbr" type="number">
+      <div *ngIf="updateOfferForm.get('appnmbr')?.invalid && updateOfferForm.get('appnmbr')?.touched">
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('required')">This field is required.</small>
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('min')">The number must be greater than 0.</small>
+        <small class="error" *ngIf="updateOfferForm.get('appnmbr')?.hasError('pattern')">Only numbers are allowed.</small>
+      </div>
+    </div>
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" placeholder="Enter description"></textarea>
+      <div *ngIf="updateOfferForm.get('description')?.invalid && updateOfferForm.get('description')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['required']">Description is required.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('description')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- Required Skills -->
+    <div class="form-group">
+      <label for="requiredSkill">Required Skills</label>
+      <tag-input
+        id="requiredSkill"
+        formControlName="requiredSkill"
+        placeholder="Add Skills"
+        [modelAsStrings]="true"
+        [separatorKeyCodes]="[13, 188]"
+        (onAdd)="onTagAdd($event)"
+        (onRemove)="onTagRemove($event)">
+      </tag-input>
+      <div *ngIf="updateOfferForm.get('requiredSkill')?.invalid && updateOfferForm.get('requiredSkill')?.touched" class="error-message">
+        Required skills are mandatory.
+      </div>
+    </div>
+    
+
+    <!-- Location -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <select id="location" formControlName="location">
+        <option value="" disabled>Select Location</option>
+        <option *ngFor="let governorate of tunisianGovernorates" [value]="governorate">{{ governorate }}</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('location')?.invalid && updateOfferForm.get('location')?.touched" class="error-message">
+        Location is required.
+      </div>
+    </div>
+
+    <!-- Duration -->
+    <div class="form-group">
+      <label for="duration">Duration</label>
+      <select id="duration" formControlName="duration">
+        <option value="" disabled>Select Duration</option>
+        <option value="3 months">3 Months</option>
+        <option value="6 months">6 Months</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('duration')?.invalid && updateOfferForm.get('duration')?.touched" class="error-message">
+        Duration is required.
+      </div>
+    </div>
+
+    <!-- Employment Type -->
+    <div class="form-group">
+      <label for="employmentType">Employment Type</label>
+      <select id="employmentType" formControlName="employmentType">
+        <option value="" disabled>Select Employment Type</option>
+        <option value="Remote">Remote</option>
+        <option value="On-site">On-site</option>
+        <option value="Hybrid">Hybrid</option>
+      </select>
+      <div *ngIf="updateOfferForm.get('employmentType')?.invalid && updateOfferForm.get('employmentType')?.touched" class="error-message">
+        Employment type is required.
+      </div>
+    </div>
+
+    <!-- Job Responsibilities -->
+    <div class="form-group">
+      <label for="jobResponsibilities">Job Responsibilities</label>
+      <textarea id="jobResponsibilities" formControlName="jobResponsibilities" placeholder="Enter job responsibilities"></textarea>
+      <div *ngIf="updateOfferForm.get('jobResponsibilities')?.invalid && updateOfferForm.get('jobResponsibilities')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['required']">Job Responsibilities are required.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('jobResponsibilities')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- What We Offer -->
+    <div class="form-group">
+      <label for="whatWeOffer">What We Offer</label>
+      <textarea id="whatWeOffer" formControlName="whatWeOffer" placeholder="Enter what you offer"></textarea>
+      <div *ngIf="updateOfferForm.get('whatWeOffer')?.invalid && updateOfferForm.get('whatWeOffer')?.touched" class="error-message">
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['required']">This field is required.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['minlength']">Must be at least 20 characters.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['maxlength']">Must be at most 500 characters.</span>
+        <span *ngIf="updateOfferForm.get('whatWeOffer')?.errors?.['pattern']">Can have max 4 special characters and must include at least 10 letters.</span>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="updateOfferForm.invalid">
+        <span class="btn-curve"></span>Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+
     </div>
   </section>
 <app-footer></app-footer>

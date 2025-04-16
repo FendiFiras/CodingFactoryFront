@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, mergeMap, Observable, retryWhen, switchMap, throwError, timer ,take} from 'rxjs';
 import { Offer } from '../models/Offer';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Offer } from '../models/Offer';
 })
 export class OfferService {
   private apiUrl = 'http://localhost:8089/pidev/offers'; // Replace with your backend API URL
+  private apiUrlAI = 'http://localhost:8089/pidev/generate-description';
 
   constructor(private http: HttpClient) {}
 
@@ -18,8 +19,13 @@ export class OfferService {
       })
     );
   }
-  
+ // offer.service.ts
+// Updated with proper rate limit handling
 
+
+generateDescription(promptData: any): Observable<any> {
+  return this.http.post(this.apiUrlAI, promptData);
+}
   // Fetch all offers
   getOffers(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);

@@ -7,7 +7,7 @@ export interface Offer {
     requiredSkill: string;
     duration: string;
     location: string;
-
+  appnmbr : number;
     employmentType: string;
     jobResponsibilities: string;
     whatWeOffer: string;

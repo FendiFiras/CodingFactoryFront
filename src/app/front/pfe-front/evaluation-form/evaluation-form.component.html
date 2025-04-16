@@ -1,0 +1,126 @@
+<div class="evaluation-popup pdf-style">
+  <h2 class="pdf-header">Student Evaluation Form</h2>
+  <form (ngSubmit)="submitEvaluation()">
+    <div class="form-group pdf-form-group" *ngFor="let question of questions; let i = index">
+      <label class="question-label pdf-label">{{ question.text }}</label>
+      <div class="pdf-select-wrapper">
+        <select class="score-select pdf-field" [(ngModel)]="question.score" name="score{{ i }}">
+          <option value="" disabled selected>Select score</option>
+          <option *ngFor="let score of [1, 2, 3, 4, 5]" [value]="score">{{ score }}</option>
+        </select>
+        <div class="pdf-select-arrow">▼</div>
+      </div>
+    </div>
+
+    <div class="form-group pdf-form-group">
+      <label class="comment-label pdf-label">Additional Comments</label>
+      <textarea
+        class="comment-textarea pdf-field pdf-textarea"
+        [(ngModel)]="comment"
+        name="comment"
+        rows="4"
+        placeholder="Enter your comments here..."
+      ></textarea>
+    </div>
+
+    <div class="button-group pdf-button-group">
+      <button class="btn pdf-button" type="submit">Submit Evaluation</button>
+    </div>
+  </form>
+</div>
+
+<style>
+.pdf-style {
+font-family: 'Helvetica', Arial, sans-serif;
+background: #ffffff;
+padding: 30px;
+max-width: 800px;
+margin: 20px auto;
+box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.pdf-header {
+color: #333333;
+border-bottom: 2px solid #cccccc;
+padding-bottom: 10px;
+margin-bottom: 25px;
+font-size: 24px;
+}
+
+.pdf-form-group {
+margin-bottom: 20px;
+}
+
+.pdf-label {
+display: block;
+margin-bottom: 8px;
+color: #444444;
+font-size: 14px;
+font-weight: 600;
+}
+
+.pdf-field {
+width: 100%;
+padding: 8px 12px;
+border: 1px solid #999999;
+border-radius: 3px;
+font-size: 14px;
+color: #333333;
+background-color: #f8f8f8;
+transition: all 0.3s ease;
+}
+
+.pdf-field:focus {
+outline: none;
+border-color: #0066cc;
+background-color: #ffffff;
+box-shadow: 0 0 3px rgba(0,102,204,0.3);
+}
+
+.pdf-select-wrapper {
+position: relative;
+display: inline-block;
+width: 100%;
+}
+
+.pdf-select-arrow {
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+pointer-events: none;
+color: #666666;
+font-size: 12px;
+}
+
+.pdf-textarea {
+resize: vertical;
+min-height: 100px;
+}
+
+.pdf-button-group {
+text-align: right;
+margin-top: 25px;
+}
+
+.pdf-button {
+background-color: #0066cc;
+color: #ffffff;
+padding: 10px 25px;
+border: 1px solid #0052a3;
+border-radius: 4px;
+font-size: 14px;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.pdf-button:hover {
+background-color: #0052a3;
+}
+
+select.score-select {
+appearance: none;
+-webkit-appearance: none;
+-moz-appearance: none;
+}
+</style>

@@ -1,0 +1,31 @@
+<!-- calendar.component.html -->
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button class="nav-button" (click)="previousMonth()">&lt;</button>
+    <h2>{{ currentDate | date:'MMMM yyyy' }}</h2>
+    <button class="nav-button" (click)="nextMonth()">&gt;</button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="day-header" *ngFor="let day of daysOfWeek">{{ day }}</div>
+    
+    <div class="date-cell" 
+         *ngFor="let date of weeks.flat()" 
+         [class.current-month]="date.isCurrentMonth"
+         [class.has-interview]="date.interviews.length > 0">
+      
+      <div class="date-number">{{ date.date.getDate() }}</div>
+      
+      <div class="interviews-container">
+        <div class="interview-item" 
+             *ngFor="let interview of date.interviews"
+             [title]="interview.application.offer.title + ' @ ' + formatTime(interview.interviewTime)">
+          {{ interview.application.offer.title }}
+          <div class="interview-time">
+            {{ formatTime(interview.interviewTime) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

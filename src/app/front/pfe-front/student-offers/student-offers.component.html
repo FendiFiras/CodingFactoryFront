@@ -1,76 +1,112 @@
 <app-navbar></app-navbar>
+
 <section class="accrodion-one">
-    <div class="container">
-        <div class="section-title  text-center">
-<h2 class="section-title__title">Explore Our Pfe Interships <br>Apply Here</h2>
-        </div>
-<div class="student-offers-container">
-    <div class="container-fluid mt-4">
-      <div class="row">
-        <!-- Left Side: List of Offers -->
-        <div class="col-md-4">
-          <div class="list-group">
-            <div
-              *ngFor="let offer of offers"
-              class="list-group-item list-group-item-action"
-              (click)="onSelectOffer(offer)"
-              [class.active]="offer === selectedOffer"
-            >
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">{{ offer.title }}</h6>
-                  <small class="text-muted">{{ offer.duration }}</small>
+  <div class="container">
+    <div class="section-title text-center">
+      <h2 class="section-title__title">Explore Our PFE Internships <br>Apply Here</h2>
+    </div>
+
+    <!-- 🔍 Filter Section -->
+    <div class="row mb-4">
+      <!-- Employment Type Filter -->
+      <div class="col-md-4">
+        <label for="employmentType">Employment Type</label>
+        <select class="form-control" [(ngModel)]="filters.employmentType" (ngModelChange)="applyFilters()">
+          <option value="">All</option>
+          <option value="Remote">Remote</option>
+          <option value="On-site">On-site</option>
+          <option value="Hybrid">Hybrid</option>
+        </select>
+      </div>
+
+      <!-- Location Filter -->
+      <div class="col-md-4">
+        <label for="location">Location</label>
+        <select class="form-control" [(ngModel)]="filters.location" (ngModelChange)="applyFilters()">
+          <option value="">All</option>
+          <option *ngFor="let gov of tunisianGovernorates" [value]="gov">{{ gov }}</option>
+        </select>
+      </div>
+
+      <!-- Title Filter -->
+      <div class="col-md-4">
+        <label for="searchTerm">Offer Title</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by title"
+          [(ngModel)]="filters.title"
+          (ngModelChange)="applyFilters()"
+        />
+      </div>
+    </div>
+
+    <!-- 🔽 Offer List and Details -->
+    <div class="student-offers-container">
+      <div class="container-fluid mt-4">
+        <div class="row">
+          <!-- Left Side: List of Offers -->
+          <div class="col-md-4">
+            <div class="list-group">
+              <div
+                *ngFor="let offer of offers"
+                class="list-group-item list-group-item-action"
+                (click)="onSelectOffer(offer)"
+                [class.active]="offer === selectedOffer"
+              >
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">{{ offer.title }}</h6>
+                    <small class="text-muted">{{ offer.duration }}</small>
+                  </div>
+                  <img
+                    *ngIf="offer.partnership?.companyLogo"
+                    [src]="offer.partnership.companyLogo"
+                    alt="Company Logo"
+                    class="img-thumbnail"
+                    style="width: 50px; height: 50px;"
+                  />
                 </div>
-                <img
-                  *ngIf="offer.partnership?.companyLogo"
-                  [src]="offer.partnership.companyLogo"
-                  alt="Company Logo"
-                  class="img-thumbnail"
-                  style="width: 50px; height: 50px;"
-                />
               </div>
             </div>
           </div>
-        </div>
-  
-        <!-- Right Side: Offer Details -->
-        <div class="col-md-8">
-          <div *ngIf="selectedOffer" class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ selectedOffer.title }}</h5>
-              <p class="card-text">{{ selectedOffer.description }}</p>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <strong>Location:</strong> {{ selectedOffer.duration }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Company:</strong> {{ selectedOffer.partnership?.companyName }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Employment Type:</strong> {{ selectedOffer.employmentType }}
-                </li>
-                <li class="list-group-item">
-                  <strong>Required Skills:</strong> {{ selectedOffer.requiredSkill }}
-                </li>
-                <li class="list-group-item">
-                  <strong>What We Offer:</strong> {{ selectedOffer.whatWeOffer }}
-                </li>
-              </ul>
-             <button
-  class="btn btn-primary"
-  (click)="onApply(selectedOffer.idOffer)"
->
-  Apply Now
-</button>
+
+          <!-- Right Side: Offer Details -->
+          <div class="col-md-8">
+            <div *ngIf="selectedOffer" class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ selectedOffer.title }}</h5>
+                <p class="card-text">{{ selectedOffer.description }}</p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <strong>Location:</strong> {{ selectedOffer.duration }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Company:</strong> {{ selectedOffer.partnership?.companyName }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Employment Type:</strong> {{ selectedOffer.employmentType }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Required Skills:</strong> {{ selectedOffer.requiredSkill }}
+                  </li>
+                  <li class="list-group-item">
+                    <strong>What We Offer:</strong> {{ selectedOffer.whatWeOffer }}
+                  </li>
+                </ul>
+                <button class="btn btn-primary mt-3" (click)="onApply(selectedOffer.idOffer)">
+                  Apply Now
+                </button>
+              </div>
             </div>
-          </div>
-          <div *ngIf="!selectedOffer" class="text-center">
-            <p>Select an offer to view details.</p>
+            <div *ngIf="!selectedOffer" class="text-center">
+              <p>Select an offer to view details.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </section>
-  <app-footer></app-footer>
+
+<app-footer></app-footer>

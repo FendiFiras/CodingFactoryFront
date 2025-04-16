@@ -15,6 +15,8 @@ import { AplicationsucsessComponent } from './front/pfe-front/aplicationsucsess/
 import { ManageOffersComponent } from './front/pfe-front/manage-offers/manage-offers.component';
 import { AplicationforCRComponent } from './front/pfe-front/aplicationfor-cr/aplicationfor-cr.component';
 import { AssignmentsforCRComponent } from './front/pfe-front/assignmentsfor-cr/assignmentsfor-cr.component';
+import { AplicationforStudentsComponent } from './front/pfe-front/aplicationfor-students/aplicationfor-students.component';
+import { EvaluationFormComponent } from './front/pfe-front/evaluation-form/evaluation-form.component';
 
 const routes: Routes = [
   {
@@ -30,6 +32,7 @@ const routes: Routes = [
   { path: 'apply/:offerId', component: ApplicationFormComponent }, // Route for application form
   { path: 'applictiondone', component: AplicationsucsessComponent }, // Route for application susess
   { path: 'manageoffers', component: ManageOffersComponent }, 
+  { path: 'assignments/evaluate/:assignmentId', component: EvaluationFormComponent },
 
 
   {
@@ -38,6 +41,7 @@ const routes: Routes = [
   },
   { path: 'assignments/:offerId', component: AssignmentsforCRComponent }, // Add this route
   { path: 'applicationsforCR/:offerId', component: AplicationforCRComponent }, // Add this route
+  { path: 'applicationsforS', component: AplicationforStudentsComponent },
 
   {
     path: 'welcompartner',
