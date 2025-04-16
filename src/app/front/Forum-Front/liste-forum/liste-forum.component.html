@@ -80,7 +80,7 @@
 
       <!-- Forums List -->
       <div class="row">
-        <div class="col-xl-12" *ngFor="let forum of forums">
+        <div class="col-xl-12" *ngFor="let forum of paginatedForums">
           <div class="blog-two__item blog-two__item--list">
             <div class="blog-two__image">
               <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
@@ -145,15 +145,29 @@
       </div>
 
       <!-- Pagination -->
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="blog-page__pagination text-left clearfix">
-            <li><a href="#" class="active">1</a></li>
-            <li><a href="#">2</a></li>
-            <li class="next"><a href="#"><span class="icon-caret-right"></span></a></li>
-          </ul>
-        </div>
-      </div>
+<div class="row">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        
+        <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+          <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+        </li>
+        
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
     </div>
   </div>
 </div>

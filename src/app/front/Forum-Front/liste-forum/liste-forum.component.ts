@@ -38,7 +38,10 @@ export class ListeForumComponent implements OnInit {
   forumToEdit: Forum | null = null;
   suggestedTopics: string[] = [];
   isGenerating = false;
-
+  // Dans votre classe ListeForumComponent
+currentPage: number = 1;
+itemsPerPage: number = 3;
+totalItems: number = 0;
   
 
 
@@ -80,6 +83,7 @@ export class ListeForumComponent implements OnInit {
           const dateB = b.creationDate ? new Date(b.creationDate).getTime() : 0;
           return dateB - dateA;
         });
+        this.totalItems = this.forums.length;
         this.isLoading = false;
       },
       error: (err) => {
@@ -87,6 +91,29 @@ export class ListeForumComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  get paginatedForums(): Forum[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.forums.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  changePage(page: number): void {
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+  
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.itemsPerPage);
+  }
+  
+  get pages(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   toggleAddForm(): void {
