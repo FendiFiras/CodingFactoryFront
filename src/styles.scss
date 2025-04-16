@@ -28,3 +28,27 @@ html, body {
     width: 100% !important;
 }
 
+/* styles.scss ou styles.css */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+  
+    .card {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+  
+    .modal-content {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+  
+    .table {
+      color: #e0e0e0;
+    }
+  
+    .table th,
+    .table td {
+      border-color: #444;
+    }
+  }

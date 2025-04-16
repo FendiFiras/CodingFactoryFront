@@ -1,0 +1,208 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+  <div class="row">
+    <!-- Left Sidebar -->
+    <div class="col-xl-4 col-lg-4 sidebar-container">
+      <app-left-side-bar></app-left-side-bar>
+    </div>
+
+    <!-- Forums List -->
+    <div class="col-xl-8 col-lg-8">
+      <h2>List of Forums</h2>
+
+      <!-- Bouton pour ajouter un forum -->
+      <button class="btn btn-primary mb-3" (click)="toggleAddForm()">
+        {{ showAddForm ? 'Hide the form' : 'Add New Forum' }}
+      </button>
+
+
+
+
+
+
+      <!-- Bouton pour afficher/cacher les suggestions IA -->
+      <div *ngIf="suggestedTopics.length">
+        <div class="ai-header">
+          <h4>
+            <i class="fas fa-robot"></i>  Suggestions
+            <small>(Automatically Generated)</small>
+          </h4>
+          <button (click)="generateNewTopics()" [disabled]="isGenerating">
+            <i class="fas fa-sync-alt" [class.spin]="isGenerating"></i>
+            {{ isGenerating ? 'Generation...' : 'New topics' }}
+          </button>
+        </div>
+      
+        <div class="ai-topics">
+          <div *ngFor="let topic of suggestedTopics" class="ai-topic">
+            {{ topic }}
+            <button (click)="createForumFromTopic(topic)">
+              <i class="fas fa-plus"></i> Create
+            </button>
+          </div>
+        </div>
+      </div>
+
+     <!-- Formulaire d'ajout -->
+<div *ngIf="showAddForm && !editMode" class="mb-4">
+  <h4>Add New Forum</h4>
+  <form [formGroup]="addForumForm" (ngSubmit)="addForum()">
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-control" formControlName="title" />
+      <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+        <div *ngIf="addForumForm.get('title').errors?.['required']">Le titre est requis.</div>
+        <div *ngIf="addForumForm.get('title').errors?.['minlength']">Le titre doit contenir au moins 2 caractères.</div>
+        <div *ngIf="addForumForm.get('title').errors?.['maxlength']">Le titre ne doit pas dépasser 50 caractères.</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" formControlName="description"></textarea>
+      <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+        <div *ngIf="addForumForm.get('description').errors?.['required']">La description est requise.</div>
+        <div *ngIf="addForumForm.get('description').errors?.['minlength']">La description doit contenir au moins 20 caractères.</div>
+        <div *ngIf="addForumForm.get('description').errors?.['maxlength']">La description ne doit pas dépasser 150 caractères.</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image</label>
+      <input type="file" class="form-control" (change)="onFileSelected($event)" />
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Submit</button>
+  </form>
+</div>
+
+
+      <!-- Forums List -->
+      <div class="row">
+        <div class="col-xl-12" *ngFor="let forum of paginatedForums">
+          <div class="blog-two__item blog-two__item--list">
+            <div class="blog-two__image">
+              <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
+              <a [routerLink]="['/forum', forum.forum_id]"></a>
+            </div>
+
+            <div class="blog-two__content">
+              <div class="blog-two__top-meta">
+                <div class="blog-two__cats"><a href="#">Forum</a></div>
+                <div class="blog-two__date"><i class="icon-clock"></i>{{ forum.creationDate | date: 'medium' }}</div>
+              </div>
+
+              <h3 class="blog-two__title">
+                <a [routerLink]="['/forum', forum.forum_id, 'discussions']">{{ forum.title }}</a>
+              </h3>
+
+              <p class="blog-two__text">{{ forum.description }}</p>
+
+              <div class="blog-two__meta">
+                <button class="btn btn-warning btn-sm me-2" (click)="editForum(forum)">Modify </button>
+                <button class="btn btn-danger btn-sm" (click)="confirmDelete(forum.forum_id)">Delete</button>
+              </div>
+            </div>
+
+            <div *ngIf="editMode && forumToEdit?.forum_id === forum.forum_id" class="blog-two__content">
+              <h4>Modify forum</h4>
+              <form [formGroup]="addForumForm" (ngSubmit)="updateForum()">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input type="text" class="form-control" formControlName="title" />
+                  <div *ngIf="addForumForm.get('title').invalid && addForumForm.get('title').touched" class="text-danger">
+                    <div *ngIf="addForumForm.get('title').errors?.['required']">Title is required.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['minlength']">The title must contain at least 2 characters.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['maxlength']">The title must not exceed 50 characters.</div>
+                    <div *ngIf="addForumForm.get('title').errors?.['pattern']">The title must contain only letters and spaces.</div>
+                  </div>
+                </div>
+            
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" formControlName="description"></textarea>
+                  <div *ngIf="addForumForm.get('description').invalid && addForumForm.get('description').touched" class="text-danger">
+                    <div *ngIf="addForumForm.get('description').errors?.['required']"> Description is required.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['minlength']"> Ddescription must contain at least 20 characters.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['maxlength']"> Description must not exceed 150 characters.</div>
+                    <div *ngIf="addForumForm.get('description').errors?.['pattern']"> Description must contain only letters and spaces.</div>
+                  </div>
+                </div>
+            
+                <div class="mb-3">
+                  <label class="form-label">Image</label>
+                  <input type="file" class="form-control" (change)="onFileSelected($event)" />
+                </div>
+            
+                <button type="submit" class="btn btn-success" [disabled]="addForumForm.invalid">Enregistrer</button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false; forumToEdit = null;">Annuler</button>
+              </form>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+<div class="row">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        
+        <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+          <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+        </li>
+        
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+<style>
+  /* Ensure the parent container uses flexbox */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Ensure the left sidebar and list forum are aligned side by side */
+.col-xl-4, .col-lg-5 {
+  flex: 0 0 auto;
+  width: 33.3333%; /* Adjust width as needed */
+}
+
+.col-xl-8, .col-lg-7 {
+  flex: 0 0 auto;
+  width: 66.6667%; /* Adjust width as needed */
+}
+
+/* Ensure the left sidebar sticks to the left */
+.sidebar--left {
+  position: sticky;
+  top: 0; /* Adjust as needed */
+  height: 100vh; /* Full height */
+  overflow-y: auto; /* Add scroll if content overflows */
+}
+.forum-image {
+  width: 100%; /* Pour qu'elles occupent toute la largeur du conteneur */
+  height: 200px; /* Taille fixe en hauteur */
+  object-fit: cover; /* Recadre l'image sans déformation */
+  border-radius: 8px; /* Coins arrondis pour un meilleur design */
+}
+</style>

@@ -183,7 +183,7 @@ export const NavigationItems: NavigationItem[] = [
         id: 'Forums Managment',
         title: 'Forums Managment',
         type: 'item',
-        url: '/Forums/bootstrap',
+        url: '/forums-management',
         classes: 'nav-item',
         icon: 'feather icon-server'
       },

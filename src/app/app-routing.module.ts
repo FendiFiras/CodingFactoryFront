@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { HomeComponent } from './front/home/home.component';
@@ -35,7 +36,15 @@ import { AplicationforCRComponent } from './front/pfe-front/aplicationfor-cr/apl
 import { AssignmentsforCRComponent } from './front/pfe-front/assignmentsfor-cr/assignmentsfor-cr.component';
 import { AplicationforStudentsComponent } from './front/pfe-front/aplicationfor-students/aplicationfor-students.component';
 import { EvaluationFormComponent } from './front/pfe-front/evaluation-form/evaluation-form.component';
+import { ListeForumComponent } from './front/Forum-Front/liste-forum/liste-forum.component';
 
+import { ForumService } from 'src/app/services/forum.service';
+import { CommonModule } from '@angular/common';
+import { ForumDiscussionsComponent } from './front/Forum-Front/forum-discussions/forum-discussions.component';
+import { ForumsManagementComponent } from './demo/forums-management/forums-management.component';
+import { AdminDiscussionComponent } from './demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component';
+import { MessageComponent } from './front/Forum-Front/message-list/message-list.component';
+import { AdminDiscussionMessagesComponent } from './demo/Message-Managment/admin-discussion-messages/admin-discussion-messages.component';
 const routes: Routes = [
  
   {
@@ -85,6 +94,69 @@ const routes: Routes = [
     children:[],
 
   },
+
+  {
+    path: 'ListForum',
+    component: ListeForumComponent
+  },
+
+
+  { path: 'forum/:forumId',
+     component: ForumDiscussionsComponent }, 
+
+
+  { path: 'admin/forum/:forumId/discussions',
+     component: AdminDiscussionComponent },
+
+
+     { path: 'admin/forum/:forumId/discussions/:discussionId', 
+      component: AdminDiscussionComponent },
+
+      {
+        path: 'discussion/:discussionId/messages',
+        component: MessageComponent
+      },
+
+
+      {
+        path: 'admin/forum/:forumId/discussion/:discussionId/messages',
+        component: AdminDiscussionMessagesComponent,
+      },
+
+    
+ /* { path: 'admin/forum/:forumId/discussions/add',
+     component: AdminAddDiscussionComponent },
+
+
+  { path: 'admin/forum/:forumId/discussions/:discussionId/edit',
+     component: AdminAddDiscussionComponent },
+    */
+
+
+
+ // { path: 'forums-management', component: ForumsManagementComponent },
+
+
+
+
+
+
+
+  /*
+  {
+    path: 'forum/:id/discussions',
+    component: ForumDiscussionsComponent 
+  },
+  */
+
+ /*
+  {
+    path: 'ForumsList',
+    component: FourmsListComponent
+  },
+*/
+  
+
   {
     path: 'login',
     component: CodingLoginComponent
@@ -270,6 +342,16 @@ const routes: Routes = [
         loadComponent: () => import('./demo/extra/sample-page/sample-page.component')
       },
       
+
+      {
+        path: 'forums-management',
+        loadComponent: () => import('./demo/forums-management/forums-management.component').then((m) => m.ForumsManagementComponent)
+      },
+
+      {
+        path: 'admin-forum-discussions',
+        loadComponent: () => import('./demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component').then((m) => m.AdminDiscussionComponent)
+      }
     ]
   },
 

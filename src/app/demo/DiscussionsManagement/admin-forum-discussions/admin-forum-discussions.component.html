@@ -1,0 +1,115 @@
+<div class="main-container">
+  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }"
+    (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
+
+  <div class="forum-container">
+    <div class="forum-header">
+      <h2>Discussions du Forum</h2>
+      <button class="btn btn-primary" (click)="toggleForm()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="search-bar">
+      <input type="text" class="form-control" placeholder="Research ..." [(ngModel)]="searchQuery"
+        (input)="applyFilter()" />
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <!-- Liste des discussions -->
+    <div *ngIf="!isLoading && filteredDiscussions.length > 0" class="discussion-grid">
+      <div *ngFor="let discussion of paginatedDiscussions" class="discussion-card">
+        <div class="card-content">
+          <h5 class="card-title">{{ discussion.title }}</h5>
+          <p class="card-description">{{ discussion.description }}</p>
+          <p class="card-date">Publié le: {{ discussion.publicationDate | date }}</p>
+          <div class="card-actions">
+            <button class="btn btn-info" (click)="viewMessages(discussion.discussion_id)">
+              <i class="fas fa-comments"></i> View Message
+            </button>
+            <button class="btn btn-danger" (click)="deleteDiscussion(discussion.discussion_id)">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+            <button class="btn btn-warning" (click)="editDiscussion(discussion)">
+              <i class="fas fa-edit"></i> Modify
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav *ngIf="filteredDiscussions.length > itemsPerPage" aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="previousPage()" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+          <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+          <a class="page-link" (click)="nextPage()" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div *ngIf="!isLoading && filteredDiscussions.length === 0" class="no-discussions">
+      Aucune discussion trouvée.
+    </div>
+  </div>
+
+  <!-- Sidebar Form -->
+  <div class="sidebar" [class.active]="showForm">
+    <div class="sidebar-header">
+      <h5>{{ editMode ? 'Modifier la Discussion' : 'Ajouter une Discussion' }}</h5>
+      <button type="button" class="btn-close" (click)="toggleForm()"></button>
+    </div>
+    <div class="sidebar-body">
+      <form [formGroup]="addDiscussionForm" (ngSubmit)="onSubmit()">
+        <input type="hidden" formControlName="userId" />
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" formControlName="title" class="form-control" required />
+          <div *ngIf="addDiscussionForm.get('title')?.invalid && addDiscussionForm.get('title')?.touched" class="error">
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['required']">The title is required.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['maxLength']">Max 100 caractères.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['forbiddenCharacters']">Caractères spéciaux interdits.</span>
+            <span *ngIf="addDiscussionForm.get('title')?.errors?.['allCaps']">Do not use only uppercase letters.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+          <div *ngIf="addDiscussionForm.get('description')?.invalid && addDiscussionForm.get('description')?.touched"
+            class="error">
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['required']">The description is required. </span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['minLength']">Min 10 caractere.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['maxLength']">Max 500 caractere.</span>
+            <span *ngIf="addDiscussionForm.get('description')?.errors?.['allCaps']">Do not write in uppercase letters.</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success" [disabled]="addDiscussionForm.invalid">
+            {{ editMode ? 'Mettre à jour' : 'Add' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
+</div>

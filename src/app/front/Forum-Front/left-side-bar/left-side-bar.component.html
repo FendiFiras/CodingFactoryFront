@@ -1,0 +1,35 @@
+<div class="sidebar sidebar--left">
+  <div class="sidebar__single sidebar__search">
+    <form action="#" class="sidebar__search-form">
+      <button type="submit"><span class="icon-Search"></span></button>
+    </form>
+  </div><!-- search-widget -->
+
+  <div class="sidebar__single sidebar__post">
+    <h3 class="sidebar__title">⏳ Latest Forums</h3>
+    <ul class="sidebar__post__list list-unstyled">
+      <li *ngFor="let forum of latestForums">
+        <a [routerLink]="['/forum', forum.forum_id]" class="forum-link">
+          <div class="sidebar__post__content">
+            <div class="forum-item-container">
+              <div class="forum-image-wrapper">
+                <div class="sidebar__post__image">
+                  <img [src]="forum.image ? 'http://localhost:8089/images/' + forum.image : 'assets/images/default-forum.jpg'" 
+                       alt="{{ forum.title }}" />
+                </div>
+              </div>
+              <div class="forum-text-content">
+                <h3 class="sidebar__post__content__title">{{ forum.title }}</h3>
+                <span class="sidebar__post__content__meta">
+                  <i class="icon-clock"></i> {{ forum.creationDate | date:'dd MMM, yyyy' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+ 
+ 
+ 

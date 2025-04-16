@@ -1,0 +1,211 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+    <h2 class="blog-details__comment__title">Forum Discussions</h2>
+
+    <!-- Add Discussion Button -->
+    <button (click)="showForm = !showForm" class="btn btn-primary mb-4">
+        {{ showForm ? 'Hide the form' : 'Add New Discussion' }}
+    </button>
+
+    <!-- Formulaire pour ajouter une discussion -->
+    <div *ngIf="showForm" class="card mb-4">
+        <div class="card-body">
+            <form (ngSubmit)="addDiscussion()">
+                <div class="form-group mb-3">
+                    <label for="title">Title :</label>
+                    <input type="text" id="title" [(ngModel)]="newDiscussion.title" name="title" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="description">Description :</label>
+                    <textarea id="description" [(ngModel)]="newDiscussion.description" name="description" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success me-2">Add</button>
+                <button type="button" class="btn btn-secondary" (click)="showForm = false">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Discussions List -->
+    <div *ngIf="!isLoading && discussions.length > 0" class="row">
+        <div *ngFor="let discussion of discussions" class="col-md-6 mb-4">
+            <div class="card discussion-card" (click)="navigateToMessages(discussion.discussion_id)">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-comments fa-3x text-primary me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">{{ discussion.title }}</h5>
+                            <small class="text-muted">Published: {{ discussion.publicationDate | date }}</small>
+                        </div>
+                    </div>
+                    <p class="card-text">{{ discussion.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <button class="btn btn-danger btn-sm me-2" (click)="deleteDiscussion(discussion.discussion_id); $event.stopPropagation()">
+                                Delete
+                            </button>
+                            <button class="btn btn-warning btn-sm" (click)="selectDiscussionForUpdate(discussion); $event.stopPropagation()">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Discussions Message -->
+    <div *ngIf="!isLoading && discussions.length === 0" class="alert alert-info">
+        No discussions found.
+    </div>
+
+    <!-- Formulaire pour modifier une discussion -->
+    <div *ngIf="selectedDiscussion" class="card mb-4">
+        <div class="card-body">
+            <h3>Modify Discussion</h3>
+            <form (ngSubmit)="updateDiscussion()">
+                <div class="form-group mb-3">
+                    <label for="edit-title">Title :</label>
+                    <input type="text" id="edit-title" [(ngModel)]="selectedDiscussion.title" name="edit-title" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="edit-description">Description :</label>
+                    <textarea id="edit-description" [(ngModel)]="selectedDiscussion.description" name="edit-description" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-warning me-2">Update</button>
+                <button type="button" class="btn btn-secondary" (click)="selectedDiscussion = null">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>
+<style>
+    /* Styles pour les cartes de discussion */
+/* 🌟 Style général */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f7fc; /* Fond doux */
+    color: #333;
+}
+
+/* 🌟 Header moderne */
+.blog-details__comment__title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #6e49f5;
+    padding: 15px;
+    background: linear-gradient(135deg, #6e49f5, #8c67f6);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(110, 73, 245, 0.2);
+    color: white;
+}
+
+/* 🌟 Carte discussion */
+.discussion-card {
+    transition: all 0.3s ease-in-out;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.discussion-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 🌟 Icône de discussion */
+.fa-comments {
+    color: #6e49f5;
+    font-size: 2.5rem;
+}
+
+/* 🌟 Texte dans la carte */
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* 🌟 Style des boutons */
+.btn {
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6e49f5, #8c67f6);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a3fe5, #7a55f0);
+}
+
+.btn-danger {
+    background: #364fc7;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #364fc7;
+}
+
+.btn-warning {
+    background: #37b24d;
+    border: none;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background: #37b24d;
+}
+
+/* 🌟 Formulaires */
+.card {
+    border-radius: 12px;
+    border: none;
+    padding: 20px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: border 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #6e49f5;
+    box-shadow: 0px 4px 8px rgba(110, 73, 245, 0.2);
+}
+
+/* 🌟 Message d'information */
+.alert {
+    border-radius: 12px;
+    padding: 15px;
+    font-weight: 500;
+}
+
+</style>

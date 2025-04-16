@@ -1,0 +1,131 @@
+<app-navbar></app-navbar>
+
+<div class="page-wrapper">
+  <div class="messenger-container">
+    <!-- En-tête avec les infos de l'utilisateur actuel -->
+    <div class="messenger-header">
+      <h2>WELCOME 😊</h2>
+      <div class="current-user-display">
+        <img [src]="currentUserImage" alt="User Image" class="user-image" />
+        <span class="user-name">{{ currentUserName }}</span>
+      </div>
+    </div>
+    
+    <!-- Barre d'outils -->
+    <div class="toolbar">
+      <button (click)="filterMessages('today')">Today</button>
+      <button (click)="filterMessages('week')">This Week</button>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="🔍 Research..." (input)="searchMessages()" />
+    </div>
+    
+    <div class="message-list">
+      <div *ngFor="let message of filteredMessages" class="message" [ngClass]="{'sent': message.userId === currentUserId, 'received': message.userId !== currentUserId}">
+        <!-- Affichage des informations de l'utilisateur -->
+        <div class="user-info" *ngIf="!message.anonymous">
+          <img [src]="currentUserImage" alt="User Image" class="user-image" />
+          <span class="user-name">{{ currentUserName }}</span>
+        </div>
+
+        <!-- Afficher l'image anonyme si le message est anonyme -->
+<div class="user-info" *ngIf="message.anonymous">
+  <img src="assets/images/anonyme.png" alt="Anonymous" class="user-image" />
+  <span class="user-name">Anonymos</span>
+</div>
+
+          <!-- Afficher "Anonyme" si le message est anonyme -->
+          <div class="user-info" *ngIf="message.anonymous">
+            <div class="anonymous-user">
+            </div>
+           </div>
+        
+        <!-- Contenu du message -->
+        <div class="message-content">
+          <p>{{ message.description }}</p>
+          <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image" class="message-img">
+          <audio *ngIf="message.audioUrl" controls [src]="'http://localhost:8089/images/' + message.audioUrl"></audio>           <!-- Afficher la localisation -->
+           <div *ngIf="message.latitude && message.longitude" class="location">
+            <a href="https://www.google.com/maps?q={{message.latitude}},{{message.longitude}}" target="_blank">
+              🌍 View on the map 
+            </a>
+          </div>
+
+
+          <!-- Boutons de Like et Dislike -->
+          <div class="like-dislike">
+            <!-- Bouton Like -->
+            <button 
+              class="like-button" 
+              [ngClass]="{'liked': isLiked(message.message_id)}" 
+              (click)="toggleLike(message)"
+            >
+              👍 {{ message.likes || 0 }}
+            </button>
+          
+            <!-- Bouton Dislike -->
+            <button 
+              class="dislike-button" 
+              [ngClass]="{'disliked': isDisliked(message.message_id)}" 
+              (click)="toggleDislike(message)"
+            >
+              👎 {{ message.dislikes || 0 }}
+            </button>
+          </div>
+          
+          <!-- Actions de l'utilisateur -->
+          <div *ngIf="message.userId === currentUserId" class="message-actions">
+            <button (click)="startEdit(message)" class="edit-btn">✏️</button>
+            <button (click)="deleteMessage(message.message_id)" class="delete-btn">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Zone de saisie -->
+    <div class="message-input">
+  <div class="input-container">
+    <!-- Nouvelle ligne d'actions intégrée -->
+    <div class="inline-actions">
+      <button (click)="toggleEmojiPicker()">😀</button>
+      <!-- Sélecteur d'emojis -->
+      <emoji-picker *ngIf="showEmojiPicker" (emoji-click)="addEmoji($event)"></emoji-picker>
+      <label class="file-upload">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        📎
+      </label>
+      <label class="anonymous-checkbox">
+        <input type="checkbox" [(ngModel)]="newMessage.anonymous" />
+        <span>Anonymos</span>
+      </label>
+    </div>
+
+    <!-- Zone de texte -->
+    <textarea [(ngModel)]="newMessage.description" 
+              placeholder="Write your message here..." 
+              maxlength="500"></textarea>
+    
+    <!-- Compteur de caractères -->
+    <div class="char-counter" [ngClass]="{'warning': newMessage.description.length > 400}">
+      {{ newMessage.description.length }}/500
+    </div>
+  </div>
+
+  <!-- Actions secondaires -->
+  <div class="actions">
+    <button (click)="toggleRecording()" class="record-button" [ngClass]="{ 'recording': isRecording }">
+      🎙️ {{ isRecording ? 'Stop' : 'Record' }}
+    </button>
+    
+    <button (click)="toggleLocation()" [class.active]="isLocationEnabled" class="location-toggle">
+      {{ isLocationEnabled ? ' Location Activated' : ' Location' }}
+    </button>
+    
+    <button (click)="addMessage()" [disabled]="!newMessage.description && !newMessage.image" class="send-button">
+      Envoyer
+    </button>
+  
+      </div>
+    </div>
+    </div>
+    </div>
+
+<app-footer></app-footer>

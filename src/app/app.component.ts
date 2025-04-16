@@ -1,5 +1,5 @@
 // Angular import
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, NgModule, OnInit, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 
 // project import

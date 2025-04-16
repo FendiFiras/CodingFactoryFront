@@ -1,0 +1,271 @@
+/* Styles pour la sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  right: 0;
+}
+
+
+.sidebar-body {
+  padding: 20px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+.sidebar-header h5 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+
+
+/* Styles spécifiques pour le bouton "Ajouter" */
+.header-container .btn-primary {
+  background-color: #17a2b8; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+  border: none; /* Supprimer la bordure par défaut */
+  border-radius: 8px; /* Coins arrondis */
+  padding: 6px 12px; /* Espacement interne réduit */
+  font-size: 0.875rem; /* Taille de police réduite */
+  font-weight: 500; /* Texte en gras */
+  transition: all 0.3s ease; /* Animation fluide */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Espace entre l'icône et le texte */
+  cursor: pointer;
+  white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée légère */
+  width: auto; /* Largeur proportionnelle au contenu */
+  min-width: 100px; /* Largeur minimale pour éviter un bouton trop étroit */
+}
+
+/* Effet au survol */
+.header-container .btn-primary:hover {
+  background-color: #138496; /* Couleur de fond au survol */
+  transform: translateY(-2px); /* Légère élévation */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée plus prononcée */
+}
+
+/* Effet au clic */
+.header-container .btn-primary:active {
+  transform: translateY(0); /* Retour à la position initiale */
+}
+
+/* Styles pour le titre "FORUM LIST" */
+h2 {
+  font-size: 2.5rem; /* Taille de police plus grande */
+  font-weight: 700; /* Texte en gras */
+  color: #2c3e50; /* Couleur foncée et moderne */
+  margin: 0; /* Supprimer la marge par défaut */
+  padding: 20px 0; /* Espacement interne */
+  text-align: center; /* Centrer le texte horizontalement */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée légère */
+  background: linear-gradient(90deg, #17a2b8, #138496); /* Dégradé de couleur */
+  -webkit-background-clip: text; /* Appliquer le dégradé au texte */
+  -webkit-text-fill-color: transparent; /* Rendre le texte transparent pour le dégradé */
+  border-bottom: 3px solid #17a2b8; /* Bordure en bas */
+  display: block; /* Prendre toute la largeur disponible */
+  width: 100%; /* Largeur totale */
+}
+
+/* Conteneur pour le titre et le bouton "Ajouter" */
+.header-container {
+  display: flex;
+  flex-direction: column; /* Disposition en colonne */
+  align-items: center; /* Centrer horizontalement */
+  margin-bottom: 24px; /* Espacement en bas */
+  padding: 20px 0; /* Espacement interne */
+  background-color: #f8f9fa; /* Fond légèrement gris */
+  border-radius: 12px; /* Coins arrondis */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombre portée */
+}
+/* Styles pour les boutons */
+.btn {
+  border-radius: 8px; /* Coins légèrement arrondis */
+  padding: 8px 16px; /* Espacement interne */
+  font-size: 0.875rem; /* Taille de police */
+  font-weight: 500; /* Texte en gras */
+  transition: all 0.3s ease; /* Animation fluide */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrer le texte et l'icône */
+  gap: 8px; /* Espace entre l'icône et le texte */
+  border: none; /* Supprimer la bordure par défaut */
+  cursor: pointer;
+  white-space: nowrap; /* Empêcher le texte de passer à la ligne */
+  width: 100%; /* Prendre toute la largeur disponible */
+}
+
+/* Styles pour le conteneur des boutons */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Disposition en colonne */
+  gap: 8px; /* Espace entre les boutons */
+}
+
+/* Conteneur pour les boutons "Modifier" et "Supprimer" */
+.button-row {
+  display: flex;
+  gap: 8px; /* Espace entre les boutons */
+}
+
+/* Styles spécifiques pour les boutons */
+.btn-info {
+  background-color: #17a2b8; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Couleur de fond */
+  color: black; /* Couleur du texte */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+}
+
+.btn:hover {
+  transform: translateY(-2px); /* Légère élévation */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Ombre portée plus prononcée */
+}
+
+.btn:active {
+  transform: translateY(0); /* Retour à la position initiale */
+}
+/* Styles pour les cartes */
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Pour que l'image ne dépasse pas */
+  width: 100%; /* Assurer que la carte prend toute la largeur disponible */
+}
+
+.card-body {
+  padding: 16px; /* Espacement interne réduit */
+}
+
+.card-title {
+  font-size: 1.1rem; /* Taille de police réduite */
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px; /* Espacement réduit */
+}
+
+.card-text {
+  font-size: 0.8rem; /* Taille de police réduite */
+  color: #666;
+  margin-bottom: 12px; /* Espacement réduit */
+}
+
+.card img {
+  width: 100%;
+  height: 150px; /* Hauteur réduite pour l'image */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Styles pour le conteneur principal */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.alert {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Styles pour les labels "Title" et "Description" */
+.label-title,
+.label-description {
+font-weight: 600; /* Texte en gras */
+color: #17a2b8; /* Couleur bleue moderne */
+margin-right: 8px; /* Espacement à droite */
+}
+
+.label-title {
+font-size: 1.1rem; /* Taille de police légèrement plus grande */
+}
+
+.label-description {
+font-size: 1rem; /* Taille de police normale */
+}
+
+.pagination {
+margin-top: 20px;
+}
+
+.page-item.active .page-link {
+background-color: #007bff;
+border-color: #007bff;
+}
+
+.page-link {
+color: #007bff;
+cursor: pointer;
+}
+
+.page-link:hover {
+color: #0056b3;
+}

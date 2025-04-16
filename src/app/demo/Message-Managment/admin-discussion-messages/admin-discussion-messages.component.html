@@ -1,0 +1,159 @@
+
+<div class="main-container"> 
+
+  <app-navigation class="pcoded-navbar" [ngClass]="{ 'navbar-collapsed': navCollapsed, 'mob-open': navCollapsedMob }"
+    (NavCollapse)="navCollapsed = !navCollapsed" (NavCollapsedMob)="navMobClick()"></app-navigation>
+
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <div class="container mt-4">
+          <!-- Bouton de retour -->
+          <div class="header-container d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Discussion Messages</h2>
+            <button class="btn btn-primary" (click)="goBack()">
+              <i class="fas fa-arrow-left"></i> GoBack
+            </button>
+          </div>
+
+          <!-- Barre de recherche et bouton Ajouter -->
+          <div class="search-and-add-container d-flex justify-content-between align-items-center mb-4">
+            <!-- Barre de recherche -->
+            <div class="search-bar">
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+                placeholder="Search for a message..."
+              />
+            </div>
+
+            <!-- Bouton pour ouvrir le formulaire -->
+            <button class="btn btn-success" (click)="toggleForm()">
+              <i class="fas fa-plus"></i> Add New Message
+            </button>
+          </div>
+
+          <!-- Liste des messages en grille -->
+          <div class="messages-grid">
+            <div *ngFor="let message of getPaginatedMessages()" class="message-card">
+              <!-- Image du message -->
+              <div *ngIf="message.image" class="text-center mt-3">
+                <img
+                  [src]="'http://localhost:8089/images/' + message.image"
+                  alt="Image du message"
+                  class="message-image"
+                />
+              </div>
+
+              <!-- Corps de la carte -->
+              <div class="card-body text-center">
+                <!-- Détails du message -->
+                <h5 class="card-title mb-2">{{ message.userId || 'Inconnu' }}</h5>
+                <small class="text-muted">{{ message.messageDate | date: 'd MMM, y' }}</small>
+                <p class="card-text mt-2">{{ message.description || 'Aucune description' }}</p>
+
+                <!-- Boutons Modifier et Supprimer -->
+                <div class="d-flex justify-content-center mt-3">
+                  <button
+                    class="btn btn-sm btn-warning me-2"
+                    (click)="editMessage(message.message_id, message.description, message.image)"
+                  >
+                    <i class="fas fa-edit"></i> Modify
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteMessage(message.message_id)"
+                  >
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                [class.active]="currentPage === i + 1"
+              >
+                <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Sidebar pour le formulaire d'ajout/modification de message -->
+<div class="sidebar" [class.active]="showForm">
+  <div class="sidebar-header">
+    <h5>{{ isEditMode ? 'Modify le message' : 'Add message' }}</h5>
+    <button type="button" class="btn-close" (click)="toggleForm()"></button>
+  </div>
+  <div class="sidebar-body">
+    <form>
+      <!-- Champ de description -->
+      <textarea
+        class="form-control mb-3"
+        [(ngModel)]="currentMessageDescription"
+        placeholder="Enter your message..."
+        rows="3"
+        [class.is-invalid]="!isDescriptionValid && currentMessageDescription.length > 0"
+      ></textarea>
+      <!-- Message d'erreur pour champ vide -->
+      <div *ngIf="errorMessage && !currentMessageDescription.trim()" class="text-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Champ pour sélectionner une image -->
+      <input
+        type="file"
+        class="form-control mb-3"
+        (change)="isEditMode ? onEditFileSelected($event) : onFileSelected($event)"
+        accept="image/*"
+      />
+
+      <!-- Aperçu de l'image sélectionnée -->
+      <div *ngIf="isEditMode ? editSelectedImage : selectedImage" class="mb-3">
+        <img
+          [src]="isEditMode ? editSelectedImage : selectedImage"
+          alt="Aperçu de l'image"
+          class="img-thumbnail"
+          style="max-width: 200px;"
+        />
+      </div>
+
+      <!-- Bouton pour ajouter ou sauvegarder -->
+      <button
+        class="btn btn-success"
+        (click)="isEditMode ? saveMessage() : addMessage()"
+      >
+        <i class="fas fa-plus"></i> {{ isEditMode ? 'Sauvegarder' : 'Ajouter' }}
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Overlay pour l'arrière-plan -->
+<div class="overlay" [class.active]="showForm" (click)="toggleForm()"></div>
+
+<app-configuration></app-configuration>
+
