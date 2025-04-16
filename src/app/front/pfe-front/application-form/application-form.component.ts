@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { NotifPfeComponent } from "../notif-pfe/notif-pfe.component";
 import { CommonModule } from '@angular/common';
+import { AuthService } from 'src/app/services/auth-service.service';
+
 @Component({
   selector: 'app-application-form',
   imports: [ FooterComponent, ReactiveFormsModule, NavbarComponent,HttpClientModule,MatInputModule,CommonModule,RouterModule,MatCardModule,MatButtonModule, NotifPfeComponent],
@@ -31,7 +33,9 @@ export class ApplicationFormComponent  {
     private route: ActivatedRoute,
     private router: Router,
     private applicationService: ApplicationService,
-    private notificationService: NotificationPfeService
+    private notificationService: NotificationPfeService,
+    private authService: AuthService // ✅ AJOUT
+
   ) {
     this.applicationForm = this.fb.group({
 
@@ -58,14 +62,22 @@ export class ApplicationFormComponent  {
       this.offerId = +params['offerId'];
       console.log('Offer ID:', this.offerId);
     });
-
-    // Fetch the userId from your authentication service or local storage
-    this.userId = this.getUserId(); // Implement this method to get the logged-in user's ID
+  
+    // ✅ Récupération de l'utilisateur connecté
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        console.log("✅ Utilisateur connecté :", this.userId);
+      },
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
+        this.router.navigate(['/login']); // Redirection si non connecté
+      }
+    });
   }
+  
 
-  getUserId(): number {
-    return 2; //////////////////////////////////////////////////////////////////////
-  }
+ 
 
   // Handle file selection
   onFileSelected(event: any): void {

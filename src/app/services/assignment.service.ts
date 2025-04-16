@@ -7,7 +7,7 @@ import { Assignment } from '../models/Assignment';
   providedIn: 'root',
 })
 export class AssignmentService {
-  private apiUrl = 'http://localhost:8089/pidev/assignments'; // Replace with your backend API URL
+  private apiUrl = 'http://localhost:8083/pidev/assignments'; // Replace with your backend API URL
 
   constructor(private http: HttpClient) {}
 

@@ -9,7 +9,7 @@ import { Partnership } from '../models/Partnership';
   providedIn: 'root',
 })
 export class PartnershipService {
-  private apiUrl = "http://localhost:8089/pidev/partnerships" // Base URL for partnerships
+  private apiUrl = "http://localhost:8083/pidev/partnerships" // Base URL for partnerships
   readonly ENDPOINT_GET = "/Get"
   constructor(private http: HttpClient) {}
 /*

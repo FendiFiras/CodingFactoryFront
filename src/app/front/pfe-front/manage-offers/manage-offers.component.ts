@@ -17,6 +17,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { BrowserModule } from '@angular/platform-browser';
 import { TagInputModule } from 'ngx-chips';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-manage-offers',
@@ -35,8 +36,12 @@ export class ManageOffersComponent {
     'Kef', 'Mahdia', 'Manouba', 'Médenine', 'Monastir', 'Nabeul', 'Sfax', 'Sidi Bouzid', 'Siliana', 'Sousse',
     'Tataouine', 'Tozeur', 'Tunis', 'Zaghouan'
   ];
+  userId!: number;
+
   constructor(
         private fb: FormBuilder,
+        private authService: AuthService, // ✅ AJOUT
+
     
     private offerService: OfferService,
     private router: Router
@@ -107,11 +112,22 @@ export class ManageOffersComponent {
   }
 
   ngOnInit(): void {
-    this.loadOffers();
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        console.log("✅ User connecté :", this.userId);
+        this.loadOffers(); // Appelle après avoir récupéré l'user
+      },
+      error: (err) => {
+        console.error("❌ Erreur récupération user :", err);
+        this.router.navigate(['/login']); // Redirection si non connecté
+      }
+    });
   }
+  
 
   loadOffers(): void {
-    this.offerService.getOffersByCompanyRepresentative(3).subscribe( // //////////////////////////////////////////////////
+    this.offerService.getOffersByCompanyRepresentative(this.userId).subscribe(
       (data: Offer[]) => {
         this.offers = data;
       },
@@ -120,6 +136,7 @@ export class ManageOffersComponent {
       }
     );
   }
+  
 
   deleteOffer(offerId: number): void {
     if (confirm('Are you sure you want to delete this offer?')) {

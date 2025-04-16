@@ -12,6 +12,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-aplicationfor-students',
@@ -21,7 +22,7 @@ import { CalendarComponent } from '../calendar/calendar.component';
   styleUrl: './aplicationfor-students.component.scss'
 })
 export class AplicationforStudentsComponent {
-  userId: number=2; // ///////////////////////////////////////////////////////////////
+  userId!: number;
   applications: Application[] = [];
     offerName?: string; // Optional property if you don't always have it
 
@@ -29,20 +30,21 @@ export class AplicationforStudentsComponent {
     private applicationservice: ApplicationService,
     private route: ActivatedRoute ,
     private offerService : OfferService,// If userId is part of the route,
+    private authService: AuthService // ✅ AJOUT
+
   ) {}
 
   ngOnInit(): void {
-
-    
-    this.applicationservice.getApplicationsByUserId(this.userId).subscribe(
-      (data: Application[]) => {
-        console.log("Received Applications:", data);
-        this.applications = data;
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        console.log("👤 Utilisateur connecté :", this.userId);
+        this.loadApplications(this.userId); // ✅ Charger les candidatures
       },
-      (error) => {
-        console.error('Error fetching applications:', error);
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
       }
-    );
+    });
   }
   
   loadApplications(userId: number): void {

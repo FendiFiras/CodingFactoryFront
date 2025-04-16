@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class AiScoreService {
 
-  private apiUrl = 'http://localhost:8089/pidev/score/calculate'; // Adjust with your backend API URL
+  private apiUrl = 'http://localhost:8083/pidev/score/calculate'; // Adjust with your backend API URL
 
   constructor(private http: HttpClient) {}
 

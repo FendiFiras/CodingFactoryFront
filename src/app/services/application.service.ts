@@ -9,7 +9,7 @@ import { Assignment } from '../models/Assignment';
   providedIn: 'root',
 })
 export class ApplicationService {
-  private apiUrl = 'http://localhost:8089/pidev/applications'; // Replace with your backend API URL
+  private apiUrl = 'http://localhost:8083/pidev/applications'; // Replace with your backend API URL
 
   constructor(private http: HttpClient) {}
 /*

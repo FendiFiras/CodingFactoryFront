@@ -9,6 +9,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-becomepartner',
@@ -16,11 +17,12 @@ import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
   templateUrl: './becomepartner.component.html',
   styleUrls: ['./becomepartner.component.scss'] // Fixed typo
 })
-export class BecomepartnerComponent {
+export class BecomepartnerComponent implements OnInit {
   partnershipForm: FormGroup;
   fileSelected: boolean = false;
-  userId: number = 3; // ////////////////////////////////////////////////////////////
-  userRole: string = 'COMPANYREPRESENTATIVE'; // Replace with actual role check
+  userId!: number;
+  userRole!: string;
+  
   hasPartnership: boolean = false; // Flag to track if the user already has a partnership
   industries: string[] = ['Artificial Intelligence', 'IT', 'Marketing', 'Finance', 'Healthcare', 'Other'];
 
@@ -28,7 +30,9 @@ export class BecomepartnerComponent {
     private fb: FormBuilder,
     private partnershipService: PartnershipService,
     private router: Router,
-    private notificationService: NotificationPfeService
+    private notificationService: NotificationPfeService,
+    private authService: AuthService // ✅ AJOUT
+
   ) {
     this.partnershipForm = this.fb.group({
       industry: ['', Validators.required],
@@ -36,6 +40,20 @@ export class BecomepartnerComponent {
       companyLogo: ['', Validators.required],
     });
   }
+  ngOnInit(): void {
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        this.userRole = user.role;
+        console.log("✅ Utilisateur connecté :", this.userId, " | Rôle :", this.userRole);
+      },
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
+        this.router.navigate(['/login']); // Redirection si non connecté
+      }
+    });
+  }
+  
 
 
 
@@ -54,7 +72,7 @@ export class BecomepartnerComponent {
       return;
     }
   
-    if (this.userRole !== 'COMPANYREPRESENTATIVE') {
+    if (this.userRole !== 'COMPANYREPRESENTIVE') {
       this.notificationService.showNotification('You must be a Company Representative to apply for a partnership.', 'error');
       return;
     }

@@ -7,8 +7,8 @@ import { Offer } from '../models/Offer';
   providedIn: 'root',
 })
 export class OfferService {
-  private apiUrl = 'http://localhost:8089/pidev/offers'; // Replace with your backend API URL
-  private apiUrlAI = 'http://localhost:8089/pidev/generate-description';
+  private apiUrl = 'http://localhost:8083/pidev/offers'; // Replace with your backend API URL
+  private apiUrlAI = 'http://localhost:8083/pidev/generate-description';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { Interview } from '../models/Interview';
   providedIn: 'root'
 })
 export class InterviewService {
-  private apiUrl = 'http://localhost:8089/pidev/interview'; // Your backend URL
+  private apiUrl = 'http://localhost:8083/pidev/interview'; // Your backend URL
 
   constructor(private http: HttpClient) {}
 

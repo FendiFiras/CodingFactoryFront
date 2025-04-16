@@ -12,6 +12,7 @@ import { Partnership } from 'src/app/models/Partnership';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
 import { TagInputModule } from 'ngx-chips';
+import { AuthService } from 'src/app/services/auth-service.service'; // ✅ Import
 
 @Component({
   selector: 'app-addoffer',
@@ -20,10 +21,10 @@ import { TagInputModule } from 'ngx-chips';
   templateUrl: './addoffer.component.html',
   styleUrls: ['./addoffer.component.scss'],
 })
-export class AddofferComponent {
+export class AddofferComponent implements OnInit {
 
   addOfferForm: FormGroup;
-  userId: number =3; ////////////////////////////////////////////////////////////
+  userId!: number;
   userRole: string = 'COMPANYREPRESENTATIVE'; // Manually set, change as required
   hasOffer: boolean = false; // Set this dynamically if needed
   tunisianGovernorates = [
@@ -35,6 +36,7 @@ export class AddofferComponent {
     private fb: FormBuilder,
     private offerService: OfferService,
     private cdRef: ChangeDetectorRef,
+    private authService: AuthService, // ✅ Ajout
 
     private router: Router,
     private notificationService: NotificationPfeService
@@ -104,6 +106,19 @@ export class AddofferComponent {
       ]
     });
   }
+  ngOnInit(): void {
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        console.log("👤 Utilisateur connecté :", this.userId);
+      },
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+  
 
 
   onSubmit(): void {
