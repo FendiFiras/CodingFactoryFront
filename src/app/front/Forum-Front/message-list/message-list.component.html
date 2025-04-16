@@ -4,7 +4,7 @@
   <div class="messenger-container">
     <!-- En-tête avec les infos de l'utilisateur actuel -->
     <div class="messenger-header">
-      <h2>Messaging</h2>
+      <h2>WELCOME 😊</h2>
       <div class="current-user-display">
         <img [src]="currentUserImage" alt="User Image" class="user-image" />
         <span class="user-name">{{ currentUserName }}</span>
@@ -26,10 +26,15 @@
           <span class="user-name">{{ currentUserName }}</span>
         </div>
 
+        <!-- Afficher l'image anonyme si le message est anonyme -->
+<div class="user-info" *ngIf="message.anonymous">
+  <img src="assets/images/anonyme.png" alt="Anonymous" class="user-image" />
+  <span class="user-name">Anonymos</span>
+</div>
+
           <!-- Afficher "Anonyme" si le message est anonyme -->
           <div class="user-info" *ngIf="message.anonymous">
             <div class="anonymous-user">
-               <span class="user-name">anonymous</span>
             </div>
            </div>
         

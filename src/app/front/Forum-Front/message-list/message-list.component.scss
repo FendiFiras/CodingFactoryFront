@@ -40,6 +40,8 @@
 .messenger-header h2 {
   font-size: 1.7em;
   font-weight: 700;
+  color: white; /* Ajoutez cette ligne */
+
 }
 
 .current-user-display {
@@ -485,4 +487,25 @@ button {
 .input-container textarea {
   border-radius: 0 0 15px 15px;
   margin-top: 0;
+}
+
+
+
+
+
+.user-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.anonymous-user {
+  display: flex;
+  align-items: center;
+}
+
+.anonymous-user img {
+  filter: grayscale(100%);
 }
