@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { EvaluationService } from 'src/app/service/evaluation.service';
+import { EvaluationService } from 'src/app/services/evaluation.service';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { CommonModule } from '@angular/common';

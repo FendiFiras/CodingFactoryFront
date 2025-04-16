@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OfferService } from 'src/app/service/offer.service';
+import { OfferService } from 'src/app/services/offer.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Partnership } from 'src/app/models/Partnership';
-import { PartnershipService } from 'src/app/service/partnership.service';
+import { PartnershipService } from 'src/app/services/partnership.service';
 import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';

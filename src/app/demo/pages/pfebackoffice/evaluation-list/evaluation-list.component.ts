@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EvaluationService } from 'src/app/service/evaluation.service';
+import { EvaluationService } from 'src/app/services/evaluation.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Evaluation } from 'src/app/models/Evaluation';
 

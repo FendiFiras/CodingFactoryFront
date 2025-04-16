@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApplicationService } from 'src/app/service/application.service';
+import { ApplicationService } from 'src/app/services/application.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 

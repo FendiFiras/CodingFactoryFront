@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Offer } from 'src/app/models/Offer';
-import { OfferService } from 'src/app/service/offer.service';
+import { OfferService } from 'src/app/services/offer.service';
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
 import { FooterComponent } from "../../elements/footer/footer.component";
 import { SharedModule } from 'src/app/theme/shared/shared.module';

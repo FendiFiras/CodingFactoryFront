@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Application } from 'src/app/models/Application';
 import { Interview } from 'src/app/models/Interview';
-import { InterviewService } from 'src/app/service/interview.service';
+import { InterviewService } from 'src/app/services/interview.service';
 
 interface CalendarDate {
   date: Date;

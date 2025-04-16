@@ -1,13 +1,13 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OfferService } from 'src/app/service/offer.service';
+import { OfferService } from 'src/app/services/offer.service';
 import { Router } from '@angular/router';
-import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
+import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FooterComponent } from "../../elements/footer/footer.component";
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import {  ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { PartnershipService } from 'src/app/service/partnership.service';
+import { PartnershipService } from 'src/app/services/partnership.service';
 import { Partnership } from 'src/app/models/Partnership';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';

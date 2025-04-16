@@ -3,14 +3,13 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Application } from 'src/app/models/Application';
 import { Offer } from 'src/app/models/Offer';
-import { ApplicationService } from 'src/app/service/application.service';
-import { AssignmentService } from 'src/app/service/assignment.service';
-import { OfferService } from 'src/app/service/offer.service';
+import { ApplicationService } from 'src/app/services/application.service';
+import { AssignmentService } from 'src/app/services/assignment.service';
+import { OfferService } from 'src/app/services/offer.service';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UserService } from 'src/app/service/user.service';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarComponent } from '../calendar/calendar.component';
 
@@ -30,7 +29,6 @@ export class AplicationforStudentsComponent {
     private applicationservice: ApplicationService,
     private route: ActivatedRoute ,
     private offerService : OfferService,// If userId is part of the route,
-private userService: UserService
   ) {}
 
   ngOnInit(): void {

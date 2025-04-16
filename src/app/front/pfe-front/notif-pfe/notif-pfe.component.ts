@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
+import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 
 @Component({
   selector: 'app-notif-pfe',

@@ -6,14 +6,14 @@ import { BrowserModule, DomSanitizer, SafeResourceUrl } from '@angular/platform-
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Assignment } from 'src/app/models/Assignment';
 import { Offer } from 'src/app/models/Offer';
-import { AssignmentService } from 'src/app/service/assignment.service';
-import { OfferService } from 'src/app/service/offer.service';
+import { AssignmentService } from 'src/app/services/assignment.service';
+import { OfferService } from 'src/app/services/offer.service';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { EvaluationFormComponent } from '../evaluation-form/evaluation-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
-import { EvaluationService } from 'src/app/service/evaluation.service';
+import { EvaluationService } from 'src/app/services/evaluation.service';
 
 @Component({
   selector: 'app-assignmentsfor-cr',

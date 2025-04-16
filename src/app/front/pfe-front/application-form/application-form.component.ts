@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Application } from 'src/app/models/Application';
-import { ApplicationService } from 'src/app/service/application.service';
+import { ApplicationService } from 'src/app/services/application.service';
 import { FooterComponent } from "../../elements/footer/footer.component";
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
+import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { NotifPfeComponent } from "../notif-pfe/notif-pfe.component";
 import { CommonModule } from '@angular/common';
 @Component({

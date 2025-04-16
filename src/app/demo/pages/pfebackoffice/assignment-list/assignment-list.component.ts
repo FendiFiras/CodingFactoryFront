@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssignmentService } from 'src/app/service/assignment.service';
+import { AssignmentService } from 'src/app/services/assignment.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Assignment } from 'src/app/models/Assignment';
 

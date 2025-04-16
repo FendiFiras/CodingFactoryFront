@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select'; // If you're using dropdowns for other fields like employmentType
 import { MatIconModule } from '@angular/material/icon'; // For icons like 'x' in the chips
 import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
-import { OfferService } from 'src/app/service/offer.service';
-import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
+import { OfferService } from 'src/app/services/offer.service';
+import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { Offer } from 'src/app/models/Offer';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';

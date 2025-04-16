@@ -3,11 +3,11 @@ import { FooterComponent } from "../../elements/footer/footer.component";
 import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { PartnershipService } from 'src/app/service/partnership.service';
+import { PartnershipService } from 'src/app/services/partnership.service';
 import { Partnership } from 'src/app/models/Partnership';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { NotificationPfeService } from 'src/app/service/notification-pfe.service';
+import { NotificationPfeService } from 'src/app/services/notification-pfe.service';
 import { NotifPfeComponent } from '../notif-pfe/notif-pfe.component';
 
 @Component({
