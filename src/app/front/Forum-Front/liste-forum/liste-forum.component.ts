@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { LeftSideBarComponent } from 'src/app/front/Forum-Front/left-side-bar/left-side-bar.component';
 import { AIGeneratorService } from 'src/app/services/ai-generator.service';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 interface Forum {
   forum_id?: number;
@@ -33,7 +34,7 @@ export class ListeForumComponent implements OnInit {
   errorMessage = '';
   showAddForm: boolean = false;
   addForumForm: FormGroup;
-  staticUserId: number = 1; // ID utilisateur statique
+  userId!: number;
   editMode = false;
   forumToEdit: Forum | null = null;
   suggestedTopics: string[] = [];
@@ -50,7 +51,9 @@ totalItems: number = 0;
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private aiGenerator: AIGeneratorService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+
   ) {
     this.addForumForm = this.fb.group({
       title: ['', [
@@ -70,9 +73,20 @@ totalItems: number = 0;
   }
 
   async ngOnInit(): Promise<void> {
-    this.loadForums();
-    await this.generateNewTopics();
+    this.authService.getUserInfo().subscribe({
+      next: async (user) => {
+        this.userId = user.idUser; // ✅ utiliser userId au lieu de staticUserId
+        await this.generateNewTopics();
+        this.loadForums();
+      },
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
+        this.router.navigate(['/login']);
+      }
+    });
+    
   }
+  
 
   loadForums(): void {
     this.isLoading = true;
@@ -130,7 +144,7 @@ totalItems: number = 0;
 
     const { title, description, image } = this.addForumForm.value;
     const formData = new FormData();
-    formData.append('userId', this.staticUserId.toString());
+    formData.append('userId', this.userId.toString()); // ✅ utiliser userId
     formData.append('title', title);
     formData.append('description', description);
     if (image) {

@@ -39,7 +39,7 @@
                 <p class="card-text">
                   <span class="label-description">Description:</span> {{ forum.description }}
                 </p>
-              <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Image du forum" class="img-fluid mb-3 rounded">
+              <img *ngIf="forum.image" [src]="'http://localhost:8085/images/' + forum.image" alt="Image du forum" class="img-fluid mb-3 rounded">
               <div class="button-container">
                 <!-- Bouton "Voir Discussions" -->
                 <button class="btn btn-info" (click)="navigateToDiscussions(forum.forum_id)">

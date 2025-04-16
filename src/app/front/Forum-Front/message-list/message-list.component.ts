@@ -8,6 +8,7 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { FooterComponent } from '../../elements/footer/footer.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import 'emoji-picker-element';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 
 
@@ -26,9 +27,6 @@ export class MessageComponent implements OnInit {
   errorMessage = '';
   filteredMessages: Message[] = [];
   searchQuery = '';
-  currentUserId = 1; // Remplacez par l'ID de l'utilisateur actuel
-  currentUserName: string = 'zitouni'; // Nom de l'utilisateur actuel
-  currentUserImage: string = 'assets/images/zita.jpg';
   isLocationEnabled = false;
   currentLocation: { latitude: number, longitude: number } | null = null;
   isRecording = false;
@@ -37,6 +35,10 @@ export class MessageComponent implements OnInit {
   audioBlob: Blob | null = null;
   audioUrl: string = '';
   showEmojiPicker = false;
+  currentUserId!: number;
+currentUserName: string = '';
+currentUserImage: string = '';
+
 
   // Liste des mots interdits
   badWords: string[] = [
@@ -60,23 +62,47 @@ export class MessageComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute  , 
+    private authService: AuthService // 👈 Ajout ici
+
 
   ) {}
 
   ngOnInit(): void {
+    // 🔁 1. Récupérer l'utilisateur connecté
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.currentUserId = user.idUser!;
+        this.currentUserName = `${user.firstName} ${user.lastName}`;
+        this.currentUserImage = user.image 
+        ? `http://localhost:8089/codingFactory/auth/images/${user.image}`
+        : '';
+       // 👈 pas d’image par défaut
+      
+
+
+  
+        this.newMessage.userId = this.currentUserId; // 👈 Important : lier à newMessage
+      },
+      error: (err) => {
+        console.error("Erreur lors de la récupération de l'utilisateur connecté :", err);
+      }
+    });
+  
+    // 🔁 2. Récupérer l'ID de la discussion et charger les messages
     this.route.params.subscribe(params => {
       this.discussionId = +params['discussionId'];
       this.newMessage.discussionId = this.discussionId;
       this.loadMessages();
-        // Initialisation de l'enregistrement vocal
-    if (navigator.mediaDevices) {
-      console.log('Le navigateur supporte MediaDevices.');
-    } else {
-      console.error('Le navigateur ne supporte pas MediaDevices pour l\'enregistrement vocal.');
-    }
+  
+      // ✅ Initialisation de l'enregistrement vocal
+      if (navigator.mediaDevices) {
+        console.log('Le navigateur supporte MediaDevices.');
+      } else {
+        console.error('Le navigateur ne supporte pas MediaDevices pour l\'enregistrement vocal.');
+      }
     });
   
-    // Demander la permission de géolocalisation
+    // 🔁 3. Demander la permission de géolocalisation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         () => console.log('Permission de géolocalisation accordée'),
@@ -84,6 +110,7 @@ export class MessageComponent implements OnInit {
       );
     }
   }
+  
 
   // Filtrer les mots interdits
   filterBadWords(text: string): string {

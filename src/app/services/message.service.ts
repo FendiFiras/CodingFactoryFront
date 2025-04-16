@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators'; // Importez tap depuis rxjs/operators
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'http://localhost:8089/messages'; // Mettez à jour l'URL de l'API
+  private apiUrl = 'http://localhost:8085/messages'; // Mettez à jour l'URL de l'API
 
   constructor(private http: HttpClient) {}
 

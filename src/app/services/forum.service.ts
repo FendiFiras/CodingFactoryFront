@@ -16,7 +16,7 @@ interface Forum {
 })
 export class ForumService {
 
-  private apiUrl = 'http://localhost:8089/api/forum';  // Changez cette URL pour correspondre à votre backend
+  private apiUrl = 'http://localhost:8085/api/forum';  // Changez cette URL pour correspondre à votre backend
 
   constructor(private http: HttpClient) { }
 

@@ -41,8 +41,8 @@
         <!-- Contenu du message -->
         <div class="message-content">
           <p>{{ message.description }}</p>
-          <img *ngIf="message.image" [src]="'http://localhost:8089/images/' + message.image" alt="Message image" class="message-img">
-          <audio *ngIf="message.audioUrl" controls [src]="'http://localhost:8089/images/' + message.audioUrl"></audio>           <!-- Afficher la localisation -->
+          <img *ngIf="message.image" [src]="'http://localhost:8085/images/' + message.image" alt="Message image" class="message-img">
+          <audio *ngIf="message.audioUrl" controls [src]="'http://localhost:8085/images/' + message.audioUrl"></audio>           <!-- Afficher la localisation -->
            <div *ngIf="message.latitude && message.longitude" class="location">
             <a href="https://www.google.com/maps?q={{message.latitude}},{{message.longitude}}" target="_blank">
               🌍 View on the map 

@@ -83,7 +83,7 @@
         <div class="col-xl-12" *ngFor="let forum of paginatedForums">
           <div class="blog-two__item blog-two__item--list">
             <div class="blog-two__image">
-              <img *ngIf="forum.image" [src]="'http://localhost:8089/images/' + forum.image" alt="Forum Image" class="forum-image" />
+              <img *ngIf="forum.image" [src]="'http://localhost:8085/images/' + forum.image" alt="Forum Image" class="forum-image" />
               <a [routerLink]="['/forum', forum.forum_id]"></a>
             </div>
 

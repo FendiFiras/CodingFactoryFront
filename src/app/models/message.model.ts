@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export class Message {
     message_id!: number;
     description!: string;
@@ -14,6 +16,7 @@ export class Message {
     latitude?: number;
     longitude?: number;
     audioUrl?: string; // Ajouter ce champ
+    user?: User;
 
 
 }
