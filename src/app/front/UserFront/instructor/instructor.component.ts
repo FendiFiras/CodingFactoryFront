@@ -15,7 +15,7 @@ import { UserPreferenceService } from 'src/app/services/user-preference.service'
   standalone: true, // Ajouté ici
 
   imports: [
-    BrowserModule,
+    CommonModule,
     FormsModule,
     HttpClientModule,
     NavbarComponent,

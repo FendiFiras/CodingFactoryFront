@@ -5,15 +5,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
   selector: 'app-coding-register',
   standalone: true,
   imports: [
-    BrowserModule,
+    CommonModule,
     FormsModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   templateUrl: './coding-register.component.html',
   styleUrls: ['./coding-register.component.scss']

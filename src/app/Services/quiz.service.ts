@@ -8,7 +8,7 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class QuizService {
-  private apiUrl = 'http://localhost:8089/pidev/Quizs'; // URL de base pour l'API
+  private apiUrl = 'http://localhost:8081/pidev/Quizs'; // URL de base pour l'API
 
   constructor(private http: HttpClient) {}
 

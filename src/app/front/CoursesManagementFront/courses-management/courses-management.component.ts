@@ -8,6 +8,7 @@ import { CourseService } from '../../../services/courses.service';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { Training } from '../../../models/training.model';
 import { TrainingService } from '../../../services/training.service';
+import { AuthService } from 'src/app/services/auth-service.service';
 @Component({
   selector: 'app-courses-management',
   imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule,    FormsModule   // <-- Ajoutez FormsModule ici
@@ -21,20 +22,22 @@ export class CoursesManagementComponent implements OnInit {
   trainings: Training[] = [];  
   courseForm: FormGroup;
   selectedTrainingId: number | null = null;
-  userId: number = 2; // 🔥 Utilisateur test
   selectedFiles: File[] = []; // Liste des fichiers sélectionnés
 // ✅ Variables pour gérer l'affichage du modal et les fichiers sélectionnés
 showFileModal: boolean = false;
 selectedCourseFiles: string[] = [];
 editingCourse: Courses | null = null;
 isEditing: boolean = false;  // ✅ Ajout d'un état pour savoir si on est en mode update
+userId!: number;
 
 
 
   constructor(
     private fb: FormBuilder,
     private courseService: CourseService,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private authService: AuthService // ✅ ajout ici
+
   ) {
     this.courseForm = this.fb.group({
       courseName: ['', [Validators.required, Validators.minLength(3)]], // ✅ Min 3 caractères
@@ -45,8 +48,12 @@ isEditing: boolean = false;  // ✅ Ajout d'un état pour savoir si on est en mo
   }  
 
   ngOnInit(): void {
+    this.authService.getUserInfo().subscribe(user => {
+      this.userId = user.idUser;
+
     this.loadCourses();
     this.loadTrainingsForUser();
+  });
   }
 
   loadCourses(): void {

@@ -9,6 +9,7 @@ import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { Router } from '@angular/router'; // ✅ Importer Router
 import { Training } from 'src/app/models/training.model';
 import { TrainingService } from 'src/app/services/training.service';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-quiz-management',
@@ -25,14 +26,16 @@ export class QuizManagementComponent implements OnInit {
   trainings: Training[] = []; // ✅ Store available trainings
   selectedQuizId: number | null = null; // ✅ Store selected quiz ID
   selectedTrainingId: number | null = null; // ✅ Store selected training ID
-  userId: number = 1; // ✅ Hardcoded user ID (1)
+  userId!: number;
   successMessage: string | null = null;
 
   constructor(
     private quizService: QuizService,
     private fb: FormBuilder,
     private router: Router ,
-    private trainingService: TrainingService      
+    private trainingService: TrainingService  ,
+    private authService: AuthService
+    
 
 
 
@@ -75,8 +78,15 @@ export class QuizManagementComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loadQuizzes();
+    this.authService.getUserInfo().subscribe(user => {
+      this.userId = user.idUser; // ou user.id
+      console.log("👤 Utilisateur connecté :", this.userId);
+      this.loadQuizzes();
+    }, error => {
+      console.error("❌ Erreur récupération utilisateur :", error);
+    });
   }
+  
 
   // Charger tous les quiz
   loadQuizzes(): void {

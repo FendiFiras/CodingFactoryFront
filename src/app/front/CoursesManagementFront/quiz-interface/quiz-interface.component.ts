@@ -11,6 +11,7 @@ import { FooterComponent } from '../../elements/footer/footer.component';
 import { CheatDetectionServiceTsService } from 'src/app/services/cheat-detection.service.ts.service';
 import { WebcamHeadtrackerComponent } from '../webcam-headtracker/webcam-headtracker.component';
 import jsPDF from 'jspdf';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-quiz-interface',
@@ -23,7 +24,7 @@ export class QuizInterfaceComponent {
   quiz!: Quiz;
   questions: QuizQuestion[] = [];
   quizId!: number;
-  userId: number = 3;
+  userId!: number;
   submitted = false;
   score!: number;
   passed!: boolean;
@@ -61,7 +62,9 @@ showCameraModal = false;
     private route: ActivatedRoute,
     private quizServiceQuestion: QuizQuestionService,
     private quizservice: QuizService,
-    private cheatService: CheatDetectionServiceTsService // ✅ Ajout ici
+    private cheatService: CheatDetectionServiceTsService,
+        private authService: AuthService // ✅ ajout ici
+    
 
   ) {}
 
@@ -69,6 +72,10 @@ showCameraModal = false;
     this.route.paramMap.subscribe(params => {
       this.quizId = Number(params.get('quizId'));
       if (!isNaN(this.quizId)) {
+
+        this.authService.getUserInfo().subscribe(user => {
+          this.userId = user.idUser; // ou `user.id` selon ta réponse backend
+          console.log("👤 Utilisateur connecté :", this.userId);
         this.loadQuizData();
 
         this.startTime = Date.now(); // Start quiz timer
@@ -134,8 +141,9 @@ showCameraModal = false;
             console.log('User is idle for ' + this.idleSeconds + ' seconds');
           }
         }, 5000);
-      }
-    });
+      }); // ← FIN DU .subscribe(user => {...})
+    
+    }});
 
 // ⛔ Bloquer clic droit (menu contextuel)
 document.addEventListener('contextmenu', (event) => {

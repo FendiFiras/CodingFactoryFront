@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TrainingService } from '../../../services/training.service';
 import { TrainingType } from '../../../models/training.model';
@@ -17,6 +17,8 @@ import { Location } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { User } from 'src/app/models/user';
+import { UserService } from 'src/app/services/user.service';
 @Component({
 
 
@@ -42,25 +44,24 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './add-training.component.html',
   styleUrls: ['./add-training.component.scss'],
 })
-export class AddTrainingComponent {
+export class AddTrainingComponent implements OnInit {
   trainingForm: FormGroup;
   trainingTypes: string[] = ['ONLINE', 'ON_SITE'];  // ✅ Liste des types
   showAddTraining: boolean = false; // ✅ Variable pour afficher ou masquer le formulaire
   minStartDate: string; // ✅ Stocke la date minimale autorisée pour Start Date
   successMessage: string = ''; // ✅ Variable pour stocker le message de succès
 
-  instructors = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Smith' },
-    { id: 3, name: 'Bob Johnson' },
-  ];
+  instructors: User[] = [];
 
-  userId: number = 1;  // Fixer le userId à 1
+
+userId!: number;
 
   constructor(
     private fb: FormBuilder,
     private trainingService: TrainingService,
-    private location: Location
+    private location: Location,
+    private userService: UserService // ✅ Ajout ici
+
   ) {
     this.minStartDate = this.getMinStartDate(); // ✅ Définir la date minimale
 
@@ -80,6 +81,18 @@ export class AddTrainingComponent {
     date.setDate(date.getDate() + 5);
     return date.toISOString().split('T')[0];
   }
+  ngOnInit(): void {
+    this.userService.getUsersByRole('INSTRUCTOR').subscribe(
+      (users) => {
+        this.instructors = users;
+        console.log('👨‍🏫 Instructeurs chargés :', this.instructors);
+      },
+      (error) => {
+        console.error('❌ Erreur chargement instructeurs :', error);
+      }
+    );
+  }
+  
 
   // ✅ Validation : startDate doit être supérieure à aujourd'hui + 5 jours
   startDateValidator(control: any) {
@@ -103,8 +116,11 @@ export class AddTrainingComponent {
  // ✅ Soumettre le formulaire et afficher le message de succès
  onSubmit() {
   if (this.trainingForm.valid) {
+
     const newTraining: Training = this.trainingForm.value;
-    this.trainingService.addTraining(newTraining, this.userId).subscribe(
+    const selectedInstructorId = this.trainingForm.value.instructorId; // 🟢 Récupère l’id choisi
+
+    this.trainingService.addTraining(newTraining, selectedInstructorId).subscribe(
       (response) => {
         console.log('✅ Formation ajoutée avec succès:', response);
         

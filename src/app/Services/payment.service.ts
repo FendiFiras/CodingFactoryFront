@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8089/pidev/api/payments';
+  private apiUrl = 'http://localhost:8081/pidev/api/payments';
   constructor(private http: HttpClient) {}
 
   createStripeSession(userId: number, trainingId: number): Observable<{ id: string; url: string }> {

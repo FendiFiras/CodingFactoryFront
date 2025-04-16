@@ -7,7 +7,7 @@ import { Session } from '../models/session.model'; // Importer le modèle
   providedIn: 'root'
 })
 export class SessionService {
-  private apiUrl = 'http://localhost:8089/pidev/Session'; // URL de ton API pour les sessions
+  private apiUrl = 'http://localhost:8081/pidev/Session'; // URL de ton API pour les sessions
 
   constructor(private http: HttpClient) {}
 

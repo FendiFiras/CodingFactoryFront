@@ -49,8 +49,10 @@
     <div class="form-group">
       <label for="instructorId">Instructor</label>
       <select id="instructorId" class="form-control" formControlName="instructorId">
-        <option *ngFor="let instructor of instructors" [value]="instructor.id">{{ instructor.name }}</option>
-      </select>
+        <option *ngFor="let instructor of instructors" [value]="instructor.idUser">
+          {{ instructor.firstName }} {{ instructor.lastName }}
+        </option>
+              </select>
       <div *ngIf="trainingForm.get('instructorId').invalid && trainingForm.get('instructorId').touched" class="text-danger">
         <span *ngIf="trainingForm.get('instructorId').errors?.['required']">Instructor is required.</span>
       </div>

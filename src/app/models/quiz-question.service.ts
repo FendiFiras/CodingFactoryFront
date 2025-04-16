@@ -8,7 +8,7 @@ import { QuizAnswer } from './quiz-answer.model';
   providedIn: 'root'
 })
 export class QuizQuestionService {
-  private apiUrl = 'http://localhost:8089/pidev/Quizs'; // URL de l'API backend
+  private apiUrl = 'http://localhost:8081/pidev/Quizs'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

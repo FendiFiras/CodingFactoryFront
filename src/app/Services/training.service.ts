@@ -7,7 +7,7 @@ import { Training } from 'src/app/models/training.model';
   providedIn: 'root'
 })
 export class TrainingService {
-  private apiUrl = 'http://localhost:8089/pidev/trainings';
+  private apiUrl = 'http://localhost:8081/pidev/trainings';
 
   constructor(private http: HttpClient) {}
 

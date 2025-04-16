@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 })
 export class CheatDetectionServiceTsService {
 
-  private apiUrl = 'http://localhost:8089/pidev/api/cheat/detect'; // 🔁 Ton endpoint Spring Boot
+  private apiUrl = 'http://localhost:8081/pidev/api/cheat/detect'; // 🔁 Ton endpoint Spring Boot
 
 
   constructor(private http: HttpClient) { }

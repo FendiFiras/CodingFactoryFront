@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment'; // ✅ Importer les 
 import { FormsModule } from '@angular/forms';  // ✅ Ajouter FormsModule
 import { SessionService } from 'src/app/services/session.service';
 import { Session } from 'src/app/models/session.model';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-training-info',
@@ -29,7 +30,7 @@ export class TrainingInfoComponent implements OnInit {
   quizzes: Quiz[] = [];
   quiz!: Quiz | null;
   quizId: number | null = null;  // ✅ Stocker l'ID du quiz ici
-  userId: number = 2; // ✅ Fixe l'ID de l'utilisateur
+  userId!: number; // ✅ Utilisateur connecté
   predictedRevenue: number = 0;
 
   stripe!: Stripe; // ✅ Stocker l'instance Stripe
@@ -51,41 +52,44 @@ export class TrainingInfoComponent implements OnInit {
     private cdr: ChangeDetectorRef,  // 🛠️ Ajout de ChangeDetectorRef
     private quizService: QuizService,
     private paymentService: PaymentService, // ✅ Injecte le PaymentService
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private authService: AuthService  // ✅ AJOUT ICI
+
 
 
   ) {}
 
   async ngOnInit() {
     this.stripe = await loadStripe(environment.stripePublicKey); // ✅ Charger Stripe.js
-
-    this.route.paramMap.subscribe(params => {
-      const trainingId = Number(params.get('id'));
-      if (!isNaN(trainingId)) {
-        this.trainingId = trainingId;
-        this.getTrainingDetails(trainingId);
-        this.loadQuiz(trainingId);
-
-        // ✅ Vérifier si l'utilisateur est déjà inscrit
-        this.checkUserEnrollment();
-
-        // ✅ Charger les formations récentes
-        this.getLatestTrainings();
-
-        // ✅ Charger les formations non achetées
-        this.getTrainingsNotEnrolled();
-
-        // ✅ Vérifier si l'utilisateur est éligible au discount
-        this.checkUserDiscount();
-        this.loadSessions(trainingId);
-
-      } else {
-        this.router.navigate(['/TrainingList']);
+  
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.userId = user.idUser;
+        console.log("👤 Utilisateur connecté :", this.userId);
+  
+        this.route.paramMap.subscribe(params => {
+          const trainingId = Number(params.get('id'));
+          if (!isNaN(trainingId)) {
+            this.trainingId = trainingId;
+            this.getTrainingDetails(trainingId);
+            this.loadQuiz(trainingId);
+            this.checkUserEnrollment();
+            this.getLatestTrainings();
+            this.getTrainingsNotEnrolled();
+            this.checkUserDiscount();
+            this.loadSessions(trainingId);
+          } else {
+            this.router.navigate(['/TrainingList']);
+          }
+        }); // ← Fermeture de this.route.paramMap.subscribe
+      }, // ← Fin du bloc `next`
+      error: (err) => {
+        console.error("❌ Erreur récupération utilisateur :", err);
+        this.router.navigate(['/login']);
       }
-    });
-}
-
-
+    }); // ← Fermeture de this.authService.getUserInfo().subscribe
+  }
+  
   
 
   getTrainingDetails(trainingId: number) {

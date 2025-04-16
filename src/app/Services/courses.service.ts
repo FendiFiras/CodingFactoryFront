@@ -7,7 +7,7 @@ import { Courses } from '../models/courses.model';
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:8089/pidev/Courses'; // Base URL de l'API
+  private apiUrl = 'http://localhost:8081/pidev/Courses'; // Base URL de l'API
 
   constructor(private http: HttpClient) {}
 
