@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Reclamation } from '../Models/reclamation.model';
+import { Reclamation } from '../models/reclamation.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ReclamationService {
 
-  private readonly API_URL = 'http://localhost:8082/reclamations';
+  private readonly API_URL = 'http://localhost:8086/reclamations';
 
   constructor(private http: HttpClient) { }
 

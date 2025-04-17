@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Material } from 'src/app/Models/material';
-import { Reclamation } from 'src/app/Models/reclamation.model';
-import { TypeStatut } from 'src/app/Models/type-statut';
+import { Material } from 'src/app/models/material';
+import { Reclamation } from 'src/app/models/reclamation.model';
+import { TypeStatut } from 'src/app/models/type-statut';
 import { MaterialService } from 'src/app/services/material.service';
 import { ReclamationService } from 'src/app/services/reclamation.service';
 

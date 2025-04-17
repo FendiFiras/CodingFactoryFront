@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Material } from 'src/app/Models/material';
+import { Material } from 'src/app/models/material';
 import { MaterialService } from 'src/app/services/material.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Reclamation } from 'src/app/Models/reclamation.model';
+import { Reclamation } from 'src/app/models/reclamation.model';
 import { ReclamationService } from 'src/app/services/reclamation.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
-import { Message } from 'src/app/Models/message';
+import { Message } from 'src/app/models/message';
 import { HttpClient } from '@angular/common/http';
 import { ChatComponent } from '../chat/chat.component';
 

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Message } from '../Models/message';
+import { Message } from '../models/message';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../front/elements/navbar/navbar.component';
 import { BrowserModule } from '@angular/platform-browser';

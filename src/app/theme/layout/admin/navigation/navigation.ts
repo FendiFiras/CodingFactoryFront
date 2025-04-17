@@ -11,19 +11,18 @@ export interface NavigationItem {
   external?: boolean;
   target?: boolean;
   breadcrumbs?: boolean;
-
   children?: NavigationItem[];
 }
 
 export const NavigationItems: NavigationItem[] = [
   {
-    id: 'navigation',
+    id: 'group-navigation',
     title: 'Navigation',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'dashboard',
+        id: 'dashboard-home',
         title: 'Dashboard',
         type: 'item',
         url: '/dashboard',
@@ -32,15 +31,14 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  
   {
-    id: 'forms',
+    id: 'group-forms',
     title: 'Forms & Tables',
     type: 'group',
     icon: 'icon-group',
     children: [
       {
-        id: 'forms-element',
+        id: 'form-elements',
         title: 'Form Elements',
         type: 'item',
         url: '/forms/basic',
@@ -48,126 +46,119 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'feather icon-file-text'
       },
       {
-        id: 'Tables',
+        id: 'tables',
         title: 'Tables',
         type: 'item',
         url: '/tables/bootstrap',
         classes: 'nav-item',
         icon: 'feather icon-server'
       },
-     
       {
-        id: 'UsersManagement',
+        id: 'users-management',
         title: 'Users Management',
-        type: 'collapse', // Permet l'expansion des éléments enfants
-        icon: 'feather icon-server',
+        type: 'collapse',
+        icon: 'feather icon-users',
         children: [
           {
-            
-            id: 'Users Managment',
+            id: 'users-list',
             title: 'List of Users',
             type: 'item',
             url: '/listeUsers',
-            icon: 'feather icon-server',
+            icon: 'feather icon-user',
             breadcrumbs: false
-            
           },
           {
-            id: 'StudentManagement',
+            id: 'students',
             title: 'Student Management',
             type: 'item',
             url: '/student',
-            icon: 'feather icon-server',
+            icon: 'feather icon-user-check',
             breadcrumbs: false
           },
           {
-            id: 'InstructorManagement',
+            id: 'instructors',
             title: 'Instructor Management',
             type: 'item',
             url: '/instructor',
-            icon: 'feather icon-server',
+            icon: 'feather icon-user-check',
             breadcrumbs: false
-          }, {
-            id: 'BannedUsers',
+          },
+          {
+            id: 'banned-users',
             title: 'Banned Users',
             type: 'item',
             url: '/banned-user',
-            icon: 'feather icon-server',
+            icon: 'feather icon-user-x',
             breadcrumbs: false
           },
           {
-            id: 'archive Ban',
+            id: 'archived-bans',
             title: 'Archived Banned Users',
             type: 'item',
             url: '/archive-ban',
-            icon: 'feather icon-server',
+            icon: 'feather icon-archive',
             breadcrumbs: false
           },
           {
-            id: 'user stats',
-            title: 'Users stats',
+            id: 'user-stats',
+            title: 'Users Stats',
             type: 'item',
             url: '/users-stats',
-            icon: 'feather icon-server',
+            icon: 'feather icon-bar-chart-2',
             breadcrumbs: false
           },
           {
-            id: 'CompanyRepresentativeManagement',
+            id: 'company-rep',
             title: 'Company Representative Management',
             type: 'item',
             url: '/companyrepresentive',
-            icon: 'feather icon-server',
+            icon: 'feather icon-briefcase',
             breadcrumbs: false
           }
-          
-
-         
         ]
       },
-     {
-        id: 'Training-managment',
-        title: 'Training Management', // Titre affiché
-        type: 'item',
-        url: '/TrainingManagement', // URL de la route
-        classes: 'nav-item',
-        icon: 'feather icon-server' // Icône à utiliser
-      },
       {
-        id: 'Events Managment',
-        title: 'Events Managment',
+        id: 'training-management',
+        title: 'Training Management',
         type: 'item',
-        url: '/Events/bootstrap',
+        url: '/TrainingManagement',
         classes: 'nav-item',
         icon: 'feather icon-server'
       },
       {
-        id: 'Pfe Managment',
-        title: 'Pfe Managment',
-        type: 'collapse',
-        url: '/pfemanagment',
+        id: 'events-management',
+        title: 'Events Management',
+        type: 'item',
+        url: '/Events/bootstrap',
         classes: 'nav-item',
-        icon: 'feather icon-server',
+        icon: 'feather icon-calendar'
+      },
+      {
+        id: 'pfe-management',
+        title: 'Pfe Management',
+        type: 'collapse',
+        icon: 'feather icon-file',
         children: [
           {
-            id: 'partnershipslist',
+            id: 'partnerships',
             title: 'Partnerships',
             type: 'item',
             url: '/partnerships'
           },
           {
-            id: 'offerslist',
+            id: 'offers',
             title: 'Offers',
             type: 'item',
             url: '/offerslist'
           },
           {
-            id: 'Applications',
+            id: 'applications',
             title: 'Applications',
             type: 'item',
             url: '/applications'
           },
           {
-            id: 'PfeAffectations',
+            id: 'pfe-affectations',
             title: 'Pfe Affectations',
             type: 'item',
             url: '/pfeaffectations'
@@ -181,282 +172,170 @@ export const NavigationItems: NavigationItem[] = [
         ]
       },
       {
-        id: 'Forums Managment',
-        title: 'Forums Managment',
+        id: 'forums-management',
+        title: 'Forums Management',
         type: 'item',
         url: '/forums-management',
         classes: 'nav-item',
-        icon: 'feather icon-server'
+        icon: 'feather icon-message-circle'
       },
       {
-        id: 'Reclamations Managment',
-        title: 'Reclamations Managment',
-        type: 'item',
-        url: '/Reclamations/bootstrap',
+        id: 'reclamations-management',
+        title: 'Reclamations Management',
+        type: 'collapse',
         classes: 'nav-item',
-        icon: 'feather icon-server'
+        icon: 'feather icon-alert-circle',
+        children: [
+          {
+            id: 'reclamations-main',
+            title: 'Reclamations',
+            type: 'item',
+            url: '/admin/reclamations',
+            classes: 'nav-item'
+          },
+          {
+            id: 'suppliers-main',
+            title: 'Suppliers',
+            type: 'item',
+            url: '/suppliers',
+            classes: 'nav-item'
+          },
+          {
+            id: 'materials-main',
+            title: 'Materials',
+            type: 'item',
+            url: '/materials',
+            classes: 'nav-item'
+          }
+        ]
       }
     ]
   },
   {
-    id: 'chart-maps',
-    title: 'Chart',
+    id: 'group-charts',
+    title: 'Charts',
     type: 'group',
     icon: 'icon-charts',
     children: [
       {
-        id: 'apexChart',
+        id: 'apex-chart',
         title: 'ApexChart',
         type: 'item',
-        url: 'apexchart',
+        url: '/apexchart',
         classes: 'nav-item',
         icon: 'feather icon-pie-chart'
       }
     ]
   },
   {
-    id: 'pages',
+    id: 'group-pages',
     title: 'Pages',
     type: 'group',
     icon: 'icon-pages',
     children: [
       {
-        id: 'auth',
+        id: 'auth-pages',
         title: 'Authentication',
         type: 'collapse',
         icon: 'feather icon-lock',
         children: [
           {
-              id: 'dashboard',
-              title: 'Dashboard',
-              type: 'item',
-              url: '/dashboard',
-              icon: 'feather icon-home',
-              classes: 'nav-item'
+            id: 'signup',
+            title: 'Sign up',
+            type: 'item',
+            url: '/auth/signup',
+            target: true,
+            breadcrumbs: false
+          },
+          {
+            id: 'signin',
+            title: 'Sign in',
+            type: 'item',
+            url: '/auth/signin',
+            target: true,
+            breadcrumbs: false
           }
-      ]
+        ]
+      },
+      {
+        id: 'sample-page',
+        title: 'Sample Page',
+        type: 'item',
+        url: '/sample-page',
+        classes: 'nav-item',
+        icon: 'feather icon-sidebar'
+      },
+      {
+        id: 'disabled-menu',
+        title: 'Disabled Menu',
+        type: 'item',
+        url: 'javascript:',
+        classes: 'nav-item disabled',
+        icon: 'feather icon-power',
+        external: true
+      },
+      {
+        id: 'buy-now',
+        title: 'Buy Now',
+        type: 'item',
+        url: 'https://codedthemes.com/item/datta-able-angular/',
+        icon: 'feather icon-book',
+        classes: 'nav-item',
+        target: true,
+        external: true
+      }
+    ]
   },
   {
-      id: 'forms',
-      title: 'Forms & Tables',
-      type: 'group',
-      icon: 'icon-group',
-      children: [
+    id: 'group-ui-elements',
+    title: 'UI Elements',
+    type: 'group',
+    icon: 'icon-ui',
+    children: [
+      {
+        id: 'basic-components',
+        title: 'Component',
+        type: 'collapse',
+        icon: 'feather icon-box',
+        children: [
           {
-              id: 'forms-element',
-              title: 'Form Elements',
-              type: 'item',
-              url: '/forms/basic',
-              classes: 'nav-item',
-              icon: 'feather icon-file-text'
+            id: 'button',
+            title: 'Button',
+            type: 'item',
+            url: '/basic/button'
           },
           {
-              id: 'Tables',
-              title: 'Tables',
-              type: 'item',
-              url: '/tables/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
+            id: 'badges',
+            title: 'Badges',
+            type: 'item',
+            url: '/basic/badges'
           },
           {
-              id: 'Users Managment',
-              title: 'Users Managment',
-              type: 'item',
-              url: '/Users/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
+            id: 'breadcrumb-pagination',
+            title: 'Breadcrumb & Pagination',
+            type: 'item',
+            url: '/basic/breadcrumb-paging'
           },
           {
-              id: 'Courses Managment',
-              title: 'Courses Managment',
-              type: 'item',
-              url: '/Courses/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
+            id: 'collapse',
+            title: 'Collapse',
+            type: 'item',
+            url: '/basic/collapse'
           },
           {
-              id: 'Events Managment',
-              title: 'Events Managment',
-              type: 'item',
-              url: '/Events/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
+            id: 'tabs-pills',
+            title: 'Tabs & Pills',
+            type: 'item',
+            url: '/basic/tabs-pills'
           },
           {
-              id: 'Pfe Managment',
-              title: 'Pfe Managment',
-              type: 'item',
-              url: '/Pfe/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
-          },
-          {
-              id: 'Forums Managment',
-              title: 'Forums Managment',
-              type: 'item',
-              url: '/Forums/bootstrap',
-              classes: 'nav-item',
-              icon: 'feather icon-server'
-          },
-          {
-              id: 'Reclamations Managment',
-              title: 'Reclamations Managment',
-              type: 'collapse',
-              classes: 'nav-item',
-              icon: 'feather icon-server',
-              children: [
-                  {
-                      id: 'reclamations',
-                      title: 'Reclamations',
-                      type: 'item',
-                      url: '/admin/reclamations',
-                      classes: 'nav-item'
-                  },
-                  {
-                      id: 'suppliers',
-                      title: 'Suppliers',
-                      type: 'item',
-                      url: '/suppliers',
-                      classes: 'nav-item'
-                  },
-                  {
-                      id: 'materials',
-                      title: 'Materials',
-                      type: 'item',
-                      url: '/materials',
-                      classes: 'nav-item'
-                  }
-              ]
+            id: 'typography',
+            title: 'Typography',
+            type: 'item',
+            url: '/basic/typography'
           }
-      ]
-  },
-  {
-      id: 'chart-maps',
-      title: 'Chart',
-      type: 'group',
-      icon: 'icon-charts',
-      children: [
-          {
-              id: 'apexChart',
-              title: 'ApexChart',
-              type: 'item',
-              url: 'apexchart',
-              classes: 'nav-item',
-              icon: 'feather icon-pie-chart'
-          }
-      ]
-  },
-  {
-      id: 'pages',
-      title: 'Pages',
-      type: 'group',
-      icon: 'icon-pages',
-      children: [
-          {
-              id: 'auth',
-              title: 'Authentication',
-              type: 'collapse',
-              icon: 'feather icon-lock',
-              children: [
-                  {
-                      id: 'signup',
-                      title: 'Sign up',
-                      type: 'item',
-                      url: '/auth/signup',
-                      target: true,
-                      breadcrumbs: false
-                  },
-                  {
-                      id: 'signin',
-                      title: 'Sign in',
-                      type: 'item',
-                      url: '/auth/signin',
-                      target: true,
-                      breadcrumbs: false
-                  }
-              ]
-          },
-          {
-              id: 'sample-page',
-              title: 'Sample Page',
-              type: 'item',
-              url: '/sample-page',
-              classes: 'nav-item',
-              icon: 'feather icon-sidebar'
-          },
-          {
-              id: 'disabled-menu',
-              title: 'Disabled Menu',
-              type: 'item',
-              url: 'javascript:',
-              classes: 'nav-item disabled',
-              icon: 'feather icon-power',
-              external: true
-          },
-          {
-              id: 'buy_now',
-              title: 'Buy Now',
-              type: 'item',
-              icon: 'feather icon-book',
-              classes: 'nav-item',
-              url: 'https://codedthemes.com/item/datta-able-angular/',
-              target: true,
-              external: true
-          }
-      ]
-  },
-  {
-      id: 'ui-element',
-      title: 'UI ELEMENT',
-      type: 'group',
-      icon: 'icon-ui',
-      children: [
-          {
-              id: 'basic',
-              title: 'Component',
-              type: 'collapse',
-              icon: 'feather icon-box',
-              children: [
-                  {
-                      id: 'button',
-                      title: 'Button',
-                      type: 'item',
-                      url: '/basic/button'
-                  },
-                  {
-                      id: 'badges',
-                      title: 'Badges',
-                      type: 'item',
-                      url: '/basic/badges'
-                  },
-                  {
-                      id: 'breadcrumb-pagination',
-                      title: 'Breadcrumb & Pagination',
-                      type: 'item',
-                      url: '/basic/breadcrumb-paging'
-                  },
-                  {
-                      id: 'collapse',
-                      title: 'Collapse',
-                      type: 'item',
-                      url: '/basic/collapse'
-                  },
-                  {
-                      id: 'tabs-pills',
-                      title: 'Tabs & Pills',
-                      type: 'item',
-                      url: '/basic/tabs-pills'
-                  },
-                  {
-                      id: 'typography',
-                      title: 'Typography',
-                      type: 'item',
-                      url: '/basic/typography'
-                  }
-              ]
-          }
-      ]
+        ]
+      }
+    ]
   }
-
-]
-  
+];

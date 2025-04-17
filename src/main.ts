@@ -6,7 +6,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http'; // ✅ Add this
 import { AppRoutingModule } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
-import { HttpClientModule } from '@angular/common/http';  // Import de HttpClientModule
 import { provideToastr } from 'ngx-toastr';
 if (environment.production) {
   enableProdMode();

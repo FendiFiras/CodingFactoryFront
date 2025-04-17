@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Material } from '../Models/material';
+import { Material } from '../models/material';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class MaterialService {
 
-  private readonly API_URL = 'http://localhost:8082/materials';
+  private readonly API_URL = 'http://localhost:8086/materials';
 
   constructor(private http: HttpClient) { }
 

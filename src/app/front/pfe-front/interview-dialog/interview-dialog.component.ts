@@ -48,7 +48,7 @@ export class InterviewDialogComponent {
       .set('interviewDate', date)
       .set('interviewTime', time);
   
-      this.http.post('http://localhost:8089/pidev/interview', null, {
+      this.http.post('http://localhost:8083/pidev/interview', null, {
         params,
         responseType: 'text'
       }).subscribe(

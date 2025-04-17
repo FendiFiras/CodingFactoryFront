@@ -1,19 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Reclamation } from 'src/app/Models/reclamation.model';
+import { Reclamation } from 'src/app/models/reclamation.model';
 import { ReclamationService } from 'src/app/services/reclamation.service';
 import { NavbarComponent } from "../../elements/navbar/navbar.component";
-import { BrowserModule } from '@angular/platform-browser';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { ChatModalComponent } from 'src/app/chat-modal/chat-modal.component';
 
 @Component({
   selector: 'app-reclamation-list',
-  imports: [RouterLink, CommonModule, NavbarComponent, BrowserModule, MatTableModule, MatPaginatorModule, BrowserAnimationsModule,
+  imports: [RouterLink, NavbarComponent,CommonModule, MatTableModule, MatPaginatorModule,
     MatButtonModule, ChatModalComponent],
   templateUrl: './reclamation-list.component.html',
   styleUrl: './reclamation-list.component.scss'

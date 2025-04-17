@@ -5,10 +5,11 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 // project import
 import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [ RouterModule,ReactiveFormsModule],
+  imports: [ RouterModule,ReactiveFormsModule,CommonModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

@@ -4,7 +4,7 @@ import { NavbarComponent } from '../../elements/navbar/navbar.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Message } from 'src/app/Models/message';
+import { Message } from 'src/app/models/message';
 import { timer, Subscription } from 'rxjs';
 
 @Component({

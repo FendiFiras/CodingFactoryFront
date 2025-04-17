@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Subscription, timer } from 'rxjs';
 import { NavbarComponent } from 'src/app/front/elements/navbar/navbar.component';
-import { Message } from 'src/app/Models/message';
+import { Message } from 'src/app/models/message';
 
 @Component({
   selector: 'app-chat',

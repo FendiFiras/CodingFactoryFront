@@ -241,7 +241,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-   // canActivate: [AdminGuard],  // Application du guard ici
+   canActivate: [AdminGuard],  // Application du guard ici
 
     children: [
    

@@ -1,6 +1,7 @@
+import { TypeStatut } from "./type-statut";
 import { Material } from "./material";
 import { Type } from "./type";
-import { TypeStatut } from "./type-statut";
+
 
 export interface Reclamation {
   idReclamation?: number;
