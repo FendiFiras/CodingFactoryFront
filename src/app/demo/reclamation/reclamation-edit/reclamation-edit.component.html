@@ -75,6 +75,7 @@
             class="form-control" 
             placeholder="Enter the quantity"
             min="1"
+          
         />
         <div *ngIf="reclamationForm.get('quantity')?.touched && reclamationForm.get('quantity')?.invalid" class="invalid-feedback">
             <div *ngIf="reclamationForm.get('quantity')?.errors?.['required']">Quantity is required.</div>

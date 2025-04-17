@@ -45,7 +45,7 @@ export class ReclamationEditComponent implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       type: ['', Validators.required],
       status: [TypeStatut.IN_WAIT, Validators.required], // Default status
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      quantity: ['', [Validators.required, Validators.min(1)]],
       urgencyLevel: [2, Validators.required],
       materials: [[], Validators.required]
     });
