@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-listevenement',
@@ -23,17 +24,27 @@ export class ListevenementComponent implements OnInit {
 
   participantsCount: { [key: number]: number } = {}; // Stockage du nombre de participants
 
-  constructor(private eventService: EventService, private router: Router, private sanitizer: DomSanitizer) {}
-
+  constructor(private eventService: EventService, private router: Router, private sanitizer: DomSanitizer,  private authService: AuthService // ✅ ajouté ici
+  ) {}
   async ngOnInit(): Promise<void> {
     try {
       await this.eventService.connectWebSocket();
-      await this.loadEvents();
-      this.idUser = 1;
+  
+      // ✅ Récupère l'utilisateur connecté
+      this.authService.getUserInfo().subscribe({
+        next: (user) => {
+          this.idUser = user.idUser; // 🔄 Dynamique
+          this.loadEvents();         // 🔄 On charge les événements après avoir l'idUser
+        },
+        error: (err) => {
+          console.error("Erreur utilisateur connecté :", err);
+        }
+      });
     } catch (error) {
       console.error("Erreur lors de l'initialisation", error);
     }
   }
+  
   
 
   loadEvents(): void {

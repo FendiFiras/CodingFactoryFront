@@ -7,6 +7,7 @@ import { Event as EventModel } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FeedBackEvent } from 'src/app/models/feedBackEvent.model';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 
 @Component({
@@ -27,21 +28,34 @@ export class DetaileventComponent implements OnInit {
 
     feedbacks: FeedBackEvent[] = [];
   
-      constructor(private route: ActivatedRoute,private eventService: EventService) {}
+      constructor(private route: ActivatedRoute,private eventService: EventService,
+        private authService: AuthService // ✅ Injecter le service
+
+
+
+      ) {}
       ngOnInit(): void {
-        // Récupérer l'ID depuis l'URL
         this.route.paramMap.subscribe(params => {
           const id = params.get('id');
           if (id) {
-            this.idEvent = +id; // Convertir en nombre
+            this.idEvent = +id;
             this.loadEventDetails();
-
           }
-          this.idUser=1;
-          this.loadFeedbacks();
-
+      
+          // 🔁 Récupérer l'utilisateur connecté dynamiquement
+          this.authService.getUserInfo().subscribe({
+            next: (user) => {
+              this.idUser = user.idUser; // ✅ ID réel
+              this.userEmail = user.email; // Si nécessaire
+              this.loadFeedbacks(); // Charger les feedbacks une fois qu'on a l'utilisateur
+            },
+            error: (err) => {
+              console.error("Erreur récupération user connecté", err);
+            }
+          });
         });
       }
+      
     
       // Charger les détails de l'événement
       loadEventDetails(): void {

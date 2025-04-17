@@ -8,6 +8,7 @@ import { EventService } from 'src/app/services/event.service';
 import { Event as EventModel } from 'src/app/models/event.model';
 import { FeedBackEvent } from 'src/app/models/feedBackEvent.model';
 import { Planning } from 'src/app/models/planning.model';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 
 @Component({
@@ -28,22 +29,30 @@ export class PlanningEventComponent implements OnInit {
 
 
   
-      constructor(private route: ActivatedRoute,private eventService: EventService) {}
+      constructor(private route: ActivatedRoute,private eventService: EventService,  private authService: AuthService // 👈 Ajoute ça
+      ) {}
       ngOnInit(): void {
-        // Récupérer l'ID depuis l'URL
         this.route.paramMap.subscribe(params => {
           const id = params.get('id');
           if (id) {
-            this.idEvent = +id; // Convertir en nombre
+            this.idEvent = +id;
             this.loadEventDetails();
+            this.loadPlanning();
           }
-          this.idUser=1;
-          this.loadFeedbacks();
-          this.loadPlanning();
-          
-
+      
+          // ✅ Récupération de l'utilisateur connecté
+          this.authService.getUserInfo().subscribe({
+            next: (user) => {
+              this.idUser = user.idUser;
+              this.loadFeedbacks(); // Charger les feedbacks après avoir récupéré l'utilisateur
+            },
+            error: (err) => {
+              console.error("Erreur récupération user connecté", err);
+            }
+          });
         });
       }
+      
     
       // Charger les détails de l'événement
       loadEventDetails(): void {
@@ -60,6 +69,8 @@ export class PlanningEventComponent implements OnInit {
 // Charger les feedbacks de l'événement donné
 loadFeedbacks(): void {
   this.eventService.getComments(this.idEvent).subscribe((data) => {
+    console.log('Feedbacks reçus:', data); // <--- ajoute ça
+
     this.feedbacks = data;
     
   });
@@ -147,7 +158,7 @@ playVideo(videoUrl: string): void {
   this.selectedVideoUrl = null;
 
   setTimeout(() => {
-    this.selectedVideoUrl = `http://localhost:8089/event/${videoUrl}`;
+    this.selectedVideoUrl = `http://localhost:8087/event/${videoUrl}`;
   }, 100); // Petit délai pour que Angular détecte le changement
   this.analyze(videoUrl);
 
@@ -185,9 +196,11 @@ analyze(fname: string) {
 
 
 
+
+
       }
 
 
         
       
-    
+  

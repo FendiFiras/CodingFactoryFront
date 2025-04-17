@@ -182,7 +182,6 @@ const routes: Routes = [
   {
     path: 'TrainingList',
     component: ListsTrainingComponent,
-    canActivate: [StudentGuard]
 
   },
   
@@ -196,7 +195,6 @@ const routes: Routes = [
     path: 'CoursesManagement',  
     component: CoursesManagementComponent,
     children:[],
-    canActivate: [InstructorGuard]
 
   },
 
@@ -206,25 +204,24 @@ const routes: Routes = [
   
     component: QuizManagementComponent,
     children:[],
-    canActivate: [InstructorGuard]
 
   },
   {
     path: 'QuizQuestionsManagement/:id', // ✅ Ajouter l'ID du quiz dans l'URL
     component: QuizQuestionsManagementComponent,
-    canActivate: [InstructorGuard]
+   // canActivate: [InstructorGuard]
 
 
   },
 
   { path: 'courses/training/:trainingId', 
     component: CoursesStudentComponent,
-    canActivate: [StudentGuard]
+    //canActivate: [StudentGuard]
  },
 
     { path: 'PassQuiz/:quizId',
        component: QuizInterfaceComponent,
-       canActivate: [StudentGuard]
+      // canActivate: [StudentGuard]
 
        },// ✅ Passage du quiz avec ID
 

@@ -17,7 +17,7 @@ import { Location } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { User } from 'src/app/models/user';
+import { User } from 'src/app/models/User';
 import { UserService } from 'src/app/services/user.service';
 @Component({
 

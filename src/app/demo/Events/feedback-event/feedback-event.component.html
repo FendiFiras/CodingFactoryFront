@@ -106,7 +106,7 @@
             <td>{{ planning.endDatetime | date: 'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ planning.description }}</td>
             <td>
-              <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="50" width="50" controls></video>
+              <video *ngIf="planning.video" [src]="'http://localhost:8087/event/' + planning.video" height="50" width="50" controls></video>
             </td>
             <td>{{ planning.locationType }}</td>
             <td>
@@ -193,7 +193,7 @@
         <!-- Video Upload -->
         <label for="video">Event Video:</label>
         <input type="file" (change)="onVideoSelected($event)" />
-        <video *ngIf="selectedPlanning.video" [src]="'http://localhost:8089/event/' + selectedPlanning.video" width="200" controls></video>
+        <video *ngIf="selectedPlanning.video" [src]="'http://localhost:8087/event/' + selectedPlanning.video" width="200" controls></video>
 
         <label for="editLocationType">Type de localisation :</label>
         <select [(ngModel)]="selectedPlanning.locationType" name="editLocationType" required>

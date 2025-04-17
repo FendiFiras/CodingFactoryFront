@@ -10,7 +10,7 @@ import { LocationEvent } from '../models/locationEvent.model';
   providedIn: 'root'
 })
 export class EventService {
-  private apiUrl = 'http://localhost:8089/event'; // Adjust the URL if needed
+  private apiUrl = 'http://localhost:8087/event'; // Adjust the URL if needed
 
   private stompClient: Client | null = null;
   private stompConnected = new BehaviorSubject<boolean>(false);
@@ -63,9 +63,12 @@ export class EventService {
 
 
      // Ajouter un commentaire
-  addComment(comment: any, eventId: number, userId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/addfeedback/${eventId}/${userId}`, comment);
-  }
+     addComment(comment: any, eventId: number, userId: number): Observable<any> {
+      return this.http.post(`${this.apiUrl}/addfeedback/${eventId}/${userId}`, comment, {
+        responseType: 'text' as 'json'  // 👈 Corrige l'erreur de parsing JSON
+      });
+    }
+    
 
   // Récupérer les commentaires d'un événement
   getComments(eventId: number): Observable<any> {
@@ -123,7 +126,7 @@ export class EventService {
   }
 
   getQRCode(eventId: number): Observable<Blob> {
-    return this.http.get(`http://localhost:8089/event/qrcode/${eventId}`, { responseType: 'blob' });
+    return this.http.get(`http://localhost:8087/event/qrcode/${eventId}`, { responseType: 'blob' });
 }
 
 
@@ -145,7 +148,7 @@ getParticipantCount(idEvent: number): Observable<number> {
       return;
     }
 
-    const socket = new SockJS('http://localhost:8089/ws');
+    const socket = new SockJS('http://localhost:8087/ws');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (msg) => console.log(msg),
@@ -212,7 +215,7 @@ getAllLocations(): Observable<LocationEvent[]> {
 }
 //**************AI */
 
-private baseUrl = 'http://localhost:8082/analyze'; // URL de l’API FastAPI
+private baseUrl = 'http://localhost:8091/analyze'; // URL de l’API FastAPI
 
 analyzeVideo(filename: string) {
   const requestBody = { filename };  // Crée l'objet contenant le champ `filename`

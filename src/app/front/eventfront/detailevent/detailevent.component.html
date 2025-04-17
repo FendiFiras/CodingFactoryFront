@@ -7,7 +7,7 @@
 <section class="page-header page-header--bg-two">
     <div class="page-header__overlay"></div>
     <div class="container text-center">
-        <h2 class="page-header__title"> {{ event.title }}</h2>
+        <h2 class="page-header__title"> {{ event?.title }}</h2>
         <ul class="page-header__breadcrumb list-unstyled">
             <li><a routerLink="/">Home</a></li>
             <li><span>Event Details</span></li>
@@ -21,7 +21,7 @@
             <div class="col-xl-8 col-lg-7">
                 <div class="blog-details__content">
                     <div class="blog-details__img">
-                        <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
+                        <img *ngIf="event.imageUrl" [src]="'http://localhost:8087/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
                     </div>
                     
                    <!-- Ligne avec Event Type et bouton aligné à droite -->
@@ -50,7 +50,7 @@
 
                     <br>
 
-                    <h3 class="blog-details__title">{{ event.title }}</h3>
+                    <h3 class="blog-details__title">{{ event?.title }}</h3>
                     
                     <!-- Description -->
                     <p class="blog-details__text">

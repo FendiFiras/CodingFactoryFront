@@ -7,7 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BanLog, Status } from 'src/app/models/ban-log';
 import { AuthService } from 'src/app/services/auth-service.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { User } from 'src/app/models/user';
+import { User } from 'src/app/models/User';
 
 
 @Component({

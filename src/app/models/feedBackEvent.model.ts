@@ -1,5 +1,5 @@
 import { Event as EventModel } from "./event.model";
-import { User } from "./user";
+import { User } from "./User";
 
 export interface FeedBackEvent {
     idFeedback: number;

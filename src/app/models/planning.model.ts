@@ -10,6 +10,7 @@ export interface Planning {
     locationType: string;
     event?:EventModel;
     locationEvent?:LocationEvent;
+    
 
   }
   

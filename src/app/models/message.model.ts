@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./User";
 
 export class Message {
     message_id!: number;

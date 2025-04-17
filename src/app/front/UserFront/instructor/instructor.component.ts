@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User, Gender, Role } from 'src/app/models/user';
+import { User, Gender, Role } from 'src/app/models/User';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';

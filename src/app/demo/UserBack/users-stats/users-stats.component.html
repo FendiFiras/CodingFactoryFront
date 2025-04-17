@@ -1,51 +1,60 @@
 <div class="dashboard-container">
+  <!-- Error Notification -->
+  <div *ngIf="errorMessage" class="error-notification">
+    <div class="error-content">
+      <i class="ti ti-alert-circle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+    <button class="close-btn" (click)="errorMessage = null">
+      <i class="ti ti-x"></i>
+    </button>
+  </div>
+
   <!-- Dashboard Header -->
   <div class="dashboard-header">
-    <h2>User Analytics Dashboard</h2>
+    <div class="header-title">
+      <i class="ti ti-chart-infographic"></i>
+      <h2>User Analytics Dashboard</h2>
+    </div>
+    
     <div class="header-actions">
-      <button class="refresh-btn" (click)="refreshData()" [disabled]="loading">
-        <i class="ti ti-refresh" [class.ti-rotate]="loading"></i> 
-        {{ loading ? 'Loading...' : 'Refresh Data' }}
-      </button>
       <div class="time-filter">
-        <span>Period:</span>
-        <select class="form-select" [(ngModel)]="filters.period" (change)="setFilter('period', filters.period)">
-          <option value="7days" > Last 7 days </option>
-          <option value="30days" > Last 30 days </option>
-          <option value="90days" > Last 90 days </option>
+        <label for="period-select">Time Period:</label>
+        <select id="period-select" class="form-select" 
+                [(ngModel)]="filters.period" 
+                (change)="setFilter('period', filters.period)">
+          <option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option>
+          <option value="90days">Last 90 Days</option>
         </select>
       </div>
+      
+      <button class="refresh-btn" (click)="refreshData()" [disabled]="loading">
+        <i class="ti ti-refresh" [class.rotate]="loading"></i>
+        {{ loading ? 'Refreshing...' : 'Refresh Data' }}
+      </button>
     </div>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="summary-cards">
-    <div class="summary-card card-male">
+  <!-- Summary Cards Row -->
+  <div class="summary-grid">
+    <!-- Male/Female Summary -->
+    <div class="summary-card card-gender">
       <div class="card-icon">
         <i class="ti ti-gender-male"></i>
-      </div>
-      <div class="card-content">
-        <h3>{{ stats.malePercentage }}%</h3>
-        <p>Male Users</p>
-        <div class="card-trend positive">
-          <i class="ti ti-arrow-up"></i> 5.2%
-        </div>
-      </div>
-    </div>
-
-    <div class="summary-card card-female">
-      <div class="card-icon">
         <i class="ti ti-gender-female"></i>
       </div>
       <div class="card-content">
-        <h3>{{ stats.femalePercentage }}%</h3>
-        <p>Female Users</p>
-        <div class="card-trend positive">
-          <i class="ti ti-arrow-up"></i> 3.8%
+        <h3>{{ stats.malePercentage }}% / {{ stats.femalePercentage }}%</h3>
+        <p>Male/Female Ratio</p>
+        <div class="card-trend">
+          <i class="ti ti-chart-line"></i>
+          Gender Distribution
         </div>
       </div>
     </div>
 
+    <!-- Dark Mode Summary -->
     <div class="summary-card card-dark">
       <div class="card-icon">
         <i class="ti ti-moon"></i>
@@ -54,11 +63,13 @@
         <h3>{{ stats.darkModeUsers | number }}</h3>
         <p>Dark Mode Users</p>
         <div class="card-trend positive">
-          <i class="ti ti-arrow-up"></i> 12.4%
+          <i class="ti ti-arrow-up"></i>
+          {{ (stats.darkModeUsers / (stats.darkModeUsers + stats.lightModeUsers || 1) * 100) | number:'1.1-1' }}%
         </div>
       </div>
     </div>
 
+    <!-- Light Mode Summary -->
     <div class="summary-card card-light">
       <div class="card-icon">
         <i class="ti ti-sun"></i>
@@ -67,133 +78,128 @@
         <h3>{{ stats.lightModeUsers | number }}</h3>
         <p>Light Mode Users</p>
         <div class="card-trend negative">
-          <i class="ti ti-arrow-down"></i> 2.1%
+          <i class="ti ti-arrow-down"></i>
+          {{ (stats.lightModeUsers / (stats.darkModeUsers + stats.lightModeUsers || 1) * 100) | number:'1.1-1' }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Regions Summary -->
+    <div class="summary-card card-regions">
+      <div class="card-icon">
+        <i class="ti ti-map-pin"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ stats.regions.length | number }}</h3>
+        <p>Active Regions</p>
+        <div class="card-trend">
+          <i class="ti ti-world"></i>
+          {{ filters.regions === 'top5' ? 'Top 5' : 'All' }} Regions
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Dashboard Content -->
   <div class="dashboard-content">
-    <!-- Gender Stats -->
+    <!-- Gender Distribution Card -->
     <div class="dashboard-card">
       <div class="card-header">
-        <h3>Gender Distribution</h3>
+        <h3>
+          <i class="ti ti-gender-hermaphrodite"></i>
+          Gender Distribution
+        </h3>
         <div class="card-actions">
-          <button class="btn-icon" 
-                  (click)="setFilter('gender', 'all')" 
-                  [class.active]="filters.gender === 'all'">
-            All
-          </button>
-          <button class="btn-icon" 
-                  (click)="setFilter('gender', 'male')" 
-                  [class.active]="filters.gender === 'male'">
-            Male
-          </button>
-          <button class="btn-icon" 
-                  (click)="setFilter('gender', 'female')" 
-                  [class.active]="filters.gender === 'female'">
-            Female
+          <button class="filter-btn" 
+                  *ngFor="let option of ['all', 'male', 'female']"
+                  (click)="setFilter('gender', option)" 
+                  [class.active]="filters.gender === option">
+            {{ option | titlecase }}
           </button>
         </div>
       </div>
       <div class="card-body">
-        <div class="chart-container">
-          <div class="main-chart">
-            <apx-chart
-              #genderChart
-              [series]="donutChart.series"
-              [chart]="donutChart.chart"
-              [labels]="donutChart.labels"
-              [colors]="donutChart.colors"
-              [legend]="donutChart.legend"
-              [dataLabels]="donutChart.dataLabels"
-              [plotOptions]="donutChart.plotOptions"
-              [tooltip]="donutChart.tooltip"
-            ></apx-chart>
+        <div class="gender-chart-container">
+          <div class="donut-chart">
+            <apx-chart #genderChart 
+                      [series]="donutChart.series" 
+                      [chart]="donutChart.chart" 
+                      [labels]="donutChart.labels"
+                      [colors]="donutChart.colors" 
+                      [legend]="donutChart.legend" 
+                      [dataLabels]="donutChart.dataLabels"
+                      [plotOptions]="donutChart.plotOptions" 
+                      [tooltip]="donutChart.tooltip">
+            </apx-chart>
           </div>
-          <div class="secondary-chart">
-            <apx-chart
-              [series]="radialChart.series"
-              [chart]="radialChart.chart"
-              [plotOptions]="radialChart.plotOptions"
-              [labels]="radialChart.labels"
-              [colors]="radialChart.colors"
-              [fill]="radialChart.fill"
-            ></apx-chart>
-            <div class="chart-label">Male Percentage</div>
-          </div>
+        
         </div>
       </div>
     </div>
 
-    <!-- Theme Preference -->
-    <div class="dashboard-card">
-      <div class="card-header">
-        <h3>Theme Preference</h3>
-        <div class="card-actions">
-          <button class="btn-icon" 
-                  (click)="setFilter('period', '7days')" 
-                  [class.active]="filters.period === '7days'">
-            Weekly
-          </button>
-          <button class="btn-icon" 
-                  (click)="setFilter('period', '30days')" 
-                  [class.active]="filters.period === '30days'">
-            Monthly
-          </button>
-          <button class="btn-icon" 
-                  (click)="setFilter('period', '90days')" 
-                  [class.active]="filters.period === '90days'">
-            Quarterly
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <apx-chart
-          #modeChart
-          [series]="barSimpleChart.series"
-          [chart]="barSimpleChart.chart"
-          [xaxis]="barSimpleChart.xaxis"
-          [yaxis]="barSimpleChart.yaxis"
-          [dataLabels]="barSimpleChart.dataLabels"
-          [legend]="barSimpleChart.legend"
-          [colors]="barSimpleChart.colors"
-          [plotOptions]="barSimpleChart.plotOptions"
-          [tooltip]="barSimpleChart.tooltip"
-        ></apx-chart>
-      </div>
+<!-- Theme Preference -->
+<div class="dashboard-card">
+  <div class="card-header">
+    <h3>
+      <i class="ti ti-brush"></i>
+      Theme Preference
+    </h3>
+    <div class="card-actions">
+      <button class="filter-btn" 
+              *ngFor="let period of ['7days', '30days', '90days']"
+              (click)="setFilter('period', period)" 
+              [class.active]="filters.period === period">
+        {{ period === '7days' ? 'Weekly' : period === '30days' ? 'Monthly' : 'Quarterly' }}
+      </button>
     </div>
+  </div>
+  <div class="card-body">
+    <apx-chart 
+      #modeChart
+      [series]="barSimpleChart.series" 
+      [chart]="barSimpleChart.chart"
+      [xaxis]="barSimpleChart.xaxis" 
+      [yaxis]="barSimpleChart.yaxis" 
+      [dataLabels]="barSimpleChart.dataLabels"
+      [legend]="barSimpleChart.legend" 
+      [colors]="['#3a86ff', '#ffbe0b']" 
+      [plotOptions]="barSimpleChart.plotOptions"
+      [tooltip]="barSimpleChart.tooltip">
+    </apx-chart>
+  </div>
+</div>
 
-    <!-- Region Distribution -->
+    <!-- Region Distribution Card -->
     <div class="dashboard-card full-width">
       <div class="card-header">
-        <h3>User Distribution by Region</h3>
+        <h3>
+          <i class="ti ti-map"></i>
+          User Distribution by Region
+        </h3>
         <div class="card-actions">
-          <button class="btn-icon" 
+          <button class="filter-btn" 
                   (click)="setFilter('regions', 'all')" 
                   [class.active]="filters.regions === 'all'">
             All Regions
           </button>
-          <button class="btn-icon" 
+          <button class="filter-btn" 
                   (click)="setFilter('regions', 'top5')" 
                   [class.active]="filters.regions === 'top5'">
-            Top 5
+            Top 5 Regions
           </button>
         </div>
       </div>
       <div class="card-body">
-        <apx-chart
-          #regionChart
-          [series]="regionChartOptions.series"
-          [chart]="regionChartOptions.chart"
-          [xaxis]="regionChartOptions.xaxis"
-          [yaxis]="regionChartOptions.yaxis"
-          [dataLabels]="regionChartOptions.dataLabels"
-          [colors]="regionChartOptions.colors"
-          [plotOptions]="regionChartOptions.plotOptions"
-          [tooltip]="regionChartOptions.tooltip"
-        ></apx-chart>
+        <apx-chart #regionChart 
+                  [series]="regionChartOptions.series" 
+                  [chart]="regionChartOptions.chart"
+                  [xaxis]="regionChartOptions.xaxis" 
+                  [yaxis]="regionChartOptions.yaxis"
+                  [dataLabels]="regionChartOptions.dataLabels" 
+                  [colors]="regionChartOptions.colors"
+                  [plotOptions]="regionChartOptions.plotOptions" 
+                  [tooltip]="regionChartOptions.tooltip">
+        </apx-chart>
       </div>
     </div>
   </div>

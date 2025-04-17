@@ -34,7 +34,7 @@
           
             <ng-template #defaultMedia>
               <ng-container *ngIf="event.imageUrl; else eventVideo">
-                <img [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
+                <img [src]="'http://localhost:8087/event/' + event.imageUrl" alt="Event Image" class="event-image"/>
               </ng-container>
           
               <ng-template #eventVideo>
@@ -68,11 +68,11 @@
             <div class="blog-details__meta__cats">
               <a href="blog-list-right.html">Development</a>
             </div>
-            <div class="blog-details__meta__date"><i class="icon-clock"></i>{{ event.startDate | date: 'dd MMM, yyyy' }}</div>
+            <div class="blog-details__meta__date"><i class="icon-clock"></i>{{ event?.startDate | date: 'dd MMM, yyyy' }}</div>
           </div>
 
-          <h3 class="blog-details__title">{{ event.title }}</h3>
-          <p class="blog-details__text">{{ event.description }}</p>
+          <h3 class="blog-details__title">{{ event?.title }}</h3>
+          <p class="blog-details__text">{{ event?.description }}</p>
 
           <div class="blog-details__bottom">
             <div class="blog-details__tags">
@@ -155,7 +155,7 @@
           <div class="sidebar__single sidebar__video">
             <h3 class="sidebar__title">Event Video</h3>
             <div class="sidebar__video-container">
-              <video *ngIf="event.videoUrl" [src]="'http://localhost:8089/event/' + event.videoUrl" height="200" width="100%" controls></video>
+              <video *ngIf="event.videoUrl" [src]="'http://localhost:8087/event/' + event.videoUrl" height="200" width="100%" controls></video>
             </div>
           </div>
           
@@ -170,7 +170,7 @@
                     <div class="planning-item__header" (click)="toggleDetails($event)">
                       <div class="planning-item__image">
                         <!-- Placeholder image; you can replace with a dynamic image if available -->
-                        <img [src]="'http://localhost:8089/event/' + event.imageUrl" width="60" height="60" alt="Event Image" class="event-image"/>
+                        <img [src]="'http://localhost:8087/event/' + event.imageUrl" width="60" height="60" alt="Event Image" class="event-image"/>
                       </div>
                       <div class="planning-item__info">
                         <h4 class="planning-item__title">{{ planning.description }}</h4>
@@ -187,7 +187,7 @@
                     <div class="planning-item__details">
                       <!-- Display video for online events -->
                       <div *ngIf="planning.locationType === 'ONLINE'" class="planning-item__media">
-                        <video *ngIf="planning.video" [src]="'http://localhost:8089/event/' + planning.video" height="150" width="100%" controls (play)="playVideo(planning.video)">
+                        <video *ngIf="planning.video" [src]="'http://localhost:8087/event/' + planning.video" height="150" width="100%" controls (play)="playVideo(planning.video)">
                         
                         </video>
                       </div>
@@ -283,7 +283,7 @@
                       <div class="testimonial-two__meta">
 
                           <img src="assets1/images/resources/testimonial-2-author-1.png" alt="eduact">
-                          <h5 class="testimonial-two__title">  {{ feedback.user.firstName }}</h5>
+                          <h5 class="testimonial-two__title">{{ feedback.user?.firstName }} {{ feedback.user?.lastName }}</h5>
                           <span class="testimonial-two__designation">UI/UX Designer</span>
                       </div><!-- testimonial-meta -->
                       

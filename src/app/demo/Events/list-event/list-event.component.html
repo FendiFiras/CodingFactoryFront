@@ -35,10 +35,10 @@
           <td>{{ event.registrationDeadline | date: 'dd/MM/yyyy HH:mm' }}</td>
 
           <td>
-            <img *ngIf="event.imageUrl" [src]="'http://localhost:8089/event/' + event.imageUrl" alt="Event Image" height="50" width="50">
+            <img *ngIf="event.imageUrl" [src]="'http://localhost:8087/event/' + event.imageUrl" alt="Event Image" height="50" width="50">
           </td>
           <td>
-            <video *ngIf="event.videoUrl" [src]="'http://localhost:8089/event/' + event.videoUrl" height="50" width="50" controls></video>
+            <video *ngIf="event.videoUrl" [src]="'http://localhost:8087/event/' + event.videoUrl" height="50" width="50" controls></video>
           </td>
           <td>{{ event.eventType }}</td>
           <td>

@@ -1,8 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ApexOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { UserPreferenceService } from 'src/app/services/user-preference.service';
 import { AuthService } from 'src/app/services/auth-service.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { lastValueFrom } from 'rxjs';
+
+interface GenderStats {
+  Male: number;
+  Female: number;
+}
+
+interface ThemeStats {
+  darkMode: number;
+  lightMode: number;
+}
+
+interface RegionData {
+  region: string;
+  count: number;
+}
 
 @Component({
   selector: 'app-users-stats',
@@ -11,18 +27,36 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   templateUrl: './users-stats.component.html',
   styleUrls: ['./users-stats.component.scss']
 })
-export class UsersStatsComponent implements OnInit {
-  @ViewChild('genderChart') genderChart!: ChartComponent;
-  @ViewChild('modeChart') modeChart!: ChartComponent;
-  @ViewChild('regionChart') regionChart!: ChartComponent;
+export class UsersStatsComponent implements OnInit, OnDestroy {
+  @ViewChild('genderChart') private genderChart?: ChartComponent;
+  @ViewChild('modeChart') private modeChart?: ChartComponent;
+  @ViewChild('regionChart') private regionChart?: ChartComponent;
 
-  // Chart configurations
-  donutChart: Partial<ApexOptions> = {};
-  barSimpleChart: Partial<ApexOptions> = {};
-  regionChartOptions: Partial<ApexOptions> = {};
-  radialChart: Partial<ApexOptions> = {};
+  donutChart: ApexOptions = {
+    chart: { type: 'donut', height: 350 },
+    series: [0, 0],
+    labels: ['Male', 'Female']
+  };
 
-  // Data
+  barSimpleChart: ApexOptions = {
+    chart: { type: 'bar', height: 350 },
+    series: [
+      { name: 'Dark Mode', data: [0] },
+      { name: 'Light Mode', data: [0] }
+    ]
+  };
+
+  regionChartOptions: ApexOptions = {
+    chart: { type: 'bar', height: 350 },
+    series: [{ name: 'Users', data: [] }],
+    xaxis: { categories: [] }
+  };
+
+  radialChart: ApexOptions = {
+    chart: { type: 'radialBar', height: 200 },
+    series: [0]
+  };
+
   stats = {
     totalUsers: 0,
     activeUsers: 0,
@@ -30,74 +64,89 @@ export class UsersStatsComponent implements OnInit {
     femalePercentage: 0,
     darkModeUsers: 0,
     lightModeUsers: 0,
-    regions: [] as { region: string, count: number }[]
+    regions: [] as RegionData[]
   };
 
-  // Filtres
   filters = {
-    period: '30days',
-    gender: 'all',
-    regions: 'all'
+    period: '30days' as '7days' | '30days' | '90days',
+    gender: 'all' as 'all' | 'male' | 'female',
+    regions: 'all' as 'all' | 'top5'
   };
 
-  // Données originales
   originalData = {
-    gender: { Male: 0, Female: 0 },
-    theme: { darkMode: 0, lightMode: 0 },
-    regions: [] as { region: string, count: number }[]
+    gender: { Male: 0, Female: 0 } as GenderStats,
+    theme: { darkMode: 0, lightMode: 0 } as ThemeStats,
+    regions: [] as RegionData[]
   };
 
   loading = true;
+  errorMessage: string | null = null;
+  private destroyed = false;
 
   constructor(
-    private userPreferenceService: UserPreferenceService,
-    private authService: AuthService,
+    private readonly userPreferenceService: UserPreferenceService,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.initializeCharts();
     this.loadAllStats();
   }
 
-  async loadAllStats() {
+  ngOnDestroy(): void {
+    this.destroyed = true;
+  }
+
+  private initializeCharts(): void {
+    this.updateCharts(0, 0, 0, 0, []);
+  }
+
+  private async loadAllStats(): Promise<void> {
+    if (this.destroyed) return;
+
     this.loading = true;
+    this.errorMessage = null;
+
     try {
       const [genderData, themeData, regionData] = await Promise.all([
-        this.authService.getGenderStats().toPromise(),
-        this.userPreferenceService.getThemeStats().toPromise(),
-        this.authService.getUsersByRegion().toPromise()
+        lastValueFrom(this.authService.getGenderStats()),
+        lastValueFrom(this.userPreferenceService.getThemeStats()),
+        lastValueFrom(this.authService.getUsersByRegion())
       ]);
 
-      // Sauvegarder les données originales
       this.originalData = {
         gender: genderData,
         theme: themeData,
-        regions: Object.entries(regionData).map(([region, count]) => ({ region, count: count as number }))
+        regions: Object.entries(regionData).map(([region, count]) => ({
+          region,
+          count: count as number
+        }))
       };
 
-      // Appliquer les filtres initiaux
       this.applyFilters();
     } catch (error) {
       console.error('Error loading stats:', error);
+      this.errorMessage = 'Failed to load statistics. Please try again.';
     } finally {
-      this.loading = false;
+      if (!this.destroyed) {
+        this.loading = false;
+      }
     }
   }
 
-  applyFilters() {
-    let maleCount = this.originalData.gender.Male;
-    let femaleCount = this.originalData.gender.Female;
-    let darkMode = this.originalData.theme.darkMode;
-    let lightMode = this.originalData.theme.lightMode;
-    let regions = [...this.originalData.regions];
+  private applyFilters(): void {
+    const { gender, theme, regions } = this.originalData;
+    const periodFactor = this.getPeriodFactor();
 
-    const periodFactor = this.filters.period === '7days' ? 0.3 :
-                        this.filters.period === '30days' ? 1 : 1.5;
-    
-    maleCount = Math.round(maleCount * periodFactor);
-    femaleCount = Math.round(femaleCount * periodFactor);
-    darkMode = Math.round(darkMode * periodFactor);
-    lightMode = Math.round(lightMode * periodFactor);
-    regions = regions.map(r => ({ ...r, count: Math.round(r.count * periodFactor) }));
+    let maleCount = Math.round(gender.Male * periodFactor);
+    let femaleCount = Math.round(gender.Female * periodFactor);
+    const darkMode = Math.round(theme.darkMode * periodFactor);
+    const lightMode = Math.round(theme.lightMode * periodFactor);
+
+    let filteredRegions = regions.map(r => ({
+      ...r,
+      count: Math.round(r.count * periodFactor)
+    }));
 
     if (this.filters.gender === 'male') {
       femaleCount = 0;
@@ -106,127 +155,51 @@ export class UsersStatsComponent implements OnInit {
     }
 
     if (this.filters.regions === 'top5') {
-      regions = regions.sort((a, b) => b.count - a.count).slice(0, 5);
+      filteredRegions = [...filteredRegions]
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
     }
 
     const totalGender = maleCount + femaleCount;
+    const malePercentage = totalGender > 0 ? Math.round((maleCount / totalGender) * 100) : 0;
+
     this.stats = {
       ...this.stats,
-      malePercentage: totalGender > 0 ? Math.round((maleCount / totalGender) * 100) : 0,
-      femalePercentage: totalGender > 0 ? 100 - this.stats.malePercentage : 0,
+      malePercentage,
+      femalePercentage: totalGender > 0 ? 100 - malePercentage : 0,
       darkModeUsers: darkMode,
       lightModeUsers: lightMode,
-      regions: regions
+      regions: filteredRegions
     };
 
-    this.updateGenderChart(maleCount, femaleCount);
-    this.updateThemeChart(darkMode, lightMode);
-    this.updateRegionChart(regions);
+    this.updateCharts(maleCount, femaleCount, darkMode, lightMode, filteredRegions);
   }
 
-  updateGenderChart(male: number, female: number) {
-    const total = male + female;
+  private updateCharts(
+    male: number,
+    female: number,
+    darkMode: number,
+    lightMode: number,
+    regions: RegionData[]
+  ): void {
+    if (this.destroyed) return;
+
     this.donutChart = {
-      chart: {
-        type: 'donut',
-        height: 350
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: (val: number) => `${val.toFixed(1)}%`,
-        style: {
-          fontSize: '12px',
-          fontWeight: 'bold'
-        }
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '70%',
-            labels: {
-              show: true,
-              total: {
-                show: true,
-                label: 'Total Users',
-                fontSize: '16px',
-                fontWeight: 600,
-                color: '#6c757d',
-                formatter: () => total.toString()
-              },
-              value: {
-                fontSize: '24px',
-                fontWeight: 700,
-                color: '#343a40'
-              }
-            }
-          }
-        }
-      },
-      colors: ['#3a86ff', '#ff006e'],
+      ...this.donutChart,
       series: [male, female],
-      labels: ['Male', 'Female'],
-      legend: {
-        position: 'right',
-        markers: {
-          strokeWidth: 12,
-        }
-      },
       tooltip: {
         y: {
-          formatter: (val: number) => `${val} users (${Math.round((val / total) * 100)}%)`
+          formatter: (val: number, { series, seriesIndex }) =>
+            `${val} users (${Math.round((val / (male + female || 1)) * 100)}%)`
         }
       }
     };
-    
 
     this.radialChart = {
-      chart: {
-        height: 200,
-        type: 'radialBar',
-        sparkline: {
-          enabled: true
-        }
-      },
-      plotOptions: {
-        radialBar: {
-          startAngle: -90,
-          endAngle: 90,
-          track: {
-            background: "#e0e0e0",
-            strokeWidth: '97%',
-            margin: 5,
-          },
-          dataLabels: {
-            name: {
-              show: false
-            },
-            value: {
-              offsetY: -2,
-              fontSize: '22px',
-              fontWeight: 700,
-              formatter: (val) => `${val}%`
-            }
-          }
-        }
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shade: 'light',
-          shadeIntensity: 0.4,
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 50, 100]
-        },
-      },
-      colors: ['#3a86ff'],
-      series: [this.stats.malePercentage],
-      labels: ['Male Percentage'],
+      ...this.radialChart,
+      series: [this.stats.malePercentage]
     };
-  }
 
-  updateThemeChart(darkMode: number, lightMode: number) {
     this.barSimpleChart = {
       chart: {
         type: 'bar',
@@ -238,13 +211,9 @@ export class UsersStatsComponent implements OnInit {
         bar: {
           horizontal: false,
           borderRadius: 6,
-          columnWidth: '55%',
-          dataLabels: {
-            position: 'top'
-          }
-        },
+          columnWidth: '55%'
+        }
       },
-      colors: ['#3a86ff', '#ffbe0b'],
       series: [
         { name: 'Dark Mode', data: [darkMode] },
         { name: 'Light Mode', data: [lightMode] }
@@ -264,13 +233,6 @@ export class UsersStatsComponent implements OnInit {
         style: {
           fontSize: '12px',
           colors: ['#fff']
-        },
-        background: {
-          enabled: true,
-          foreColor: '#fff',
-          borderRadius: 4,
-          padding: 6,
-          opacity: 0.8
         }
       },
       legend: {
@@ -281,74 +243,48 @@ export class UsersStatsComponent implements OnInit {
         shared: true,
         intersect: false,
         y: {
-          formatter: (val: number) => `${val} ${val > 1 ? 'users' : 'user'}`
-        }
-      },
-      grid: {
-        row: {
-          colors: ['#f8f9fa', 'transparent'],
-          opacity: 0.5
+          formatter: (val: number) => `${val} users`
         }
       }
     };
-  }
 
-  updateRegionChart(regions: { region: string, count: number }[]) {
     this.regionChartOptions = {
-      chart: {
-        type: 'bar',
-        height: 350
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 6,
-          columnWidth: '60%',
-          dataLabels: {
-            position: 'top'
-          }
-        }
-      },
-      colors: ['#3a86ff'],
+      ...this.regionChartOptions,
       series: [{
         name: 'Users',
         data: regions.map(r => r.count)
       }],
       xaxis: {
-        categories: regions.map(r => r.region),
-        labels: {
-          rotate: -45,
-          rotateAlways: true,
-          style: {
-            fontSize: '12px'
-          }
-        }
-      },
-      yaxis: {
-        title: { text: 'Number of Users' },
-        min: 0
-      },
-      dataLabels: {
-        enabled: true,
-        offsetY: -20,
-        style: {
-          fontSize: '12px',
-          colors: ['#fff']
-        }
-      },
-      tooltip: {
-        y: {
-          formatter: (val: number) => `${val} ${val > 1 ? 'users' : 'user'}`
-        }
+        categories: regions.map(r => r.region)
       }
     };
+
+    this.genderChart?.updateOptions(this.donutChart);
+    this.modeChart?.updateOptions(this.barSimpleChart);
+    this.regionChart?.updateOptions(this.regionChartOptions);
   }
 
-  setFilter(type: 'period' | 'gender' | 'regions', value: string) {
-    this.filters[type] = value;
+  private getPeriodFactor(): number {
+    switch (this.filters.period) {
+      case '7days': return 0.3;
+      case '30days': return 1;
+      case '90days': return 1.5;
+      default: return 1;
+    }
+  }
+
+  setFilter(type: 'period' | 'gender' | 'regions', value: string): void {
+    if (type === 'period') {
+      this.filters.period = value as '7days' | '30days' | '90days';
+    } else if (type === 'gender') {
+      this.filters.gender = value as 'all' | 'male' | 'female';
+    } else if (type === 'regions') {
+      this.filters.regions = value as 'all' | 'top5';
+    }
     this.applyFilters();
   }
 
-  refreshData() {
+  refreshData(): void {
     this.loadAllStats();
   }
 }
