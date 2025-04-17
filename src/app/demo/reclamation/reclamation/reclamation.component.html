@@ -1,0 +1,144 @@
+<div class="reclamation-list-container">
+  <h2>Reclamations Management</h2>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <table
+    *ngIf="!isLoading && reclamations.length"
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let reclamation">{{ reclamation.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let reclamation">{{ reclamation.description }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let reclamation">{{ reclamation.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let reclamation">
+        <span
+          class="badge"
+          [ngClass]="{
+            'bg-secondary': reclamation.status === 'IN_WAIT',
+            'bg-success': reclamation.status === 'TREATED',
+            'bg-danger': reclamation.status === 'CLOSED'
+          }"
+        >
+          {{ reclamation.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="urgency">
+      <th mat-header-cell *matHeaderCellDef> Urgency </th>
+      <td mat-cell *matCellDef="let reclamation">
+        <span
+          class="badge"
+          [ngClass]="{
+            'bg-success': reclamation.urgencyLevel === 1,
+            'bg-warning text-dark': reclamation.urgencyLevel === 2,
+            'bg-danger': reclamation.urgencyLevel === 3,
+            'bg-dark': reclamation.urgencyLevel === 4
+          }"
+        >
+          {{ getUrgencyLabel(reclamation.urgencyLevel) }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef> Creation Date </th>
+      <td mat-cell *matCellDef="let reclamation">
+        {{ reclamation.creationDate | date: 'short' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="file">
+      <th mat-header-cell *matHeaderCellDef> File </th>
+      <td mat-cell *matCellDef="let reclamation">
+        <button 
+          *ngIf="reclamation.fileName" 
+          class="btn btn-download"
+          (click)="downloadFile(reclamation.idReclamation, reclamation.fileName)">
+          Download
+        </button>
+        <span *ngIf="!reclamation.fileName" class="text-muted">No file</span>
+      </td>
+    </ng-container>      
+
+    <!-- Actions Column (admin) -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let reclamation">
+        <button class="btn btn-edit" (click)="editReclamation(reclamation.idReclamation)">Edit</button>
+        <button class="btn btn-delete" (click)="deleteReclamation(reclamation.idReclamation)">Delete</button>
+        <button
+          *ngIf="reclamation.status === 'IN_WAIT'"
+          class="btn btn-treat"
+          (click)="treatReclamation(reclamation)">
+          Treat
+        </button>
+
+        <!-- 🔴 Badge si user a parlé -->
+        <span *ngIf="activeChats.has(reclamation.idReclamation)" class="chat-badge">💬</span>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+
+  <button class="btn btn-add" [routerLink]="['/user/reclamations/add']">
+    Add New Reclamation
+  </button>
+
+  <div *ngIf="!isLoading && !reclamations.length" class="alert alert-info">
+    No reclamations found.
+  </div>
+
+  <br><br><br>
+
+  <div class="material-stats">
+    <h3>📊 Most Reclamated Materials</h3>
+    <table class="stat-table">
+      <tr>
+        <th>Material</th>
+        <th>Total Quantity</th>
+      </tr>
+      <tr *ngFor="let stat of materialStats">
+        <td>{{ stat.label }}</td>
+        <td>{{ stat.totalQuantity }}</td>
+      </tr>
+    </table>
+  </div> 
+</div>
+
+<app-chat
+*ngIf="selectedReclamationIdForChat"
+[reclamationId]="selectedReclamationIdForChat"
+userType="admin"
+(close)="selectedReclamationIdForChat = null">
+</app-chat>

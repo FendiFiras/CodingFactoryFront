@@ -37,6 +37,9 @@ import { AssignmentsforCRComponent } from './front/pfe-front/assignmentsfor-cr/a
 import { AplicationforStudentsComponent } from './front/pfe-front/aplicationfor-students/aplicationfor-students.component';
 import { EvaluationFormComponent } from './front/pfe-front/evaluation-form/evaluation-form.component';
 import { ListeForumComponent } from './front/Forum-Front/liste-forum/liste-forum.component';
+import { ReclamationAddComponent } from './front/reclamation/reclamation-add/reclamation-add.component';
+import { ReclamationComponent } from './demo/reclamation/reclamation/reclamation.component';
+import { ReclamationEditComponent } from './demo/reclamation/reclamation-edit/reclamation-edit.component';
 
 import { ForumService } from 'src/app/services/forum.service';
 import { CommonModule } from '@angular/common';
@@ -347,7 +350,42 @@ const routes: Routes = [
 
       {
         path: 'admin-forum-discussions',
-        loadComponent: () => import('./demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component').then((m) => m.AdminDiscussionComponent)
+        loadComponent: () => import('./demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component').then((m) => m.AdminDiscussionComponent)},
+      {
+        path: 'suppliers',
+        loadComponent: () => import('./demo/supplier/supplier-list/supplier-list.component').then(c => c.SupplierListComponent)
+      },
+      {
+        path: 'supplier-form',
+        loadComponent: () => import('./demo/supplier/supplier-form/supplier-form.component').then(c => c.SupplierFormComponent)
+      },
+      {
+        path: 'supplier-form/:id',
+        loadComponent: () => import('./demo/supplier/supplier-form/supplier-form.component').then(c => c.SupplierFormComponent)
+      },
+      {
+        path: 'materials',
+        loadComponent: () => import('./demo/material/material-list/material-list.component').then(c => c.MaterialListComponent)
+      },
+      {
+        path: 'material-form',
+        loadComponent: () => import('./demo/material/material-form/material-form.component').then(c => c.MaterialFormComponent)
+      },
+      {
+        path: 'material-form/:id',
+        loadComponent: () => import('./demo/material/material-form/material-form.component').then(c => c.MaterialFormComponent)
+      },
+      {
+          path: 'admin/reclamations',
+          loadComponent: () => import('./demo/reclamation/reclamation/reclamation.component').then(c => c.ReclamationComponent)
+      },
+      {
+          path: 'admin/reclamation-edit/:id',
+          loadComponent: () => import('./demo/reclamation/reclamation-edit/reclamation-edit.component').then(c => c.ReclamationEditComponent)
+      },
+      {
+          path: 'admin/chat',
+          loadComponent: () => import('./demo/reclamation/chat/chat.component').then(c => c.ChatComponent)
       }
     ]
   },
@@ -360,9 +398,26 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
-      }
+      },
+      {
+        path: 'user/reclamations',
+        loadComponent: () => import('./front/reclamation/reclamation-list/reclamation-list.component').then(c => c.ReclamationListComponent)
+      },
+      {
+        path: 'user/reclamation-edit/:id',
+        loadComponent: () => import('./front/reclamation/reclamation-edit/reclamation-edit.component').then(c => c.ReclamationEditComponent)
+      },
+      {
+        path: 'user/reclamations/add',
+        loadComponent: () => import('./front/reclamation/reclamation-add/reclamation-add.component').then(c => c.ReclamationAddComponent)
+      },
+      {
+        path: 'user/chat',
+        loadComponent: () => import('./front/reclamation/chat/chat.component').then(c => c.ChatComponent)
+      },
     ]
-  }
+  },
+
 ];
 
 @NgModule({

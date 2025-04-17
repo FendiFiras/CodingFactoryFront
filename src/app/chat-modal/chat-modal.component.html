@@ -1,0 +1,18 @@
+<div class="chat-modal">
+    <div class="chat-header">
+      <span>Chat - Réclamation #{{ reclamationId }}</span>
+      <button (click)="closeChat()">✖</button>
+    </div>
+  
+    <div class="chat-body">
+      <div *ngFor="let msg of messages" [ngClass]="{'user-msg': msg.sender === 'user', 'admin-msg': msg.sender === 'admin'}" class="chat-message">
+        <strong>{{ msg.sender }}:</strong> {{ msg.content }}
+      </div>
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="newMessage" placeholder="Écrire un message..." (keyup.enter)="sendMessage()" />
+      <button (click)="sendMessage()">Envoyer</button>
+    </div>
+  </div>
+  

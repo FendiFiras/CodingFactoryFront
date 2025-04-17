@@ -1,0 +1,20 @@
+<div class="material-list-container">
+    <h2>Materials</h2>
+    <table>
+      <tr>
+        <th>Label</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let material of materials">
+        <td>{{ material.label }}</td>
+        <td>{{ material.quantity }}</td>
+        <td>
+          <button class="btn btn-delete" (click)="deleteMaterial(material.idMaterial)">Delete</button>
+          <button class="btn btn-edit" [routerLink]="['/material-form', material.idMaterial]">Edit</button>
+        </td>
+      </tr>
+    </table>
+    <button class="btn btn-add" [routerLink]="['/material-form']">Add Material</button>
+  </div>
+  

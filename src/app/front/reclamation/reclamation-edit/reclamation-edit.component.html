@@ -1,0 +1,75 @@
+<app-navbar></app-navbar>
+
+<div class="reclamation-edit-container">
+    <h2>Edit Reclamation</h2>
+  
+    <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+  
+      <!-- Error Alert -->
+      <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
+  
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" formControlName="title" placeholder="Enter reclamation title" />
+      </div>
+  
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" placeholder="Enter description"></textarea>
+      </div>
+  
+      <!-- Type -->
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select id="type" formControlName="type">
+          <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+  
+      <!-- Urgency Level -->
+      <div class="form-group">
+        <label for="urgencyLevel">Urgency Level</label>
+        <select id="urgencyLevel" formControlName="urgencyLevel">
+          <option *ngFor="let level of urgencyLevels" [value]="level.value">{{ level.label }}</option>
+        </select>
+      </div>
+  
+      <!-- Materials -->
+      <div class="form-group">
+        <label for="materials">Materials</label>
+        <select id="materials" formControlName="materials" multiple>
+          <option *ngFor="let material of materials" [ngValue]="material">{{ material.label }}</option>
+        </select>
+      </div>
+
+      <!-- Quantity -->
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input 
+            type="number" 
+            id="quantity" 
+            formControlName="quantity" 
+            class="form-control" 
+            placeholder="Enter the quantity"
+            min="1"
+        />
+        <div *ngIf="reclamationForm.get('quantity')?.touched && reclamationForm.get('quantity')?.invalid" class="invalid-feedback">
+            <div *ngIf="reclamationForm.get('quantity')?.errors?.['required']">Quantity is required.</div>
+            <div *ngIf="reclamationForm.get('quantity')?.errors?.['min']">Quantity must be at least 1.</div>
+        </div>
+      </div>
+  
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-save" [disabled]="reclamationForm.invalid || isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Save Changes
+        </button>
+        <button type="button" class="btn btn-cancel" [routerLink]="['/user/reclamations']">Cancel</button>
+      </div>
+  
+    </form>
+  </div>
+  
