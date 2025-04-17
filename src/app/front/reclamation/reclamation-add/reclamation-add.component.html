@@ -104,7 +104,7 @@
           <input
             type="number"
             id="material-quantity-{{material.idMaterial}}"
-            [formControlName]="'quantities[' + i + '].quantity'"
+            formControlName="quantity"
             min="1"
             class="form-control"
             placeholder="Enter quantity"

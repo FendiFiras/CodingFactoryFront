@@ -59,7 +59,7 @@ export class ReclamationAddComponent implements OnInit {
       type: [Type.MATERIAL, Validators.required],
       urgencyLevel: [2, Validators.required],
       materials: [[], Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]]
+      quantity: [[Validators.required, Validators.min(1)]]
     });
   }
 
@@ -112,6 +112,7 @@ export class ReclamationAddComponent implements OnInit {
   
     this.reclamationService.addReclamation(formData).subscribe(
       () => {
+        console.log(formData)
         this.isSubmitting = false;
         this.resetForm();
         this.router.navigate(['/home']);
