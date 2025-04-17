@@ -75,4 +75,9 @@ public class ReclamationController {
             return ResponseEntity.notFound().build();
         }
     }
+
+  @GetMapping("/material-stats")
+  public ResponseEntity<?> getMaterialStats() {
+    return ResponseEntity.ok(reclamationService.getMostUsedMaterials());
+  }
 }

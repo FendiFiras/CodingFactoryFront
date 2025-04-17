@@ -54,4 +54,8 @@ export class ReclamationService {
       responseType: 'blob'
     });
   }  
+
+  getMaterialStats(): Observable<{ label: string, totalQuantity: number }[]> {
+    return this.http.get<{ label: string, totalQuantity: number }[]>(`${this.API_URL}/material-stats`);
+  }
 }

@@ -1,22 +1,17 @@
-<div class="chat-container">
-    <div class="chat-header">Réclamation Chat</div>
-  
-    <div class="chat-box">
-      <div *ngFor="let msg of messages" [ngClass]="{'user-msg': msg.sender === 'user', 'admin-msg': msg.sender === 'admin'}" class="message">
-        <div class="sender">{{ msg.sender }}:</div>
-        <div class="content">{{ msg.content }}</div>
-      </div>
-    </div>
-  
-    <div class="chat-input">
-        <input
-        [(ngModel)]="newMessage"
-        type="text"
-        class="form-control"
-        placeholder="Écrire un message..."
-        (keydown.enter)="sendMessage()" />
-      
-      <button class="btn btn-primary" (click)="sendMessage()">Envoyer</button>      
+<div class="chat-modal">
+  <div class="chat-header">
+    <span>Chat - Réclamation #{{ reclamationId }}</span>
+    <button (click)="closeChat()">✖</button>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let msg of messages" [ngClass]="{'user-msg': msg.sender === 'user', 'admin-msg': msg.sender === 'admin'}" class="chat-message">
+      <strong>{{ msg.sender }}:</strong> {{ msg.content }}
     </div>
   </div>
-  
+
+  <div class="chat-input">
+    <input [(ngModel)]="newMessage" placeholder="Écrire un message..." (keyup.enter)="sendMessage()" />
+    <button (click)="sendMessage()">Envoyer</button>
+  </div>
+</div>

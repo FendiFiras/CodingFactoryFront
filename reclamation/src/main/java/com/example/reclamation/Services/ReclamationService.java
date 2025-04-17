@@ -84,6 +84,10 @@ public class ReclamationService {
         return null;
     }
 
+    public List<Map<String, Object>> getMostUsedMaterials() {
+      return reclamationRepository.getMostReclamatedMaterials();
+    }
+
     public Reclamation updateReclamation(Reclamation reclamation) {
         return reclamationRepository.save(reclamation);
     }

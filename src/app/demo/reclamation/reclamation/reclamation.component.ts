@@ -10,8 +10,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { Message } from 'src/app/Models/message';
-import { ChatModalComponent } from 'src/app/chat-modal/chat-modal.component';
 import { HttpClient } from '@angular/common/http';
+import { ChatComponent } from '../chat/chat.component';
 
 @Component({
   selector: 'app-reclamation',
@@ -26,7 +26,7 @@ import { HttpClient } from '@angular/common/http';
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    ChatModalComponent
+    ChatComponent
   ],
 })
 export class ReclamationComponent implements OnInit {
@@ -48,6 +48,7 @@ export class ReclamationComponent implements OnInit {
   selectedReclamationIdForChat: number | null = null;
   chatOpenMap = new Map<number, boolean>();
   activeChats: Set<number> = new Set(); // idReclamation qui ont un message user
+  materialStats: { label: string, totalQuantity: number }[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -59,6 +60,7 @@ export class ReclamationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReclamations();
+    this.loadMaterialStats();
 
     setInterval(() => {
       this.reclamations
@@ -99,19 +101,60 @@ export class ReclamationComponent implements OnInit {
       }
     );
   }
+  
 
   editReclamation(id: number): void {
     this.router.navigate(['/admin/reclamation-edit', id]);
   }
 
   treatReclamation(reclamation: Reclamation): void {
-    const newQuantity = prompt(
-      `Enter the quantity to add for ${reclamation.materials[0]?.label}:`,
-      '0'
-    );
+    // Create a custom dialog dynamically
+    const dialog = document.createElement('div');
+    dialog.style.position = 'fixed';
+    dialog.style.top = '50%';
+    dialog.style.left = '50%';
+    dialog.style.transform = 'translate(-50%, -50%)';
+    dialog.style.backgroundColor = '#fff';
+    dialog.style.padding = '20px';
+    dialog.style.borderRadius = '8px';
+    dialog.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+    dialog.style.zIndex = '1000';
+    dialog.style.maxWidth = '400px';
+    dialog.style.width = '90%';
 
-    if (newQuantity !== null) {
-      const quantityToAdd = parseInt(newQuantity, 10);
+    dialog.innerHTML = `
+      <h3 style="font-size: 1.5rem; color: #333; margin-bottom: 15px;">Treat Reclamation</h3>
+      <p style="color: #555; margin-bottom: 20px;">
+        Enter the quantity to add for ${reclamation.materials[0]?.label || 'Unknown Material'}:
+      </p>
+      <input
+        type="number"
+        id="quantityInput"
+        min="0"
+        value="0"
+        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; color: #333;"
+      >
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button
+          id="cancelBtn"
+          style="padding: 8px 15px; border: none; border-radius: 5px; background-color: #6c757d; color: white; cursor: pointer; font-weight: 600;"
+        >Cancel</button>
+        <button
+          id="submitBtn"
+          style="padding: 8px 15px; border: none; border-radius: 5px; background-color: #28a745; color: white; cursor: pointer; font-weight: 600;"
+        >Submit</button>
+      </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    const submitBtn = dialog.querySelector('#submitBtn');
+    const cancelBtn = dialog.querySelector('#cancelBtn');
+    const quantityInput = dialog.querySelector('#quantityInput') as HTMLInputElement;
+
+    const handleSubmit = () => {
+      const quantity = quantityInput.value;
+      const quantityToAdd = parseInt(quantity, 10);
       if (isNaN(quantityToAdd) || quantityToAdd < 0) {
         alert('Please enter a valid quantity.');
         return;
@@ -123,13 +166,25 @@ export class ReclamationComponent implements OnInit {
           () => {
             this.loadReclamations();
             alert('Reclamation treated successfully!');
+            document.body.removeChild(dialog);
           },
           (error) => {
             console.error('Error treating reclamation:', error);
             alert('Failed to treat reclamation.');
+            document.body.removeChild(dialog);
           }
         );
-    }
+    };
+
+    const handleCancel = () => {
+      document.body.removeChild(dialog);
+    };
+
+    submitBtn?.addEventListener('click', handleSubmit);
+    cancelBtn?.addEventListener('click', handleCancel);
+    quantityInput?.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') handleSubmit();
+    });
   }
 
   deleteReclamation(id: number): void {
@@ -179,5 +234,11 @@ export class ReclamationComponent implements OnInit {
       default:
         return 'Unknown';
     }
+  }
+
+  loadMaterialStats() {
+    this.reclamationService.getMaterialStats().subscribe(stats => {
+      this.materialStats = stats;
+    });
   }
 }

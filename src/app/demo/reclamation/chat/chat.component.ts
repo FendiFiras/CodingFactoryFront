@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { Subscription, timer } from 'rxjs';
 import { NavbarComponent } from 'src/app/front/elements/navbar/navbar.component';
 import { Message } from 'src/app/Models/message';
 
@@ -15,38 +16,58 @@ import { Message } from 'src/app/Models/message';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
+  @Input() reclamationId!: number;
+  @Input() userType: 'user' | 'admin' = 'user';
+  @Input() polling = true;
+  @Output() close = new EventEmitter<void>();
+
   messages: Message[] = [];
   newMessage = '';
-  reclamationId = 1; // Static for now
+  private lastMessageId: number | null = null;
+  private pollingSub?: Subscription;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadMessages();
-    setInterval(() => this.loadMessages(), 3000); // Polling every 3s
+
+    if (this.polling) {
+      this.pollingSub = timer(0, 3000).subscribe(() => this.loadMessages());
+    }
   }
 
-  sendMessage(): void {
+  ngOnDestroy() {
+    this.pollingSub?.unsubscribe();
+  }
+
+  loadMessages() {
+    this.http.get<Message[]>(`http://localhost:8082/api/messages/reclamation/${this.reclamationId}`)
+      .subscribe(msgs => {
+        const latest = msgs[msgs.length - 1];
+        if (!latest || latest.id !== this.lastMessageId) {
+          this.messages = msgs;
+          this.lastMessageId = latest?.id ?? null;
+        }
+      });
+  }
+
+  sendMessage() {
     if (!this.newMessage.trim()) return;
 
-    const messageToSend = this.newMessage;
-    this.newMessage = ''; // clear early to prevent double fire
-
     const message: Partial<Message> = {
-      sender: 'admin',
-      content: messageToSend,
-      reclamation: { idReclamation: this.reclamationId } // ✅ correspond à l'entité Java
+      sender: this.userType,
+      content: this.newMessage,
+      reclamation: { idReclamation: this.reclamationId }
     };
-    
 
     this.http.post<Message>('http://localhost:8082/api/messages', message).subscribe(() => {
+      this.newMessage = '';
       this.loadMessages();
     });
   }
 
-  loadMessages(): void {
-    this.http.get<Message[]>(`/api/messages/reclamation/${this.reclamationId}`)
-      .subscribe(data => this.messages = data);
+  closeChat() {
+    this.close.emit();
   }
 }
