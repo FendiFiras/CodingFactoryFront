@@ -1,0 +1,34 @@
+.prediction-form-container {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.prediction-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.prediction-form label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.prediction-form input,
+.prediction-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.result-box {
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}

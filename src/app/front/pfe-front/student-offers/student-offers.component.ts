@@ -7,13 +7,15 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PredectionComponent } from '../predection/predection.component';
 
 
 @Component({
   selector: 'app-student-offers',
   templateUrl: './student-offers.component.html',
   styleUrls: ['./student-offers.component.scss'],
-  imports: [NavbarComponent, FooterComponent,CommonModule,FormsModule],
+  imports: [NavbarComponent, FooterComponent,CommonModule,FormsModule,    PredectionComponent 
+  ],
 })
 export class StudentOffersComponent implements OnInit {
   tunisianGovernorates: string[] = [
@@ -21,7 +23,8 @@ export class StudentOffersComponent implements OnInit {
     'Kef', 'Mahdia', 'Manouba', 'Médenine', 'Monastir', 'Nabeul', 'Sfax', 'Sidi Bouzid', 'Siliana', 'Sousse',
     'Tataouine', 'Tozeur', 'Tunis', 'Zaghouan'
   ];
-  
+  showModal = false;
+
   filters = {
     employmentType: '',
     location: '',
@@ -30,6 +33,7 @@ export class StudentOffersComponent implements OnInit {
   offers: Offer[] = []; // Offers after filtering
   allOffers: Offer[] = []; // Full list of offers for filtering
   selectedOffer: Offer | null = null;
+  showPredectionModal: boolean = false;
 
 
   constructor(private offerService: OfferService,
@@ -40,7 +44,13 @@ export class StudentOffersComponent implements OnInit {
   ngOnInit(): void {
     this.loadOffers();
   }
-
+  openPredection() {
+    this.showPredectionModal = true;
+  }
+  
+  closePredection() {
+    this.showPredectionModal = false;
+  }
   loadOffers(): void {
     this.offerService.getOffers().subscribe({
       next: (data) => {

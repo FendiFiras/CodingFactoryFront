@@ -48,6 +48,7 @@ import { ForumsManagementComponent } from './demo/forums-management/forums-manag
 import { AdminDiscussionComponent } from './demo/DiscussionsManagement/admin-forum-discussions/admin-forum-discussions.component';
 import { MessageComponent } from './front/Forum-Front/message-list/message-list.component';
 import { AdminDiscussionMessagesComponent } from './demo/Message-Managment/admin-discussion-messages/admin-discussion-messages.component';
+import { PredectionComponent } from './front/pfe-front/predection/predection.component';
 const routes: Routes = [
  
   {
@@ -163,6 +164,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: CodingLoginComponent
+  },
+  {
+    path: 'predict',
+    component: PredectionComponent
   },
   {
     path: 'register',

@@ -1,11 +1,24 @@
 <app-navbar></app-navbar>
 
+
+
 <section class="accrodion-one">
   <div class="container">
     <div class="section-title text-center">
       <h2 class="section-title__title">Explore Our PFE Internships <br>Apply Here</h2>
     </div>
-
+<!-- ✅ Modal Overlay & Content -->
+<div class="custom-modal" *ngIf="showModal">
+  <div class="custom-modal-content">
+    <app-predection (close)="showModal = false"></app-predection>
+  </div>
+</div>
+<!-- 🔘 Button to open the prediction modal -->
+<div class="text-center my-4">
+  <button class="btn btn-info" (click)="showModal = true">
+    Check My Chances
+  </button>
+</div>
     <!-- 🔍 Filter Section -->
     <div class="row mb-4">
       <!-- Employment Type Filter -->
@@ -94,6 +107,9 @@
                     <strong>What We Offer:</strong> {{ selectedOffer.whatWeOffer }}
                   </li>
                 </ul>
+                <button class="btn btn-primary mt-3" (click)="onApply(selectedOffer.idOffer)">
+                  Apply Now
+                </button>
                 <button class="btn btn-primary mt-3" (click)="onApply(selectedOffer.idOffer)">
                   Apply Now
                 </button>

@@ -87,3 +87,28 @@
       border-color: #0056b3;
     }
   }
+  .custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .custom-modal-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px;      /* ⬅️ Smaller width */
+    max-height: 90vh;      /* ⬅️ Limited height */
+    overflow-y: auto;      /* ⬅️ Enables scroll if content is too tall */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+  
