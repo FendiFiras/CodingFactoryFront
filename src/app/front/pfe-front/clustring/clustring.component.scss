@@ -1,0 +1,63 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fbfd;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+  border-bottom: 2px solid #3f51b5;
+  padding-bottom: 0.5rem;
+}
+
+.recommendation-list {
+  margin-bottom: 2rem;
+  list-style: none;
+  padding-left: 0;
+  li {
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #444;
+  }
+}
+
+.section {
+  margin-top: 2rem;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  border-left: 5px solid #3f51b5;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: #f0f4ff;
+  }
+
+  h4 {
+    margin-top: 0;
+    color: #3f51b5;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: #333;
+  }
+}

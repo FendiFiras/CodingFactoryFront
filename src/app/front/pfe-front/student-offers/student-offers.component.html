@@ -15,8 +15,8 @@
 </div>
 <!-- 🔘 Button to open the prediction modal -->
 <div class="text-center my-4">
-  <button class="btn btn-info" (click)="showModal = true">
-    Check My Chances
+  <button class="floating-check-btn" (click)="showModal = true">
+    🚀 Check My Chances
   </button>
 </div>
     <!-- 🔍 Filter Section -->
@@ -107,9 +107,7 @@
                     <strong>What We Offer:</strong> {{ selectedOffer.whatWeOffer }}
                   </li>
                 </ul>
-                <button class="btn btn-primary mt-3" (click)="onApply(selectedOffer.idOffer)">
-                  Apply Now
-                </button>
+              
                 <button class="btn btn-primary mt-3" (click)="onApply(selectedOffer.idOffer)">
                   Apply Now
                 </button>

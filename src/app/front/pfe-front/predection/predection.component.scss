@@ -1,34 +1,127 @@
+// Container général du formulaire
 .prediction-form-container {
   background: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 600px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
   font-family: 'Segoe UI', sans-serif;
 }
 
-.prediction-form .form-group {
-  margin-bottom: 1.2rem;
+// Titre principal
+.section-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #2c3e50;
 }
 
-.prediction-form label {
+// Grille du formulaire
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Groupe de champs
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+// Labels
+label {
   font-weight: 600;
   margin-bottom: 0.3rem;
-  display: block;
+  color: #333;
 }
 
-.prediction-form input,
-.prediction-form select {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
+// Inputs & selects
+input,
+select {
+  padding: 0.6rem;
   border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
 }
 
+// Boutons
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  button {
+    flex: 1 1 auto;
+    min-width: 160px;
+    max-width: 240px;
+  }
+}
+
+// Bouton de base
+.btn {
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  font-weight: 600;
+}
+
+// Bouton de prédiction
+.btn.primary {
+  background-color: #4caf50;
+  color: #fff;
+
+  &:hover {
+    background-color: #449d48;
+  }
+}
+
+// Bouton de recommandation
+.btn.recommend {
+  background-color: #3f51b5;
+  color: #fff;
+
+  &:hover {
+    background-color: #34439a;
+  }
+}
+
+// Bouton de fermeture
+.btn.outline {
+  background-color: transparent;
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+
+  &:hover {
+    background-color: #fdecea;
+    border-color: #c0392b;
+  }
+}
+
+// Résultat d'analyse IA
 .result-box {
-  padding: 1rem;
-  border-top: 1px solid #ddd;
-  background-color: #f9f9f9;
-  border-radius: 6px;
+  margin-top: 2rem;
+  text-align: center;
+  background: #f4f6f9;
+  padding: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+
+  .lead {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
 }

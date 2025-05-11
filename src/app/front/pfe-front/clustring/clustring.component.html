@@ -1,0 +1,52 @@
+
+<app-navbar></app-navbar>
+
+
+<div class="container">
+  <h2 class="section-title">🎯 Personalized Recommendations</h2>
+
+  <ul class="recommendation-list">
+    <li *ngFor="let rec of recommendations">✔️ {{ rec }}</li>
+  </ul>
+
+  <!-- 📚 Formations -->
+  <div *ngIf="cluster === 0 && trainings.length" class="section">
+    <h3>📚 Suggested Trainings:</h3>
+    <br>
+    <div class="card-grid">
+      <div class="card" *ngFor="let t of trainings" (click)="goToTrainingDetails(t.trainingId)">
+        <h4>{{ t.trainingName }}</h4>
+        <p>Type : {{ t.type }}</p>
+        <p>📅 Du {{ t.startDate | date }} au {{ t.endDate | date }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📅 Événements -->
+  <div *ngIf="cluster === 1 && events.length" class="section">
+    <h3>📅 Recommended Events:</h3>
+    <br>
+
+    <div class="card-grid">
+      <div class="card" *ngFor="let e of events" (click)="goToEventDetails(e.idEvent)">
+        <h4>{{ e.title }}</h4>
+        <p>{{ e.description }}</p>
+        <p>🗓️ Date : {{ e.startDate | date }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💼 Offres de stage -->
+  <div *ngIf="cluster === 2 && offers.length" class="section">
+    <h3>💼 Recommended Internship Offers:</h3>
+    <br>
+
+    <div class="card-grid">
+      <div class="card" *ngFor="let o of offers" (click)="goToOfferDetails(o.idOffer)">
+        <h4>{{ o.title }}</h4>
+        <p>{{ o.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

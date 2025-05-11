@@ -10,7 +10,7 @@ import { Subscription , timer} from 'rxjs';
 @Component({
   selector: 'app-chat-modal',
   imports: [CommonModule,
-          BrowserModule,
+          
           FormsModule],
   templateUrl: './chat-modal.component.html',
   styleUrls: ['./chat-modal.component.scss']

@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NavbarComponent } from '../../elements/navbar/navbar.component';
 
 @Component({
   selector: 'app-predection',
@@ -12,8 +14,8 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class PredectionComponent {
-  constructor(private http: HttpClient
-  ) {}  // injection du service
+  constructor(private http: HttpClient, private router: Router) {}
+  // injection du service
   result: number | null = null;  // <-- ajouter cette ligne
   @Output() close = new EventEmitter<void>();
 
@@ -29,23 +31,40 @@ export class PredectionComponent {
   };
   
   levels = [
-    { label: 'Débutant', value: 0 },
-    { label: 'Intermédiaire', value: 1 },
-    { label: 'Avancé', value: 2 },
+    { label: 'Beginner', value: 0 },
+    { label: 'Intermediate', value: 1 },
+    { label: 'Advanced', value: 2 },
     { label: 'Expert', value: 3 }
   ];
   
   fields = [
-    { label: 'Sciences', value: 0 },
-    { label: 'Droit', value: 1 },
-    { label: 'Médecine', value: 2 },
-    { label: 'Informatique', value: 3 },
-    { label: 'Commerce', value: 4 },
-    { label: 'Ingénierie', value: 5 },
-    { label: 'Lettres', value: 6 },
-    { label: 'Art', value: 7 },
-    { label: 'Autre', value: 8 }
+    
+      { label: 'Data Science & Intelligence Artificielle', value: 0 },
+      { label: 'Web & Mobile Developement', value: 1 },
+      { label: 'CyberSecurity', value: 2 },
+      { label: 'Cloud Computing & DevOps', value: 3 },
+      { label: 'Big Data & Data Analysis', value: 4 },
+      { label: 'General informatics', value: 5 },
+      { label: 'Systems & Networks', value: 6 },
+      { label: 'UX/UI Design', value: 7 },
+      { label: 'Blockchain & Web3', value: 8 }
+  
+    
   ];
+
+  prepareFormData() {
+    return {
+      Level: Number(this.formData.Level),
+      University_GPA: Number(this.formData.University_GPA),
+      Field_of_Study: Number(this.formData.Field_of_Study),
+      Internships_Completed: Number(this.formData.Internships_Completed),
+      Projects_Completed: Number(this.formData.Projects_Completed),
+      Certifications: Number(this.formData.Certifications),
+      Soft_Skills_Score: Number(this.formData.Soft_Skills_Score),
+      Career_Satisfaction: Number(this.formData.Career_Satisfaction)
+    };
+  }
+  
   isFormValid(): boolean {
     const f = this.formData;
   
@@ -67,9 +86,25 @@ export class PredectionComponent {
       return;
     }
   
-    this.http.post<any>('http://localhost:5000/predict', this.formData)
+    this.http.post<any>('http://localhost:5000/predict', this.prepareFormData())
       .subscribe(res => {
         this.result = res.prediction;
+      });
+  }
+  onRecommendClick() {
+    if (!this.isFormValid()) {
+      alert('Please fill out all fields correctly before continuing.');
+      return;
+    }
+  
+    this.http.post<any>('http://localhost:5000/cluster', this.formData)
+      .subscribe(res => {
+        const cluster = res.cluster;
+        // Ouvre un nouvel onglet vers le composant clustring avec le cluster en paramètre
+        const url = this.router.serializeUrl(
+          this.router.createUrlTree(['/clustring'], { queryParams: { cluster } })
+        );
+        window.open(url, '_blank');
       });
   }
   

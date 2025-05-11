@@ -11,8 +11,12 @@ import { ChatModalComponent } from 'src/app/chat-modal/chat-modal.component';
 
 @Component({
   selector: 'app-reclamation-list',
+  standalone: true, // ✅ AJOUTE CECI
+
   imports: [RouterLink, NavbarComponent,CommonModule, MatTableModule, MatPaginatorModule,
-    MatButtonModule, ChatModalComponent],
+    MatButtonModule, ChatModalComponent,      // ✅ remplace BrowserModule
+  ],
+
   templateUrl: './reclamation-list.component.html',
   styleUrl: './reclamation-list.component.scss'
 })

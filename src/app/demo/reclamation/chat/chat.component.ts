@@ -11,7 +11,7 @@ import { Message } from 'src/app/models/message';
   selector: 'app-chat',
   imports: [CommonModule,
         NavbarComponent,
-        BrowserModule,
+        
         FormsModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'

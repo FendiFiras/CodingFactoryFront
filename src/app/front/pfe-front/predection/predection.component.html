@@ -1,66 +1,70 @@
 <div class="prediction-form-container">
-    <h2 class="text-center mb-4">AI-Based Internship Prediction</h2>
-  
-    <form (ngSubmit)="submitForm()" class="prediction-form">
+  <h2 class="section-title">🎓 AI-Based Internship Prediction</h2>
+
+  <form (ngSubmit)="submitForm()" class="prediction-form">
+    <div class="form-grid">
       <div class="form-group">
         <label>Student Level</label>
-        <select [(ngModel)]="formData.Level" name="Level" class="form-control">
+        <select [(ngModel)]="formData.Level" name="Level">
           <option *ngFor="let l of levels" [value]="l.value">{{ l.label }}</option>
         </select>
       </div>
-  
+
       <div class="form-group">
         <label>University GPA</label>
-        <input type="number" step="0.01" [(ngModel)]="formData.University_GPA" name="University_GPA" class="form-control">
+        <input type="number" step="1" [(ngModel)]="formData.University_GPA" name="University_GPA">
       </div>
-  
+
       <div class="form-group">
         <label>Field of Study</label>
-        <select [(ngModel)]="formData.Field_of_Study" name="Field_of_Study" class="form-control">
+        <select [(ngModel)]="formData.Field_of_Study" name="Field_of_Study">
           <option *ngFor="let f of fields" [value]="f.value">{{ f.label }}</option>
         </select>
       </div>
-  
+
       <div class="form-group">
         <label>Internships Completed</label>
-        <input type="number" [(ngModel)]="formData.Internships_Completed" name="Internships_Completed" class="form-control">
+        <input type="number" [(ngModel)]="formData.Internships_Completed" name="Internships_Completed">
       </div>
-  
+
       <div class="form-group">
         <label>Projects Completed</label>
-        <input type="number" [(ngModel)]="formData.Projects_Completed" name="Projects_Completed" class="form-control">
+        <input type="number" [(ngModel)]="formData.Projects_Completed" name="Projects_Completed">
       </div>
-  
+
       <div class="form-group">
         <label>Certifications</label>
-        <input type="number" [(ngModel)]="formData.Certifications" name="Certifications" class="form-control">
+        <input type="number" [(ngModel)]="formData.Certifications" name="Certifications">
       </div>
-  
       <div class="form-group">
         <label>Soft Skills Score (out of 10)</label>
-        <input type="number" [(ngModel)]="formData.Soft_Skills_Score" name="Soft_Skills_Score" class="form-control">
+        <input type="number" [(ngModel)]="formData.Soft_Skills_Score" name="Soft_Skills_Score">
       </div>
-  
+
       <div class="form-group">
         <label>Career Satisfaction (out of 10)</label>
-        <input type="number" [(ngModel)]="formData.Career_Satisfaction" name="Career_Satisfaction" class="form-control">
+        <input type="number" [(ngModel)]="formData.Career_Satisfaction" name="Career_Satisfaction">
       </div>
-  
-      <div class="d-flex justify-content-between mt-4">
-        <button type="submit" class="btn btn-success" [disabled]="!isFormValid()">
-            Analyze My Chances
-          </button>        <button type="button" class="btn btn-outline-danger" (click)="close.emit()">Close</button>
-      </div>
-    </form>
-
-      
-    <div *ngIf="result !== null" class="mt-4 text-center result-box">
-      <p class="lead">
-        AI Result: 
-        <strong [style.color]="result === 1 ? '#28a745' : '#ffc107'">
-            {{ result === 1 ? 'Strong Profile – High Chance of Internship' : 'Needs Improvement – Low Chance of Internship' }}
-          </strong>
-      </p>
     </div>
+
+    <div class="button-group">
+      <button type="submit" class="btn primary" [disabled]="!isFormValid()">
+        🚀 Analyze My Chances
+      </button>
+      <button type="button" class="btn recommend" (click)="onRecommendClick()">
+        🎯 Get AI Recommendation
+      </button>
+      <button type="button" class="btn outline" (click)="close.emit()">❌ Close</button>
+    </div>
+  </form>
+
+  <div *ngIf="result !== null" class="result-box">
+    <p class="lead">
+      AI Result:
+      <strong [style.color]="result === 1 ? '#28a745' : '#ffc107'">
+        {{ result === 1 ? 'Strong Profile – High Chance of Internship' : 'Needs Improvement – Low Chance of Internship'
+        }}
+      </strong>
+    </p>
   </div>
-  
+</div>

@@ -49,6 +49,7 @@ import { AdminDiscussionComponent } from './demo/DiscussionsManagement/admin-for
 import { MessageComponent } from './front/Forum-Front/message-list/message-list.component';
 import { AdminDiscussionMessagesComponent } from './demo/Message-Managment/admin-discussion-messages/admin-discussion-messages.component';
 import { PredectionComponent } from './front/pfe-front/predection/predection.component';
+import { ClustringComponent } from './front/pfe-front/clustring/clustring.component';
 const routes: Routes = [
  
   {
@@ -168,6 +169,11 @@ const routes: Routes = [
   {
     path: 'predict',
     component: PredectionComponent
+  },
+
+  {
+    path: 'clustring',
+    component: ClustringComponent
   },
   {
     path: 'register',

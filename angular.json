@@ -35,7 +35,6 @@
               "src/fake-data",
               "src/assets1",
               "src/assets2",
-
               "src/uploads" 
             ],
             "styles": [

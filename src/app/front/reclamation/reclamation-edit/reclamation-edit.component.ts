@@ -11,7 +11,11 @@ import { NavbarComponent } from "../../elements/navbar/navbar.component";
 
 @Component({
   selector: 'app-reclamation-edit',
-  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, NavbarComponent],
+  standalone: true, // ✅ AJOUTE CECI
+
+  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, NavbarComponent,      // ✅ remplace BrowserModule
+  ],
+
   templateUrl: './reclamation-edit.component.html',
   styleUrl: './reclamation-edit.component.scss'
 })
